@@ -74,6 +74,86 @@
 
 .tclas-hero__actions { display: flex; gap: .85rem; flex-wrap: wrap; align-items: center; }
 
+// ── Split photo hero ──────────────────────────────────────────────────────
+
+// Container — same stacking context as .tclas-hero__bg
+.tclas-hero__split {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+// One pair = two side-by-side panels; only the active pair is visible
+.tclas-hero__pair {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	opacity: 0;
+	transition: opacity .7s ease;
+
+	&--active { opacity: 1; }
+}
+
+.tclas-hero__panel {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+
+	img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	// Gradient overlays — MN carries the heavy left-side text gradient
+	&--mn::after,
+	&--lux::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+	&--mn::after  { background: linear-gradient(to right, rgba(10,37,64,.84) 0%, rgba(10,37,64,.52) 50%, rgba(10,37,64,.18) 100%); }
+	&--lux::after { background: linear-gradient(to left,  rgba(10,37,64,.55) 0%, rgba(10,37,64,.20) 60%, rgba(10,37,64,.05) 100%); }
+
+	// Hairline divider between the two panels
+	&--mn { border-right: 1px solid rgba(255,255,255,.15); }
+}
+
+// Municipality label — small caps, pinned to bottom of each panel
+.tclas-hero__panel-label {
+	position: absolute;
+	bottom: 1.1rem;
+	z-index: 1;
+	font-size: .68rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .09em;
+	color: rgba(255,255,255,.7);
+
+	.tclas-hero__panel--mn  & { left: 1rem; }
+	.tclas-hero__panel--lux & { right: 1rem; text-align: right; }
+}
+
+// Photo credit — even smaller, beneath the label
+.tclas-hero__panel-credit {
+	position: absolute;
+	bottom: .35rem;
+	z-index: 1;
+	font-size: .6rem;
+	color: rgba(255,255,255,.38);
+
+	.tclas-hero__panel--mn  & { left: 1rem; }
+	.tclas-hero__panel--lux & { right: 1rem; }
+}
+
+// On mobile, hide the LUX panel and let MN fill the full width
+@media (max-width: 767px) {
+	.tclas-hero__panel--lux { display: none; }
+	.tclas-hero__panel--mn  { border-right: none; }
+}
+
 // ── Page hero variant ─────────────────────────────────────────────────────
 .tclas-hero--page {
 	min-height: 200px;

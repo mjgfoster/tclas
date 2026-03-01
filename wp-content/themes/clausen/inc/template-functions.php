@@ -25,9 +25,65 @@ function tclas_hero_url( string $size = 'desktop' ): string {
 }
 
 /**
- * Render hero section background tag.
+ * Render hero section background.
+ *
+ * When hero_pairs ACF data is present, renders the split photo panels
+ * (.tclas-hero__split > .tclas-hero__pair > .tclas-hero__panel × 2).
+ * Multiple pairs are stacked; the first is active by default and JS can
+ * cycle through the rest.
+ *
+ * Falls back to the illustration / SVG placeholder when no pairs are set.
  */
 function tclas_render_hero_bg(): void {
+	if ( function_exists( 'get_field' ) ) {
+		$pairs = get_field( 'hero_pairs', 'option' );
+		if ( is_array( $pairs ) && ! empty( $pairs ) ) {
+			$count = count( $pairs );
+			echo '<div class="tclas-hero__split" data-pairs="' . esc_attr( $count ) . '">';
+			foreach ( $pairs as $index => $pair ) {
+				$mn_img    = ! empty( $pair['mn_photo'] )  ? $pair['mn_photo']  : null;
+				$lux_img   = ! empty( $pair['lux_photo'] ) ? $pair['lux_photo'] : null;
+				$mn_place  = isset( $pair['mn_municipality'] )  ? trim( $pair['mn_municipality'] )  : '';
+				$lux_place = isset( $pair['lux_municipality'] ) ? trim( $pair['lux_municipality'] ) : '';
+				$mn_credit  = isset( $pair['mn_credit'] )  ? trim( $pair['mn_credit'] )  : '';
+				$lux_credit = isset( $pair['lux_credit'] ) ? trim( $pair['lux_credit'] ) : '';
+				$active_class = $index === 0 ? ' tclas-hero__pair--active' : '';
+				echo '<div class="tclas-hero__pair' . esc_attr( $active_class ) . '" data-pair-index="' . esc_attr( $index ) . '">';
+
+				// Minnesota panel.
+				echo '<div class="tclas-hero__panel tclas-hero__panel--mn">';
+				if ( $mn_img && ! empty( $mn_img['url'] ) ) {
+					echo '<img src="' . esc_url( $mn_img['url'] ) . '" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
+				}
+				if ( $mn_place ) {
+					echo '<span class="tclas-hero__panel-label">' . esc_html( $mn_place ) . ', MN</span>';
+				}
+				if ( $mn_credit ) {
+					echo '<span class="tclas-hero__panel-credit">' . esc_html( $mn_credit ) . '</span>';
+				}
+				echo '</div>';
+
+				// Luxembourg panel.
+				echo '<div class="tclas-hero__panel tclas-hero__panel--lux">';
+				if ( $lux_img && ! empty( $lux_img['url'] ) ) {
+					echo '<img src="' . esc_url( $lux_img['url'] ) . '" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
+				}
+				if ( $lux_place ) {
+					echo '<span class="tclas-hero__panel-label">' . esc_html( $lux_place ) . '</span>';
+				}
+				if ( $lux_credit ) {
+					echo '<span class="tclas-hero__panel-credit">' . esc_html( $lux_credit ) . '</span>';
+				}
+				echo '</div>';
+
+				echo '</div>'; // .tclas-hero__pair
+			}
+			echo '</div>'; // .tclas-hero__split
+			return;
+		}
+	}
+
+	// Fallback: illustration / SVG placeholder.
 	$desktop_url = tclas_hero_url( 'desktop' );
 	$mobile_url  = tclas_hero_url( 'mobile' );
 	echo '<picture class="tclas-hero__bg">';
