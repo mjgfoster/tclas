@@ -197,7 +197,7 @@
 .tclas-hero__label {
 	position: absolute;
 	bottom: 1.5rem;
-	z-index: 1;
+	z-index: 12;
 	background: rgba(10,37,64,.6);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
@@ -209,6 +209,7 @@
 }
 
 .tclas-hero__label-city {
+	font-family: var(--font-sans);
 	font-size: .72rem;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -218,6 +219,7 @@
 }
 
 .tclas-hero__label-credit {
+	font-family: var(--font-sans);
 	font-size: .62rem;
 	color: rgba(255,255,255,.75);
 	margin: .2rem 0 0;
