@@ -257,6 +257,32 @@ function tclas_register_acf_fields(): void {
 				],
 			],
 		],
+		[
+			'key'          => 'field_ltz_terms',
+			'label'        => 'Luxembourgish vocabulary',
+			'name'         => 'ltz_terms',
+			'type'         => 'repeater',
+			'instructions' => 'Words and phrases to wrap in <span lang="lb">. List longer phrases before shorter words — multi-word phrases must come first. Leave empty to use the built-in fallback list. Changes apply within 12 hours (or after saving).',
+			'layout'       => 'table',
+			'button_label' => 'Add term',
+			'sub_fields'   => [
+				[
+					'key'     => 'field_ltz_terms_ltz',
+					'label'   => 'Luxembourgish term',
+					'name'    => 'ltz_term',
+					'type'    => 'text',
+					'wrapper' => [ 'width' => '50' ],
+				],
+				[
+					'key'          => 'field_ltz_terms_en',
+					'label'        => 'English gloss',
+					'name'         => 'en_translation',
+					'type'         => 'text',
+					'wrapper'      => [ 'width' => '50' ],
+					'instructions' => 'Optional — for editorial reference only, not displayed on the site.',
+				],
+			],
+		],
 	] );
 
 	// ── Illustrations field group ─────────────────────────────────────────

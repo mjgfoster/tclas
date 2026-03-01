@@ -14,12 +14,12 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Curated list of Luxembourgish words and phrases used in TCLAS content.
+ * Built-in fallback list — used when the ACF vocabulary repeater is empty.
  * Ordered longest-first so multi-word phrases take priority over single words.
  *
  * @return string[]
  */
-function tclas_ltz_terms(): array {
+function tclas_ltz_terms_fallback(): array {
 	return [
 		// Phrases first (longest match wins)
 		'Gudde Moien',
@@ -44,6 +44,59 @@ function tclas_ltz_terms(): array {
 		'Schlass',
 	];
 }
+
+/**
+ * Return the active Luxembourgish term list.
+ *
+ * Checks a 12-hour transient first, then reads from the ACF "ltz_terms"
+ * repeater on Theme Options. Falls back to the hardcoded list when ACF
+ * returns nothing (e.g. field is empty or ACF is inactive).
+ *
+ * @return string[]
+ */
+function tclas_ltz_terms(): array {
+	$cached = get_transient( 'tclas_ltz_terms' );
+	if ( is_array( $cached ) && ! empty( $cached ) ) {
+		return $cached;
+	}
+
+	$terms = [];
+
+	if ( function_exists( 'get_field' ) ) {
+		$rows = get_field( 'ltz_terms', 'option' );
+		if ( is_array( $rows ) && ! empty( $rows ) ) {
+			foreach ( $rows as $row ) {
+				$t = isset( $row['ltz_term'] ) ? trim( $row['ltz_term'] ) : '';
+				if ( $t !== '' ) {
+					$terms[] = $t;
+				}
+			}
+		}
+	}
+
+	if ( empty( $terms ) ) {
+		$terms = tclas_ltz_terms_fallback();
+	} else {
+		// Sort longest-first so multi-word phrases match before single words.
+		usort( $terms, fn( $a, $b ) => strlen( $b ) - strlen( $a ) );
+	}
+
+	set_transient( 'tclas_ltz_terms', $terms, 12 * HOUR_IN_SECONDS );
+
+	return $terms;
+}
+
+/**
+ * Bust the ltz_terms transient whenever the Theme Options ACF page is saved.
+ *
+ * @param int|string $post_id The post ID passed by acf/save_post.
+ */
+function tclas_ltz_bust_transient( $post_id ): void {
+	if ( $post_id === 'options' ) {
+		delete_transient( 'tclas_ltz_terms' );
+	}
+}
+add_action( 'acf/save_post', 'tclas_ltz_bust_transient', 20 );
 
 /**
  * Wrap each known Luxembourgish term in <span lang="lb">.
