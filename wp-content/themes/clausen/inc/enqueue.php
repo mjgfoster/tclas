@@ -106,11 +106,18 @@ function tclas_enqueue_assets(): void {
 		],
 	] );
 
-	// ── Hero slideshow (front page only) ─────────────────────────────────
+	// ── Hero scripts (front page only) ───────────────────────────────────
 	if ( is_front_page() ) {
 		wp_enqueue_script(
 			'tclas-hero',
 			TCLAS_ASSETS . '/js/hero-slideshow.js',
+			[],
+			TCLAS_VERSION,
+			true
+		);
+		wp_enqueue_script(
+			'tclas-hero-greeting',
+			TCLAS_ASSETS . '/js/hero-greeting.js',
 			[],
 			TCLAS_VERSION,
 			true

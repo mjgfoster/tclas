@@ -76,6 +76,59 @@
 
 .tclas-hero__actions { display: flex; gap: .85rem; flex-wrap: wrap; align-items: center; }
 
+// ── Animated three-language greeting ─────────────────────────────────────
+
+.tclas-hero__greeting {
+	display: grid;
+	margin: 0;
+
+	> * { grid-area: 1 / 1; }
+}
+
+.tclas-hero__greeting-stage {
+	font-family: var(--font-sans);
+	font-size: clamp(3rem, 8vw, 5.5rem);
+	font-weight: 700;
+	line-height: 1.05;
+	color: rgba(255,255,255,.45);
+	opacity: 0;
+	transform: translateY(1.5rem);
+	transition: opacity .5s ease, transform .5s ease;
+	pointer-events: none;
+
+	&[data-active] {
+		opacity: 1;
+		transform: none;
+		pointer-events: auto;
+	}
+
+	// Final stage is fully opaque
+	&[data-stage="2"] { color: #fff; }
+}
+
+.tclas-hero__greeting-ctas {
+	margin-top: 2.5rem;
+	opacity: 0;
+	transform: translateY(1rem);
+	transition: opacity .6s ease .2s, transform .6s ease .2s;
+
+	&[hidden] { display: none; }
+
+	&.is-visible {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+// Reduced motion: skip straight to final stage, no transitions
+@media (prefers-reduced-motion: reduce) {
+	.tclas-hero__greeting-stage {
+		transition: none;
+		transform: none;
+	}
+	.tclas-hero__greeting-ctas { transition: none; }
+}
+
 // ── Split photo hero (Figma: diagonal clip-path + vertical slide) ────────
 
 // Show/hide desktop vs mobile backgrounds
@@ -109,17 +162,6 @@
 	left: 0;
 	width: calc(50% + 2rem);
 	clip-path: polygon(0 0, 100% 0, calc(100% - 4rem) 100%, 0 100%);
-
-	// Gradient sits above active slide (z-index 10) for text legibility.
-	// clip-path creates a stacking context, so z-index is local.
-	&::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		z-index: 11;
-		pointer-events: none;
-		background: linear-gradient(to right, rgba(10,37,64,.80) 0%, rgba(10,37,64,.50) 52%, rgba(10,37,64,.06) 100%);
-	}
 }
 
 .tclas-hero__side--right {
@@ -225,11 +267,11 @@
 	margin: .2rem 0 0;
 }
 
-// Mobile gradient overlay for text legibility
+// Mobile: subtle bottom scrim so labels remain readable
 .tclas-hero__mobile-gradient {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(to bottom, transparent, rgba(10,37,64,.2) 50%, rgba(10,37,64,.65));
+	background: linear-gradient(to bottom, transparent 40%, rgba(10,37,64,.35) 100%);
 }
 
 // Orange accent divider below the H1

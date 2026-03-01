@@ -25,31 +25,20 @@ get_header();
 
 	<div class="container-tclas">
 		<div class="tclas-hero__content">
-			<span class="tclas-hero__eyebrow">
-				<?php
-				echo tclas_ltz( 'Mir sinn hei', 'We are here', false );
-				?> &mdash; Twin Cities Luxembourg American Society
-			</span>
 
-			<h1 class="tclas-hero__title">
-				<?php esc_html_e( 'Where the Twin Cities meet the Grand Duchy.', 'tclas' ); ?>
+			<h1 class="tclas-hero__greeting" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>">
+				<span class="tclas-hero__greeting-stage" data-stage="0" data-active="true" lang="lb">W&euml;llkomm</span>
+				<span class="tclas-hero__greeting-stage" data-stage="1" lang="fr">Bienvenue</span>
+				<span class="tclas-hero__greeting-stage" data-stage="2"><?php esc_html_e( 'Welcome', 'tclas' ); ?></span>
 			</h1>
 
-			<div class="tclas-hero__divider" aria-hidden="true"></div>
-
-			<p class="tclas-hero__subtitle">
-				<?php esc_html_e( "We're Minnesotans with Luxembourg in our bones, passports and hearts.", 'tclas' ); ?>
-				<?php echo tclas_ltz( 'Mir sinn hei', 'We are here', false ); ?> &mdash;
-				<?php esc_html_e( "and we'd love to meet you.", 'tclas' ); ?>
-			</p>
-
-			<div class="tclas-hero__actions">
+			<div class="tclas-hero__greeting-ctas tclas-hero__actions" hidden>
 				<?php if ( ! tclas_is_member() ) : ?>
 					<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary btn-lg">
 						<?php esc_html_e( 'Join us', 'tclas' ); ?>
 					</a>
 					<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-light">
-						<?php esc_html_e( 'Learn more', 'tclas' ); ?>
+						<?php esc_html_e( 'Learn more about TCLAS', 'tclas' ); ?>
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( home_url( '/events/' ) ); ?>" class="btn btn-primary btn-lg">
@@ -60,6 +49,7 @@ get_header();
 					</a>
 				<?php endif; ?>
 			</div>
+
 		</div>
 	</div>
 
