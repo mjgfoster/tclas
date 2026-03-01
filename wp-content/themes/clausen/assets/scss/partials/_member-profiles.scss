@@ -1,0 +1,391 @@
+// =============================================================================
+//  Auto-injected: load config tokens + bp() mixin
+// =============================================================================
+@use 'config' as *;
+
+// =============================================================================
+//  _member-profiles.scss — Member directory + individual profile page styles
+//  Loaded only on page-my-story.php and page-member-profiles.php
+// =============================================================================
+
+// ── Back link ─────────────────────────────────────────────────────────────
+.tclas-back-link {
+	display: inline-block;
+	color: rgba(235, 245, 252, .7);
+	font-family: var(--font-sans);
+	font-size: .8rem;
+	font-weight: 600;
+	text-decoration: none;
+	letter-spacing: .04em;
+	margin-bottom: .6rem;
+
+	&:hover { color: var(--c-or-pale); }
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────
+.tclas-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: .25rem;
+	font-family: var(--font-sans);
+	font-size: .7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .07em;
+	padding: .2rem .55rem;
+	border-radius: 99px;
+	white-space: nowrap;
+
+	&--founding  { background: var(--c-gold); color: var(--c-ardoise); }
+	&--ancestors { background: var(--c-or-pale); color: var(--c-ardoise); border: 1px solid var(--c-border); }
+	&--family    { background: var(--c-or-pale); color: var(--c-muted);   border: 1px solid var(--c-border); }
+	&--sm        { font-size: .65rem; padding: .15rem .4rem; }
+}
+
+// ── Photo upload widget ───────────────────────────────────────────────────
+.tclas-photo-upload {
+	display: flex;
+	align-items: center;
+	gap: 1.25rem;
+	padding: 1.25rem;
+	background: var(--c-or-pale);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	margin-bottom: .25rem;
+
+	@include bp($bp-xs) { flex-direction: column; align-items: flex-start; }
+}
+
+.tclas-photo-upload__preview { flex-shrink: 0; }
+
+.tclas-photo-upload__img {
+	width: 96px;
+	height: 96px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid var(--c-border);
+	background: var(--c-border);
+	display: block;
+}
+
+.tclas-photo-upload__controls {
+	display: flex;
+	flex-direction: column;
+	gap: .4rem;
+}
+
+.tclas-photo-choose-btn { align-self: flex-start; }
+
+.tclas-photo-remove-btn {
+	align-self: flex-start;
+	font-family: var(--font-sans);
+	font-size: .78rem;
+	color: var(--c-crimson);
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	text-decoration: underline;
+
+	&:hover { color: var(--c-crimson-dk); }
+}
+
+.tclas-photo-status {
+	font-family: var(--font-sans);
+	font-size: .8rem;
+	color: var(--c-muted);
+	margin: 0;
+
+	&--error   { color: var(--c-crimson); }
+	&--success { color: var(--c-vert); }
+}
+
+// ── Per-field privacy toggle ──────────────────────────────────────────────
+.tclas-field-privacy {
+	margin-top: 1rem;
+	border-top: 1px solid var(--c-border);
+	padding-top: .75rem;
+}
+
+.tclas-field-privacy__toggle {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+	font-family: var(--font-sans);
+	font-size: .78rem;
+	font-weight: 600;
+	color: var(--c-muted);
+	cursor: pointer;
+	list-style: none;
+	user-select: none;
+
+	&::-webkit-details-marker { display: none; }
+
+	&::before {
+		content: '▸';
+		transition: transform .15s ease;
+	}
+}
+
+details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
+
+.tclas-field-privacy__current {
+	margin-left: auto;
+	font-weight: 400;
+	color: var(--c-body-text);
+}
+
+.tclas-field-privacy__options {
+	display: flex;
+	gap: 1.25rem;
+	margin-top: .6rem;
+	padding-left: .25rem;
+}
+
+// ── Directory filters ─────────────────────────────────────────────────────
+.tclas-dir-filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: .75rem;
+	margin-bottom: 2rem;
+	padding: 1rem 1.25rem;
+	background: var(--c-white);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+}
+
+.tclas-dir-filter-input {
+	font-family: var(--font-sans);
+	font-size: .9rem;
+	padding: .45rem .75rem;
+	border: 1px solid var(--c-input-border);
+	border-radius: var(--radius);
+	background: var(--c-body-bg);
+	color: var(--c-body-text);
+	min-width: 180px;
+
+	&:focus { outline: 3px solid var(--c-crimson); border-color: var(--c-crimson); }
+}
+
+.tclas-dir-filters__search { flex: 1; min-width: 200px; .tclas-dir-filter-input { width: 100%; } }
+
+.tclas-dir-filter-check {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	font-family: var(--font-sans);
+	font-size: .88rem;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.tclas-dir-count {
+	font-family: var(--font-sans);
+	font-size: .8rem;
+	color: var(--c-muted);
+	margin: 0;
+	white-space: nowrap;
+	margin-left: auto;
+}
+
+// ── Directory grid ────────────────────────────────────────────────────────
+.tclas-dir-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+	gap: 1rem;
+
+	@include bp($bp-xs) { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+}
+
+// ── Directory card ────────────────────────────────────────────────────────
+.tclas-dir-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 1.25rem 1rem;
+	background: var(--c-white);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	text-decoration: none;
+	color: inherit;
+	transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+	gap: .65rem;
+
+	&:hover {
+		box-shadow: var(--shadow-md);
+		border-color: var(--c-aigue);
+		transform: translateY(-2px);
+		color: inherit;
+	}
+
+	&[hidden] { display: none !important; }
+}
+
+.tclas-dir-card__photo { flex-shrink: 0; }
+
+.tclas-dir-card__img {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid var(--c-border);
+	background: var(--c-or-pale);
+	display: block;
+}
+
+.tclas-dir-card__body { flex: 1; width: 100%; }
+
+.tclas-dir-card__name {
+	font-family: var(--font-sans);
+	font-size: .92rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin: 0 0 .2rem;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tclas-dir-card__city {
+	font-family: var(--font-sans);
+	font-size: .78rem;
+	color: var(--c-muted);
+	margin: 0 0 .5rem;
+}
+
+.tclas-dir-card__indicators { display: flex; justify-content: center; align-items: center; gap: .35rem; flex-wrap: wrap; }
+.tclas-dir-card__indicator  { font-size: 1rem; line-height: 1; }
+
+.tclas-dir-no-results {
+	font-family: var(--font-sans);
+	color: var(--c-muted);
+	text-align: center;
+	padding: 2rem;
+}
+
+// ── Individual profile view ───────────────────────────────────────────────
+.tclas-profile-view {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	max-width: 780px;
+}
+
+.tclas-profile-header {
+	display: flex;
+	gap: 1.75rem;
+	align-items: flex-start;
+	background: var(--c-white);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	padding: 1.75rem;
+	box-shadow: var(--shadow-sm);
+
+	@include bp($bp-sm) {
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+
+		.tclas-profile-badges { justify-content: center; }
+		.tclas-profile-meta-list { justify-items: center; }
+		.tclas-profile-social { justify-content: center; }
+	}
+}
+
+.tclas-profile-header__photo { flex-shrink: 0; }
+
+.tclas-profile-header__img {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 4px solid var(--c-border);
+	display: block;
+}
+
+.tclas-profile-header__meta { flex: 1; min-width: 0; }
+
+.tclas-profile-header__name {
+	font-family: var(--font-sans);
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin: 0 0 .6rem;
+}
+
+.tclas-profile-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .9rem; }
+
+// Meta list
+.tclas-profile-meta-list {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	column-gap: .75rem;
+	row-gap: .2rem;
+	font-family: var(--font-sans);
+	font-size: .88rem;
+	margin: 0 0 .9rem;
+
+	dt { color: var(--c-muted); font-weight: 600; }
+	dd { color: var(--c-body-text); margin: 0; }
+}
+
+// Social links
+.tclas-profile-social { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+.tclas-profile-social__link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--c-or-pale);
+	color: var(--c-ardoise);
+	text-decoration: none;
+	border: 1px solid var(--c-border);
+	transition: background .15s, color .15s;
+
+	&:hover { background: var(--c-aigue); color: #fff; border-color: var(--c-aigue); }
+}
+
+// Profile sections
+.tclas-profile-section {
+	background: var(--c-white);
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	padding: 1.5rem;
+	box-shadow: var(--shadow-sm);
+}
+
+.tclas-profile-section__title {
+	font-family: var(--font-sans);
+	font-size: .7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .09em;
+	color: var(--c-crimson);
+	margin: 0 0 .85rem;
+}
+
+.tclas-profile-bio {
+	font-family: var(--font-serif);
+	font-size: 1rem;
+	line-height: 1.65;
+	color: var(--c-body-text);
+	max-width: 65ch;
+	margin: 0;
+}
+
+.tclas-profile-roots__label {
+	font-family: var(--font-sans);
+	font-size: .82rem;
+	font-weight: 600;
+	color: var(--c-muted);
+	margin: 0 0 .45rem;
+}
+
+.tclas-profile-pills       { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tclas-profile-family-names{ font-family: var(--font-sans); font-size: .92rem; color: var(--c-body-text); margin: 0; }

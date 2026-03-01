@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TCLAS Site QA Audit — 23 February 2026</title>
+<style>
+  @page { margin: 1.5cm 2cm; size: letter; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 11pt; line-height: 1.55; color: #1a1a1a; max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 22pt; color: #0A2540; margin-bottom: .15em; }
+  .subtitle { font-size: 11pt; color: #667; margin-bottom: .5em; }
+  .meta { font-size: 9pt; color: #999; border-bottom: 2px solid #0A2540; padding-bottom: .75em; margin-bottom: 2em; }
+  h2 { font-size: 15pt; color: #0A2540; margin: 2em 0 .6em; padding-bottom: .3em; border-bottom: 1px solid #ddd; page-break-after: avoid; }
+  h3 { font-size: 11pt; color: #333; margin: 1.4em 0 .3em; page-break-after: avoid; }
+  p, li { margin-bottom: .4em; }
+  ul { padding-left: 1.4em; }
+  a { color: #2563EB; }
+  code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 9.5pt; background: #f3f4f6; padding: .1em .35em; border-radius: 3px; }
+
+  /* Severity badges */
+  .badge { display: inline-block; font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: .2em .6em; border-radius: 3px; color: #fff; vertical-align: middle; margin-right: .4em; }
+  .badge--critical { background: #DC2626; }
+  .badge--high { background: #EA580C; }
+  .badge--medium { background: #CA8A04; }
+  .badge--low { background: #65A30D; }
+  .badge--a11y { background: #7C3AED; }
+
+  /* Finding cards */
+  .finding { border: 1px solid #e5e7eb; border-radius: 6px; padding: 1em 1.2em; margin-bottom: 1em; page-break-inside: avoid; }
+  .finding--critical { border-left: 4px solid #DC2626; }
+  .finding--high { border-left: 4px solid #EA580C; }
+  .finding--medium { border-left: 4px solid #CA8A04; }
+  .finding--low { border-left: 4px solid #65A30D; }
+  .finding--a11y { border-left: 4px solid #7C3AED; }
+  .finding h3 { margin-top: 0; }
+  .finding-detail { font-size: 10pt; color: #444; }
+  .finding-page { font-size: 9pt; color: #888; margin-bottom: .3em; }
+  .finding-fix { font-size: 10pt; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: .6em .8em; margin-top: .5em; }
+  .finding-fix strong { color: #166534; }
+
+  /* Annotation area */
+  .annotation-box { border: 2px dashed #cbd5e1; border-radius: 6px; padding: .8em 1em; margin-top: .5em; min-height: 50px; }
+  .annotation-label { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: #94a3b8; margin-bottom: .3em; }
+
+  /* Summary table */
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 1em 0; }
+  th, td { text-align: left; padding: .45em .6em; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f8fafc; font-weight: 600; color: #0A2540; }
+  .status-yes { color: #16a34a; font-weight: 600; }
+  .status-no { color: #DC2626; font-weight: 700; }
+  .status-warn { color: #CA8A04; font-weight: 600; }
+
+  /* Page link boxes */
+  .page-link { display: inline-block; font-size: 9pt; background: #eff6ff; color: #2563EB; padding: .15em .5em; border-radius: 3px; text-decoration: none; margin-top: .2em; }
+  .page-link:hover { background: #dbeafe; }
+
+  /* Style guide */
+  .style-guide { background: #fefce8; border: 1px solid #fde68a; border-radius: 6px; padding: 1em 1.2em; margin: 1.5em 0; }
+  .style-guide h3 { color: #92400e; margin-top: 0; }
+
+  /* Print tweaks */
+  @media print {
+    body { padding: 0; font-size: 10pt; }
+    .page-link { background: none; padding: 0; }
+    a { color: #333; text-decoration: underline; }
+    .annotation-box { border-color: #ccc; }
+    .finding { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>TCLAS Site QA Audit</h1>
+<p class="subtitle">Non-member perspective &middot; Full-site crawl &middot; Bug fixes, UI updates, accessibility</p>
+<p class="meta">Date: 23 February 2026 &nbsp;&middot;&nbsp; Auditor: Claude (AI) &nbsp;&middot;&nbsp; Environment: localhost:8888/tclas-local &nbsp;&middot;&nbsp; Theme: Clausen v1.1</p>
+
+<!-- ─── STYLE GUIDE ─────────────────────────────────────────────────── -->
+
+<div class="style-guide">
+  <h3>Active Style Guide Reference</h3>
+  <ul>
+    <li><strong>Language:</strong> U.S. English, AP style (Associated Press Stylebook)</li>
+    <li><strong>Citations:</strong> ASA format (American Sociological Association)</li>
+    <li><strong>Dates/times:</strong> Spell out months and days; "7 p.m." not "7:00 pm"; "at" not "@"; en-dash for ranges</li>
+    <li><strong>Typography:</strong> No ampersands in running text</li>
+    <li><strong>Blog posts:</strong> Option to hide author byline per individual post</li>
+  </ul>
+</div>
+
+<!-- ─── PAGE-BY-PAGE SUMMARY ────────────────────────────────────────── -->
+
+<h2>Page-by-Page Summary</h2>
+
+<table>
+  <thead>
+    <tr><th>Page</th><th>Has Content?</th><th>Header Styled?</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Homepage</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>Two empty illustration placeholders</td>
+    </tr>
+    <tr>
+      <td>About</td>
+      <td class="status-warn">Placeholder</td>
+      <td class="status-yes">Yes</td>
+      <td>Main content is gibberish; board sidebar works</td>
+    </tr>
+    <tr>
+      <td>Events (list)</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>Clean; only LIST tab as designed</td>
+    </tr>
+    <tr>
+      <td>Event (single)</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>Two-column layout working well</td>
+    </tr>
+    <tr>
+      <td>News (archive)</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-warn">Different style</td>
+      <td>No eyebrow; hero-style header; inconsistent</td>
+    </tr>
+    <tr>
+      <td>News (single post)</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>&ldquo;More from TCLAS&rdquo; section works</td>
+    </tr>
+    <tr>
+      <td>Resources</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>Members-only gate looks good</td>
+    </tr>
+    <tr>
+      <td>Join (<code>/join/</code>)</td>
+      <td class="status-no">Empty</td>
+      <td class="status-warn">Generic</td>
+      <td><strong>Critical conversion blocker</strong></td>
+    </tr>
+    <tr>
+      <td>Membership Levels</td>
+      <td class="status-warn">Unstyled</td>
+      <td class="status-warn">Generic</td>
+      <td>Raw PMPro table; no branding</td>
+    </tr>
+    <tr>
+      <td>Login</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-warn">Generic</td>
+      <td>Form functional</td>
+    </tr>
+    <tr>
+      <td>Contact</td>
+      <td class="status-no">Empty</td>
+      <td class="status-warn">Generic</td>
+      <td>No form, email, or info at all</td>
+    </tr>
+    <tr>
+      <td>404</td>
+      <td class="status-yes">Yes</td>
+      <td class="status-yes">Yes</td>
+      <td>&ldquo;Hoppla.&rdquo; &mdash; charming</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ─── CRITICAL ─────────────────────────────────────────────────────── -->
+
+<h2>Critical Findings</h2>
+
+<div class="finding finding--critical">
+  <p class="finding-page">Page: <code>/join/</code> &nbsp;&middot;&nbsp; All conversion CTAs across the site</p>
+  <h3><span class="badge badge--critical">Critical</span> #1 &mdash; <code>/join/</code> page is completely empty</h3>
+  <p class="finding-detail">The single most important conversion page on the site contains only a title and a footer. The following links all point here and hit a dead end:</p>
+  <ul class="finding-detail">
+    <li>Hero &ldquo;Join us&rdquo; button</li>
+    <li>&ldquo;Membership&rdquo; nav link</li>
+    <li>All three homepage tier buttons (&ldquo;Join as individual/family/student&rdquo;)</li>
+    <li>Bottom CTA &ldquo;Join TCLAS&rdquo;</li>
+    <li>Resources page &ldquo;Join TCLAS&rdquo; button</li>
+  </ul>
+  <p class="finding-detail">The actual PMPro membership levels table lives at <code>/membership-levels/</code>, but nothing routes visitors there.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Either add the <code>[pmpro_levels]</code> or <code>[pmpro_checkout]</code> shortcode to the <code>/join/</code> page content, or redirect all CTA links to <code>/membership-levels/</code>. Ideally, build out <code>/join/</code> with a branded checkout experience.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--critical">
+  <p class="finding-page">Page: <code>/contact/</code> &nbsp;&middot;&nbsp; Footer links (x2)</p>
+  <h3><span class="badge badge--critical">Critical</span> #2 &mdash; <code>/contact/</code> page is completely empty</h3>
+  <p class="finding-detail">Linked from the footer in two places (&ldquo;Contact&rdquo; in the Organisation column and &ldquo;Contact&rdquo; in the bottom bar). The page renders only a title &mdash; no contact form, no email address, no phone number, no mailing address.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Add a contact form (Gravity Forms, WPForms, or simple <code>mailto:</code> link), an email address, and optionally a mailing address.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--critical">
+  <p class="finding-page">Component: Primary navigation &nbsp;&middot;&nbsp; Header</p>
+  <h3><span class="badge badge--critical">Critical</span> #3 &mdash; Nav link labels are swapped</h3>
+  <p class="finding-detail">&ldquo;Membership&rdquo; in the main nav &rarr; <code>/join/</code> (the empty page). The red &ldquo;Join&rdquo; button &rarr; <code>/membership-levels/</code> (a raw PMPro table). These are backwards. A visitor clicks &ldquo;Membership&rdquo; expecting to learn about membership and sees nothing; they click &ldquo;Join&rdquo; expecting checkout and get an unstyled data table.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> In WordPress Admin &rarr; Appearance &rarr; Menus, swap the URLs: &ldquo;Membership&rdquo; should point to the membership info/levels page, and &ldquo;Join&rdquo; should point to the checkout/signup flow. Or unify both under a single well-built <code>/join/</code> page.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<!-- ─── HIGH ──────────────────────────────────────────────────────────── -->
+
+<h2>High-Priority Findings</h2>
+
+<div class="finding finding--high">
+  <p class="finding-page">Component: Header brand area &nbsp;&middot;&nbsp; <code>header.php</code> lines 39&ndash;51</p>
+  <h3><span class="badge badge--high">High</span> #4 &mdash; Header brand link creates 3 orphan links (broken HTML)</h3>
+  <p class="finding-detail"><code>the_custom_logo()</code> outputs its own <code>&lt;a&gt;</code> tag wrapping the logo image. Since it&rsquo;s nested inside the <code>&lt;a class="tclas-brand"&gt;</code> wrapper, the browser auto-corrects the invalid nesting by splitting the outer link into empty fragments. The rendered DOM contains:</p>
+  <ul class="finding-detail">
+    <li>An empty <code>&lt;a class="tclas-brand"&gt;</code> (no content, no accessible name)</li>
+    <li>A second empty <code>&lt;a class="tclas-brand"&gt;</code> fragment inside <code>.tclas-brand__logo</code></li>
+    <li>The actual <code>&lt;a class="custom-logo-link"&gt;</code> with the logo image</li>
+    <li>The brand name and tagline text orphaned <em>outside</em> any link</li>
+  </ul>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Replace <code>the_custom_logo()</code> with direct <code>&lt;img&gt;</code> output using <code>wp_get_attachment_image()</code> on the custom logo ID. This avoids the nested <code>&lt;a&gt;</code> problem entirely.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--high">
+  <p class="finding-page">Page: <code>/about/</code></p>
+  <h3><span class="badge badge--high">High</span> #5 &mdash; About page has placeholder content</h3>
+  <p class="finding-detail">The main content area reads &ldquo;afasdfasdfasdfasdfadfasdfas&rdquo;. Both the &ldquo;Our story&rdquo; button and the &ldquo;Learn more&rdquo; hero button on the homepage lead here. The 2:1 layout and board sidebar are working correctly &mdash; the page just needs real copy.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Draft and publish the About page content in the WordPress editor. Consider: mission statement, brief history, what TCLAS does, how to get involved.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--high">
+  <p class="finding-page">Page: Homepage &nbsp;&middot;&nbsp; Sections 3 and 5</p>
+  <h3><span class="badge badge--high">High</span> #6 &mdash; Large empty illustration placeholders on homepage</h3>
+  <p class="finding-detail">The &ldquo;About TCLAS&rdquo; section and &ldquo;Membership&rdquo; section both render large light-blue rectangles (~350px tall) where illustrations should be. On mobile, the About placeholder takes nearly the full viewport height. These make the site look unfinished to first-time visitors.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Either upload illustrations via the ACF theme options panel, or hide the placeholder divs until images are available by adding <code>.tclas-welcome__illustration:empty, .tclas-membership__illustration:empty { display: none; }</code></div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--high">
+  <p class="finding-page">Files: <code>page.php</code>, <code>front-page.php</code> &nbsp;&middot;&nbsp; All generic pages</p>
+  <h3><span class="badge badge--high">High</span> #7 &mdash; <code>container</code> vs. <code>container-tclas</code> inconsistency</h3>
+  <p class="finding-detail">Every section in <code>front-page.php</code> and both wrappers in <code>page.php</code> use Bootstrap&rsquo;s <code>.container</code>, while the project convention is <code>.container-tclas</code> (max-width: 1200px). This causes subtle width differences between the homepage/generic pages and pages like Events, About, and Resources that use the correct class.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Replace <code>class="container"</code> with <code>class="container-tclas"</code> in <code>page.php</code> (lines 21, 38) and all sections in <code>front-page.php</code>.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--high">
+  <p class="finding-page">Page: <code>/news/</code> archive</p>
+  <h3><span class="badge badge--high">High</span> #8 &mdash; News archive header doesn&rsquo;t match site pattern</h3>
+  <p class="finding-detail">Events &rarr; ardoise header with &ldquo;COMMUNITY&rdquo; eyebrow. Resources &rarr; &ldquo;MEMBER RESOURCES&rdquo; eyebrow. About &rarr; &ldquo;ABOUT TCLAS&rdquo; eyebrow. But the News archive uses a different full-bleed hero-style header with just &ldquo;News &amp; stories&rdquo; and no eyebrow. Visually inconsistent.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Update the news archive template to use the standard <code>.tclas-page-header.tclas-page-header--ardoise</code> pattern with a &ldquo;FROM THE COMMUNITY&rdquo; or similar eyebrow.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<!-- ─── MEDIUM ────────────────────────────────────────────────────────── -->
+
+<h2>Medium-Priority Findings</h2>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Page: Homepage tier cards &nbsp;&middot;&nbsp; <code>front-page.php</code> lines 202&ndash;247</p>
+  <h3><span class="badge badge--medium">Medium</span> #9 &mdash; Homepage tier &ldquo;Join as...&rdquo; buttons all hit the empty page</h3>
+  <p class="finding-detail">The three buttons link to <code>/join/?level=1</code>, <code>?level=2</code>, <code>?level=3</code> &mdash; but <code>/join/</code> renders nothing regardless of the query parameter. Directly related to Critical #1.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Update <code>home_url('/join/')</code> to point to the PMPro checkout URL, or ensure the <code>/join/</code> page handles the <code>?level=</code> parameter correctly with the <code>[pmpro_checkout]</code> shortcode.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Page: <code>/membership-levels/</code></p>
+  <h3><span class="badge badge--medium">Medium</span> #10 &mdash; Membership Levels page is completely unstyled</h3>
+  <p class="finding-detail">When a visitor finds this page (via the red &ldquo;Join&rdquo; header button), they see a raw PMPro table: &ldquo;Level | Price | Select&rdquo; with generic red buttons. No tier descriptions, no benefit lists, no branded cards. Stark contrast to the beautifully designed homepage membership section.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Either style the PMPro levels output with CSS overrides, or create a custom page template that replicates the homepage tier-card design with checkout links.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Component: Footer &ldquo;Stay in Touch&rdquo; section</p>
+  <h3><span class="badge badge--medium">Medium</span> #11 &mdash; Newsletter signup form doesn&rsquo;t render</h3>
+  <p class="finding-detail">The footer says &ldquo;Bimonthly news, events, and Luxembourg stories &mdash; in your inbox.&rdquo; but no email input or subscribe button appears below it. The template calls <code>tclas_footer_newsletter_form()</code> but nothing renders &mdash; the Mailchimp for WP form may not be configured.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Configure a Mailchimp for WP form in the plugin settings, or verify the form ID referenced in the function matches an active form.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Pages: News archive, Homepage news section</p>
+  <h3><span class="badge badge--medium">Medium</span> #12 &mdash; Red pin icon appears on every post card</h3>
+  <p class="finding-detail">All 4 blog posts display a small crimson pin/pushpin icon above the date. If this is a &ldquo;sticky post&rdquo; indicator, they shouldn&rsquo;t all be pinned. If it&rsquo;s decorative, it&rsquo;s confusing &mdash; visitors may wonder what it signifies.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Only show the pin icon on posts that are actually marked as &ldquo;sticky&rdquo; in WordPress, or remove the icon entirely if it&rsquo;s decorative.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Pages: Login, Contact, Join, Membership Levels</p>
+  <h3><span class="badge badge--medium">Medium</span> #13 &mdash; Generic pages lack themed page headers</h3>
+  <p class="finding-detail">These pages use <code>page.php</code>&rsquo;s generic hero header (dark full-bleed with just the title). No eyebrow label, no consistent <code>.tclas-page-header--ardoise</code> pattern. They feel unfinished compared to Events, About, and Resources.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Update <code>page.php</code> to use the standard page header pattern, or create individual page templates for Login and Contact with the correct header markup.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--medium">
+  <p class="finding-page">Pages: Events list, single event &nbsp;&middot;&nbsp; TEC date format settings</p>
+  <h3><span class="badge badge--medium">Medium</span> #14 &mdash; Date/time format doesn&rsquo;t follow AP style guide</h3>
+  <p class="finding-detail">Event cards show &ldquo;March 7 @ 6:30 pm - 8:30 pm&rdquo;. Per the style guide, this should read &ldquo;March 7 at 6:30 p.m.&rdquo; (no &ldquo;@&rdquo;; periods in a.m./p.m.; en-dash for ranges). This is governed by The Events Calendar&rsquo;s date format settings in WordPress admin.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> In WP Admin &rarr; Events &rarr; Settings &rarr; Display, update the time format to use &ldquo;g:i a&rdquo; and customize the separator. May need a filter hook for the &ldquo;@&rdquo; &rarr; &ldquo;at&rdquo; replacement and the period-style a.m./p.m.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<!-- ─── LOW ────────────────────────────────────────────────────────────── -->
+
+<h2>Low-Priority Findings</h2>
+
+<div class="finding finding--low">
+  <p class="finding-page">Pages: News archive, Homepage</p>
+  <h3><span class="badge badge--low">Low</span> #15 &mdash; &ldquo;1 min read&rdquo; on every single post</h3>
+  <p class="finding-detail">All 4 blog posts display &ldquo;1 min read&rdquo;. Either the read-time calculation needs adjustment or the sample content is genuinely that short.</p>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--low">
+  <p class="finding-page">Component: Mobile hamburger menu</p>
+  <h3><span class="badge badge--low">Low</span> #16 &mdash; No visible close affordance on mobile menu</h3>
+  <p class="finding-detail">The menu opens with the ☰ icon but doesn&rsquo;t visually change to a &times; when open. Tapping ☰ again closes it, but the visual signal is weak.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Toggle the hamburger icon to &times; (or an animated X) when <code>aria-expanded="true"</code>.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--low">
+  <p class="finding-page">Component: Footer &ldquo;Organisation&rdquo; column</p>
+  <h3><span class="badge badge--low">Low</span> #17 &mdash; Footer Organisation column is sparse</h3>
+  <p class="finding-detail">Contains only two links: &ldquo;About TCLAS&rdquo; and &ldquo;Contact.&rdquo; Could be expanded with links to Leadership/Board, mission, or bylaws.</p>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--low">
+  <p class="finding-page">Component: Footer &ldquo;Facebook&rdquo; link</p>
+  <h3><span class="badge badge--low">Low</span> #18 &mdash; External link opens in new tab without indicator</h3>
+  <p class="finding-detail">The footer &ldquo;Facebook&rdquo; link has <code>target="_blank"</code> but no icon or text hint that it opens externally. WCAG recommends warning users.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Add an external-link icon or append &ldquo;(opens in new window)&rdquo; as visually hidden text for screen readers.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<!-- ─── ACCESSIBILITY ─────────────────────────────────────────────────── -->
+
+<h2>Accessibility Findings</h2>
+
+<div class="finding finding--a11y">
+  <p class="finding-page">Component: Header brand &nbsp;&middot;&nbsp; <code>header.php</code></p>
+  <h3><span class="badge badge--a11y">A11y</span> #19 &mdash; Two empty brand links announced by screen readers</h3>
+  <p class="finding-detail">Per finding #4, the broken <code>&lt;a class="tclas-brand"&gt;</code> elements have zero text content. Screen readers will announce &ldquo;link&rdquo; with no accessible name twice in succession before reaching the actual logo link. Confusing for keyboard/screen reader users.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Fix the nested link issue (finding #4). As a quick interim fix, add <code>aria-hidden="true" tabindex="-1"</code> to the empty fragments.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--a11y">
+  <p class="finding-page">Pages: Homepage &nbsp;&middot;&nbsp; Footer &nbsp;&middot;&nbsp; Template strings</p>
+  <h3><span class="badge badge--a11y">A11y</span> #20 &mdash; Luxembourgish strings missing <code>lang="lb"</code> in templates</h3>
+  <p class="finding-detail">&ldquo;W&euml;llkomm&rdquo; (homepage h2), &ldquo;Mir sinn hei&rdquo; (hero eyebrow + footer tagline) are not wrapped in <code>&lt;span lang="lb"&gt;</code>. The ltz-tagger module only processes <code>the_content</code> and <code>the_excerpt</code> filters &mdash; hardcoded template strings are not covered. Screen readers will attempt to pronounce these as English.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> Manually wrap each Luxembourgish string in template files with <code>&lt;span lang="lb"&gt;</code>, or extend the ltz-tagger to also filter <code>the_title</code> and custom template hooks.</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<div class="finding finding--a11y">
+  <p class="finding-page">Pages: Homepage sections 3 and 5</p>
+  <h3><span class="badge badge--a11y">A11y</span> #21 &mdash; Illustration placeholders may confuse assistive tech</h3>
+  <p class="finding-detail"><code>tclas_illustration()</code> receives alt text (e.g., &ldquo;TCLAS members gathered around a table&rdquo;) but renders an empty <code>&lt;div&gt;</code> with no image. If the alt text is applied as an <code>aria-label</code> or <code>role="img"</code>, screen readers may describe a nonexistent image.</p>
+  <div class="finding-fix"><strong>Suggested fix:</strong> If no image is uploaded, output nothing (or output the <code>&lt;div&gt;</code> with <code>aria-hidden="true"</code> and no alt text).</div>
+  <div class="annotation-box"><p class="annotation-label">Your notes</p></div>
+</div>
+
+<!-- ─── TOP PRIORITIES ────────────────────────────────────────────────── -->
+
+<h2>Recommended Priority Order</h2>
+
+<table>
+  <thead>
+    <tr><th>#</th><th>Action</th><th>Impact</th><th>Effort</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Fix <code>/join/</code> page (add PMPro shortcode or redirect tier buttons)</td><td>Unblocks all membership signups</td><td>15 min</td></tr>
+    <tr><td>2</td><td>Swap nav labels (Membership/Join URLs)</td><td>Fixes primary navigation confusion</td><td>5 min</td></tr>
+    <tr><td>3</td><td>Add real content to About page</td><td>Fixes the &ldquo;Learn more&rdquo; dead end</td><td>30 min (copywriting)</td></tr>
+    <tr><td>4</td><td>Add content to Contact page</td><td>Fixes two footer dead ends</td><td>15 min</td></tr>
+    <tr><td>5</td><td>Fix header brand nested links</td><td>Fixes 2 empty links + orphaned text</td><td>10 min</td></tr>
+    <tr><td>6</td><td>Hide/replace illustration placeholders</td><td>Removes &ldquo;unfinished&rdquo; appearance</td><td>5 min</td></tr>
+    <tr><td>7</td><td>Standardize <code>container-tclas</code> across templates</td><td>Consistent page widths</td><td>10 min</td></tr>
+    <tr><td>8</td><td>Style the News archive header</td><td>Visual consistency with other pages</td><td>10 min</td></tr>
+    <tr><td>9</td><td>Configure newsletter form</td><td>Enables email signups</td><td>15 min</td></tr>
+    <tr><td>10</td><td>Style <code>/membership-levels/</code></td><td>Better signup experience</td><td>30 min</td></tr>
+  </tbody>
+</table>
+
+<!-- ─── NOTES ──────────────────────────────────────────────────────────── -->
+
+<h2>General Notes</h2>
+
+<div class="annotation-box" style="min-height:120px;">
+  <p class="annotation-label">Your overall notes and priorities</p>
+</div>
+
+<p style="margin-top: 3em; font-size: 9pt; color: #aaa; text-align: center;">
+  TCLAS QA Audit &middot; Generated 23 February 2026 &middot; To save as PDF: File &rarr; Print &rarr; Save as PDF
+</p>
+
+</body>
+</html>

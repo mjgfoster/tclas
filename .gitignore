@@ -1,0 +1,40 @@
+# ── WordPress core ────────────────────────────────────────────────────────────
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/xmlrpc.php
+/index.php
+/readme.html
+/license.txt
+
+# ── Sensitive config ──────────────────────────────────────────────────────────
+# wp-config-sample.php is safe to track; wp-config.php is not (holds DB creds)
+wp-config.php
+
+# ── Generated / runtime content ───────────────────────────────────────────────
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# ── Third-party plugins (ignore all, un-ignore ours) ─────────────────────────
+wp-content/plugins/*
+!wp-content/plugins/luxembourg-citizenship-quiz/
+
+# ── Themes (ignore bundled defaults, keep clausen) ───────────────────────────
+wp-content/themes/*
+!wp-content/themes/clausen/
+
+# ── Build artifacts ───────────────────────────────────────────────────────────
+node_modules/
+*.map
+
+# ── OS / editor / tooling ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+/error_log
+.idea/
+.vscode/
+.claude/

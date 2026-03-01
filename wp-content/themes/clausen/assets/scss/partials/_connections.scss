@@ -1,0 +1,149 @@
+// =============================================================================
+//  _connections.scss — "How Are We Connected" panel, cards, pills
+// =============================================================================
+
+// ── Panel ─────────────────────────────────────────────────────────────────
+.tclas-conn-panel {
+	background: var(--c-or-pale);
+	border: 1px solid var(--c-border);
+	border-top: 3px solid var(--c-aigue);
+	padding: 1.5rem;
+	margin-bottom: 1.75rem;
+
+	&--has-new { border-top-color: var(--c-crimson); }
+}
+
+.tclas-conn-panel__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: .75rem;
+	margin-bottom: 1.25rem;
+	flex-wrap: wrap;
+}
+
+.tclas-conn-panel__title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+
+.tclas-conn-panel__edit-link {
+	font-size: .8rem;
+	color: var(--c-crimson);
+	text-decoration: none;
+	font-weight: 700;
+	white-space: nowrap;
+
+	&:hover { text-decoration: underline; }
+}
+
+.tclas-conn-panel__empty {
+	font-size: .9rem;
+	color: var(--c-muted);
+
+	p { margin-bottom: .85rem; max-width: 58ch; }
+}
+
+.tclas-conn-panel__see-all {
+	font-size: .82rem;
+	margin-top: .85rem;
+	text-align: right;
+
+	a { color: var(--c-crimson); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } }
+}
+
+// ── Badge (new-connection count dot) ─────────────────────────────────────
+.tclas-conn-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.4rem;
+	height: 1.4rem;
+	padding: 0 .3rem;
+	background: var(--c-crimson);
+	color: #fff;
+	font-size: .65rem;
+	font-weight: 700;
+	border-radius: 999px;
+	line-height: 1;
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────
+.tclas-conn-cards { display: flex; flex-direction: column; gap: .85rem; }
+
+.tclas-conn-card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	padding: 1.1rem 1.25rem;
+	position: relative;
+	transition: box-shadow .2s;
+
+	&:hover { box-shadow: var(--shadow-sm); }
+
+	// Strength accent
+	&--remarkable { border-left: 4px solid var(--c-crimson); }
+	&--strong     { border-left: 4px solid var(--c-gold); }
+	&--possible   { border-left: 4px solid var(--c-aigue); }
+
+	// New/unseen
+	&--new { background: rgba(227,30,38,.03); }
+
+	// Compact variant (sidebar on My Story)
+	&--compact {
+		padding: .85rem 1rem;
+
+		.tclas-conn-card__sentence { font-size: .82rem; margin-bottom: .5rem; }
+	}
+}
+
+.tclas-conn-card__top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: .65rem;
+	gap: .5rem;
+}
+
+.tclas-conn-card__strength { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.tclas-conn-card--remarkable .tclas-conn-card__strength { color: var(--c-crimson); }
+.tclas-conn-card--strong     .tclas-conn-card__strength { color: #8a6000; }
+.tclas-conn-card--possible   .tclas-conn-card__strength { color: var(--c-aigue); }
+
+.tclas-conn-dismiss {
+	background: none;
+	border: none;
+	color: var(--c-muted);
+	font-size: 1.1rem;
+	cursor: pointer;
+	padding: .1rem .35rem;
+	line-height: 1;
+	transition: color .12s;
+
+	&:hover { color: var(--c-crimson); }
+}
+
+.tclas-conn-card__who   { display: flex; align-items: center; gap: .65rem; margin-bottom: .65rem; }
+.tclas-conn-card__avatar{ border-radius: 50%; width: 40px; height: 40px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--c-border); }
+.tclas-conn-card__name  { display: block; font-size: .9rem; color: var(--c-ardoise); line-height: 1.2; }
+.tclas-conn-card__sentence { font-size: .85rem; color: var(--c-body-text); line-height: 1.55; margin: 0 0 .75rem; max-width: 60ch; }
+.tclas-conn-card__pills { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .65rem; }
+.tclas-conn-card__actions { margin-top: .5rem; }
+
+// ── Pills ─────────────────────────────────────────────────────────────────
+.tclas-conn-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: .25rem;
+	font-size: .68rem;
+	font-weight: 700;
+	padding: .2em .65em;
+	border-radius: 999px;
+
+	&--commune { background: rgba(62,169,224,.12); color: #1a5980; }
+	&--surname  { background: rgba(227,30,38,.08); color: #8a1318; }
+}

@@ -1,0 +1,224 @@
+// =============================================================================
+//  _hub.scss — Member hub layout, sidebar, cards, gate, mobile
+// =============================================================================
+
+.tclas-hub {
+	display: flex;
+	min-height: calc(100vh - 68px);
+	align-items: stretch;
+}
+
+.tclas-hub-sidebar {
+	width: 250px;
+	flex-shrink: 0;
+	background: var(--c-ardoise-dk);
+	display: flex;
+	flex-direction: column;
+	position: sticky;
+	top: 68px;
+	height: calc(100vh - 68px);
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(235,245,252,.15) transparent;
+}
+
+.tclas-hub-sidebar__user {
+	padding: 1.1rem 1.25rem;
+	border-bottom: 1px solid rgba(235,245,252,.08);
+	display: flex;
+	align-items: center;
+	gap: .65rem;
+}
+
+.tclas-hub-sidebar__avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+	border: 2px solid rgba(235,245,252,.2);
+}
+
+.tclas-hub-sidebar__name {
+	font-weight: 700;
+	font-size: .82rem;
+	color: var(--c-or-pale);
+	line-height: 1.2;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 150px;
+	margin: 0 0 .15rem;
+}
+
+.tclas-hub-sidebar__level {
+	font-size: .6rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .07em;
+	color: var(--c-crimson);
+	background: rgba(227,30,38,.15);
+	padding: .1em .5em;
+	display: inline-block;
+}
+
+.tclas-hub-sidebar__nav {
+	padding: .5rem 0;
+	flex: 1;
+
+	li { margin: 0; list-style: none; }
+
+	a {
+		display: flex;
+		align-items: center;
+		gap: .55rem;
+		padding: .6rem 1.25rem;
+		color: rgba(235,245,252,.6);
+		text-decoration: none;
+		font-size: .82rem;
+		font-weight: 700;
+		border-left: 3px solid transparent;
+		transition: background .15s, color .15s, border-color .15s;
+
+		&:hover {
+			background: rgba(255,255,255,.04);
+			color: var(--c-or-pale);
+			border-left-color: rgba(227,30,38,.5);
+			text-decoration: none;
+		}
+
+		&.active,
+		.current-menu-item > & {
+			background: rgba(227,30,38,.12);
+			color: var(--c-or-pale);
+			border-left-color: var(--c-crimson);
+		}
+	}
+}
+
+.tclas-hub-sidebar__footer {
+	padding: .85rem 1.25rem;
+	border-top: 1px solid rgba(235,245,252,.08);
+}
+
+.tclas-hub-sidebar__logout {
+	font-size: .78rem;
+	color: rgba(235,245,252,.38);
+	text-decoration: none;
+	transition: color .15s;
+
+	&:hover { color: var(--c-or-pale); text-decoration: underline; }
+}
+
+// ── Hub content area ──────────────────────────────────────────────────────
+.tclas-hub-content {
+	flex: 1;
+	min-width: 0;
+	background: var(--c-body-bg);
+	padding: 2rem;
+}
+
+.tclas-hub-content__header {
+	background: var(--c-ardoise);
+	color: var(--c-or-pale);
+	padding: 1.5rem 2rem;
+	border-bottom: 3px solid var(--c-crimson);
+	margin: -2rem -2rem 2rem;
+}
+
+.tclas-hub-content__title    { font-size: 1.65rem; color: var(--c-or-pale); margin-bottom: .15rem; }
+.tclas-hub-content__subtitle { font-size: .72rem; color: rgba(235,245,252,.5); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin: 0; }
+
+.tclas-hub-grid {
+	display: grid;
+	grid-template-columns: repeat(2,1fr);
+	gap: 1.25rem;
+	margin-bottom: 2rem;
+
+	@media (max-width: 767px) { grid-template-columns: 1fr; }
+}
+
+.tclas-hub-card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	border-top: 3px solid var(--c-crimson);
+	padding: 1.25rem;
+}
+
+.tclas-hub-card__title {
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin-bottom: .75rem;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+
+		&:hover { color: var(--c-crimson); text-decoration: underline; }
+	}
+}
+
+.tclas-hub-card__body { font-size: .85rem; color: var(--c-muted); }
+
+.tclas-hub-section { margin-bottom: 2.5rem; }
+
+.tclas-hub-section__title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	padding-bottom: .65rem;
+	border-bottom: 2px solid var(--c-border);
+	margin-bottom: 1.25rem;
+}
+
+// ── Mobile sidebar ────────────────────────────────────────────────────────
+.tclas-hub-mobile-toggle { display: none; margin-bottom: 1rem; }
+
+.tclas-hub-sidebar-backdrop {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,.5);
+	z-index: 1044;
+
+	&.is-visible { display: block; }
+}
+
+@media (max-width: 991px) {
+	.tclas-hub-sidebar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		z-index: 1045;
+		transform: translateX(-100%);
+		box-shadow: 4px 0 20px rgba(0,0,0,.3);
+		transition: transform .3s ease;
+
+		&.is-open { transform: translateX(0); }
+	}
+
+	.tclas-hub-mobile-toggle { display: inline-flex; }
+}
+
+// ── Member gate ───────────────────────────────────────────────────────────
+.tclas-member-gate {
+	text-align: center;
+	padding: 3rem 2rem;
+	background: var(--c-body-bg);
+	border: 2px solid var(--c-border);
+	margin: 2rem 0;
+}
+
+.tclas-member-gate__image {
+	width: 140px;
+	height: 140px;
+	margin: 0 auto 1.5rem;
+
+	&.tclas-illus-placeholder { border-radius: 50%; }
+}
+
+.tclas-member-gate__title  { font-size: 1.5rem; color: var(--c-ardoise); margin-bottom: .65rem; }
+.tclas-member-gate__desc   { color: var(--c-muted); max-width: 45ch; margin: 0 auto 1.5rem; }
+.tclas-member-gate__actions{ display: flex; justify-content: center; flex-wrap: wrap; gap: .75rem; }

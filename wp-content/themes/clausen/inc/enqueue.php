@@ -1,0 +1,150 @@
+<?php
+/**
+ * Enqueue scripts & styles
+ *
+ * Pre-compiled theme — no build step required.
+ * Bootstrap loaded from CDN. Adobe Fonts optional (set kit ID in Theme Options).
+ * Adobe Fonts kit ID: pck6hdf — https://use.typekit.net/pck6hdf.css
+ *
+ * @package TCLAS
+ */
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+function tclas_enqueue_assets(): void {
+
+	// ── Adobe Fonts — Proxima Nova (sans) + Freight Text Pro (serif) ────────
+	// Kit ID stored in ACF Theme Options field 'adobe_fonts_kit_id'.
+	// Update the kit in Adobe Fonts → Web Projects to include proxima-nova
+	// and freight-text-pro, then paste the new kit ID in Theme Options.
+	// CSS vars: --font-sans (Proxima Nova), --font-serif (Freight Text Pro).
+	$kit_id = 'pck6hdf';
+	if ( function_exists( 'get_field' ) ) {
+		$acf_kit = sanitize_text_field( (string) get_field( 'adobe_fonts_kit_id', 'option' ) );
+		if ( $acf_kit ) {
+			$kit_id = $acf_kit;
+		}
+	}
+
+	wp_enqueue_style(
+		'tclas-adobe-fonts',
+		'https://use.typekit.net/' . $kit_id . '.css',
+		[],
+		null
+	);
+
+	// ── Bootstrap 5.3 CSS — CDN ───────────────────────────────────────────
+	wp_enqueue_style(
+		'bootstrap',
+		'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+		[ 'tclas-adobe-fonts' ],
+		null
+	);
+
+	// ── Compiled theme stylesheet ─────────────────────────────────────────
+	wp_enqueue_style(
+		'tclas-main',
+		TCLAS_ASSETS . '/css/main.css',
+		[ 'bootstrap' ],
+		TCLAS_VERSION
+	);
+
+	// Inject lion watermark SVG URL dynamically so path survives theme/domain moves.
+	$lion_url = get_template_directory_uri() . '/assets/images/lion-watermark.svg';
+	wp_add_inline_style(
+		'tclas-main',
+		"body::after { background-image: url('" . esc_url( $lion_url ) . "'); }"
+	);
+
+	// ── The Events Calendar overrides (TEC pages only) ────────────────────
+	if ( class_exists( 'Tribe__Events__Main' ) &&
+		( is_post_type_archive( Tribe__Events__Main::POSTTYPE ) || is_singular( Tribe__Events__Main::POSTTYPE ) || is_tax( Tribe__Events__Main::TAXONOMY ) )
+	) {
+		wp_enqueue_style(
+			'tclas-tribe-events',
+			TCLAS_ASSETS . '/css/tribe-events.css',
+			[ 'tclas-main' ],
+			TCLAS_VERSION
+		);
+	}
+
+	// ── Bootstrap 5.3 JS — CDN ────────────────────────────────────────────
+	wp_enqueue_script(
+		'bootstrap',
+		'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
+		[],
+		null,
+		true
+	);
+
+	// ── Theme JavaScript ──────────────────────────────────────────────────
+	wp_enqueue_script(
+		'tclas-main',
+		TCLAS_ASSETS . '/js/main.js',
+		[ 'bootstrap' ],
+		TCLAS_VERSION,
+		true
+	);
+
+	wp_localize_script( 'tclas-main', 'tclasData', [
+		'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+		'nonce'       => wp_create_nonce( 'tclas_nonce' ),
+		'isLoggedIn'  => is_user_logged_in(),
+		'nationalDay' => tclas_get_national_day_data(),
+		'themeUri'    => TCLAS_URI,
+		'referralUrl' => tclas_get_referral_url(),
+		'strings'     => [
+			'openMenu'   => __( 'Open menu',   'tclas' ),
+			'closeMenu'  => __( 'Close menu',  'tclas' ),
+			'copied'     => __( 'Copied!',     'tclas' ),
+			'copyUrl'    => __( 'Copy link',   'tclas' ),
+			'formErrors' => __( 'Please correct the errors below.', 'tclas' ),
+			// Connections feature
+			'connDismissed'  => __( 'Connection dismissed.', 'tclas' ),
+			'connSaving'     => __( 'Saving…', 'tclas' ),
+			'connSaved'      => __( 'Saved!', 'tclas' ),
+		],
+	] );
+
+	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'tclas_enqueue_assets' );
+
+/**
+ * Editor assets.
+ */
+function tclas_enqueue_editor_assets(): void {
+	wp_enqueue_style(
+		'tclas-editor',
+		TCLAS_ASSETS . '/css/main.css',
+		[],
+		TCLAS_VERSION
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'tclas_enqueue_editor_assets' );
+
+/**
+ * Resource hints — preconnect to CDNs.
+ */
+function tclas_resource_hints( array $urls, string $relation_type ): array {
+	if ( 'preconnect' === $relation_type ) {
+		$urls[] = [ 'href' => 'https://cdn.jsdelivr.net', 'crossorigin' => '' ];
+		$urls[] = [ 'href' => 'https://use.typekit.net',  'crossorigin' => '' ];
+		$urls[] = [ 'href' => 'https://p.typekit.net',    'crossorigin' => '' ];
+	}
+	return $urls;
+}
+add_filter( 'wp_resource_hints', 'tclas_resource_hints', 10, 2 );
+
+/**
+ * SiteGround Speed Optimizer exclusions.
+ */
+function tclas_speed_optimizer_exclusions( array $excluded ): array {
+	$excluded[] = 'cdn.jsdelivr.net';
+	$excluded[] = 'use.typekit.net';
+	return $excluded;
+}
+add_filter( 'sgo_js_minify_exclude',  'tclas_speed_optimizer_exclusions' );
+add_filter( 'sgo_css_minify_exclude', 'tclas_speed_optimizer_exclusions' );

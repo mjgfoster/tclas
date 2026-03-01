@@ -1,0 +1,377 @@
+// =============================================================================
+//  _sections.scss — Homepage sections: welcome, events, news, membership,
+//                   join CTA, national day
+// =============================================================================
+
+// ── Welcome band ──────────────────────────────────────────────────────────
+.tclas-welcome {
+	background: var(--c-or-pale);
+	padding: var(--pad-y) 0;
+}
+
+.tclas-welcome__inner {
+	display: grid;
+	grid-template-columns: 1fr 420px;
+	gap: 3.5rem;
+	align-items: center;
+
+	@media (max-width: 991px) { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.tclas-welcome__title  { color: var(--c-ardoise); }
+.tclas-welcome__body   { color: var(--c-body-text); font-size: 1.05rem; max-width: none; }
+.tclas-welcome__lux    { font-size: .8rem; font-weight: 700; color: var(--c-muted); font-style: italic; margin-top: 1.25rem; display: block; }
+
+.tclas-welcome__illustration {
+	width: 100%;
+	aspect-ratio: 5/4;
+	overflow: hidden;
+	background: var(--c-or-pale-dk);
+
+	.tclas-illustration-placeholder { min-height: 280px; width: 100%; height: 100%; background: var(--c-or-pale-dk); }
+	img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+// ── Events section ────────────────────────────────────────────────────────
+.tclas-events {
+	background: var(--c-white);
+	padding: var(--pad-y) 0;
+}
+
+.tclas-events__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.tclas-events__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+	gap: 1.25rem;
+
+	@media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// Event card
+.tclas-event-card {
+	display: flex;
+	background: #fff;
+	border: 1px solid var(--c-border);
+	position: relative;
+	transition: box-shadow .2s, transform .2s;
+
+	&:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+	&--members { border-left: 4px solid var(--c-crimson); }
+}
+
+.tclas-event-card__date {
+	background: var(--c-crimson);
+	color: #fff;
+	min-width: 62px;
+	padding: .9rem .65rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	text-align: center;
+
+	.day   { display: block; font-size: 1.65rem; font-weight: 700; line-height: 1; }
+	.month { display: block; font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-top: .15rem; }
+	.year  { display: block; font-size: .58rem; color: rgba(255,255,255,.65); margin-top: .1rem; }
+}
+
+.tclas-event-card__body { padding: .9rem 1.1rem; flex: 1; min-width: 0; }
+
+.tclas-event-card__category {
+	display: block;
+	font-size: .62rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	color: var(--c-crimson);
+	margin-bottom: .3rem;
+}
+
+.tclas-event-card__title {
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin-bottom: .35rem;
+	line-height: 1.25;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+
+		&::after { content: ''; position: absolute; inset: 0; }
+		&:hover  { color: var(--c-crimson); }
+	}
+}
+
+.tclas-event-card__meta { font-size: .8rem; color: var(--c-muted); display: flex; flex-wrap: wrap; gap: .3rem .85rem; }
+
+.tclas-events__empty {
+	text-align: center;
+	padding: 3rem 1.5rem;
+	color: var(--c-muted);
+	grid-column: 1 / -1;
+
+	.tclas-lux            { display: block; font-size: 1.15rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .35rem; }
+	.tclas-lux-translation{ font-size: .875rem; font-style: italic; }
+}
+
+// ── News section ──────────────────────────────────────────────────────────
+.tclas-news {
+	background: var(--c-body-bg);
+	padding: var(--pad-y) 0;
+}
+
+.tclas-news__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.tclas-news__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+	gap: 1.25rem;
+	margin-top: 2rem;
+
+	@media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+// Post card
+.tclas-post-card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	position: relative;
+	transition: box-shadow .2s, transform .2s;
+
+	&:hover {
+		box-shadow: var(--shadow-md);
+		transform: translateY(-2px);
+
+		.tclas-post-card__image img { transform: scale(1.04); }
+	}
+}
+
+.tclas-post-card__image {
+	aspect-ratio: 16/9;
+	overflow: hidden;
+	flex-shrink: 0;
+
+	img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+
+	&--placeholder {
+		background: var(--c-or-pale);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		aspect-ratio: 16/9;
+		font-size: 2.5rem;
+		opacity: .4;
+	}
+}
+
+.tclas-post-card__body { padding: 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
+.tclas-post-card__meta { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; flex-wrap: wrap; }
+
+.tclas-post-card__category {
+	font-size: .62rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	color: var(--c-crimson);
+	text-decoration: none;
+
+	&:hover { text-decoration: underline; }
+}
+
+.tclas-post-card__date { font-size: .78rem; color: var(--c-muted); }
+
+.tclas-post-card__title {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin-bottom: .5rem;
+	line-height: 1.3;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+
+		&::after { content: ''; position: absolute; inset: 0; }
+		&:hover  { color: var(--c-crimson); }
+	}
+}
+
+.tclas-post-card__excerpt {
+	font-size: .85rem;
+	color: var(--c-muted);
+	line-height: 1.55;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	flex: 1;
+	max-width: none;
+}
+
+// ── Membership section ────────────────────────────────────────────────────
+.tclas-membership {
+	background: var(--c-ardoise);
+	padding: var(--pad-y-lg) 0;
+	color: rgba(235,245,252,.85);
+
+	h2         { color: var(--c-or-pale); }
+	.tclas-eyebrow { color: var(--c-aigue); }
+}
+
+.tclas-membership__illustration {
+	width: 100%;
+	height: 240px;
+	margin-bottom: 2.5rem;
+	overflow: hidden;
+	position: relative;
+
+	.tclas-illustration-placeholder { width: 100%; height: 100%; min-height: 240px; background: rgba(255,255,255,.05); }
+	img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+}
+
+// Tier cards
+.tclas-tiers {
+	display: grid;
+	grid-template-columns: repeat(3,1fr);
+	gap: 1.25rem;
+	margin-top: 2rem;
+
+	@media (max-width: 767px) { grid-template-columns: 1fr; max-width: 380px; margin-left: auto; margin-right: auto; }
+}
+
+.tclas-tier {
+	background: rgba(255,255,255,.06);
+	border: 1px solid rgba(235,245,252,.12);
+	border-top: 3px solid rgba(235,245,252,.2);
+	display: flex;
+	flex-direction: column;
+	transition: border-color .2s, background .2s;
+
+	&:hover { background: rgba(255,255,255,.1); border-top-color: var(--c-or-pale); }
+
+	&--featured {
+		border-color: rgba(227,30,38,.5);
+		border-top-color: var(--c-crimson);
+		background: rgba(227,30,38,.1);
+		position: relative;
+
+		&:hover { background: rgba(227,30,38,.14); }
+	}
+}
+
+.tclas-tier__badge {
+	position: absolute;
+	top: -11px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: var(--c-crimson);
+	color: #fff;
+	font-size: .62rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	padding: .2em .85em;
+	white-space: nowrap;
+}
+
+.tclas-tier__header { padding: 1.5rem 1.5rem 1rem; text-align: center; }
+.tclas-tier__invite { font-size: .9rem; font-style: italic; color: rgba(235,245,252,.75); margin-bottom: .85rem; display: block; }
+.tclas-tier__name   { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
+.tclas-tier__price  { font-size: 2.5rem; font-weight: 700; color: var(--c-or-pale); line-height: 1; }
+.tclas-tier__period { font-size: .8rem; color: rgba(235,245,252,.45); }
+.tclas-tier__body   { padding: 0 1.5rem 1.5rem; flex: 1; }
+
+.tclas-tier__features {
+	list-style: none;
+	padding: 0;
+	margin: 0 0 1.5rem;
+
+	li {
+		display: flex;
+		align-items: flex-start;
+		gap: .5rem;
+		padding: .35rem 0;
+		font-size: .82rem;
+		color: rgba(235,245,252,.78);
+		border-bottom: 1px solid rgba(235,245,252,.07);
+
+		&:last-child  { border-bottom: none; }
+		&::before     { content: '✓'; color: var(--c-vert); font-weight: 700; flex-shrink: 0; margin-top: .05em; }
+
+		&.unavailable {
+			color: rgba(235,245,252,.3);
+			&::before { content: '–'; color: rgba(235,245,252,.25); }
+		}
+	}
+}
+
+.tclas-tier__cta { padding: 0 1.5rem 1.5rem; .btn { width: 100%; } }
+
+// ── Join CTA ──────────────────────────────────────────────────────────────
+.tclas-join-cta {
+	background: var(--c-crimson);
+	padding: 3rem 0;
+	text-align: center;
+
+	h2 { color: #fff; }
+	p  { color: rgba(255,255,255,.88); max-width: none; }
+}
+
+.tclas-join-cta__actions {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-top: 1.5rem;
+}
+
+// ── National Day banner ───────────────────────────────────────────────────
+.tclas-nd-banner {
+	background: var(--c-ardoise);
+	color: var(--c-or-pale);
+	padding: var(--pad-y-lg) 0;
+	position: relative;
+	overflow: hidden;
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 5px;
+		background: linear-gradient(to right, #EF3340 33.33%, #fff 33.33% 66.66%, #00A3E0 66.66%);
+	}
+
+	h2 { color: var(--c-or-pale); }
+}
+
+.tclas-countdown {
+	display: flex;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+	margin: 1.5rem 0;
+}
+
+.tclas-countdown__num   { display: block; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; color: #fff; line-height: 1; }
+.tclas-countdown__label { display: block; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.5); margin-top: .2rem; }

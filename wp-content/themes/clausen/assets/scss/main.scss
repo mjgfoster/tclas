@@ -1,0 +1,23 @@
+// =============================================================================
+//  main.scss — Clausen v1.2 — Ciel Bleu design system
+//  Compiles to: assets/css/main.css
+// =============================================================================
+
+@use 'partials/config'      as *;
+@use 'partials/reset';
+@use 'partials/a11y';
+@use 'partials/typography';
+@use 'partials/layout';
+@use 'partials/buttons';
+@use 'partials/forms';
+@use 'partials/header';
+@use 'partials/footer';
+@use 'partials/hero';
+@use 'partials/sections';
+@use 'partials/hub';
+@use 'partials/connections';
+@use 'partials/story';
+@use 'partials/referral';
+@use 'partials/pages';
+@use 'partials/utilities';
+@use 'partials/vendor';

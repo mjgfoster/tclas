@@ -1,0 +1,70 @@
+// =============================================================================
+//  _typography.scss — Headings, body copy, links, eyebrow, ruled decorator
+// =============================================================================
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: var(--font-sans);
+	font-weight: 700;
+	line-height: 1.2;
+	color: var(--c-ardoise);
+	margin: 0 0 .75rem;
+}
+h1 { font-size: clamp(1.9rem, 4.5vw, 2.75rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+h3 { font-size: clamp(1.2rem, 2.2vw, 1.6rem); }
+h4 { font-size: 1.15rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: .9rem; }
+
+p { margin: 0 0 1rem; max-width: 68ch; }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--c-crimson); text-decoration: underline; text-underline-offset: 3px; }
+a:hover { color: var(--c-crimson-dk); }
+
+ul,ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+li { margin-bottom: .25rem; }
+
+blockquote {
+	border-left: 4px solid var(--c-crimson);
+	padding: 1rem 1.5rem;
+	margin: 1.75rem 0;
+	background: var(--c-or-pale);
+	font-style: italic;
+	color: var(--c-muted);
+}
+
+// ── Eyebrow label ─────────────────────────────────────────────────────────
+.tclas-eyebrow {
+	display: inline-block;
+	font-size: .7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: var(--c-crimson);
+	margin-bottom: .6rem;
+
+	&--light { color: var(--c-or-pale); }
+	&--gold  { color: var(--c-gold); }
+}
+
+// ── Ruled underline decorator ─────────────────────────────────────────────
+.tclas-ruled {
+	position: relative;
+	padding-bottom: 1rem;
+	margin-bottom: 1.75rem;
+
+	&::after {
+		content: '';
+		display: block;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 48px;
+		height: 3px;
+		background: var(--c-crimson);
+	}
+
+	&--center::after { left: 50%; transform: translateX(-50%); }
+	&--light::after  { background: var(--c-or-pale); }
+}

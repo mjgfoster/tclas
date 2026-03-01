@@ -1,0 +1,184 @@
+// =============================================================================
+//  _utilities.scss — Badges, breadcrumb, pagination, tabs, directory, docs
+// =============================================================================
+
+// ── Badges ────────────────────────────────────────────────────────────────
+.tclas-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: .25rem;
+	font-size: .62rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .07em;
+	padding: .2em .6em;
+	line-height: 1.4;
+	white-space: nowrap;
+
+	&--crimson  { background: var(--c-crimson);  color: #fff; }
+	&--ardoise  { background: var(--c-ardoise);  color: var(--c-or-pale); }
+	&--vert     { background: var(--c-vert);     color: #fff; }
+	&--aigue    { background: var(--c-aigue);    color: #fff; }
+	&--outline  { background: transparent; border: 1.5px solid var(--c-crimson); color: var(--c-crimson); }
+	&--or-pale  { background: var(--c-or-pale);  color: var(--c-ardoise); }
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────
+.tclas-breadcrumb {
+	font-size: .8rem;
+	color: var(--c-muted);
+	margin-bottom: 1.25rem;
+
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: .3rem;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	li::after { content: '/'; color: var(--c-border-dk); margin-left: .3rem; }
+	li:last-child::after { display: none; }
+
+	a { color: var(--c-crimson); text-decoration: underline; }
+
+	&--light { color: rgba(235,245,252,.6); a { color: rgba(235,245,252,.85); } }
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────
+.tclas-pagination {
+	display: flex;
+	justify-content: center;
+	gap: .3rem;
+	margin-top: 2.5rem;
+	flex-wrap: wrap;
+
+	.page-numbers {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.2rem;
+		height: 2.2rem;
+		padding: 0 .6rem;
+		border: 2px solid var(--c-border);
+		color: var(--c-ardoise);
+		text-decoration: none;
+		font-weight: 700;
+		font-size: .82rem;
+		transition: all .15s;
+
+		&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
+		&.current { background: var(--c-crimson); border-color: var(--c-crimson); color: #fff; }
+	}
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────
+.tclas-tabs {
+	border-bottom: 2px solid var(--c-border);
+	margin-bottom: 1.75rem;
+	display: flex;
+	flex-wrap: wrap;
+	overflow-x: auto;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar { display: none; }
+}
+
+.tclas-tab {
+	display: inline-flex;
+	align-items: center;
+	padding: .65rem 1.1rem;
+	font-weight: 700;
+	font-size: .82rem;
+	color: var(--c-muted);
+	text-decoration: none;
+	border-bottom: 3px solid transparent;
+	margin-bottom: -2px;
+	white-space: nowrap;
+	transition: color .15s, border-color .15s;
+
+	&:hover       { color: var(--c-crimson); text-decoration: none; }
+	&.is-active   { color: var(--c-crimson); border-bottom-color: var(--c-crimson); }
+}
+
+// ── Directory (old-style) ─────────────────────────────────────────────────
+.tclas-directory-filters {
+	display: flex;
+	gap: .4rem;
+	flex-wrap: wrap;
+	margin-bottom: 1.25rem;
+	align-items: center;
+}
+
+.tclas-filter-btn {
+	display: inline-flex;
+	align-items: center;
+	padding: .28rem .8rem;
+	border: 2px solid var(--c-border);
+	background: none;
+	font-size: .8rem;
+	font-weight: 700;
+	color: var(--c-body-text);
+	cursor: pointer;
+	transition: all .15s;
+	font-family: var(--font-sans);
+
+	&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
+	&.active{ background: var(--c-crimson); border-color: var(--c-crimson); color: #fff; }
+}
+
+.tclas-directory-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+	gap: 1.1rem;
+}
+
+.tclas-member-card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	padding: 1.1rem;
+	display: flex;
+	align-items: flex-start;
+	gap: .85rem;
+	transition: box-shadow .2s;
+
+	&:hover { box-shadow: var(--shadow-sm); }
+}
+
+.tclas-member-card__avatar  { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--c-border); flex-shrink: 0; }
+.tclas-member-card__name    { font-size: .9rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tclas-member-card__location{ font-size: .78rem; color: var(--c-muted); }
+.tclas-member-card__level   { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-crimson); margin-top: .2rem; }
+.tclas-member-card__commune { font-size: .6rem; color: var(--c-aigue); font-weight: 700; margin-top: .15rem; }
+
+// ── Documents ─────────────────────────────────────────────────────────────
+.tclas-doc-list { display: flex; flex-direction: column; gap: .65rem; }
+
+.tclas-doc-item {
+	display: flex;
+	align-items: center;
+	gap: .85rem;
+	padding: .85rem 1.1rem;
+	background: #fff;
+	border: 1px solid var(--c-border);
+	text-decoration: none;
+	color: var(--c-ardoise);
+	transition: border-color .15s, box-shadow .15s;
+
+	&:hover { border-color: var(--c-crimson); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--c-ardoise); }
+}
+
+.tclas-doc-item__icon     { width: 36px; height: 36px; background: var(--c-body-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; color: var(--c-crimson); }
+.tclas-doc-item__name     { font-weight: 700; font-size: .85rem; display: block; }
+.tclas-doc-item__meta     { font-size: .7rem; color: var(--c-muted); margin-top: .1rem; display: flex; gap: .65rem; }
+.tclas-doc-item__download { flex-shrink: 0; font-size: .82rem; font-weight: 700; color: var(--c-crimson); margin-left: auto; }
+
+// ── Print ─────────────────────────────────────────────────────────────────
+@media print {
+	.tclas-header,.tclas-footer,.tclas-hub-sidebar,.skip-link,.tclas-renewal-banner { display: none !important; }
+	body { background: #fff; color: #000; }
+	a { color: #000; }
+	a[href]::after { content: ' (' attr(href) ')'; font-size: .8em; }
+}

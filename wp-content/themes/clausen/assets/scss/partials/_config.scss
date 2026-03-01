@@ -1,0 +1,46 @@
+// =============================================================================
+//  _config.scss — Design tokens, SASS breakpoint vars & bp() mixin
+// =============================================================================
+
+// ── CSS custom properties (runtime tokens) ────────────────────────────────
+:root {
+	--c-crimson:      #E31E26;   // Logo red / Luxembourg flag red
+	--c-crimson-dk:   #B8161C;   // Hover/active state
+	--c-ardoise:      #0A2540;   // Dark navy — header, footer, dark sections
+	--c-ardoise-dk:   #061828;   // Deeper navy — hover states
+	--c-or-pale:      #EBF5FC;   // Sky tint — light section backgrounds
+	--c-or-pale-dk:   #D4EAFA;   // Slightly deeper sky tint
+	--c-aigue:        #3ea9e0;   // Logo sky blue — eyebrows, links, accents
+	--c-vert:         #3D6B4F;   // Green — success / check marks
+	--c-gold:         #D4AF37;   // MN antique gold — map markers, accents
+	--c-white:        #FFFFFF;
+	--c-body-bg:      #F4F9FD;   // Very light blue body background
+	--c-body-text:    #0A2540;   // Dark navy body text
+	--c-muted:        #4E718A;   // Blue-gray muted text
+	--c-border:       #C8DFF0;   // Light blue-gray borders
+	--c-border-dk:    #A0C8E0;   // Slightly darker border
+	--c-input-border: #7AAAC8;   // Input field borders
+	--radius: 8px;
+	--shadow-sm: 0 1px 4px rgba(10,37,64,.08);
+	--shadow-md: 0 4px 16px rgba(10,37,64,.12);
+	--shadow-lg: 0 8px 32px rgba(10,37,64,.16);
+	--font-sans:  'proxima-nova', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--font-serif: 'freight-text-pro', Georgia, 'Times New Roman', serif;
+	--pad-y:    4rem;
+	--pad-y-lg: 5.5rem;
+	--pad-y-sm: 2.5rem;
+}
+
+// ── SASS breakpoint variables ──────────────────────────────────────────────
+$bp-xs:  480px;
+$bp-sm:  600px;
+$bp-md:  768px;
+$bp-lg:  992px;
+$bp-xl: 1200px;
+
+// ── Breakpoint mixin ───────────────────────────────────────────────────────
+@mixin bp($size) {
+	@media (max-width: #{$size}) {
+		@content;
+	}
+}

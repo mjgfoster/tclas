@@ -1,0 +1,324 @@
+/* Luxembourg Citizenship Quiz — v1.4
+ * Styled to match the TCLAS / Clausen theme design system.
+ * Uses theme CSS custom properties where available, with fallbacks.
+ * Fallback hex values reflect the current Ciel Bleu palette.
+ * Border-radius uses --radius (8px) global token. Progress bar uses 0 intentionally.
+ */
+
+/* ── Box-sizing reset scoped to quiz ───────────────────────────────────── */
+
+.cq_quiz_container *,
+.cq_quiz_container *::before,
+.cq_quiz_container *::after {
+    box-sizing: border-box;
+}
+
+/* ── Outer container ────────────────────────────────────────────────────── */
+
+.cq_quiz_container {
+    max-width: 640px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid var(--c-border, #ddd);
+    border-radius: var(--radius, 8px);
+    font-family: inherit;
+    color: var(--c-body-text, #1a1a1a);
+}
+
+/* ── Progress bar ──────────────────────────────────────────────────────── */
+
+.cq_progress_wrapper {
+    width: 100%;
+    height: 6px;
+    background: var(--c-or-pale, #EBF5FC);
+    border-radius: 0; /* Sharp corners */
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.cq_progress_bar {
+    height: 100%;
+    background: var(--c-crimson, #E31E26);
+    border-radius: 0; /* Sharp corners */
+    transition: width 0.35s ease;
+}
+
+/* ── Question text ─────────────────────────────────────────────────────── */
+
+.cq_question_text {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    font-weight: 600;
+    margin: 0 0 1.5rem;
+    color: var(--c-ardoise, #0A2540);
+}
+
+/* ── Form Inputs ────────────────────────────────────────────────────────── */
+
+.cq_form_group {
+    margin-bottom: 1rem;
+}
+
+.cq_form_group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    color: var(--c-ardoise, #0A2540);
+}
+
+.cq_label_hint {
+    font-weight: normal;
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+.cq_input_field,
+.cq_select_field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--c-border, #ddd);
+    border-radius: var(--radius, 8px);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: #fff;
+    color: var(--c-ardoise, #0A2540);
+}
+
+/* ── Born-before-1969 checkbox ──────────────────────────────────────────── */
+
+.cq_checkbox_label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--c-ardoise, #0A2540);
+    margin-bottom: 0.4rem;
+}
+
+.cq_checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    margin-top: 0.1rem;
+    accent-color: var(--c-crimson, #E31E26);
+    cursor: pointer;
+}
+
+.cq_checkbox_label + .cq_label_hint {
+    margin-top: 0;
+    margin-left: 1.85rem; /* indent under checkbox */
+}
+
+/* ── Born-before-1969 pill toggle ──────────────────────────────────────── */
+
+.cq_toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0.25rem;
+}
+
+.cq_toggle__track {
+    width: 52px;
+    height: 28px;
+    border-radius: 14px;
+    background: var(--c-border, #ccc);
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.cq_toggle[aria-checked="true"] .cq_toggle__track {
+    background: var(--c-crimson, #E31E26);
+}
+
+.cq_toggle__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+}
+
+.cq_toggle[aria-checked="true"] .cq_toggle__thumb {
+    transform: translateX(24px);
+}
+
+.cq_toggle__label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--c-ardoise, #0A2540);
+}
+
+.cq_input_field:focus-visible,
+.cq_select_field:focus-visible {
+    outline: 3px solid var(--c-crimson, #E31E26);
+    outline-offset: 2px;
+    border-color: var(--c-crimson, #E31E26);
+    box-shadow: 0 0 0 5px rgba(227, 30, 38, 0.18);
+}
+
+/* ── Button container ──────────────────────────────────────────────────── */
+
+.cq_button_container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+
+/* ── Option buttons ────────────────────────────────────────────────────── */
+
+.cq_option_btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    color: var(--c-ardoise, #0A2540);
+    border: 1px solid var(--c-border, #ddd);
+    border-radius: var(--radius, 8px);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.cq_option_btn:hover {
+    background: var(--c-ardoise, #0A2540);
+    border-color: var(--c-ardoise, #0A2540);
+    color: var(--c-or-pale, #EBF5FC);
+}
+
+.cq_submit_btn {
+    background: var(--c-ardoise, #0A2540);
+    color: var(--c-or-pale, #EBF5FC);
+    text-align: center;
+    font-weight: bold;
+}
+
+.cq_submit_btn:hover {
+    background: var(--c-crimson, #E31E26);
+    border-color: var(--c-crimson, #E31E26);
+    color: #fff;
+}
+
+/* ── Restart + Back buttons ────────────────────────────────────────────── */
+
+.cq_restart_btn,
+.cq_back_btn {
+    display: inline-block;
+    align-self: flex-start;
+    background: transparent;
+    color: var(--c-ardoise, #0A2540);
+    border: 1px solid var(--c-ardoise, #0A2540);
+    border-radius: var(--radius, 8px);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cq_restart_btn:hover,
+.cq_back_btn:hover {
+    background: var(--c-ardoise, #0A2540);
+    color: var(--c-or-pale, #EBF5FC);
+}
+
+/* ── Focus styles ──────────────────────────────────────────────────────── */
+
+.cq_option_btn:focus-visible,
+.cq_restart_btn:focus-visible,
+.cq_back_btn:focus-visible,
+.cq_toggle:focus-visible {
+    outline: 3px solid var(--c-crimson, #E31E26);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(227, 30, 38, 0.18);
+}
+
+/* ── Outcome screen body text ──────────────────────────────────────────── */
+
+.cq_outcome_body {
+    margin: 0 0 1.5rem;
+    line-height: 1.75;
+    color: var(--c-ardoise, #0A2540);
+    font-size: 0.975rem;
+}
+
+/* ── Member CTA box ────────────────────────────────────────────────────── */
+
+.cq_cta_box {
+    background: var(--c-or-pale, #EBF5FC);
+    border-left: 3px solid var(--c-crimson, #E31E26);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.cq_cta_text {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--c-ardoise, #0A2540);
+}
+
+.cq_cta_btn {
+    text-decoration: none;
+    text-align: center;
+}
+
+/* ── Legal disclaimer ──────────────────────────────────────────────────── */
+
+.cq_disclaimer {
+    font-size: 0.825rem;
+    line-height: 1.6;
+    color: #555;
+    border-top: 1px solid var(--c-border, #ddd);
+    padding-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cq_disclaimer a {
+    color: var(--c-crimson, #E31E26);
+    text-decoration: underline;
+}
+
+.cq_disclaimer a:hover {
+    color: var(--c-ardoise, #0A2540);
+}
+
+/* ── Email results section ─────────────────────────────────────────────── */
+
+.cq_email_section {
+    border-top: 1px solid var(--c-border, #ddd);
+    padding-top: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.cq_email_label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--c-ardoise, #0A2540);
+    margin: 0 0 0.75rem;
+    display: block;
+}
+
+.cq_email_status {
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0.5rem 0 0;
+    min-height: 1.2em;
+}

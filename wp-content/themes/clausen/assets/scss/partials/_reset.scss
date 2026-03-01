@@ -1,0 +1,48 @@
+// =============================================================================
+//  _reset.scss — Box model, body, base elements
+// =============================================================================
+
+*,*::before,*::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+	font-family: var(--font-serif);
+	font-size: 1.125rem;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--c-body-text);
+	background: var(--c-body-bg);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+// UI chrome stays on sans-serif
+button,input,select,textarea,label,
+.btn,.tclas-eyebrow,.tclas-story-legend,.tclas-story-hint,
+.tclas-story-label,.tclas-trip-label,.tclas-story-social-label,
+.tclas-story-privacy-label,.tclas-story-radio,.tclas-story-checkbox,
+.tclas-alert,.tclas-tier,.tclas-conn-card,.tclas-referral-card,
+.site-nav,.site-footer,.pmpro_content_message {
+	font-family: var(--font-sans);
+}
+
+// Fixed lion watermark — SVG URL injected via wp_add_inline_style() in enqueue.php
+body::after {
+	content: '';
+	position: fixed;
+	bottom: -60px;
+	right: -40px;
+	width: 320px;
+	height: 320px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	opacity: .05;
+	pointer-events: none;
+	z-index: -1;
+}
+
+img,video,svg { max-width: 100%; height: auto; display: block; }
+figure { margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+table { border-collapse: collapse; width: 100%; }

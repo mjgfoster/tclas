@@ -1,0 +1,213 @@
+// =============================================================================
+//  _vendor.scss — Third-party plugin overrides: TEC base, bbPress, PMPro, MC4WP
+// =============================================================================
+
+// ── TEC base accent (full overrides in tribe-events.scss) ─────────────────
+.tribe-events {
+	--tec-color-accent-primary: var(--c-crimson);
+	font-family: var(--font-sans) !important;
+}
+
+.tribe-events .tribe-events-c-nav__next,
+.tribe-events .tribe-events-c-nav__prev {
+	color: var(--c-crimson) !important;
+	border-color: var(--c-crimson) !important;
+}
+
+.tribe-events .tribe-events-c-nav__next:hover,
+.tribe-events .tribe-events-c-nav__prev:hover {
+	background: var(--c-crimson) !important;
+	color: #fff !important;
+}
+
+.tribe-events .tribe-events-c-small-cta__link {
+	background: var(--c-crimson) !important;
+	border-color: var(--c-crimson) !important;
+	color: #fff !important;
+	border-radius: var(--radius, 8px) !important;
+	font-weight: 700 !important;
+}
+
+.tribe-events .tribe-event-url,
+.tribe-events .tribe-events-calendar-list__event-title-link {
+	color: var(--c-ardoise) !important;
+	text-decoration: none !important;
+}
+
+.tribe-events .tribe-event-url:hover,
+.tribe-events .tribe-events-calendar-list__event-title-link:hover {
+	color: var(--c-crimson) !important;
+	text-decoration: none !important;
+}
+
+.tribe-events .tribe-events-calendar-month__day--current .tribe-events-calendar-month__day-date {
+	background: var(--c-crimson) !important;
+	color: #fff !important;
+}
+
+// ── bbPress ───────────────────────────────────────────────────────────────
+#bbpress-forums {
+	font-family: var(--font-sans) !important;
+	font-size: .9rem !important;
+}
+
+#bbpress-forums .bbp-forum-title a,
+#bbpress-forums .bbp-topic-title a {
+	color: var(--c-ardoise) !important;
+	font-weight: 700 !important;
+	text-decoration: none !important;
+}
+
+#bbpress-forums .bbp-forum-title a:hover,
+#bbpress-forums .bbp-topic-title a:hover {
+	color: var(--c-crimson) !important;
+	text-decoration: underline !important;
+}
+
+#bbpress-forums .bbp-header {
+	background: var(--c-ardoise) !important;
+	color: var(--c-or-pale) !important;
+	font-size: .78rem !important;
+	font-weight: 700 !important;
+}
+
+#bbpress-forums input[type="submit"],
+#bbpress-forums .bbp-submit-wrapper .button {
+	background: var(--c-crimson) !important;
+	border: none !important;
+	color: #fff !important;
+	font-weight: 700 !important;
+	border-radius: 0 !important;
+	padding: .55rem 1.4rem !important;
+	font-family: var(--font-sans) !important;
+	cursor: pointer !important;
+}
+
+#bbpress-forums label {
+	display: block !important;
+	margin-bottom: .35rem !important;
+	font-weight: 700 !important;
+	font-size: .82rem !important;
+}
+
+// ── PMPro ─────────────────────────────────────────────────────────────────
+#pmpro_checkout,.pmpro { font-family: var(--font-sans) !important; }
+
+.pmpro input[type="submit"],
+.pmpro_btn,
+#pmpro_checkout input[type="submit"] {
+	background: var(--c-crimson) !important;
+	border: none !important;
+	color: #fff !important;
+	font-weight: 700 !important;
+	border-radius: 0 !important;
+	padding: .55rem 1.4rem !important;
+	cursor: pointer !important;
+	font-family: var(--font-sans) !important;
+	font-size: .875rem !important;
+}
+
+.pmpro_price   { color: var(--c-crimson) !important; font-weight: 700 !important; }
+.pmpro_message { border-left: 4px solid var(--c-crimson) !important; background: rgba(227,30,38,.06) !important; padding: .85rem 1.1rem !important; margin-bottom: 1.1rem !important; }
+
+#pmpro_checkout label,
+.pmpro label {
+	display: block !important;
+	margin-bottom: .35rem !important;
+	font-weight: 700 !important;
+	font-size: .82rem !important;
+}
+
+#pmpro_checkout input[type="text"],
+#pmpro_checkout input[type="email"],
+#pmpro_checkout input[type="password"],
+#pmpro_checkout select {
+	border: 2px solid var(--c-input-border) !important;
+	border-radius: 0 !important;
+	padding: .5rem .8rem !important;
+	font-family: var(--font-sans) !important;
+	font-size: .9rem !important;
+}
+
+#pmpro_checkout input:focus,
+#pmpro_checkout select:focus {
+	border-color: var(--c-crimson) !important;
+	box-shadow: 0 0 0 3px rgba(227,30,38,.15) !important;
+	outline: none !important;
+}
+
+// PMPro levels page table
+.pmpro_levels_table {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: var(--font-sans);
+
+	th {
+		background: var(--c-ardoise);
+		color: var(--c-or-pale);
+		font-size: .78rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		padding: .75rem 1rem;
+		text-align: left;
+	}
+
+	td {
+		padding: .85rem 1rem;
+		border-bottom: 1px solid var(--c-border);
+		font-size: .9rem;
+		color: var(--c-body-text);
+	}
+
+	tr:hover td { background: var(--c-or-pale); }
+
+	.pmpro_btn {
+		background: var(--c-crimson);
+		border: none;
+		color: #fff;
+		font-weight: 700;
+		padding: .45rem 1.1rem;
+		font-size: .82rem;
+		cursor: pointer;
+		text-decoration: none;
+		display: inline-block;
+		border-radius: var(--radius);
+		font-family: var(--font-sans);
+
+		&:hover { background: var(--c-crimson-dk); text-decoration: none; color: #fff; }
+	}
+}
+
+// ── MC4WP ─────────────────────────────────────────────────────────────────
+.mc4wp-form label {
+	display: block !important;
+	margin-bottom: .35rem !important;
+	font-weight: 700 !important;
+	font-size: .82rem !important;
+}
+
+.mc4wp-form input[type="email"],
+.mc4wp-form input[type="text"] {
+	border: 2px solid var(--c-input-border) !important;
+	border-radius: 0 !important;
+	padding: .5rem .8rem !important;
+	font-family: var(--font-sans) !important;
+	font-size: .9rem !important;
+	width: 100% !important;
+}
+
+.mc4wp-form input[type="submit"] {
+	background: var(--c-crimson) !important;
+	border: none !important;
+	color: #fff !important;
+	font-weight: 700 !important;
+	border-radius: 0 !important;
+	padding: .55rem 1.4rem !important;
+	cursor: pointer !important;
+	font-family: var(--font-sans) !important;
+}
+
+.mc4wp-alert         { padding: .75rem 1rem; margin: .75rem 0; font-size: .85rem; }
+.mc4wp-alert-success { background: rgba(61,107,79,.1); color: #2a4c37; border-left: 3px solid var(--c-vert); }
+.mc4wp-alert-error   { background: rgba(227,30,38,.06); color: #8a1318; border-left: 3px solid var(--c-crimson); }

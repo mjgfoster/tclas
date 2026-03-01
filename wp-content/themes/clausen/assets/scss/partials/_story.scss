@@ -1,0 +1,126 @@
+// =============================================================================
+//  _story.scss — My Story form: fieldsets, repeaters, travel log, privacy
+// =============================================================================
+
+.tclas-story-layout {
+	display: grid;
+	grid-template-columns: 1fr 340px;
+	gap: 2.5rem;
+	align-items: start;
+
+	@media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+// ── Form column ───────────────────────────────────────────────────────────
+.tclas-story-fieldset { border: 0; margin: 0 0 2rem; padding: 0; }
+
+.tclas-story-legend {
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin-bottom: .35rem;
+	display: block;
+	width: 100%;
+}
+
+.tclas-story-hint { font-size: .82rem; color: var(--c-muted); margin: 0 0 1rem; max-width: 58ch; }
+
+// ── Repeater rows ─────────────────────────────────────────────────────────
+.tclas-repeater-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .75rem; }
+.tclas-repeater-row  { display: flex; align-items: center; gap: .4rem; }
+
+.tclas-story-input {
+	flex: 1;
+	border: 2px solid var(--c-input-border);
+	padding: .45rem .75rem;
+	font-size: .9rem;
+	font-family: var(--font-sans);
+	color: var(--c-body-text);
+	background: #fff;
+	border-radius: var(--radius);
+	transition: border-color .15s;
+
+	&:focus {
+		border-color: var(--c-crimson);
+		box-shadow: 0 0 0 3px rgba(227,30,38,.12);
+		outline: none;
+	}
+}
+
+.tclas-repeater-remove {
+	background: none;
+	border: 1px solid var(--c-border);
+	color: var(--c-muted);
+	width: 1.8rem;
+	height: 1.8rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	flex-shrink: 0;
+	font-size: 1rem;
+	line-height: 1;
+	border-radius: var(--radius);
+	transition: all .12s;
+
+	&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
+}
+
+// ── Travel log ────────────────────────────────────────────────────────────
+.tclas-trip-list { display: flex; flex-direction: column; gap: .75rem; margin-bottom: .75rem; }
+
+.tclas-trip-item {
+	position: relative;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	padding: .75rem;
+	background: #fff;
+}
+
+.tclas-trip-fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: .5rem .75rem;
+	margin-bottom: .5rem;
+
+	@media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.tclas-trip-field-group      { display: flex; flex-direction: column; gap: .2rem; }
+.tclas-trip-field-group--full{ margin-bottom: .25rem; }
+.tclas-trip-label            { font-size: .75rem; font-weight: 600; color: var(--c-ardoise); }
+.tclas-trip-month,.tclas-trip-purpose,.tclas-trip-notes { width: 100%; }
+.tclas-trip-notes            { resize: vertical; min-height: 3.5rem; }
+.tclas-trip-remove           { position: absolute; top: .5rem; right: .5rem; }
+
+// ── Privacy fields ────────────────────────────────────────────────────────
+.tclas-story-privacy-row    { margin-bottom: 1rem; }
+.tclas-story-privacy-label  { display: block; font-size: .82rem; font-weight: 700; color: var(--c-body-text); margin-bottom: .4rem; }
+.tclas-story-radio-group    { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tclas-story-radio          { display: flex; align-items: center; gap: .35rem; font-size: .85rem; cursor: pointer; }
+.tclas-story-check-row      { margin-bottom: .5rem; }
+.tclas-story-checkbox        { display: flex; align-items: flex-start; gap: .4rem; font-size: .85rem; cursor: pointer; }
+
+// ── Submit row ────────────────────────────────────────────────────────────
+.tclas-story-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .5rem; }
+
+// ── Sidebar column ────────────────────────────────────────────────────────
+.tclas-story-sidebar-col       { position: sticky; top: 88px; }
+.tclas-story-connections-preview{ margin-bottom: 1.5rem; }
+.tclas-story-sidebar-title     { font-size: 1rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .85rem; }
+.tclas-story-no-connections    { margin-bottom: 1.5rem; }
+
+.tclas-story-tip-box {
+	background: var(--c-or-pale);
+	border-left: 3px solid var(--c-aigue);
+	padding: 1rem 1.25rem;
+}
+
+.tclas-story-tip-title { font-size: .85rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .65rem; }
+.tclas-story-tip-box ul{ font-size: .82rem; color: var(--c-muted); padding-left: 1.2rem; margin: 0; }
+.tclas-story-tip-box li{ margin-bottom: .35rem; }
+
+// ── Bio counter + social fields ───────────────────────────────────────────
+.tclas-bio-counter          { text-align: right; font-size: .78rem; color: var(--c-muted); }
+.tclas-story-social-group   { margin-bottom: .85rem; }
+.tclas-story-social-label   { display: block; font-size: .82rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .3rem; }

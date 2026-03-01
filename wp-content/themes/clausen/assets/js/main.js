@@ -1,0 +1,493 @@
+/**
+ * Clausen v1.1 — Theme JavaScript
+ * Terres Rouges · Twin Cities Luxembourg American Society
+ */
+(function () {
+  'use strict';
+
+  // ── Utilities ──────────────────────────────────────────────────────────────
+  const qs  = (sel, ctx = document) => ctx.querySelector(sel);
+  const qsa = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+  function ready(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  // ── Mobile navigation ──────────────────────────────────────────────────────
+  function initMobileNav() {
+    const hamburger = qs('.tclas-hamburger');
+    const nav       = qs('.tclas-nav');
+    if (!hamburger || !nav) return;
+
+    hamburger.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-open');
+      hamburger.setAttribute('aria-expanded', String(open));
+      hamburger.setAttribute('aria-label', open
+        ? (tclasData.strings.closeMenu || 'Close menu')
+        : (tclasData.strings.openMenu  || 'Open menu')
+      );
+      hamburger.textContent = open ? '\u00d7' : '\u2630';
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+        nav.classList.remove('is-open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.textContent = '\u2630';
+      }
+    });
+
+    // Mobile dropdown toggles
+    qsa('.tclas-nav__item').forEach(item => {
+      const link     = qs('.tclas-nav__link', item);
+      const dropdown = qs('.tclas-nav__dropdown', item);
+      if (!dropdown) return;
+
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth < 992) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  }
+
+  // ── Member hub sidebar (mobile) ───────────────────────────────────────────
+  function initHubSidebar() {
+    const sidebar   = qs('.tclas-hub-sidebar');
+    const toggle    = qs('.tclas-hub-mobile-toggle');
+    const backdrop  = qs('.tclas-hub-sidebar-backdrop');
+    if (!sidebar || !toggle) return;
+
+    function open()  { sidebar.classList.add('is-open');    backdrop && backdrop.classList.add('is-visible'); document.body.style.overflow = 'hidden'; }
+    function close() { sidebar.classList.remove('is-open'); backdrop && backdrop.classList.remove('is-visible'); document.body.style.overflow = ''; }
+
+    toggle.addEventListener('click', open);
+    backdrop && backdrop.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  }
+
+  // ── Renew banner dismiss ───────────────────────────────────────────────────
+  function initRenewBanner() {
+    const btn = qs('.tclas-renew-banner__dismiss');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const banner = btn.closest('.tclas-renew-banner');
+      if (banner) banner.remove();
+      // Remember dismissal for this session
+      try { sessionStorage.setItem('tclas_renew_dismissed', '1'); } catch(e) {}
+    });
+    // Re-apply dismissal
+    try {
+      if (sessionStorage.getItem('tclas_renew_dismissed')) {
+        const banner = qs('.tclas-renew-banner');
+        if (banner) banner.remove();
+      }
+    } catch(e) {}
+  }
+
+  // ── Referral URL copy ─────────────────────────────────────────────────────
+  function initReferralCopy() {
+    qsa('.tclas-referral-copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const url = btn.dataset.url || qs('.tclas-referral-card__url')?.textContent?.trim();
+        if (!url) return;
+
+        navigator.clipboard.writeText(url).then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          btn.classList.add('is-copied');
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.classList.remove('is-copied');
+          }, 2000);
+
+          // Track copy event server-side
+          if (typeof tclasData !== 'undefined' && tclasData.isLoggedIn) {
+            const fd = new FormData();
+            fd.append('action', 'tclas_referral_copy');
+            fd.append('nonce',  tclasData.nonce);
+            fetch(tclasData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+              .catch(() => {}); // Fire-and-forget; ignore errors
+          }
+        }).catch(() => {
+          // Fallback
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus(); ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        });
+      });
+    });
+  }
+
+  // ── Scroll fade-in ────────────────────────────────────────────────────────
+  function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    const items = qsa('[data-reveal]');
+    if (!items.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    items.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+      observer.observe(el);
+    });
+
+    // Add is-visible style
+    const style = document.createElement('style');
+    style.textContent = '[data-reveal].is-visible { opacity: 1 !important; transform: translateY(0) !important; }';
+    document.head.appendChild(style);
+  }
+
+  // ── National Day season detection ─────────────────────────────────────────
+  function initNationalDaySeason() {
+    if (typeof tclasData === 'undefined' || !tclasData.nationalDay) return;
+    const { isNationalDaySeason } = tclasData.nationalDay;
+    if (isNationalDaySeason) {
+      document.body.classList.add('is-national-day-season');
+    }
+  }
+
+  // ── Directory filter buttons ───────────────────────────────────────────────
+  function initDirectoryFilters() {
+    qsa('.tclas-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.closest('.tclas-filter-bar');
+        if (!group) return;
+        qsa('.tclas-filter-btn', group).forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Dispatch event for any JS filtering logic
+        document.dispatchEvent(new CustomEvent('tclasFilter', {
+          detail: { filter: btn.dataset.filter }
+        }));
+      });
+    });
+  }
+
+  // ── Bootstrap dropdown accessibility fix ──────────────────────────────────
+  function initDropdowns() {
+    // For non-Bootstrap environments — keyboard nav for dropdowns
+    qsa('.tclas-nav__item').forEach(item => {
+      const link = qs('.tclas-nav__link', item);
+      if (!link) return;
+      link.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const dropdown = qs('.tclas-nav__dropdown', item);
+          if (dropdown && window.innerWidth >= 992) {
+            e.preventDefault();
+            const visible = getComputedStyle(dropdown).opacity !== '0';
+            dropdown.style.opacity  = visible ? '0' : '1';
+            dropdown.style.visibility = visible ? 'hidden' : 'visible';
+            dropdown.style.pointerEvents = visible ? 'none' : 'auto';
+          }
+        }
+      });
+    });
+  }
+
+  // ── Smooth scroll for anchor links ────────────────────────────────────────
+  function initSmoothScroll() {
+    qsa('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const target = qs(link.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const offset = 80; // header height
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  // ── Lëtzebuergesch tooltip init ───────────────────────────────────────────
+  function initLtzTooltips() {
+    // abbr.ltz elements get Bootstrap tooltips if available, otherwise title fallback
+    qsa('abbr.ltz').forEach(el => {
+      if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+        new bootstrap.Tooltip(el, { placement: 'top' });
+      }
+    });
+  }
+
+  // ── Connections panel ─────────────────────────────────────────────────────
+  function initConnectionsPanel() {
+    const panel = qs('#tclas-connections-panel');
+    if (!panel) return;
+
+    // Mark all visible connections as "seen" after a short delay,
+    // so members can read them before the badge clears.
+    const newCount = parseInt(panel.dataset.new || '0', 10);
+    if (newCount > 0 && typeof tclasData !== 'undefined' && tclasData.isLoggedIn) {
+      setTimeout(() => {
+        const fd = new FormData();
+        fd.append('action', 'tclas_mark_connections_seen');
+        fd.append('nonce', tclasData.nonce);
+        fetch(tclasData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+          .then(() => {
+            const badge = qs('.tclas-conn-badge', panel);
+            if (badge) badge.remove();
+            panel.classList.remove('tclas-conn-panel--has-new');
+            qsa('.tclas-conn-card--new', panel).forEach(c => c.classList.remove('tclas-conn-card--new'));
+          })
+          .catch(() => {});
+      }, 4000); // 4-second read window before clearing badge
+    }
+
+    // Dismiss individual connection cards.
+    panel.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tclas-conn-dismiss');
+      if (!btn) return;
+
+      const otherId = btn.dataset.otherId;
+      const card    = btn.closest('.tclas-conn-card');
+      if (!card || !otherId) return;
+
+      // Optimistic removal.
+      card.style.transition = 'opacity .25s, transform .25s';
+      card.style.opacity    = '0';
+      card.style.transform  = 'translateX(8px)';
+
+      setTimeout(() => {
+        card.remove();
+
+        // If no cards remain, reload the panel content to show empty state.
+        const remaining = qsa('.tclas-conn-card', panel);
+        if (remaining.length === 0) {
+          window.location.reload();
+        }
+      }, 280);
+
+      // Persist dismissal server-side (fire-and-forget).
+      if (typeof tclasData !== 'undefined' && tclasData.isLoggedIn) {
+        const fd = new FormData();
+        fd.append('action',        'tclas_dismiss_connection');
+        fd.append('nonce',         tclasData.nonce);
+        fd.append('other_user_id', otherId);
+        fetch(tclasData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
+          .catch(() => {});
+      }
+    });
+  }
+
+  // ── My Luxembourg Story form — repeater fields ────────────────────────────
+  function initMyStoryForm() {
+    const form = qs('#tclas-my-story-form');
+    if (!form) return;
+
+    // ── Add row ────────────────────────────────────────────────────────
+    qsa('.tclas-repeater-add').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const listId = btn.dataset.target;
+        const list   = qs('#' + listId);
+        if (!list) return;
+
+        const row = document.createElement('div');
+        row.className = 'tclas-repeater-row';
+
+        const input = document.createElement('input');
+        input.type         = 'text';
+        input.name         = btn.dataset.name;
+        input.className    = 'tclas-story-input';
+        input.placeholder  = btn.dataset.placeholder || '';
+        input.autocomplete = 'off';
+        if (btn.dataset.list) {
+          input.setAttribute('list', btn.dataset.list);
+        }
+        input.setAttribute('aria-label', input.placeholder);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type      = 'button';
+        removeBtn.className = 'tclas-repeater-remove';
+        removeBtn.setAttribute('aria-label', 'Remove');
+        removeBtn.textContent = '×';
+
+        row.appendChild(input);
+        row.appendChild(removeBtn);
+        list.appendChild(row);
+        input.focus();
+      });
+    });
+
+    // ── Remove row (delegated on each list container) ──────────────────
+    qsa('.tclas-repeater-list').forEach(list => {
+      list.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tclas-repeater-remove');
+        if (!btn) return;
+        const row = btn.closest('.tclas-repeater-row');
+        if (row) {
+          row.style.opacity = '0';
+          row.style.transition = 'opacity .2s';
+          setTimeout(() => row.remove(), 220);
+        }
+      });
+    });
+
+    // ── Save feedback: swap button text briefly ────────────────────────
+    form.addEventListener('submit', () => {
+      const submitBtn = qs('[type="submit"]', form);
+      if (submitBtn) {
+        submitBtn.textContent = (tclasData && tclasData.strings && tclasData.strings.connSaving)
+          ? tclasData.strings.connSaving
+          : 'Saving…';
+        submitBtn.disabled = true;
+      }
+    });
+  }
+
+  // ── Travel Log repeater ───────────────────────────────────────────────────
+  function initTripRepeater() {
+    const addBtn = qs('#tclas-trip-add');
+    const list   = qs('#tclas-trips-list');
+    if (!addBtn || !list) return;
+
+    const purposeOptions = [
+      { value: '',         label: '— select —'           },
+      { value: 'heritage', label: 'Heritage research'    },
+      { value: 'family',   label: 'Family visit'         },
+      { value: 'tourism',  label: 'Tourism / vacation'   },
+      { value: 'tclas',    label: 'TCLAS / society event' },
+      { value: 'business', label: 'Business'             },
+      { value: 'other',    label: 'Other'                },
+    ];
+
+    // Build a new trip card element
+    function buildCard() {
+      const item = document.createElement('div');
+      item.className = 'tclas-trip-item';
+
+      // ── top two-column grid
+      const fields = document.createElement('div');
+      fields.className = 'tclas-trip-fields';
+
+      // Month/Year
+      const monthGroup = document.createElement('div');
+      monthGroup.className = 'tclas-trip-field-group';
+      const monthLabel = document.createElement('label');
+      monthLabel.className = 'tclas-trip-label';
+      monthLabel.textContent = 'Month & Year';
+      const monthInput = document.createElement('input');
+      monthInput.type      = 'month';
+      monthInput.name      = 'tclas_trip_month_year[]';
+      monthInput.className = 'tclas-story-input tclas-trip-month';
+      monthInput.min       = '1900-01';
+      monthInput.max       = new Date().toISOString().slice(0, 7); // YYYY-MM
+      monthInput.setAttribute('aria-label', 'Month & Year');
+      monthGroup.appendChild(monthLabel);
+      monthGroup.appendChild(monthInput);
+
+      // Purpose
+      const purposeGroup = document.createElement('div');
+      purposeGroup.className = 'tclas-trip-field-group';
+      const purposeLabel = document.createElement('label');
+      purposeLabel.className = 'tclas-trip-label';
+      purposeLabel.textContent = 'Purpose';
+      const purposeSelect = document.createElement('select');
+      purposeSelect.name      = 'tclas_trip_purpose[]';
+      purposeSelect.className = 'tclas-story-input tclas-trip-purpose';
+      purposeSelect.setAttribute('aria-label', 'Purpose');
+      purposeOptions.forEach(opt => {
+        const o = document.createElement('option');
+        o.value       = opt.value;
+        o.textContent = opt.label;
+        purposeSelect.appendChild(o);
+      });
+      purposeGroup.appendChild(purposeLabel);
+      purposeGroup.appendChild(purposeSelect);
+
+      fields.appendChild(monthGroup);
+      fields.appendChild(purposeGroup);
+      item.appendChild(fields);
+
+      // Notes — full width
+      const notesGroup = document.createElement('div');
+      notesGroup.className = 'tclas-trip-field-group tclas-trip-field-group--full';
+      const notesLabel = document.createElement('label');
+      notesLabel.className = 'tclas-trip-label';
+      notesLabel.textContent = 'Notes / highlights';
+      const notesArea = document.createElement('textarea');
+      notesArea.name        = 'tclas_trip_notes[]';
+      notesArea.className   = 'tclas-story-input tclas-trip-notes';
+      notesArea.rows        = 2;
+      notesArea.placeholder = 'Villages visited, archives searched, relatives met\u2026';
+      notesArea.setAttribute('aria-label', 'Notes / highlights');
+      notesGroup.appendChild(notesLabel);
+      notesGroup.appendChild(notesArea);
+      item.appendChild(notesGroup);
+
+      // Remove button
+      const removeBtn = document.createElement('button');
+      removeBtn.type      = 'button';
+      removeBtn.className = 'tclas-trip-remove tclas-repeater-remove';
+      removeBtn.setAttribute('aria-label', 'Remove this trip');
+      removeBtn.textContent = '\u00d7';
+      item.appendChild(removeBtn);
+
+      return { item, monthInput };
+    }
+
+    // Add a new card on button click
+    addBtn.addEventListener('click', () => {
+      const { item, monthInput } = buildCard();
+      list.appendChild(item);
+      monthInput.focus();
+    });
+
+    // Delegated remove handler
+    list.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tclas-trip-remove');
+      if (!btn) return;
+      const card = btn.closest('.tclas-trip-item');
+      if (!card) return;
+      card.style.transition = 'opacity .2s';
+      card.style.opacity    = '0';
+      setTimeout(() => card.remove(), 220);
+    });
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  ready(() => {
+    initMobileNav();
+    initHubSidebar();
+    initRenewBanner();
+    initReferralCopy();
+    initScrollReveal();
+    initNationalDaySeason();
+    initDirectoryFilters();
+    initDropdowns();
+    initSmoothScroll();
+    initLtzTooltips();
+    initConnectionsPanel();
+    initMyStoryForm();
+    initTripRepeater();
+    initBioCounter();
+  });
+
+  // ── Bio character counter ─────────────────────────────────────────────────
+  function initBioCounter() {
+    const textarea = qs('#tclas-bio-field');
+    const counter  = qs('#tclas-bio-chars');
+    if ( !textarea || !counter ) return;
+    textarea.addEventListener('input', function () {
+      counter.textContent = textarea.value.length;
+    });
+  }
+
+})();

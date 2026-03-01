@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 640" width="1440" height="640">
+  <defs>
+    <!-- Sky gradient: warm golden hour -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#C8952A" stop-opacity="0.55"/>
+      <stop offset="40%"  stop-color="#E8D5A8"/>
+      <stop offset="100%" stop-color="#D4B882"/>
+    </linearGradient>
+    <!-- Water gradient -->
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#7BBDD4"/>
+      <stop offset="100%" stop-color="#5BA3C9"/>
+    </linearGradient>
+    <!-- Ground gradient -->
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#3D6B4F"/>
+      <stop offset="100%" stop-color="#2d5040"/>
+    </linearGradient>
+    <!-- Gëlle Fra glow -->
+    <radialGradient id="fraGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#FFD700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Sun glow -->
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#F5E6C8" stop-opacity="0.7"/>
+      <stop offset="60%"  stop-color="#C8952A" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#C8952A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Left fade for text overlap -->
+    <linearGradient id="textFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#2C3E50" stop-opacity="0.72"/>
+      <stop offset="55%"  stop-color="#2C3E50" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#2C3E50" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── SKY ────────────────────────────────────────────────────────── -->
+  <rect width="1440" height="640" fill="url(#sky)"/>
+
+  <!-- Sun -->
+  <ellipse cx="720" cy="210" rx="180" ry="130" fill="url(#sunGlow)"/>
+  <circle cx="720" cy="215" r="38" fill="#D4B882" opacity="0.85"/>
+
+  <!-- Distant clouds — very soft -->
+  <ellipse cx="280" cy="140" rx="110" ry="28" fill="#F5E6C8" opacity="0.25"/>
+  <ellipse cx="340" cy="128" rx="80" ry="22" fill="#F5E6C8" opacity="0.2"/>
+  <ellipse cx="1100" cy="130" rx="130" ry="30" fill="#F5E6C8" opacity="0.22"/>
+  <ellipse cx="1060" cy="118" rx="90" ry="20" fill="#F5E6C8" opacity="0.18"/>
+  <ellipse cx="600" cy="100" rx="100" ry="22" fill="#F5E6C8" opacity="0.15"/>
+
+  <!-- ── LUXEMBOURG CITY — RIGHT SIDE ──────────────────────────────── -->
+
+  <!-- Background hill -->
+  <ellipse cx="1080" cy="420" rx="380" ry="120" fill="#2d5040" opacity="0.5"/>
+
+  <!-- Distant trees right -->
+  <rect x="920" y="340" width="12" height="60" fill="#2C3E50"/>
+  <ellipse cx="926" cy="335" rx="22" ry="28" fill="#2d5040"/>
+  <rect x="970" y="330" width="10" height="70" fill="#2C3E50"/>
+  <ellipse cx="975" cy="325" rx="18" ry="24" fill="#3D6B4F"/>
+  <rect x="1260" y="345" width="11" height="55" fill="#2C3E50"/>
+  <ellipse cx="1265" cy="340" rx="20" ry="26" fill="#2d5040"/>
+
+  <!-- Luxembourg old town buildings — right cluster -->
+  <!-- Building 1 — tall narrow -->
+  <rect x="1060" y="270" width="38" height="160" fill="#3a5068"/>
+  <!-- Windows -->
+  <rect x="1067" y="285" width="8" height="10" fill="#C8952A" opacity="0.7"/>
+  <rect x="1081" y="285" width="8" height="10" fill="#C8952A" opacity="0.5"/>
+  <rect x="1067" y="305" width="8" height="10" fill="#C8952A" opacity="0.6"/>
+  <rect x="1081" y="305" width="8" height="10" fill="#C8952A" opacity="0.4"/>
+  <rect x="1067" y="325" width="8" height="10" fill="#C8952A" opacity="0.7"/>
+  <!-- Pointed roof -->
+  <polygon points="1055,270 1098,270 1079,240" fill="#2C3E50"/>
+  <line x1="1079" y1="240" x2="1079" y2="228" stroke="#2C3E50" stroke-width="3"/>
+
+  <!-- Building 2 — wider, lower -->
+  <rect x="1100" y="300" width="55" height="130" fill="#4a6480"/>
+  <rect x="1108" y="312" width="9" height="12" fill="#C8952A" opacity="0.6"/>
+  <rect x="1124" y="312" width="9" height="12" fill="#C8952A" opacity="0.5"/>
+  <rect x="1140" y="312" width="9" height="12" fill="#C8952A" opacity="0.7"/>
+  <rect x="1108" y="332" width="9" height="12" fill="#C8952A" opacity="0.4"/>
+  <rect x="1124" y="332" width="9" height="12" fill="#C8952A" opacity="0.6"/>
+  <rect x="1140" y="332" width="9" height="12" fill="#C8952A" opacity="0.5"/>
+  <!-- Flat roof with parapet -->
+  <rect x="1097" y="293" width="61" height="10" fill="#2C3E50"/>
+
+  <!-- Building 3 — left of main cluster -->
+  <rect x="1010" y="305" width="42" height="125" fill="#2C3E50"/>
+  <rect x="1018" y="318" width="8" height="11" fill="#C8952A" opacity="0.5"/>
+  <rect x="1033" y="318" width="8" height="11" fill="#C8952A" opacity="0.6"/>
+  <rect x="1018" y="338" width="8" height="11" fill="#C8952A" opacity="0.4"/>
+  <!-- Stepped gable -->
+  <polygon points="1007,305 1055,305 1052,290 1042,290 1040,278 1022,278 1020,290 1010,290" fill="#2C3E50"/>
+
+  <!-- Building 4 — far right -->
+  <rect x="1165" y="315" width="48" height="115" fill="#3a5068"/>
+  <rect x="1173" y="328" width="8" height="10" fill="#C8952A" opacity="0.55"/>
+  <rect x="1188" y="328" width="8" height="10" fill="#C8952A" opacity="0.45"/>
+  <rect x="1173" y="348" width="8" height="10" fill="#C8952A" opacity="0.6"/>
+  <rect x="1188" y="348" width="8" height="10" fill="#C8952A" opacity="0.5"/>
+  <!-- Hip roof -->
+  <polygon points="1162,315 1216,315 1205,295 1174,295" fill="#2C3E50"/>
+
+  <!-- Notre-Dame Cathedral spire — the distinctive tall spire -->
+  <rect x="1215" y="200" width="22" height="230" fill="#2C3E50"/>
+  <polygon points="1208,200 1245,200 1226,155" fill="#2C3E50"/>
+  <line x1="1226" y1="155" x2="1226" y2="140" stroke="#2C3E50" stroke-width="2.5"/>
+  <!-- Cathedral body -->
+  <rect x="1200" y="310" width="52" height="120" fill="#3a5068"/>
+  <!-- Cathedral windows - gothic arches suggested -->
+  <rect x="1207" y="320" width="10" height="18" rx="5" fill="#C8952A" opacity="0.6"/>
+  <rect x="1222" y="320" width="10" height="18" rx="5" fill="#C8952A" opacity="0.5"/>
+  <rect x="1237" y="320" width="10" height="18" rx="5" fill="#C8952A" opacity="0.6"/>
+  <!-- Second spire -->
+  <rect x="1245" y="240" width="14" height="190" fill="#2C3E50"/>
+  <polygon points="1240,240 1263,240 1252,210" fill="#2C3E50"/>
+
+  <!-- ── GËLLE FRA ───────────────────────────────────────────────── -->
+  <!-- Glow -->
+  <ellipse cx="1130" cy="175" rx="55" ry="55" fill="url(#fraGlow)"/>
+
+  <!-- Column base — stepped -->
+  <rect x="1118" y="370" width="24" height="60" fill="#C8952A" opacity="0.85"/>
+  <rect x="1114" y="420" width="32" height="10" fill="#C8952A" opacity="0.9"/>
+  <rect x="1110" y="427" width="40" height="10" fill="#C8952A" opacity="0.85"/>
+
+  <!-- Column shaft -->
+  <rect x="1122" y="215" width="16" height="158" fill="#C8952A" opacity="0.9"/>
+  <!-- Column capital -->
+  <rect x="1117" y="208" width="26" height="10" fill="#C8952A"/>
+
+  <!-- Gëlle Fra figure — golden female figure holding laurel -->
+  <!-- Body -->
+  <ellipse cx="1130" cy="195" rx="7" ry="14" fill="#C8952A"/>
+  <!-- Dress/robe flowing -->
+  <polygon points="1123,195 1137,195 1140,215 1120,215" fill="#C8952A" opacity="0.9"/>
+  <!-- Arms raised holding laurel wreath -->
+  <line x1="1130" y1="190" x2="1115" y2="178" stroke="#C8952A" stroke-width="3"/>
+  <line x1="1130" y1="190" x2="1145" y2="178" stroke="#C8952A" stroke-width="3"/>
+  <!-- Laurel wreath suggestion -->
+  <ellipse cx="1130" cy="173" rx="18" ry="8" fill="none" stroke="#C8952A" stroke-width="2.5"/>
+  <ellipse cx="1115" cy="178" rx="5" ry="5" fill="#C8952A" opacity="0.7"/>
+  <ellipse cx="1145" cy="178" rx="5" ry="5" fill="#C8952A" opacity="0.7"/>
+  <!-- Head -->
+  <circle cx="1130" cy="182" r="7" fill="#C8952A"/>
+  <!-- Crown/rays -->
+  <line x1="1130" y1="175" x2="1130" y2="163" stroke="#C8952A" stroke-width="1.5"/>
+  <line x1="1124" y1="177" x2="1118" y2="166" stroke="#C8952A" stroke-width="1.5"/>
+  <line x1="1136" y1="177" x2="1142" y2="166" stroke="#C8952A" stroke-width="1.5"/>
+  <line x1="1121" y1="180" x2="1113" y2="172" stroke="#C8952A" stroke-width="1"/>
+  <line x1="1139" y1="180" x2="1147" y2="172" stroke="#C8952A" stroke-width="1"/>
+
+  <!-- ── MIDDLE GROUND — TREES & HILLS ─────────────────────────────── -->
+  <!-- Rolling hill / ground plane center -->
+  <ellipse cx="720" cy="490" rx="600" ry="90" fill="#3D6B4F" opacity="0.4"/>
+
+  <!-- Tree line center-right -->
+  <rect x="860" y="375" width="10" height="55" fill="#2C3E50"/>
+  <ellipse cx="865" cy="368" rx="20" ry="25" fill="#3D6B4F"/>
+  <rect x="890" y="380" width="9" height="50" fill="#2C3E50"/>
+  <ellipse cx="894" cy="374" rx="16" ry="21" fill="#2d5040"/>
+
+  <!-- Tree line center-left -->
+  <rect x="530" y="368" width="10" height="62" fill="#2C3E50"/>
+  <ellipse cx="535" cy="360" rx="22" ry="27" fill="#2d5040"/>
+  <rect x="555" y="375" width="9" height="55" fill="#2C3E50"/>
+  <ellipse cx="559" cy="368" rx="18" ry="23" fill="#3D6B4F"/>
+
+  <!-- ── MINNEAPOLIS — LEFT SIDE ────────────────────────────────────── -->
+
+  <!-- Background building suggestion — IDS tower simplified -->
+  <rect x="180" y="240" width="30" height="210" fill="#4a6480" opacity="0.6"/>
+  <rect x="195" y="225" width="16" height="20" fill="#4a6480" opacity="0.5"/>
+  <!-- IDS antenna -->
+  <line x1="203" y1="225" x2="203" y2="200" stroke="#2C3E50" stroke-width="2" opacity="0.7"/>
+
+  <!-- Background building 2 -->
+  <rect x="218" y="265" width="40" height="185" fill="#3a5068" opacity="0.55"/>
+  <rect x="226" y="278" width="7" height="10" fill="#C8952A" opacity="0.4"/>
+  <rect x="240" y="278" width="7" height="10" fill="#C8952A" opacity="0.35"/>
+
+  <!-- Trees left bank -->
+  <rect x="100" y="360" width="11" height="70" fill="#2C3E50"/>
+  <ellipse cx="105" cy="352" rx="24" ry="30" fill="#3D6B4F"/>
+  <rect x="130" y="365" width="10" height="65" fill="#2C3E50"/>
+  <ellipse cx="135" cy="358" rx="20" ry="26" fill="#2d5040"/>
+  <rect x="155" y="355" width="12" height="75" fill="#2C3E50"/>
+  <ellipse cx="161" cy="346" rx="26" ry="32" fill="#3D6B4F"/>
+
+  <!-- ── WATER / LAKE ────────────────────────────────────────────────── -->
+  <!-- Shared water body — Mississippi meets Moselle, poetically -->
+  <path d="M 0 430 Q 180 410 360 425 Q 540 440 720 428 Q 900 416 1080 430 Q 1260 444 1440 430 L 1440 640 L 0 640 Z"
+        fill="url(#water)" opacity="0.88"/>
+
+  <!-- Water shimmer lines -->
+  <line x1="120" y1="455" x2="280" y2="452" stroke="white" stroke-width="1" opacity="0.18"/>
+  <line x1="80" y1="468" x2="200" y2="465" stroke="white" stroke-width="0.8" opacity="0.14"/>
+  <line x1="600" y1="448" x2="820" y2="444" stroke="white" stroke-width="1" opacity="0.15"/>
+  <line x1="1100" y1="452" x2="1320" y2="458" stroke="white" stroke-width="1" opacity="0.16"/>
+  <line x1="1050" y1="465" x2="1200" y2="470" stroke="white" stroke-width="0.8" opacity="0.12"/>
+
+  <!-- Reflections in water -->
+  <!-- Gëlle Fra reflection -->
+  <rect x="1124" y="430" width="12" height="55" fill="#C8952A" opacity="0.18"/>
+  <ellipse cx="1130" cy="488" rx="8" ry="4" fill="#C8952A" opacity="0.12"/>
+  <!-- Spoonbridge reflection -->
+  <ellipse cx="388" cy="480" rx="18" ry="6" fill="#C0001A" opacity="0.22"/>
+  <path d="M 340 432 Q 390 445 440 435" stroke="#F5E6C8" stroke-width="2" fill="none" opacity="0.18"/>
+
+  <!-- ── GREEN BANK / FOREGROUND ─────────────────────────────────────── -->
+  <path d="M 0 420 Q 200 400 400 415 Q 600 430 720 420 Q 840 410 1000 418 Q 1200 428 1440 415 L 1440 445 Q 1200 458 1000 448 Q 840 440 720 450 Q 600 460 400 445 Q 200 430 0 450 Z"
+        fill="url(#ground)"/>
+
+  <!-- Foreground grass texture -->
+  <path d="M 0 438 Q 200 425 450 435 Q 680 445 900 432 Q 1150 420 1440 432 L 1440 640 L 0 640 Z"
+        fill="#2d5040" opacity="0.7"/>
+
+  <!-- ── SPOONBRIDGE & CHERRY ───────────────────────────────────────── -->
+  <!-- Spoon handle — long arc from lower left up to bowl -->
+  <path d="M 260 490 Q 300 460 340 435 Q 370 418 400 415"
+        stroke="#F5E6C8" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <!-- Spoon handle shadow -->
+  <path d="M 262 493 Q 302 463 342 438 Q 372 421 402 418"
+        stroke="#2C3E50" stroke-width="9" fill="none" stroke-linecap="round" opacity="0.3"/>
+
+  <!-- Spoon bowl -->
+  <ellipse cx="408" cy="413" rx="36" ry="14" fill="#F5E6C8" transform="rotate(-15, 408, 413)"/>
+  <ellipse cx="408" cy="413" rx="30" ry="10" fill="#D4B882" opacity="0.5" transform="rotate(-15, 408, 413)"/>
+
+  <!-- Cherry stem -->
+  <path d="M 400 398 Q 395 378 388 368" stroke="#2C3E50" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Cherry — red, prominent -->
+  <circle cx="385" cy="358" r="22" fill="#C0001A"/>
+  <circle cx="385" cy="358" r="22" fill="none" stroke="#2C3E50" stroke-width="1.5" opacity="0.3"/>
+  <!-- Cherry highlight -->
+  <ellipse cx="378" cy="350" rx="7" ry="5" fill="white" opacity="0.25" transform="rotate(-20, 378, 350)"/>
+
+  <!-- ── LION EASTER EGG — on the curl of the spoon handle ─────────── -->
+  <!-- Tiny lion sitting on the spoon handle curve, around (320, 448) -->
+  <!-- Body -->
+  <ellipse cx="320" cy="453" rx="7" ry="6" fill="#C0001A" opacity="0.9"/>
+  <!-- Head -->
+  <circle cx="320" cy="444" r="5" fill="#C0001A" opacity="0.9"/>
+  <!-- Mane — simple ring -->
+  <circle cx="320" cy="444" r="7" fill="none" stroke="#C8952A" stroke-width="2" opacity="0.85"/>
+  <!-- Crown -->
+  <polygon points="316,437 318,432 320,436 322,432 324,437" fill="#C8952A" opacity="0.9"/>
+  <!-- Tail curl -->
+  <path d="M 326 455 Q 334 450 332 444 Q 330 440 327 442" stroke="#C0001A" stroke-width="2" fill="none" opacity="0.9"/>
+  <!-- Tiny face suggestion -->
+  <circle cx="318" cy="444" r="1" fill="#2C3E50" opacity="0.7"/>
+  <circle cx="322" cy="444" r="1" fill="#2C3E50" opacity="0.7"/>
+
+  <!-- ── FOREGROUND FLOWERS / DETAILS ──────────────────────────────── -->
+  <!-- Small wildflowers left bank -->
+  <circle cx="80" cy="448" r="4" fill="#F5E6C8" opacity="0.7"/>
+  <circle cx="95" cy="452" r="3" fill="#C0001A" opacity="0.6"/>
+  <circle cx="110" cy="446" r="4" fill="#F5E6C8" opacity="0.65"/>
+  <circle cx="125" cy="450" r="3" fill="#C8952A" opacity="0.6"/>
+  <!-- Right bank flowers -->
+  <circle cx="1300" cy="445" r="4" fill="#F5E6C8" opacity="0.6"/>
+  <circle cx="1318" cy="449" r="3" fill="#C0001A" opacity="0.55"/>
+  <circle cx="1340" cy="443" r="4" fill="#C8952A" opacity="0.6"/>
+  <circle cx="1360" cy="448" r="3" fill="#F5E6C8" opacity="0.55"/>
+
+  <!-- ── TEXT OVERLAY FADE — left third for copy ───────────────────── -->
+  <rect x="0" y="0" width="560" height="640" fill="url(#textFade)"/>
+
+  <!-- ── CRIMSON BOTTOM RULE ────────────────────────────────────────── -->
+  <rect x="0" y="636" width="1440" height="4" fill="#C0001A"/>
+</svg>

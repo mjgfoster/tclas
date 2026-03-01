@@ -1,0 +1,318 @@
+// =============================================================================
+//  _pages.scss — Interior page styles: join, single, about, board, newsletter,
+//                commune, member profiles (from main.css), page header
+// =============================================================================
+
+// ── Page header (shared) ──────────────────────────────────────────────────
+.tclas-page-header { padding: 2.5rem 0; }
+.tclas-page-header--ardoise { background: var(--c-ardoise); }
+.tclas-page-header__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0; }
+
+// ── Join page feature grid ────────────────────────────────────────────────
+.tclas-join-features {
+	display: grid;
+	grid-template-columns: repeat(3,1fr);
+	gap: 2rem;
+	margin-top: 1.5rem;
+
+	h3 { font-size: .95rem; margin-bottom: .35rem; }
+	p  { font-size: .88rem; color: var(--c-muted); margin: 0; }
+
+	@media (max-width: 767px) { grid-template-columns: 1fr; }
+}
+
+// ── Single post ───────────────────────────────────────────────────────────
+.entry-content {
+	max-width: 70ch;
+
+	h2 { margin-top: 2rem; }
+	h3 { margin-top: 1.5rem; }
+	img{ margin: 1.5rem 0; }
+	ul,ol { margin-bottom: 1.5rem; }
+	a { color: var(--c-crimson); text-decoration: underline; }
+}
+
+.tclas-single { padding: 3rem 0; }
+.tclas-single__header { margin-bottom: 2rem; }
+.tclas-single__title  { font-size: clamp(1.65rem, 3.5vw, 2.25rem); }
+
+.tclas-single__meta {
+	font-size: .82rem;
+	color: var(--c-muted);
+	margin-bottom: 1.25rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem 1.25rem;
+}
+
+.tclas-single__featured-image {
+	margin-bottom: 2rem;
+	aspect-ratio: 16/9;
+	overflow: hidden;
+
+	img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+// ── About page ────────────────────────────────────────────────────────────
+.tclas-about-layout {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 3rem;
+	align-items: start;
+
+	@media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.tclas-about-layout__sidebar-title { font-size: 1.25rem; color: var(--c-ardoise); margin: 0 0 1rem; }
+
+// ── Board member cards ────────────────────────────────────────────────────
+.tclas-board-grid { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.tclas-board-card {
+	display: flex;
+	align-items: flex-start;
+	gap: .75rem;
+}
+
+.tclas-board-card__photo {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	overflow: hidden;
+	flex-shrink: 0;
+	background: var(--c-or-pale);
+}
+
+.tclas-board-card__img  { width: 100%; height: 100%; object-fit: cover; }
+.tclas-board-card__info { display: flex; flex-direction: column; }
+.tclas-board-card__name { font-size: .9rem; color: var(--c-ardoise); }
+.tclas-board-card__role { font-size: .75rem; color: var(--c-muted); }
+
+.tclas-board-card__email {
+	font-size: .75rem;
+	color: var(--c-crimson);
+	text-decoration: none;
+
+	&:hover { text-decoration: underline; }
+}
+
+// ── Newsletter / Loon & Lion archive ──────────────────────────────────────
+.tclas-issue-group {
+	margin-bottom: 4rem;
+	padding-bottom: 4rem;
+	border-bottom: 1px solid var(--c-border);
+
+	&:last-child { border-bottom: 0; }
+}
+
+.tclas-issue-masthead { margin-bottom: 1.5rem; }
+.tclas-issue-masthead__date { font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--c-ardoise); margin: .15rem 0 0; line-height: 1.15; }
+
+.tclas-issue-body {
+	display: grid;
+	grid-template-columns: 260px 1fr;
+	gap: 2.5rem;
+	align-items: start;
+
+	@media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.tclas-issue-cover-wrap { position: sticky; top: 6rem; @media (max-width: 700px) { position: static; } }
+.tclas-issue-cover      { width: 100%; border-radius: var(--radius); box-shadow: var(--shadow-md); display: block; }
+
+.tclas-toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+
+.tclas-toc-item {
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--c-border);
+
+	&:last-child { border-bottom: 0; padding-bottom: 0; }
+}
+
+.tclas-toc-department { font-size: .65rem; display: block; margin-bottom: .3rem; }
+.tclas-toc-title      { font-size: 1.15rem; margin: .1rem 0 .45rem; line-height: 1.3; a { color: var(--c-ardoise); text-decoration: none; &:hover { color: var(--c-crimson); text-decoration: underline; } } }
+.tclas-toc-excerpt    { font-size: .88rem; color: var(--c-muted); margin: 0 0 .4rem; max-width: 54ch; }
+.tclas-toc-meta       { font-size: .75rem; color: var(--c-muted); font-style: italic; }
+
+// ── Commune profile ───────────────────────────────────────────────────────
+.tclas-commune-layout {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 2.5rem;
+	align-items: start;
+
+	@media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.tclas-commune-fact-col   { position: sticky; top: 6rem; @media (max-width: 700px) { position: static; } }
+.tclas-commune-fact-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--c-muted); margin: .75rem 0 .2rem; }
+.tclas-commune-audio      { margin: .75rem 0; display: flex; flex-direction: column; gap: .35rem; audio { width: 100%; border-radius: var(--radius); } }
+.tclas-commune-ext-links  { display: flex; flex-direction: column; gap: .4rem; margin-top: .5rem; }
+
+.tclas-commune-ext-link {
+	display: inline-flex;
+	align-items: center;
+	gap: .35rem;
+	font-size: .88rem;
+	color: var(--c-aigue);
+	text-decoration: none;
+
+	&:hover { text-decoration: underline; }
+}
+
+.tclas-commune-mini-map       { width: 100%; height: 200px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--c-border); margin-bottom: 1rem; }
+.tclas-commune-member-grid    { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
+
+.tclas-commune-member-card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	gap: .75rem;
+	text-decoration: none;
+	color: var(--c-ardoise);
+	transition: border-color .15s, box-shadow .15s;
+
+	&:hover { border-color: var(--c-crimson); box-shadow: var(--shadow-sm); }
+	img { border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; }
+}
+
+.tclas-commune-empty { text-align: center; padding: 3rem 1rem; color: var(--c-muted); }
+
+// ── Member profile (styles from main.css) ────────────────────────────────
+.tclas-profile-layout {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 2.5rem;
+	align-items: start;
+
+	@media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.tclas-profile-sidebar { position: sticky; top: 6rem; @media (max-width: 700px) { position: static; } }
+
+.tclas-profile-avatar    { width: 96px; height: 96px; border-radius: 50%; margin-bottom: 1rem; }
+.tclas-profile-name      { font-size: 1.4rem; color: var(--c-ardoise); margin: 0 0 .25rem; }
+.tclas-profile-greeting  { font-size: .92rem; color: var(--c-muted); margin: 0 0 1rem; font-style: italic; }
+
+.tclas-profile-section-label {
+	font-size: .7rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	color: var(--c-muted);
+	margin: 1.1rem 0 .4rem;
+	display: block;
+}
+
+.tclas-profile-surname-tags  { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .5rem; }
+.tclas-profile-surname-tag   { background: var(--c-or-pale); color: var(--c-ardoise); font-size: .78rem; padding: .2rem .55rem; border-radius: 999px; }
+.tclas-profile-commune-tags  { display: flex; flex-direction: column; gap: .35rem; }
+
+.tclas-profile-commune-tag {
+	display: flex;
+	align-items: center;
+	gap: .35rem;
+	font-size: .88rem;
+	color: var(--c-aigue);
+	text-decoration: none;
+	padding: .3rem .5rem;
+	min-height: 44px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	transition: border-color .15s;
+
+	&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
+}
+
+.tclas-profile-social { display: flex; gap: .6rem; margin-top: 1rem; flex-wrap: wrap; }
+
+.tclas-social-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--radius);
+	background: var(--c-or-pale);
+	color: var(--c-ardoise);
+	text-decoration: none;
+	font-size: .75rem;
+	font-weight: 700;
+	transition: background .15s, color .15s;
+	flex-shrink: 0;
+
+	&:hover { background: var(--c-ardoise); color: var(--c-or-pale); }
+}
+
+.tclas-profile-bio        { font-size: 1rem; line-height: 1.7; color: var(--c-body-text); margin-bottom: 1.5rem; }
+.tclas-profile-no-bio     { color: var(--c-muted); font-size: .9rem; font-style: italic; }
+
+.tclas-profile-trip-timeline { display: flex; flex-direction: column; gap: 1rem; margin-top: .5rem; }
+
+.tclas-profile-trip-item {
+	border-left: 3px solid var(--c-crimson);
+	padding: .4rem 0 .4rem .9rem;
+}
+
+.tclas-profile-trip-date   { font-size: .78rem; font-weight: 700; color: var(--c-ardoise); }
+.tclas-profile-trip-purpose{ font-size: .78rem; color: var(--c-muted); margin-left: .4rem; }
+.tclas-profile-trip-notes  { font-size: .85rem; color: var(--c-body-text); margin-top: .2rem; }
+.tclas-profile-since       { font-size: .78rem; color: var(--c-muted); margin-top: 1rem; font-style: italic; }
+
+// Additional profile classes
+.tclas-profile-avatar-wrap    { text-align: center; margin-bottom: .75rem; }
+.tclas-profile-pill-group     { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .5rem; }
+.tclas-profile-pill           { background: var(--c-or-pale); color: var(--c-ardoise); font-size: .78rem; padding: .2rem .55rem; border-radius: 999px; white-space: nowrap; }
+.tclas-profile-meta           { font-size: .78rem; color: var(--c-muted); margin-top: 1rem; font-style: italic; }
+.tclas-profile-sidebar-actions{ display: flex; flex-direction: column; gap: .4rem; margin-top: 1.25rem; }
+
+.tclas-profile-back-link,
+.tclas-profile-edit-link {
+	font-size: .82rem;
+	color: var(--c-aigue);
+	text-decoration: none;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+
+	&:hover { color: var(--c-crimson); }
+}
+
+.tclas-profile-main         { min-width: 0; }
+.tclas-profile-section-title{ font-size: 1.1rem; color: var(--c-ardoise); margin: 0 0 .75rem; border-bottom: 1px solid var(--c-border); padding-bottom: .4rem; }
+
+.tclas-profile-bio-cta,
+.tclas-profile-empty-cta { background: var(--c-or-pale); border-left: 3px solid var(--c-crimson); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+
+.tclas-profile-trips     { margin-bottom: 1.5rem; }
+.tclas-profile-trip-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+.tclas-profile-trip-meta { display: flex; align-items: center; gap: .5rem; margin-bottom: .2rem; flex-wrap: wrap; }
+
+// Directory card link styles
+.tclas-directory__grid     { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 1rem; }
+
+.tclas-directory__card {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	gap: .75rem;
+	border-radius: var(--radius);
+	transition: box-shadow .2s;
+
+	&--link {
+		text-decoration: none;
+		color: inherit;
+		cursor: pointer;
+
+		&:hover { box-shadow: 0 4px 16px rgba(10,37,64,.12); border-color: var(--c-ardoise); }
+	}
+}
+
+.tclas-directory__avatar   { border-radius: 50%; flex-shrink: 0; }
+.tclas-directory__name     { display: block; font-size: .92rem; color: var(--c-ardoise); }
+.tclas-directory__view-link{ display: block; font-size: .75rem; color: var(--c-aigue); margin-top: .15rem; }

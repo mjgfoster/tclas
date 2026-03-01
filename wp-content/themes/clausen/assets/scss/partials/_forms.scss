@@ -1,0 +1,186 @@
+// =============================================================================
+//  _forms.scss — Inputs, labels, checkboxes, alerts, search, tier selector
+// =============================================================================
+
+label,.form-label {
+	display: block;
+	font-weight: 700;
+	font-size: .82rem;
+	color: var(--c-body-text);
+	margin-bottom: .35rem;
+}
+
+.form-hint {
+	display: block;
+	font-size: .78rem;
+	color: var(--c-muted);
+	margin-top: -.2rem;
+	margin-bottom: .35rem;
+}
+
+input[type="text"],input[type="email"],input[type="password"],
+input[type="search"],input[type="tel"],input[type="url"],
+input[type="number"],input[type="date"],select,textarea,.form-control {
+	display: block;
+	width: 100%;
+	border: 2px solid var(--c-input-border);
+	border-radius: var(--radius);
+	background: #fff;
+	color: var(--c-body-text);
+	font-family: var(--font-sans);
+	font-size: .9rem;
+	padding: .5rem .8rem;
+	line-height: 1.5;
+	transition: border-color .15s, box-shadow .15s;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder { color: #b0a89e; }
+
+input:focus,select:focus,textarea:focus,.form-control:focus {
+	border-color: var(--c-crimson);
+	box-shadow: 0 0 0 3px rgba(227,30,38,.15);
+	outline: none;
+}
+
+input:disabled,select:disabled,textarea:disabled {
+	background: #f5f1eb;
+	color: var(--c-muted);
+	cursor: not-allowed;
+	border-color: var(--c-border);
+}
+
+textarea { min-height: 110px; resize: vertical; }
+
+select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6259' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right .75rem center;
+	padding-right: 2.25rem;
+}
+
+input[type="checkbox"],input[type="radio"] {
+	width: 1.05rem;
+	height: 1.05rem;
+	border: 2px solid var(--c-input-border);
+	border-radius: 2px;
+	cursor: pointer;
+	flex-shrink: 0;
+	accent-color: var(--c-crimson);
+	margin-right: .5rem;
+	vertical-align: middle;
+}
+input[type="radio"] { border-radius: 50%; }
+
+.form-check {
+	display: flex;
+	align-items: flex-start;
+	gap: .5rem;
+	margin-bottom: .5rem;
+
+	label { font-weight: 400; cursor: pointer; margin: 0; }
+}
+
+.is-invalid { border-color: var(--c-crimson) !important; }
+.is-valid   { border-color: var(--c-vert) !important; }
+
+.invalid-feedback,.form-error {
+	display: block;
+	font-size: .78rem;
+	color: var(--c-crimson);
+	font-weight: 700;
+	margin-top: .3rem;
+}
+
+.valid-feedback {
+	display: block;
+	font-size: .78rem;
+	color: var(--c-vert);
+	font-weight: 700;
+	margin-top: .3rem;
+}
+
+.form-group,.tclas-field { margin-bottom: 1.1rem; }
+.form-group:last-child { margin-bottom: 0; }
+
+// ── Alerts ────────────────────────────────────────────────────────────────
+.tclas-alert {
+	padding: .85rem 1.1rem;
+	border-left: 4px solid;
+	margin-bottom: 1.25rem;
+	font-size: .875rem;
+
+	&--success { border-color: var(--c-vert);    background: rgba(61,107,79,.07);  color: #2a4c37; }
+	&--error   { border-color: var(--c-crimson);  background: rgba(227,30,38,.06); color: #8a1318; }
+	&--info    { border-color: var(--c-aigue);    background: rgba(62,169,224,.08); color: #1a5980; }
+	&--warning { border-color: var(--c-gold);     background: rgba(253,185,19,.08); color: #8a6000; }
+}
+
+// ── Search ────────────────────────────────────────────────────────────────
+.tclas-search {
+	position: relative;
+
+	input[type="search"] { padding-right: 3rem; }
+}
+
+.tclas-search__btn {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 2.75rem;
+	background: var(--c-crimson);
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background .15s;
+
+	&:hover { background: var(--c-crimson-dk); }
+}
+
+// ── Tier selector (join page) ─────────────────────────────────────────────
+.tclas-tier-selector {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+	gap: 1rem;
+	margin-bottom: 1.75rem;
+}
+
+.tclas-tier-option {
+	input[type="radio"] {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0,0,0,0);
+	}
+
+	label {
+		display: block;
+		border: 2px solid var(--c-border);
+		padding: 1.25rem;
+		cursor: pointer;
+		text-align: center;
+		font-weight: 400;
+		height: 100%;
+		transition: border-color .15s, background .15s;
+
+		&:hover { border-color: var(--c-crimson); background: rgba(227,30,38,.04); }
+	}
+
+	input:checked + label {
+		border-color: var(--c-crimson);
+		background: rgba(227,30,38,.06);
+	}
+}
+
+.tier-name  { display: block; font-size: 1rem;  font-weight: 700; color: var(--c-ardoise); margin-bottom: .35rem; }
+.tier-price { display: block; font-size: 1.6rem; font-weight: 700; color: var(--c-crimson); margin-bottom: .2rem; }
+.tier-desc  { display: block; font-size: .8rem;  color: var(--c-muted); }
