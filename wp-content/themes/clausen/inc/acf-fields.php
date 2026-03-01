@@ -205,6 +205,16 @@ function tclas_register_acf_fields(): void {
 						'instructions' => 'Optional.',
 						'wrapper'      => [ 'width' => '25' ],
 					],
+					[
+						'key'           => 'field_hero_pairs_mobile_image',
+						'label'         => 'Mobile image',
+						'name'          => 'mobile_image',
+						'type'          => 'image',
+						'return_format' => 'array',
+						'preview_size'  => 'medium',
+						'instructions'  => 'Optional. Portrait or square crop for mobile (portrait ratio recommended). Falls back to the Luxembourg photo if left empty.',
+						'wrapper'       => [ 'width' => '50' ],
+					],
 				],
 			],
 			// ── Homepage stats ────────────────────────────────────────────────

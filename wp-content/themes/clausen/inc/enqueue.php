@@ -106,6 +106,24 @@ function tclas_enqueue_assets(): void {
 		],
 	] );
 
+	// ── Hero scripts (front page only) ───────────────────────────────────
+	if ( is_front_page() ) {
+		wp_enqueue_script(
+			'tclas-hero',
+			TCLAS_ASSETS . '/js/hero-slideshow.js',
+			[],
+			TCLAS_VERSION,
+			true
+		);
+		wp_enqueue_script(
+			'tclas-hero-greeting',
+			TCLAS_ASSETS . '/js/hero-greeting.js',
+			[],
+			TCLAS_VERSION,
+			true
+		);
+	}
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
