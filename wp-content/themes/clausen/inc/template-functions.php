@@ -58,7 +58,7 @@ function tclas_render_hero_bg(): void {
 				}
 				if ( $city ) {
 					echo '<div class="tclas-hero__label tclas-hero__label--left">';
-					echo '<p class="tclas-hero__label-city">' . esc_html( $city ) . ', MN</p>';
+					echo '<p class="tclas-hero__label-city">' . esc_html( $city ) . '</p>';
 					if ( $credit ) {
 						echo '<p class="tclas-hero__label-credit">' . esc_html( $credit ) . '</p>';
 					}
