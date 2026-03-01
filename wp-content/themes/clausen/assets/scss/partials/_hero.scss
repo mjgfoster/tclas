@@ -55,13 +55,14 @@
 	@media (min-width: 992px) { padding: 6rem 0; }
 }
 
-.tclas-hero__eyebrow { color: rgba(235,245,252,.75); margin-bottom: .75rem; }
+.tclas-hero__eyebrow { color: rgba(235,245,252,.75); margin-bottom: .75rem; text-shadow: 0 1px 6px rgba(0,0,0,.55); }
 
 .tclas-hero__title {
 	font-size: clamp(2rem, 5.5vw, 3.25rem);
 	color: #fff;
 	line-height: 1.1;
 	margin-bottom: 1rem;
+	text-shadow: 0 2px 12px rgba(0,0,0,.5);
 }
 
 .tclas-hero__subtitle {
@@ -70,6 +71,7 @@
 	margin-bottom: 1.75rem;
 	max-width: 48ch;
 	line-height: 1.65;
+	text-shadow: 0 1px 8px rgba(0,0,0,.5);
 }
 
 .tclas-hero__actions { display: flex; gap: .85rem; flex-wrap: wrap; align-items: center; }
@@ -107,12 +109,33 @@
 	left: 0;
 	width: calc(50% + 2rem);
 	clip-path: polygon(0 0, 100% 0, calc(100% - 4rem) 100%, 0 100%);
+
+	// Gradient sits above active slide (z-index 10) for text legibility.
+	// clip-path creates a stacking context, so z-index is local.
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 11;
+		pointer-events: none;
+		background: linear-gradient(to right, rgba(10,37,64,.80) 0%, rgba(10,37,64,.50) 52%, rgba(10,37,64,.06) 100%);
+	}
 }
 
 .tclas-hero__side--right {
 	right: 0;
 	width: calc(50% + 2rem);
 	clip-path: polygon(4rem 0, 100% 0, 100% 100%, 0 100%);
+
+	// Subtle right-edge vignette for depth.
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 11;
+		pointer-events: none;
+		background: linear-gradient(to left, rgba(10,37,64,.38) 0%, transparent 65%);
+	}
 }
 
 // Each slide sits full-bleed within its side
