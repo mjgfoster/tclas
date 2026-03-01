@@ -35,6 +35,8 @@ get_header();
 				<?php esc_html_e( 'Where the Twin Cities meet the Grand Duchy.', 'tclas' ); ?>
 			</h1>
 
+			<div class="tclas-hero__divider" aria-hidden="true"></div>
+
 			<p class="tclas-hero__subtitle">
 				<?php esc_html_e( "We're Minnesotans with Luxembourg in our bones, passports and hearts.", 'tclas' ); ?>
 				<?php echo tclas_ltz( 'Mir sinn hei', 'We are here', false ); ?> &mdash;

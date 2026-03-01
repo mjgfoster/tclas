@@ -27,10 +27,9 @@ function tclas_hero_url( string $size = 'desktop' ): string {
 /**
  * Render hero section background.
  *
- * When hero_pairs ACF data is present, renders the split photo panels
- * (.tclas-hero__split > .tclas-hero__pair > .tclas-hero__panel × 2).
- * Multiple pairs are stacked; the first is active by default and JS can
- * cycle through the rest.
+ * When hero_pairs ACF data is present, renders the Figma split-screen hero:
+ *   .tclas-hero__background-desktop — two clip-path sides, each with all slides
+ *   .tclas-hero__background-mobile  — single-image crossfade slides
  *
  * Falls back to the illustration / SVG placeholder when no pairs are set.
  */
@@ -38,47 +37,84 @@ function tclas_render_hero_bg(): void {
 	if ( function_exists( 'get_field' ) ) {
 		$pairs = get_field( 'hero_pairs', 'option' );
 		if ( is_array( $pairs ) && ! empty( $pairs ) ) {
-			$count = count( $pairs );
-			echo '<div class="tclas-hero__split" data-pairs="' . esc_attr( $count ) . '">';
+
+			// ── Desktop: two clip-path sides (MN left, LUX right) ────────────
+			echo '<div class="tclas-hero__background-desktop">';
+
+			// Left side — Minnesota, slides DOWN.
+			echo '<div class="tclas-hero__side tclas-hero__side--left">';
 			foreach ( $pairs as $index => $pair ) {
-				$mn_img    = ! empty( $pair['mn_photo'] )  ? $pair['mn_photo']  : null;
-				$lux_img   = ! empty( $pair['lux_photo'] ) ? $pair['lux_photo'] : null;
-				$mn_place  = isset( $pair['mn_municipality'] )  ? trim( $pair['mn_municipality'] )  : '';
-				$lux_place = isset( $pair['lux_municipality'] ) ? trim( $pair['lux_municipality'] ) : '';
-				$mn_credit  = isset( $pair['mn_credit'] )  ? trim( $pair['mn_credit'] )  : '';
-				$lux_credit = isset( $pair['lux_credit'] ) ? trim( $pair['lux_credit'] ) : '';
-				$active_class = $index === 0 ? ' tclas-hero__pair--active' : '';
-				echo '<div class="tclas-hero__pair' . esc_attr( $active_class ) . '" data-pair-index="' . esc_attr( $index ) . '">';
-
-				// Minnesota panel.
-				echo '<div class="tclas-hero__panel tclas-hero__panel--mn">';
-				if ( $mn_img && ! empty( $mn_img['url'] ) ) {
-					echo '<img src="' . esc_url( $mn_img['url'] ) . '" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
+				$img    = ! empty( $pair['mn_photo'] ) ? $pair['mn_photo'] : null;
+				$city   = isset( $pair['mn_municipality'] ) ? trim( $pair['mn_municipality'] ) : '';
+				$credit = isset( $pair['mn_credit'] )       ? trim( $pair['mn_credit'] )       : '';
+				$active = $index === 0 ? ' data-active="true"' : '';
+				echo '<div class="tclas-hero__image-slide" data-index="' . esc_attr( $index ) . '" data-side="minnesota"' . $active . '>';
+				if ( $img && ! empty( $img['url'] ) ) {
+					$src    = esc_url( ! empty( $img['sizes']['large'] ) ? $img['sizes']['large'] : $img['url'] );
+					$srcset = ! empty( $img['sizes']['large'] )
+						? ' srcset="' . esc_url( $img['sizes']['large'] ) . ' 1024w, ' . esc_url( $img['url'] ) . ' ' . (int) $img['width'] . 'w"'
+						: '';
+					echo '<img src="' . $src . '"' . $srcset . ' sizes="(min-width: 768px) 50vw, 100vw" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
 				}
-				if ( $mn_place ) {
-					echo '<span class="tclas-hero__panel-label">' . esc_html( $mn_place ) . ', MN</span>';
-				}
-				if ( $mn_credit ) {
-					echo '<span class="tclas-hero__panel-credit">' . esc_html( $mn_credit ) . '</span>';
-				}
-				echo '</div>';
-
-				// Luxembourg panel.
-				echo '<div class="tclas-hero__panel tclas-hero__panel--lux">';
-				if ( $lux_img && ! empty( $lux_img['url'] ) ) {
-					echo '<img src="' . esc_url( $lux_img['url'] ) . '" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
-				}
-				if ( $lux_place ) {
-					echo '<span class="tclas-hero__panel-label">' . esc_html( $lux_place ) . '</span>';
-				}
-				if ( $lux_credit ) {
-					echo '<span class="tclas-hero__panel-credit">' . esc_html( $lux_credit ) . '</span>';
+				if ( $city ) {
+					echo '<div class="tclas-hero__label tclas-hero__label--left">';
+					echo '<p class="tclas-hero__label-city">' . esc_html( $city ) . ', MN</p>';
+					if ( $credit ) {
+						echo '<p class="tclas-hero__label-credit">' . esc_html( $credit ) . '</p>';
+					}
+					echo '</div>';
 				}
 				echo '</div>';
-
-				echo '</div>'; // .tclas-hero__pair
 			}
-			echo '</div>'; // .tclas-hero__split
+			echo '</div>'; // side--left
+
+			// Right side — Luxembourg, slides UP.
+			echo '<div class="tclas-hero__side tclas-hero__side--right">';
+			foreach ( $pairs as $index => $pair ) {
+				$img    = ! empty( $pair['lux_photo'] ) ? $pair['lux_photo'] : null;
+				$city   = isset( $pair['lux_municipality'] ) ? trim( $pair['lux_municipality'] ) : '';
+				$credit = isset( $pair['lux_credit'] )       ? trim( $pair['lux_credit'] )       : '';
+				$active = $index === 0 ? ' data-active="true"' : '';
+				echo '<div class="tclas-hero__image-slide" data-index="' . esc_attr( $index ) . '" data-side="luxembourg"' . $active . '>';
+				if ( $img && ! empty( $img['url'] ) ) {
+					$src    = esc_url( ! empty( $img['sizes']['large'] ) ? $img['sizes']['large'] : $img['url'] );
+					$srcset = ! empty( $img['sizes']['large'] )
+						? ' srcset="' . esc_url( $img['sizes']['large'] ) . ' 1024w, ' . esc_url( $img['url'] ) . ' ' . (int) $img['width'] . 'w"'
+						: '';
+					echo '<img src="' . $src . '"' . $srcset . ' sizes="(min-width: 768px) 50vw, 100vw" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
+				}
+				if ( $city ) {
+					echo '<div class="tclas-hero__label tclas-hero__label--right">';
+					echo '<p class="tclas-hero__label-city">' . esc_html( $city ) . '</p>';
+					if ( $credit ) {
+						echo '<p class="tclas-hero__label-credit">' . esc_html( $credit ) . '</p>';
+					}
+					echo '</div>';
+				}
+				echo '</div>';
+			}
+			echo '</div>'; // side--right
+
+			echo '</div>'; // background-desktop
+
+			// ── Mobile: single crossfade image ───────────────────────────────
+			echo '<div class="tclas-hero__background-mobile">';
+			foreach ( $pairs as $index => $pair ) {
+				// Prefer dedicated mobile_image; fall back to lux_photo.
+				$img = ! empty( $pair['mobile_image'] )
+					? $pair['mobile_image']
+					: ( ! empty( $pair['lux_photo'] ) ? $pair['lux_photo'] : null );
+				$active = $index === 0 ? ' data-active="true"' : '';
+				echo '<div class="tclas-hero__image-slide" data-index="' . esc_attr( $index ) . '"' . $active . '>';
+				if ( $img && ! empty( $img['url'] ) ) {
+					$src = esc_url( ! empty( $img['sizes']['large'] ) ? $img['sizes']['large'] : $img['url'] );
+					echo '<img src="' . $src . '" sizes="100vw" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
+					echo '<div class="tclas-hero__mobile-gradient" aria-hidden="true"></div>';
+				}
+				echo '</div>';
+			}
+			echo '</div>'; // background-mobile
+
 			return;
 		}
 	}

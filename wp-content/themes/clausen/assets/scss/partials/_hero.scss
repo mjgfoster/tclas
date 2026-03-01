@@ -74,84 +74,145 @@
 
 .tclas-hero__actions { display: flex; gap: .85rem; flex-wrap: wrap; align-items: center; }
 
-// ── Split photo hero ──────────────────────────────────────────────────────
+// ── Split photo hero (Figma: diagonal clip-path + vertical slide) ────────
 
-// Container — same stacking context as .tclas-hero__bg
-.tclas-hero__split {
+// Show/hide desktop vs mobile backgrounds
+.tclas-hero__background-mobile {
 	position: absolute;
 	inset: 0;
 	z-index: 0;
+	display: block;
+
+	@media (min-width: 768px) { display: none; }
 }
 
-// One pair = two side-by-side panels; only the active pair is visible
-.tclas-hero__pair {
+.tclas-hero__background-desktop {
 	position: absolute;
 	inset: 0;
-	display: flex;
-	opacity: 0;
-	transition: opacity .7s ease;
+	z-index: 0;
+	display: none;
 
-	&--active { opacity: 1; }
+	@media (min-width: 768px) { display: flex; }
 }
 
-.tclas-hero__panel {
-	flex: 1;
-	position: relative;
+// Clip-path sides — each slightly wider than 50% so the diagonals overlap
+.tclas-hero__side {
+	position: absolute;
+	top: 0;
+	height: 100%;
 	overflow: hidden;
+}
+
+.tclas-hero__side--left {
+	left: 0;
+	width: calc(50% + 2rem);
+	clip-path: polygon(0 0, 100% 0, calc(100% - 4rem) 100%, 0 100%);
+}
+
+.tclas-hero__side--right {
+	right: 0;
+	width: calc(50% + 2rem);
+	clip-path: polygon(4rem 0, 100% 0, 100% 100%, 0 100%);
+}
+
+// Each slide sits full-bleed within its side
+.tclas-hero__image-slide {
+	position: absolute;
+	inset: 0;
 
 	img {
-		position: absolute;
-		inset: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
-
-	// Gradient overlays — MN carries the heavy left-side text gradient
-	&--mn::after,
-	&--lux::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-	}
-	&--mn::after  { background: linear-gradient(to right, rgba(10,37,64,.84) 0%, rgba(10,37,64,.52) 50%, rgba(10,37,64,.18) 100%); }
-	&--lux::after { background: linear-gradient(to left,  rgba(10,37,64,.55) 0%, rgba(10,37,64,.20) 60%, rgba(10,37,64,.05) 100%); }
-
-	// Hairline divider between the two panels
-	&--mn { border-right: 1px solid rgba(255,255,255,.15); }
 }
 
-// Municipality label — small caps, pinned to bottom of each panel
-.tclas-hero__panel-label {
+// Mobile: simple opacity crossfade
+.tclas-hero__background-mobile .tclas-hero__image-slide {
+	opacity: 0;
+	transition: opacity 1.5s ease-in-out;
+
+	&[data-active="true"] {
+		opacity: 1;
+		z-index: 10;
+	}
+}
+
+// Desktop: vertical slide — MN slides down, LUX slides up
+@media (min-width: 768px) {
+	.tclas-hero__side--left .tclas-hero__image-slide {
+		transform: translateY(-100%);
+		transition: transform 1.8s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+	}
+
+	.tclas-hero__side--right .tclas-hero__image-slide {
+		transform: translateY(100%);
+		transition: transform 1.8s cubic-bezier(0.43, 0.13, 0.23, 0.96);
+	}
+
+	.tclas-hero__image-slide[data-active="true"] {
+		transform: translateY(0);
+		z-index: 10;
+	}
+
+	.tclas-hero__image-slide[data-previous="true"] { z-index: 5; }
+}
+
+// Reduced motion: fall back to crossfade on all viewports
+@media (prefers-reduced-motion: reduce) {
+	.tclas-hero__side--left .tclas-hero__image-slide,
+	.tclas-hero__side--right .tclas-hero__image-slide {
+		transform: none;
+		opacity: 0;
+		transition: opacity .5s ease-in-out;
+	}
+
+	.tclas-hero__image-slide[data-active="true"] { opacity: 1; }
+}
+
+// City / municipality labels
+.tclas-hero__label {
 	position: absolute;
-	bottom: 1.1rem;
+	bottom: 1.5rem;
 	z-index: 1;
-	font-size: .68rem;
+	background: rgba(10,37,64,.6);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	padding: .45rem .7rem;
+	border-radius: 2px;
+
+	&--left  { left: 1.5rem; }
+	&--right { right: 1.5rem; }
+}
+
+.tclas-hero__label-city {
+	font-size: .72rem;
 	font-weight: 700;
 	text-transform: uppercase;
-	letter-spacing: .09em;
-	color: rgba(255,255,255,.7);
-
-	.tclas-hero__panel--mn  & { left: 1rem; }
-	.tclas-hero__panel--lux & { right: 1rem; text-align: right; }
+	letter-spacing: .06em;
+	color: #fff;
+	margin: 0;
 }
 
-// Photo credit — even smaller, beneath the label
-.tclas-hero__panel-credit {
+.tclas-hero__label-credit {
+	font-size: .62rem;
+	color: rgba(255,255,255,.75);
+	margin: .2rem 0 0;
+}
+
+// Mobile gradient overlay for text legibility
+.tclas-hero__mobile-gradient {
 	position: absolute;
-	bottom: .35rem;
-	z-index: 1;
-	font-size: .6rem;
-	color: rgba(255,255,255,.38);
-
-	.tclas-hero__panel--mn  & { left: 1rem; }
-	.tclas-hero__panel--lux & { right: 1rem; }
+	inset: 0;
+	background: linear-gradient(to bottom, transparent, rgba(10,37,64,.2) 50%, rgba(10,37,64,.65));
 }
 
-// On mobile, hide the LUX panel and let MN fill the full width
-@media (max-width: 767px) {
-	.tclas-hero__panel--lux { display: none; }
-	.tclas-hero__panel--mn  { border-right: none; }
+// Orange accent divider below the H1
+.tclas-hero__divider {
+	width: 5rem;
+	height: 3px;
+	background: var(--c-gold);
+	margin: 1.25rem 0;
 }
 
 // ── Page hero variant ─────────────────────────────────────────────────────
