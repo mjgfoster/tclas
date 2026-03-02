@@ -45,8 +45,7 @@
 						<div class="tclas-brand__logo" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;color:#C0001A;font-size:1.4rem;font-weight:700;">🦁</div>
 					<?php endif; ?>
 					<div class="tclas-brand__text">
-						<span class="tclas-brand__name">Twin Cities Luxembourg</span>
-						<span class="tclas-brand__tagline">American Society</span>
+						<span class="tclas-brand__name">Twin Cities Luxembourg<wbr> American Society</span>
 					</div>
 				</a>
 
