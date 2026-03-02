@@ -8,7 +8,6 @@
 .tclas-mission {
 	background: var(--c-or-pale);
 	padding: var(--pad-y) 0;
-	text-align: center;
 
 	h2 { color: var(--c-ardoise); margin-bottom: 1rem; }
 
@@ -16,7 +15,7 @@
 		color: var(--c-body-text);
 		font-size: 1.05rem;
 		max-width: 68ch;
-		margin: 0 auto 2rem;
+		margin: 0 0 2rem;
 		line-height: 1.7;
 	}
 }
@@ -25,7 +24,6 @@
 .tclas-quiz-cta {
 	background: var(--c-ardoise);
 	padding: var(--pad-y) 0;
-	text-align: center;
 
 	.tclas-eyebrow { color: var(--c-aigue); }
 	h2             { color: var(--c-or-pale); margin-bottom: 1rem; }
@@ -34,7 +32,7 @@
 		color: rgba(235,245,252,.8);
 		font-size: 1.05rem;
 		max-width: 56ch;
-		margin: 0 auto 2rem;
+		margin: 0 0 2rem;
 		line-height: 1.7;
 	}
 }
