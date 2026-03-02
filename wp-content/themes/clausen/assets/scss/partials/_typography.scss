@@ -6,6 +6,8 @@ h1,h2,h3,h4,h5,h6 {
 	font-family: var(--font-serif);
 	font-weight: 900;
 	line-height: 1.2;
+	letter-spacing: -0.025em;
+	font-feature-settings: "lnum" 1, "tnum" 1;
 	color: var(--c-ardoise);
 	margin: 0 0 .75rem;
 }
@@ -37,11 +39,11 @@ blockquote {
 // ── Eyebrow label ─────────────────────────────────────────────────────────
 .tclas-eyebrow {
 	display: inline-block;
-	font-size: .7rem;
+	font-size: .875rem;
 	font-weight: 700;
 	text-transform: uppercase;
-	letter-spacing: .1em;
-	color: var(--c-crimson);
+	letter-spacing: .15em;
+	color: var(--c-body-text);
 	margin-bottom: .6rem;
 
 	&--light { color: var(--c-or-pale); }
