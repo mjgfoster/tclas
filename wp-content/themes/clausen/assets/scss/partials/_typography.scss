@@ -3,8 +3,8 @@
 // =============================================================================
 
 h1,h2,h3,h4,h5,h6 {
-	font-family: var(--font-sans);
-	font-weight: 700;
+	font-family: var(--font-serif);
+	font-weight: 900;
 	line-height: 1.2;
 	color: var(--c-ardoise);
 	margin: 0 0 .75rem;
@@ -16,11 +16,11 @@ h4 { font-size: 1.15rem; }
 h5 { font-size: 1rem; }
 h6 { font-size: .9rem; }
 
-p { margin: 0 0 1rem; max-width: 68ch; }
+p { margin: 0 0 1rem; max-width: 68ch; line-height: 1.8; }
 p:last-child { margin-bottom: 0; }
 
-a { color: var(--c-crimson); text-decoration: underline; text-underline-offset: 3px; }
-a:hover { color: var(--c-crimson-dk); }
+a { color: var(--c-ardoise); text-decoration: underline; text-underline-offset: 3px; }
+a:hover { color: var(--c-ardoise-dk); }
 
 ul,ol { padding-left: 1.4rem; margin-bottom: 1rem; }
 li { margin-bottom: .25rem; }
