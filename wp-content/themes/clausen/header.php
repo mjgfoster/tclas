@@ -9,6 +9,8 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<a class="tclas-skip-link" href="#main-content"><?php esc_html_e( 'Skip to main content', 'tclas' ); ?></a>
+
 <div id="page">
 
 	<?php
@@ -39,7 +41,7 @@
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="tclas-brand" rel="home">
 					<?php if ( has_custom_logo() ) : ?>
 						<div class="tclas-brand__logo">
-							<?php echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'medium', false, [ 'alt' => get_bloginfo( 'name' ) ] ); ?>
+							<?php echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'thumbnail', false, [ 'alt' => get_bloginfo( 'name' ) ] ); ?>
 						</div>
 					<?php else : ?>
 						<div class="tclas-brand__logo" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;color:#C0001A;font-size:1.4rem;font-weight:700;">🦁</div>
@@ -49,8 +51,8 @@
 					</div>
 				</a>
 
-				<!-- Primary navigation -->
-				<nav aria-label="<?php esc_attr_e( 'Primary navigation', 'tclas' ); ?>">
+				<!-- Desktop navigation -->
+				<nav class="tclas-header__desktop-nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary navigation', 'tclas' ); ?>">
 					<?php
 					wp_nav_menu( [
 						'theme_location' => 'primary',
@@ -62,19 +64,50 @@
 					?>
 				</nav>
 
-				<!-- Header actions -->
-				<div class="tclas-header__actions">
+				<!-- Desktop utility bar: search + member action -->
+				<div class="tclas-header__utility">
+					<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" class="tclas-search-btn" aria-label="<?php esc_attr_e( 'Search', 'tclas' ); ?>">
+						<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+					</a>
 					<?php tclas_render_header_actions(); ?>
-					<button
-						class="tclas-hamburger"
-						aria-expanded="false"
-						aria-controls="tclas-nav"
-						aria-label="<?php esc_attr_e( 'Open menu', 'tclas' ); ?>"
-					>☰</button>
 				</div>
+
+				<!-- Mobile toggle -->
+				<button
+					class="tclas-hamburger"
+					aria-expanded="false"
+					aria-controls="tclas-nav-drawer"
+					aria-label="<?php esc_attr_e( 'Toggle menu', 'tclas' ); ?>"
+				>
+					<svg class="tclas-hamburger__menu" aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+					<svg class="tclas-hamburger__close" aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				</button>
 
 			</div><!-- .tclas-header__inner -->
 		</div><!-- .container-tclas -->
+
+		<!-- Mobile navigation drawer -->
+		<div class="tclas-nav-drawer" id="tclas-nav-drawer">
+			<nav role="navigation" aria-label="<?php esc_attr_e( 'Mobile navigation', 'tclas' ); ?>">
+				<?php
+				wp_nav_menu( [
+					'theme_location' => 'primary',
+					'menu_class'     => 'tclas-nav-drawer__links',
+					'container'      => false,
+					'walker'         => new TCLAS_Nav_Walker(),
+					'fallback_cb'    => '__return_false',
+				] );
+				?>
+			</nav>
+			<div class="tclas-nav-drawer__utility">
+				<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" class="tclas-nav-drawer__search">
+					<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+					<span><?php esc_html_e( 'Search', 'tclas' ); ?></span>
+				</a>
+				<?php tclas_render_header_actions( true ); ?>
+			</div>
+		</div><!-- .tclas-nav-drawer -->
+
 	</header>
 
 	<main id="main-content" tabindex="-1">
