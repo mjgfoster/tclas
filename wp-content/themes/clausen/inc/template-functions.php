@@ -223,35 +223,39 @@ function tclas_is_member(): bool {
 // ── Navigation CTA ────────────────────────────────────────────────────────
 
 /**
- * Render the header action area (join/login/account/renew).
+ * Render the header utility action (user menu or login link).
+ *
+ * @param bool $mobile  True when rendering inside the mobile drawer.
  */
-function tclas_render_header_actions(): void {
-	$status = tclas_membership_status();
+function tclas_render_header_actions( bool $mobile = false ): void {
+	$icon_size = $mobile ? '20' : '18';
+	$icon_user = '<svg aria-hidden="true" focusable="false" width="' . $icon_size . '" height="' . $icon_size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
-	switch ( $status ) {
-		case 'active':
-			$account_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'account' ) : get_permalink( get_option( 'pmpro_account_page_id' ) );
-			$name        = wp_get_current_user()->display_name;
-			echo '<a href="' . esc_url( $account_url ) . '" class="tclas-header__account">';
-			echo get_avatar( get_current_user_id(), 30, '', '', [ 'class' => 'tclas-header__avatar' ] );
-			echo '<span>' . esc_html__( 'My account', 'tclas' ) . '</span>';
+	if ( is_user_logged_in() ) {
+		$user       = wp_get_current_user();
+		$first_name = ! empty( $user->user_firstname ) ? $user->user_firstname : __( 'Member', 'tclas' );
+		$hub_url    = home_url( '/member-hub/' );
+
+		if ( $mobile ) {
+			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-nav-drawer__user-link">';
+			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
+			echo '<span>' . esc_html__( 'Dashboard', 'tclas' ) . '</span>';
 			echo '</a>';
-			break;
-
-		case 'expiring':
-		case 'expired':
-			$renew_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : '#join';
-			echo '<a href="' . esc_url( $renew_url ) . '" class="btn btn-primary btn-sm tclas-header__join">';
-			echo esc_html__( 'Renew my membership', 'tclas' );
+		} else {
+			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-user-menu">';
+			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
+			/* translators: %s: member's first name */
+			echo '<span>' . esc_html( sprintf( __( 'Moien, %s', 'tclas' ), $first_name ) ) . '</span>';
 			echo '</a>';
-			break;
+		}
+	} else {
+		$login_url = wp_login_url( get_permalink() );
 
-		default: // 'none'
-			$join_url  = home_url( '/join/' );
-			$login_url = wp_login_url( get_permalink() );
-			echo '<a href="' . esc_url( $join_url ) . '" class="btn btn-primary btn-sm tclas-header__join">' . esc_html__( 'Join', 'tclas' ) . '</a>';
-			echo '<a href="' . esc_url( $login_url ) . '" class="tclas-header__login">' . esc_html__( 'Log in', 'tclas' ) . '</a>';
-			break;
+		if ( $mobile ) {
+			echo '<a href="' . esc_url( $login_url ) . '" class="tclas-nav-drawer__login-link">' . esc_html__( 'Member Log In', 'tclas' ) . '</a>';
+		} else {
+			echo '<a href="' . esc_url( $login_url ) . '" class="tclas-header__login">' . esc_html__( 'Member Log In', 'tclas' ) . '</a>';
+		}
 	}
 }
 

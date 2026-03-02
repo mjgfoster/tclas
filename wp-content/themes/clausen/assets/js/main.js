@@ -17,40 +17,43 @@
   // ── Mobile navigation ──────────────────────────────────────────────────────
   function initMobileNav() {
     const hamburger = qs('.tclas-hamburger');
-    const nav       = qs('.tclas-nav');
-    if (!hamburger || !nav) return;
+    const drawer    = qs('.tclas-nav-drawer');
+    if (!hamburger || !drawer) return;
+
+    const iconMenu  = qs('.tclas-hamburger__menu',  hamburger);
+    const iconClose = qs('.tclas-hamburger__close', hamburger);
+
+    function openMenu() {
+      drawer.classList.add('is-open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      if (iconMenu)  iconMenu.style.display  = 'none';
+      if (iconClose) iconClose.style.display = '';
+    }
+
+    function closeMenu() {
+      drawer.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      if (iconMenu)  iconMenu.style.display  = '';
+      if (iconClose) iconClose.style.display = 'none';
+    }
 
     hamburger.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      hamburger.setAttribute('aria-expanded', String(open));
-      hamburger.setAttribute('aria-label', open
-        ? (tclasData.strings.closeMenu || 'Close menu')
-        : (tclasData.strings.openMenu  || 'Open menu')
-      );
-      hamburger.textContent = open ? '\u00d7' : '\u2630';
+      drawer.classList.contains('is-open') ? closeMenu() : openMenu();
     });
+
+    // Close when a nav link is tapped
+    qsa('a', drawer).forEach(link => link.addEventListener('click', closeMenu));
 
     // Close on outside click
     document.addEventListener('click', (e) => {
-      if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
-        nav.classList.remove('is-open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        hamburger.textContent = '\u2630';
+      if (!hamburger.contains(e.target) && !drawer.contains(e.target)) {
+        closeMenu();
       }
     });
 
-    // Mobile dropdown toggles
-    qsa('.tclas-nav__item').forEach(item => {
-      const link     = qs('.tclas-nav__link', item);
-      const dropdown = qs('.tclas-nav__dropdown', item);
-      if (!dropdown) return;
-
-      link.addEventListener('click', (e) => {
-        if (window.innerWidth < 992) {
-          e.preventDefault();
-          item.classList.toggle('is-open');
-        }
-      });
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
     });
   }
 
