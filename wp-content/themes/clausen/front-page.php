@@ -67,15 +67,16 @@ get_header();
 </section>
 
 <!-- ── 3. EVENTS ────────────────────────────────────────────────────────── -->
-<section class="tclas-events tclas-section--sm" id="events">
+<section class="tclas-events" id="events">
 	<div class="container-tclas">
 		<div class="tclas-events__header">
 			<div>
-				<span class="tclas-eyebrow"><?php esc_html_e( 'What\'s happening', 'tclas' ); ?></span>
+				<span class="tclas-eyebrow"><?php esc_html_e( 'Happening soon', 'tclas' ); ?></span>
 				<h2><?php esc_html_e( 'Upcoming events', 'tclas' ); ?></h2>
 			</div>
-			<a href="<?php echo esc_url( home_url( '/events/' ) ); ?>" class="btn btn-outline-ardoise btn-sm">
-				<?php esc_html_e( 'All events', 'tclas' ); ?>
+			<a href="<?php echo esc_url( home_url( '/events/' ) ); ?>" class="tclas-events__view-all tclas-events__view-all--desktop">
+				<?php esc_html_e( 'View all events', 'tclas' ); ?>
+				<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
 			</a>
 		</div>
 
@@ -92,6 +93,11 @@ get_header();
 			<?php tclas_render_events_empty(); ?>
 		<?php endif; ?>
 
+		<div class="tclas-events__view-all-mobile">
+			<a href="<?php echo esc_url( home_url( '/events/' ) ); ?>" class="tclas-events__view-all-btn">
+				<?php esc_html_e( 'View all events', 'tclas' ); ?>
+			</a>
+		</div>
 	</div>
 </section>
 

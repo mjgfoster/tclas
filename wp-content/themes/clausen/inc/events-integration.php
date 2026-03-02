@@ -33,38 +33,72 @@ function tclas_get_upcoming_events( int $limit = 3 ): array {
  * @param WP_Post $event  TEC event post object.
  */
 function tclas_render_event_card( WP_Post $event ): void {
-	$start     = tribe_get_start_date( $event->ID, false, 'U' );
-	$day       = date_i18n( 'j',    $start );
-	$month     = date_i18n( 'M',   $start );
-	$year      = date_i18n( 'Y',    $start );
-	$time      = tribe_get_start_time( $event->ID );
-	$venue     = tribe_get_venue( $event->ID );
+	$start    = tribe_get_start_date( $event->ID, false, 'U' );
+	$date_str = date_i18n( 'l, F j', $start );
+	$time_str = tribe_get_start_time( $event->ID );
+	$venue    = tribe_get_venue( $event->ID );
 	$permalink = get_permalink( $event->ID );
-	$title     = get_the_title( $event->ID );
-	$members   = get_post_meta( $event->ID, '_tclas_members_only', true );
+	$title    = get_the_title( $event->ID );
+	$members  = get_post_meta( $event->ID, '_tclas_members_only', true );
+	$excerpt  = get_the_excerpt( $event->ID );
+
+	// Inline SVG icons — avoids external icon library dependency
+	$icon_cal   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+	$icon_clock = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+	$icon_pin   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+	$icon_lock  = '<svg aria-hidden="true" focusable="false" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
 	?>
-	<article class="tclas-event-card">
-		<div class="tclas-event-card__date" aria-hidden="true">
-			<span class="day"><?php echo esc_html( $day ); ?></span>
-			<span class="month"><?php echo esc_html( $month ); ?></span>
-			<span class="year"><?php echo esc_html( $year ); ?></span>
-		</div>
-		<div class="tclas-event-card__body">
-			<time class="sr-only" datetime="<?php echo esc_attr( date( 'Y-m-d', $start ) ); ?>">
-				<?php echo esc_html( date_i18n( get_option( 'date_format' ), $start ) ); ?>
-			</time>
-			<h3 class="tclas-event-card__title">
-				<a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a>
-			</h3>
-			<div class="tclas-event-card__meta">
-				<?php if ( $time ) : ?><span><?php echo esc_html( $time ); ?></span><?php endif; ?>
-				<?php if ( $venue ) : ?><span><?php echo esc_html( $venue ); ?></span><?php endif; ?>
+	<a href="<?php echo esc_url( $permalink ); ?>" class="tclas-event-card" aria-label="<?php echo esc_attr( $title ); ?>">
+		<article>
+			<div class="tclas-event-card__image">
+				<?php if ( has_post_thumbnail( $event->ID ) ) : ?>
+					<?php echo get_the_post_thumbnail( $event->ID, 'medium_large' ); ?>
+				<?php else : ?>
+					<div class="tclas-event-card__image-placeholder" aria-hidden="true">
+						<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+					</div>
+				<?php endif; ?>
 			</div>
-			<?php if ( $members ) : ?>
-				<span class="tclas-event-card__members"><?php esc_html_e( 'Members only', 'tclas' ); ?></span>
-			<?php endif; ?>
-		</div>
-	</article>
+
+			<div class="tclas-event-card__content">
+				<time class="sr-only" datetime="<?php echo esc_attr( date( 'Y-m-d', $start ) ); ?>">
+					<?php echo esc_html( $date_str ); ?>
+				</time>
+
+				<h3 class="tclas-event-card__title"><?php echo esc_html( $title ); ?></h3>
+
+				<?php if ( $excerpt ) : ?>
+					<p class="tclas-event-card__excerpt"><?php echo esc_html( wp_trim_words( $excerpt, 20 ) ); ?></p>
+				<?php endif; ?>
+
+				<div class="tclas-event-card__meta">
+					<div class="tclas-event-card__meta-row">
+						<span class="tclas-event-card__meta-icon"><?php echo $icon_cal; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+						<span><?php echo esc_html( $date_str ); ?></span>
+					</div>
+					<?php if ( $time_str ) : ?>
+						<div class="tclas-event-card__meta-row">
+							<span class="tclas-event-card__meta-icon"><?php echo $icon_clock; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+							<span><?php echo esc_html( $time_str ); ?></span>
+						</div>
+					<?php endif; ?>
+					<?php if ( $venue ) : ?>
+						<div class="tclas-event-card__meta-row">
+							<span class="tclas-event-card__meta-icon"><?php echo $icon_pin; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+							<span><?php echo esc_html( $venue ); ?></span>
+						</div>
+					<?php endif; ?>
+				</div>
+
+				<?php if ( $members ) : ?>
+					<div class="tclas-event-card__members-badge">
+						<?php echo $icon_lock; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						<span><?php esc_html_e( 'Members only', 'tclas' ); ?></span>
+					</div>
+				<?php endif; ?>
+			</div>
+		</article>
+	</a>
 	<?php
 }
 
