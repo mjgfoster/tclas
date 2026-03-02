@@ -1,7 +1,60 @@
 // =============================================================================
-//  _sections.scss — Homepage sections: welcome, events, news, membership,
-//                   join CTA, national day
+//  _sections.scss — Homepage sections: mission, events, citizenship CTA,
+//                   join bar, national day; also news + membership (used on
+//                   interior pages / join page)
 // =============================================================================
+
+// ── Mission statement ─────────────────────────────────────────────────────
+.tclas-mission {
+	background: var(--c-or-pale);
+	padding: var(--pad-y) 0;
+	text-align: center;
+
+	h2 { color: var(--c-ardoise); margin-bottom: 1rem; }
+
+	p {
+		color: var(--c-body-text);
+		font-size: 1.05rem;
+		max-width: 68ch;
+		margin: 0 auto 2rem;
+		line-height: 1.7;
+	}
+}
+
+// ── Citizenship quiz CTA ──────────────────────────────────────────────────
+.tclas-quiz-cta {
+	background: var(--c-ardoise);
+	padding: var(--pad-y) 0;
+	text-align: center;
+
+	.tclas-eyebrow { color: var(--c-aigue); }
+	h2             { color: var(--c-or-pale); margin-bottom: 1rem; }
+
+	p {
+		color: rgba(235,245,252,.8);
+		font-size: 1.05rem;
+		max-width: 56ch;
+		margin: 0 auto 2rem;
+		line-height: 1.7;
+	}
+}
+
+// ── Join bar (pre-footer) ─────────────────────────────────────────────────
+.tclas-join-bar {
+	background: var(--c-gold);
+	padding: 3.5rem 0;
+	text-align: center;
+
+	h2 { color: var(--c-ardoise); margin-bottom: 0; }
+}
+
+.tclas-join-bar__actions {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-top: 1.5rem;
+}
 
 // ── Welcome band ──────────────────────────────────────────────────────────
 .tclas-welcome {
