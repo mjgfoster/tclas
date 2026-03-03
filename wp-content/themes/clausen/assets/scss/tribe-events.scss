@@ -156,8 +156,9 @@
 // ── View selector — hidden (list-only; selector redundant) ────────────────
 .tribe-events-c-view-selector { display: none !important; }
 
-// ── Top bar — hidden entirely (no archive browsing needed) ────────────────
-.tribe-events-c-top-bar { display: none !important; }
+// ── Top bar + bottom pagination — hidden (no archive browsing needed) ────────
+.tribe-events-c-top-bar,
+.tribe-events-c-nav { display: none !important; }
 
 .tribe-events-c-top-bar__today-button {
 	font-family:   var(--font-sans) !important;
