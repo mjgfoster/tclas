@@ -220,7 +220,7 @@
 		z-index: 10;
 	}
 
-	.tclas-hero__image-slide[data-previous="true"] { z-index: 5; }
+	.tclas-hero__image-slide[data-previous="true"] { z-index: 5; transform: translateY(0); } // hold in place; incoming slide reveals over it
 }
 
 // Reduced motion: fall back to crossfade on all viewports
