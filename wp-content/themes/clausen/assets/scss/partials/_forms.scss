@@ -114,10 +114,11 @@ input[type="radio"] { border-radius: 50%; }
 	margin-bottom: 1.25rem;
 	font-size: .875rem;
 
-	&--success { border-color: var(--c-vert);    background: rgba(61,107,79,.07);  color: #2a4c37; }
-	&--error   { border-color: var(--c-crimson);  background: rgba(227,30,38,.06); color: #8a1318; }
-	&--info    { border-color: var(--c-aigue);    background: rgba(62,169,224,.08); color: #1a5980; }
-	&--warning { border-color: var(--c-gold);     background: rgba(253,185,19,.08); color: #8a6000; }
+	&--success  { border-color: var(--c-vert);    background: rgba(61,107,79,.07);  color: #2a4c37; }
+	&--error    { border-color: var(--c-crimson);  background: rgba(227,30,38,.06); color: #8a1318; }
+	&--info     { border-color: var(--c-aigue);    background: rgba(62,169,224,.08); color: #1a5980; }
+	&--warning  { border-color: var(--c-gold);     background: rgba(253,185,19,.08); color: #8a6000; }
+	&--prominent{ margin-bottom: 2rem; } // larger gap when alert precedes major content
 }
 
 // ── Search ────────────────────────────────────────────────────────────────

@@ -244,7 +244,7 @@ $profile_photo_url = $profile_photo_id
 							</div>
 
 							<!-- Bio -->
-							<p class="tclas-story-hint" style="margin-top:1.25rem">
+							<p class="tclas-story-hint tclas-story-hint--mt-lg">
 								<?php esc_html_e( "A short introduction for other members — your Luxembourg connection, what you're researching, or what you love about Lëtzebuergesch culture. Max 800 characters.", 'tclas' ); ?>
 							</p>
 							<textarea
@@ -260,7 +260,7 @@ $profile_photo_url = $profile_photo_id
 							</p>
 
 							<!-- City -->
-							<label class="tclas-story-social-label" for="tclas-city-field" style="margin-top:1rem;display:block">
+							<label class="tclas-story-social-label tclas-story-social-label--mt" for="tclas-city-field">
 								<?php esc_html_e( 'City you currently live in', 'tclas' ); ?>
 							</label>
 							<input
@@ -368,7 +368,7 @@ $profile_photo_url = $profile_photo_id
 								<?php esc_html_e( '+ Add another surname', 'tclas' ); ?>
 							</button>
 
-							<p class="tclas-story-hint" style="margin-top:.75rem">
+							<p class="tclas-story-hint tclas-story-hint--mt">
 								<?php esc_html_e( 'Ancestry privacy is shared with the communes section above.', 'tclas' ); ?>
 							</p>
 
@@ -550,7 +550,7 @@ $profile_photo_url = $profile_photo_id
 								<?php esc_html_e( '+ Add family member', 'tclas' ); ?>
 							</button>
 
-							<div class="tclas-story-check-row" style="margin-top:1rem">
+							<div class="tclas-story-check-row tclas-story-check-row--mt">
 								<label class="tclas-story-checkbox">
 									<input
 										type="checkbox"
@@ -654,7 +654,7 @@ $profile_photo_url = $profile_photo_id
 								</div>
 							<?php endforeach; ?>
 							<?php if ( count( $visible ) > 3 ) : ?>
-								<p style="margin-top:.75rem;font-size:.82rem;">
+								<p class="tclas-story-connections-more">
 									<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>">
 										<?php
 										printf(

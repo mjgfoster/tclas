@@ -20,11 +20,11 @@
 .tclas-section--sm{ padding-top: var(--pad-y-sm); padding-bottom: var(--pad-y-sm); }
 
 // ── Background utilities ──────────────────────────────────────────────────
-.tclas-bg-white   { background-color: var(--c-white); }
-.tclas-bg-warm    { background-color: var(--c-body-bg); }
-.tclas-bg-or-pale { background-color: var(--c-or-pale); }
-.tclas-bg-ardoise { background-color: var(--c-ardoise); }
-.tclas-bg-crimson { background-color: var(--c-crimson); }
+.tclas-bg-white,   .bg-white   { background-color: var(--c-white); }
+.tclas-bg-warm,    .bg-warm    { background-color: var(--c-body-bg); }
+.tclas-bg-or-pale, .bg-or-pale { background-color: var(--c-or-pale); }
+.tclas-bg-ardoise, .bg-ardoise { background-color: var(--c-ardoise); }
+.tclas-bg-crimson, .bg-crimson { background-color: var(--c-crimson); }
 
 .tclas-text-white   { color: #fff !important; }
 .tclas-text-or-pale { color: var(--c-or-pale) !important; }
@@ -32,10 +32,14 @@
 .tclas-text-muted   { color: var(--c-muted) !important; }
 
 .tclas-bg-ardoise h1,.tclas-bg-ardoise h2,.tclas-bg-ardoise h3,
-.tclas-bg-ardoise h4,.tclas-bg-ardoise h5,.tclas-bg-ardoise h6 { color: var(--c-or-pale); }
-.tclas-bg-ardoise p,.tclas-bg-ardoise li { color: rgba(235,245,252,.78); }
-.tclas-bg-crimson h1,.tclas-bg-crimson h2,.tclas-bg-crimson h3 { color: #fff; }
-.tclas-bg-crimson p { color: rgba(255,255,255,.88); }
+.tclas-bg-ardoise h4,.tclas-bg-ardoise h5,.tclas-bg-ardoise h6,
+.bg-ardoise h1,.bg-ardoise h2,.bg-ardoise h3,
+.bg-ardoise h4,.bg-ardoise h5,.bg-ardoise h6 { color: var(--c-or-pale); }
+.tclas-bg-ardoise p,.tclas-bg-ardoise li,
+.bg-ardoise p,.bg-ardoise li { color: rgba(235,245,252,.78); }
+.tclas-bg-crimson h1,.tclas-bg-crimson h2,.tclas-bg-crimson h3,
+.bg-crimson h1,.bg-crimson h2,.bg-crimson h3 { color: #fff; }
+.tclas-bg-crimson p,.bg-crimson p { color: rgba(255,255,255,.88); }
 
 // ── Grid utilities ────────────────────────────────────────────────────────
 .tclas-grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }

@@ -82,6 +82,16 @@
 	img { width: 100%; height: 100%; object-fit: contain; display: block; }
 }
 
+// Emoji fallback (when no custom logo is set in the Customizer)
+.tclas-brand__logo--fallback {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #C0001A; // Luxembourg flag red — intentional, distinct from --c-crimson
+	font-size: 1.4rem;
+	font-weight: 700;
+}
+
 .tclas-brand__name {
 	font-family: var(--font-serif);
 	font-size: 1.125rem;
@@ -211,6 +221,9 @@
 }
 
 // ── Mobile hamburger ──────────────────────────────────────────────────────
+// Close icon is hidden by default; JS shows it via iconClose.style.display='inline'
+.tclas-hamburger__close { display: none; }
+
 .tclas-hamburger {
 	display: none;
 	background: none;

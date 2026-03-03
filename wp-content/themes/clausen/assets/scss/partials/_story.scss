@@ -23,7 +23,9 @@
 	width: 100%;
 }
 
-.tclas-story-hint { font-size: .82rem; color: var(--c-muted); margin: 0 0 1rem; max-width: 58ch; }
+.tclas-story-hint        { font-size: .82rem; color: var(--c-muted); margin: 0 0 1rem; max-width: 58ch; }
+.tclas-story-hint--mt    { margin-top: .75rem; }
+.tclas-story-hint--mt-lg { margin-top: 1.25rem; }
 
 // ── Repeater rows ─────────────────────────────────────────────────────────
 .tclas-repeater-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .75rem; }
@@ -99,6 +101,7 @@
 .tclas-story-radio-group    { display: flex; flex-wrap: wrap; gap: .5rem; }
 .tclas-story-radio          { display: flex; align-items: center; gap: .35rem; font-size: .85rem; cursor: pointer; }
 .tclas-story-check-row      { margin-bottom: .5rem; }
+.tclas-story-check-row--mt  { margin-top: 1rem; }
 .tclas-story-checkbox        { display: flex; align-items: flex-start; gap: .4rem; font-size: .85rem; cursor: pointer; }
 
 // ── Submit row ────────────────────────────────────────────────────────────
@@ -123,4 +126,6 @@
 // ── Bio counter + social fields ───────────────────────────────────────────
 .tclas-bio-counter          { text-align: right; font-size: .78rem; color: var(--c-muted); }
 .tclas-story-social-group   { margin-bottom: .85rem; }
-.tclas-story-social-label   { display: block; font-size: .82rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .3rem; }
+.tclas-story-social-label    { display: block; font-size: .82rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .3rem; }
+.tclas-story-social-label--mt{ margin-top: 1rem; }
+.tclas-story-connections-more{ margin-top: .75rem; font-size: .82rem; }

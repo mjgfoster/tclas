@@ -29,7 +29,7 @@ while ( have_posts() ) :
 				</a>
 			<?php endif; ?>
 			<h1 class="tclas-hero__title"><?php the_title(); ?></h1>
-			<p class="tclas-hero__subtitle" style="font-size:0.9rem;">
+			<p class="tclas-hero__subtitle">
 				<?php
 				printf(
 					/* translators: 1: author, 2: date, 3: reading time */
@@ -66,8 +66,8 @@ while ( have_posts() ) :
 		}
 		if ( $related ) :
 		?>
-			<hr style="border:none;border-top:2px solid var(--c-border);margin:2.5rem 0 2rem;">
-			<h2 style="font-size:1.25rem;"><?php esc_html_e( 'More from TCLAS', 'tclas' ); ?></h2>
+			<hr class="tclas-single__divider">
+			<h2 class="tclas-single__related-heading"><?php esc_html_e( 'More from TCLAS', 'tclas' ); ?></h2>
 			<div class="tclas-grid-3">
 				<?php foreach ( $related as $post ) : setup_postdata( $post ); ?>
 					<?php get_template_part( 'template-parts/content/card', 'post' ); ?>

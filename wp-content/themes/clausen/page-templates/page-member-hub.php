@@ -88,7 +88,7 @@ $user = wp_get_current_user();
 				$days      = tclas_days_to_expiry();
 				$renew_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : '#';
 			?>
-				<div class="tclas-alert tclas-alert--<?php echo $status === 'expired' ? 'error' : 'warning'; ?>" style="margin-bottom:2rem;">
+				<div class="tclas-alert tclas-alert--<?php echo $status === 'expired' ? 'error' : 'warning'; ?> tclas-alert--prominent">
 					<?php if ( $status === 'expired' ) : ?>
 						<?php
 						printf(
@@ -123,7 +123,7 @@ $user = wp_get_current_user();
 							<?php echo wp_kses_post( $card['content'] ); ?>
 						</div>
 						<?php if ( ! empty( $card['link'] ) ) : ?>
-							<p style="margin-top:1rem;">
+							<p class="tclas-hub-card__link-wrap">
 								<a href="<?php echo esc_url( $card['link'] ); ?>" class="btn btn-outline-ardoise btn-sm">
 									<?php echo esc_html( $card['link_label'] ?? __( 'View →', 'tclas' ) ); ?>
 								</a>

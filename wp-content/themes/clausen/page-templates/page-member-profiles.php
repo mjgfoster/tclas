@@ -191,7 +191,7 @@ if ( $profile_username ) :
 					<?php endif; ?>
 
 					<?php if ( $is_own_profile ) : ?>
-						<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise" style="margin-top:1rem">
+						<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise tclas-profile-own-link">
 							<?php esc_html_e( 'Edit my profile →', 'tclas' ); ?>
 						</a>
 					<?php endif; ?>
@@ -223,7 +223,7 @@ if ( $profile_username ) :
 					<?php endif; ?>
 
 					<?php if ( ! empty( $p['surnames_raw'] ) ) : ?>
-						<div class="tclas-profile-roots" style="margin-top:.75rem">
+						<div class="tclas-profile-roots">
 							<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Family surnames', 'tclas' ); ?></h4>
 							<div class="tclas-profile-pills">
 								<?php foreach ( $p['surnames_raw'] as $surname ) : ?>

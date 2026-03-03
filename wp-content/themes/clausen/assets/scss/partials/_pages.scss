@@ -8,6 +8,11 @@
 .tclas-page-header--ardoise { background: var(--c-ardoise); }
 .tclas-page-header__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0; }
 
+// ── Join page intro / CTA ─────────────────────────────────────────────────
+.tclas-join-intro .container-tclas { text-align: center; }
+.tclas-join-lede                   { font-size: 1.15rem; max-width: 48ch; margin: 0 auto; }
+.tclas-join-cta   .container-tclas { text-align: center; }
+
 // ── Join page feature grid ────────────────────────────────────────────────
 .tclas-join-features {
 	display: grid;
@@ -31,6 +36,9 @@
 	ul,ol { margin-bottom: 1.5rem; }
 	a { color: var(--c-crimson); text-decoration: underline; }
 }
+
+.tclas-single__divider        { border: none; border-top: 2px solid var(--c-border); margin: 2.5rem 0 2rem; }
+.tclas-single__related-heading{ font-size: 1.25rem; }
 
 .tclas-single { padding: 3rem 0; }
 .tclas-single__header { margin-bottom: 2rem; }
@@ -290,6 +298,20 @@
 .tclas-profile-trips     { margin-bottom: 1.5rem; }
 .tclas-profile-trip-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
 .tclas-profile-trip-meta { display: flex; align-items: center; gap: .5rem; margin-bottom: .2rem; flex-wrap: wrap; }
+
+// ── Referral landing page ─────────────────────────────────────────────────
+.tclas-referral-landing__intro .container-tclas { text-align: center; }
+.tclas-referral-landing__lede    { font-size: 1.15rem; max-width: 42ch; margin: 0 auto 2rem; }
+.tclas-referral-landing__cta-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.tclas-referral-landing .bg-ardoise .container-tclas { text-align: center; }
+.tclas-referral-landing .tclas-tiers-mini { display: flex; flex-wrap: wrap; justify-content: center; max-width: 600px; margin: 2rem auto 0; }
+.tclas-referral-landing__tier-cta { margin-top: 2rem; }
+
+// ── Profile roots spacing ─────────────────────────────────────────────────
+.tclas-profile-roots + .tclas-profile-roots { margin-top: .75rem; }
+
+// ── Profile edit button ───────────────────────────────────────────────────
+.tclas-profile-own-link { margin-top: 1rem; }
 
 // Directory card link styles
 .tclas-directory__grid     { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 1rem; }
