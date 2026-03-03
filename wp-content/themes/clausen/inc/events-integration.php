@@ -244,8 +244,10 @@ function tclas_get_featured_event(): ?WP_Post {
 /**
  * Inject a "Members only" badge after the event title in TEC's list view.
  */
-add_action( 'tribe_template_after_include', function ( string $file, string $name, object $template ): void {
-	if ( 'v2/list/event/title' !== $name ) {
+add_action( 'tribe_template_after_include', function ( $file, $name, $template ): void {
+	// TEC may pass $name as an array of path segments or as a string.
+	$name_str = is_array( $name ) ? implode( '/', $name ) : (string) $name;
+	if ( 'v2/list/event/title' !== $name_str ) {
 		return;
 	}
 
