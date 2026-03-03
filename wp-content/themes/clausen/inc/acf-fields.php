@@ -536,6 +536,14 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Format: YYYY-MM (e.g. 2027-01). Groups this article with others in the same issue.',
 			],
 			[
+				'key'          => 'field_tclas_issue_title',
+				'label'        => 'Issue title',
+				'name'         => 'tclas_issue_title',
+				'type'         => 'text',
+				'placeholder'  => 'e.g. The Loon & the Lion — March 2026',
+				'instructions' => 'Display name for this issue. Shown on article pages above the headline. Falls back to a formatted date if left blank.',
+			],
+			[
 				'key'           => 'field_tclas_issue_order',
 				'label'         => 'Order within issue',
 				'name'          => 'tclas_issue_order',
