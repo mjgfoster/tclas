@@ -43,7 +43,7 @@ $members = [];
 $all_users = get_users( [
 	'meta_key'     => '_tclas_communes_norm',
 	'meta_compare' => 'EXISTS',
-	'fields'       => [ 'ID', 'display_name' ],
+	'fields'       => [ 'ID', 'display_name', 'user_login' ],
 	'number'       => -1,
 ] );
 foreach ( $all_users as $u ) {
@@ -175,7 +175,7 @@ foreach ( $all_users as $u ) {
 
 				<div class="tclas-commune-member-grid">
 					<?php foreach ( $members as $u ) : ?>
-					<a href="<?php echo esc_url( add_query_arg( 'member', $u->ID, home_url( '/member-hub/profile/' ) ) ); ?>"
+					<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' . rawurlencode( $u->user_login ) . '/' ) ); ?>"
 					   class="tclas-commune-member-card">
 						<?php echo get_avatar( $u->ID, 40, '', '', [ 'class' => '' ] ); ?>
 						<span><?php echo esc_html( $u->display_name ); ?></span>
