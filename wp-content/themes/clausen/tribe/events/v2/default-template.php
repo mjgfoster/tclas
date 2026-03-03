@@ -25,7 +25,7 @@ $featured = function_exists( 'tclas_get_featured_event' ) ? tclas_get_featured_e
 	</div>
 </div>
 
-<?php if ( $featured ) :
+<?php if ( $featured && ! tribe_is_single_event() ) :
 	$f_id       = $featured->ID;
 	$f_title    = get_the_title( $f_id );
 	$f_start    = tribe_get_start_date( $f_id, false, 'U' );
