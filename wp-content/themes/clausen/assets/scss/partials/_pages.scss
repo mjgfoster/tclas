@@ -1,12 +1,74 @@
 // =============================================================================
-//  _pages.scss — Interior page styles: join, single, about, board, newsletter,
-//                commune, member profiles (from main.css), page header
+//  _pages.scss — Interior page styles: citizenship, join, single, about, board,
+//                newsletter, commune, member profiles (from main.css), page header
 // =============================================================================
 
 // ── Page header (shared) ──────────────────────────────────────────────────
 .tclas-page-header { padding: 2.5rem 0; }
 .tclas-page-header--ardoise { background: var(--c-ardoise); }
 .tclas-page-header__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0; }
+
+// ── Citizenship page ──────────────────────────────────────────────────────
+.tclas-citizenship-lede { font-size: 1.1rem; max-width: 62ch; }
+
+.tclas-quiz-wrapper {
+	background: #fff;
+	border: 1px solid var(--c-border);
+	border-top: 3px solid var(--c-crimson);
+	padding: 2rem;
+	margin-top: 1.5rem;
+
+	@media (max-width: 600px) { padding: 1.25rem; }
+}
+
+.tclas-citizenship-resources { align-items: start; gap: 3rem; }
+
+.tclas-steps {
+	list-style: none;
+	padding: 0;
+	margin: 1rem 0 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.tclas-step {
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+}
+
+.tclas-step__num {
+	flex-shrink: 0;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background: var(--c-crimson);
+	color: #fff;
+	font-size: .82rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: .1rem;
+}
+
+.tclas-step__title { font-size: .9rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .25rem; display: block; }
+.tclas-step__text  { font-size: .88rem; color: var(--c-muted); margin: 0; max-width: none; }
+
+.tclas-citizenship-cta {
+	text-align: center;
+
+	h2 { color: var(--c-or-pale); }
+	p  { color: rgba(235,245,252,.82); margin: 0 auto 1.75rem; }
+}
+
+.tclas-citizenship-cta__actions {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
 
 // ── Join page intro / CTA ─────────────────────────────────────────────────
 .tclas-join-intro .container-tclas { text-align: center; }
