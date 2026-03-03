@@ -1,0 +1,338 @@
+// =============================================================================
+//  _pmpro.scss — Paid Memberships Pro integration
+//
+//  Strategy: override PMPro's CSS custom properties to map to our design
+//  tokens, then add targeted aesthetic overrides. No template files needed.
+//
+//  PMPro pages use page.php → already get the ardoise page header and
+//  .container-tclas.container--narrow wrapper automatically.
+// =============================================================================
+
+@use 'config' as *;
+
+// ── 1. Token overrides ────────────────────────────────────────────────────
+// Map PMPro's CSS vars to our design tokens. Scoped to .pmpro so we don't
+// bleed into wp-admin or other plugin output.
+
+.pmpro {
+	--pmpro--color--accent:             var(--c-ardoise);
+	--pmpro--color--accent--variation:  var(--c-ardoise-dk);
+	--pmpro--color--base:               var(--c-white);
+	--pmpro--color--base-2:             var(--c-or-pale);
+	--pmpro--color--contrast:           var(--c-body-text);
+	--pmpro--color--border:             var(--c-border);
+	--pmpro--color--border--variation:  var(--c-or-pale-dk);
+	--pmpro--base--border-radius:       var(--radius);
+	--pmpro--box-shadow:                var(--shadow-sm);
+}
+
+
+// ── 2. Typography ─────────────────────────────────────────────────────────
+
+.pmpro {
+	color: var(--c-body-text);
+	font-family: var(--font-sans);
+
+	h2,
+	.pmpro_card_title.pmpro_font-large {
+		font-family: var(--font-serif);
+		color: var(--c-ardoise);
+		font-weight: 400;
+	}
+
+	h3,
+	.pmpro_section_title {
+		font-family: var(--font-sans);
+		font-weight: 700;
+		color: var(--c-ardoise);
+		font-size: 0.875rem;
+		text-transform: uppercase;
+		letter-spacing: 0.07em;
+	}
+
+	p {
+		color: var(--c-body-text);
+	}
+
+	a {
+		color: var(--c-ardoise);
+
+		&:hover {
+			color: var(--c-crimson);
+		}
+	}
+}
+
+
+// ── 3. Form inputs ────────────────────────────────────────────────────────
+// PMPro uses .pmpro_form_input for all its inputs. Override focus ring and
+// border to match our input style from _forms.scss.
+
+.pmpro {
+	.pmpro_form_input {
+		background-color: var(--c-white);
+		border-color: var(--c-input-border);
+		color: var(--c-body-text);
+		font-family: var(--font-sans);
+		font-size: 1rem;
+		border-radius: var(--radius);
+		transition: border-color 0.2s, box-shadow 0.2s;
+	}
+
+	.pmpro_form_input-text:focus,
+	.pmpro_form_input-email:focus,
+	.pmpro_form_input-url:focus,
+	.pmpro_form_input-password:focus,
+	.pmpro_form_input-search:focus,
+	.pmpro_form_input-select:focus,
+	.pmpro_form_input-number:focus,
+	.pmpro_form_input-textarea:focus {
+		border-color: var(--c-ardoise);
+		box-shadow: 0 0 0 3px rgba(43, 98, 130, 0.15);
+		outline: none;
+	}
+
+	.pmpro_form_label {
+		font-weight: 600;
+		font-size: 0.875rem;
+		color: var(--c-body-text);
+	}
+
+	.pmpro_form_hint {
+		color: var(--c-muted);
+		font-size: 0.8125rem;
+	}
+}
+
+
+// ── 4. Buttons ────────────────────────────────────────────────────────────
+// Primary PMPro button → our crimson. Outline and cancel variants follow.
+
+.pmpro {
+	.pmpro_btn {
+		background-color: var(--c-crimson);
+		border-color: var(--c-crimson);
+		border-radius: var(--radius);
+		font-family: var(--font-sans);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		box-shadow: var(--shadow-sm);
+		transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+		&:hover,
+		&:focus {
+			background-color: var(--c-crimson-dk);
+			border-color: var(--c-crimson-dk);
+			color: var(--c-white);
+		}
+	}
+
+	// Submit checkout — full width, slightly taller
+	.pmpro_btn-submit-checkout {
+		width: 100%;
+		padding-top: 0.875rem;
+		padding-bottom: 0.875rem;
+		font-size: 1.05rem;
+	}
+
+	// Outline variant
+	.pmpro_btn-outline {
+		background-color: transparent;
+		border-color: var(--c-ardoise);
+		color: var(--c-ardoise);
+
+		&:hover,
+		&:focus {
+			background-color: var(--c-ardoise);
+			border-color: var(--c-ardoise);
+			color: var(--c-white);
+		}
+	}
+
+	// Cancel / secondary
+	.pmpro_btn-cancel {
+		background-color: transparent;
+		border-color: var(--c-border-dk);
+		color: var(--c-muted);
+		box-shadow: none;
+
+		&:hover,
+		&:focus {
+			background-color: var(--c-or-pale);
+			border-color: var(--c-border-dk);
+			color: var(--c-body-text);
+		}
+	}
+
+	// Delete / destructive
+	.pmpro_btn-delete {
+		background-color: var(--c-crimson-dk);
+		border-color: var(--c-crimson-dk);
+
+		&:hover,
+		&:focus {
+			background-color: #5a2020;
+			border-color: #5a2020;
+		}
+	}
+
+	// Print link
+	.pmpro_btn-print {
+		color: var(--c-ardoise);
+
+		&:hover {
+			color: var(--c-ardoise-dk);
+		}
+	}
+}
+
+
+// ── 5. Cards ──────────────────────────────────────────────────────────────
+
+.pmpro {
+	.pmpro_card {
+		border-color: var(--c-border);
+		box-shadow: var(--shadow-sm);
+		border-radius: var(--radius);
+	}
+
+	.pmpro_card_title {
+		color: var(--c-ardoise);
+	}
+
+	.pmpro_card_actions {
+		background-color: var(--c-or-pale);
+		border-color: var(--c-border);
+	}
+
+	// Checkout: highlight the "Membership Information" summary card
+	#pmpro_pricing_fields {
+		border-left: 3px solid var(--c-ardoise);
+	}
+}
+
+
+// ── 6. Tables ─────────────────────────────────────────────────────────────
+
+.pmpro {
+	.pmpro_table {
+		thead th {
+			color: var(--c-ardoise);
+			font-size: 0.8125rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			border-bottom-color: var(--c-border-dk);
+		}
+
+		tbody tr {
+			border-bottom-color: var(--c-border);
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
+		tfoot tr td {
+			font-weight: 700;
+			border-top-color: var(--c-border-dk);
+		}
+	}
+}
+
+
+// ── 7. Messages / alerts ──────────────────────────────────────────────────
+// Keep PMPro's semantic colours (info/success/error/alert) but soften the
+// border-radius and add our shadow token.
+
+.pmpro .pmpro_message,
+.pmpro_message {
+	border-radius: var(--radius);
+	font-size: 0.9375rem;
+}
+
+
+// ── 8. Tags / status badges ───────────────────────────────────────────────
+
+.pmpro {
+	.pmpro_tag {
+		border-radius: calc(var(--radius) / 2);
+		font-size: 0.75rem;
+		font-family: var(--font-sans);
+	}
+}
+
+
+// ── 9. Password strength meter ────────────────────────────────────────────
+
+#pass-strength-result {
+	border-radius: var(--radius);
+	font-family: var(--font-sans);
+	font-size: 0.875rem;
+}
+
+
+// ── 10. Login page ────────────────────────────────────────────────────────
+// PMPro's login form is already in container--narrow. Just centre it a bit
+// more and add breathing room.
+
+.pmpro_login_wrap {
+	max-width: 420px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+// ── 11. Account page ──────────────────────────────────────────────────────
+
+.pmpro {
+	// Membership level name on the account dashboard
+	.pmpro_account-membership {
+		.pmpro_card_title {
+			font-family: var(--font-serif);
+			font-weight: 400;
+		}
+	}
+
+	// Quick-links nav (Cancel, Billing, etc.) at the bottom of account cards
+	.pmpro_card_action_separator {
+		color: var(--c-border-dk);
+	}
+}
+
+
+// ── 12. Levels page fallback ──────────────────────────────────────────────
+// /membership-levels/ will redirect to /join/ (Phase D). This is a backstop
+// in case the redirect hasn't been set up yet.
+
+.tclas-pmpro-levels-wrap {
+	.pmpro_table {
+		th,
+		td {
+			padding: 0.75rem 1rem;
+		}
+
+		.pmpro_btn {
+			white-space: nowrap;
+		}
+	}
+}
+
+
+// ── 13. Responsive ────────────────────────────────────────────────────────
+
+@include bp($bp-sm) {
+	.pmpro {
+		// Cards stack better with a tiny bit of extra breathing room on mobile
+		.pmpro_card_content,
+		.pmpro_card_title {
+			padding-left: 1.25rem;
+			padding-right: 1.25rem;
+		}
+
+		.pmpro_card_actions {
+			padding-left: 1.25rem;
+			padding-right: 1.25rem;
+		}
+	}
+}
