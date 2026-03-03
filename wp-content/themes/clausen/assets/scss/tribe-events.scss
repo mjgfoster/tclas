@@ -150,96 +150,15 @@
 	padding-left:   var(--pad-x, 1.25rem) !important;
 }
 
-// ── Events bar ────────────────────────────────────────────────────────────
-.tribe-events-c-events-bar {
-	background:    var(--c-or-pale, #EBF5FC) !important;
-	border-color:  var(--c-border, #D0D9E0) !important;
-	border-radius: var(--radius, 8px) !important;
-	padding:       .5rem .75rem !important;
-	margin-bottom: 1.5rem !important;
-	gap:           .5rem !important;
-}
+// ── Events bar — hidden (low event volume; search not needed) ─────────────
+.tribe-events-c-events-bar { display: none !important; }
 
-.tribe-events-c-events-bar__search-button,
-.tribe-events-c-search__button {
-	background:    var(--c-crimson, #E31E26) !important;
-	border-color:  var(--c-crimson, #E31E26) !important;
-	color:         #fff !important;
-	border-radius: var(--radius, 8px) !important;
-	font-family:   var(--font-sans) !important;
-	font-weight:   700 !important;
-	padding:       .5rem 1.1rem !important;
+// ── View selector — hidden (list-only; selector redundant) ────────────────
+.tribe-events-c-view-selector { display: none !important; }
 
-	&:hover {
-		background:   var(--c-ardoise, #0A2540) !important;
-		border-color: var(--c-ardoise, #0A2540) !important;
-	}
-}
-
-.tribe-events-c-events-bar__search-button-text {
-	font-family: var(--font-sans) !important;
-	font-weight: 700 !important;
-}
-
-.tribe-common-form-control-text__input {
-	border-color:  var(--c-border, #D0D9E0) !important;
-	border-radius: var(--radius, 8px) !important;
-	font-family:   var(--font-sans) !important;
-	font-size:     1rem !important;
-
-	&:focus {
-		outline:    none !important;
-		border-color: var(--c-crimson, #E31E26) !important;
-		box-shadow: 0 0 0 3px rgba(227, 30, 38, .15) !important;
-	}
-}
-
-// ── View selector tabs ────────────────────────────────────────────────────
-.tribe-events-c-view-selector__list-item-link {
-	font-family:     var(--font-sans) !important;
-	font-size:       .75rem !important;
-	font-weight:     700 !important;
-	text-transform:  uppercase !important;
-	letter-spacing:  .07em !important;
-	color:           var(--c-ardoise, #0A2540) !important;
-	text-decoration: none !important;
-}
-
-.tribe-events-c-view-selector__list-item--active .tribe-events-c-view-selector__list-item-link,
-.tribe-events-c-view-selector__list-item-link[aria-current="true"] {
-	color: var(--c-crimson, #E31E26) !important;
-}
-
-.tribe-events-c-view-selector__list-item--active .tribe-events-c-view-selector__list-item-link::after {
-	background: var(--c-crimson, #E31E26) !important;
-}
-
-// Hide Month and Day view tabs — List view only
-.tribe-events-c-view-selector__list-item--month,
-.tribe-events-c-view-selector__list-item--day { display: none !important; }
-
-.tribe-events-c-view-selector__button {
-	font-family:    var(--font-sans) !important;
-	font-size:      .75rem !important;
-	font-weight:    700 !important;
-	text-transform: uppercase !important;
-	letter-spacing: .07em !important;
-	color:          var(--c-ardoise, #0A2540) !important;
-}
-
-// ── Top-bar navigation ────────────────────────────────────────────────────
-.tribe-events-c-top-bar__nav-link {
-	color:         var(--c-crimson, #E31E26) !important;
-	border-color:  var(--c-border, #D0D9E0) !important;
-	border-radius: 50% !important;
-	transition:    background .15s, color .15s !important;
-
-	&:hover {
-		background:   var(--c-crimson, #E31E26) !important;
-		border-color: var(--c-crimson, #E31E26) !important;
-		color:        #fff !important;
-	}
-}
+// ── Top-bar navigation — hidden (no archive browsing needed) ──────────────
+.tribe-events-c-top-bar__nav-link,
+.tribe-events-c-top-bar__today-button { display: none !important; }
 
 .tribe-events-c-top-bar__today-button {
 	font-family:   var(--font-sans) !important;
