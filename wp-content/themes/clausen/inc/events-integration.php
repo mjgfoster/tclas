@@ -102,18 +102,19 @@ function tclas_render_event_card( WP_Post $event ): void {
 	<?php
 }
 
-// ── Members-only meta box ──────────────────────────────────────────────────
+// ── Event settings meta box ────────────────────────────────────────────────
 
 /**
- * Register a "Members only" meta box on TEC event edit screens.
+ * Register the "TCLAS Event Settings" meta box on TEC event edit screens.
+ * Covers: featured event flag, members-only flag, external registration URL.
  */
 function tclas_events_meta_box_register(): void {
 	if ( ! class_exists( 'Tribe__Events__Main' ) ) {
 		return;
 	}
 	add_meta_box(
-		'tclas_event_members_only',
-		__( 'TCLAS Access', 'tclas' ),
+		'tclas_event_settings',
+		__( 'TCLAS Event Settings', 'tclas' ),
 		'tclas_events_meta_box_render',
 		Tribe__Events__Main::POSTTYPE,
 		'side',
@@ -123,38 +124,61 @@ function tclas_events_meta_box_register(): void {
 add_action( 'add_meta_boxes', 'tclas_events_meta_box_register' );
 
 /**
- * Render the "Members only" meta box.
+ * Render the TCLAS Event Settings meta box.
  *
  * @param WP_Post $post  The event post.
  */
 function tclas_events_meta_box_render( WP_Post $post ): void {
-	wp_nonce_field( 'tclas_event_members_only', 'tclas_event_members_only_nonce' );
-	$checked = (bool) get_post_meta( $post->ID, '_tclas_members_only', true );
+	wp_nonce_field( 'tclas_event_settings', 'tclas_event_settings_nonce' );
+	$featured     = (bool) get_post_meta( $post->ID, '_tclas_featured_event', true );
+	$members_only = (bool) get_post_meta( $post->ID, '_tclas_members_only', true );
+	$reg_url      = esc_url( get_post_meta( $post->ID, '_tclas_registration_url', true ) );
 	?>
-	<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-		<input
-			type="checkbox"
-			name="tclas_members_only"
-			value="1"
-			<?php checked( $checked ); ?>
-		>
-		<?php esc_html_e( 'Members only event', 'tclas' ); ?>
+	<p style="margin:0 0 10px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#50575e;">
+		<?php esc_html_e( 'Display', 'tclas' ); ?>
+	</p>
+
+	<label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px;">
+		<input type="checkbox" name="tclas_featured_event" value="1" <?php checked( $featured ); ?>>
+		<?php esc_html_e( 'Featured event', 'tclas' ); ?>
 	</label>
-	<p class="description" style="margin-top:6px;">
-		<?php esc_html_e( 'When checked, a "Members only" badge is shown on the event card.', 'tclas' ); ?>
+	<p class="description" style="margin:0 0 12px 24px;">
+		<?php esc_html_e( 'Highlights this event in the hero at the top of the Events page. One at a time.', 'tclas' ); ?>
+	</p>
+
+	<label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px;">
+		<input type="checkbox" name="tclas_members_only" value="1" <?php checked( $members_only ); ?>>
+		<?php esc_html_e( 'Members only', 'tclas' ); ?>
+	</label>
+	<p class="description" style="margin:0 0 16px 24px;">
+		<?php esc_html_e( 'Shows a "Members only" badge on the event card.', 'tclas' ); ?>
+	</p>
+
+	<p style="margin:0 0 6px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#50575e;">
+		<?php esc_html_e( 'Registration', 'tclas' ); ?>
+	</p>
+	<input
+		type="url"
+		name="tclas_registration_url"
+		value="<?php echo esc_attr( $reg_url ); ?>"
+		placeholder="https://"
+		style="width:100%;box-sizing:border-box;"
+	>
+	<p class="description" style="margin-top:5px;">
+		<?php esc_html_e( 'External registration link (Eventbrite, Google Forms, etc.). Leave blank to link to this event page.', 'tclas' ); ?>
 	</p>
 	<?php
 }
 
 /**
- * Save the "Members only" meta when the event is saved.
+ * Save TCLAS event settings when the event is saved.
  *
  * @param int $post_id  The event post ID.
  */
 function tclas_events_meta_box_save( int $post_id ): void {
 	if (
-		! isset( $_POST['tclas_event_members_only_nonce'] ) ||
-		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['tclas_event_members_only_nonce'] ) ), 'tclas_event_members_only' )
+		! isset( $_POST['tclas_event_settings_nonce'] ) ||
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['tclas_event_settings_nonce'] ) ), 'tclas_event_settings' )
 	) {
 		return;
 	}
@@ -167,13 +191,76 @@ function tclas_events_meta_box_save( int $post_id ): void {
 		return;
 	}
 
+	// Featured event
+	if ( ! empty( $_POST['tclas_featured_event'] ) ) {
+		update_post_meta( $post_id, '_tclas_featured_event', '1' );
+	} else {
+		delete_post_meta( $post_id, '_tclas_featured_event' );
+	}
+
+	// Members only
 	if ( ! empty( $_POST['tclas_members_only'] ) ) {
 		update_post_meta( $post_id, '_tclas_members_only', '1' );
 	} else {
 		delete_post_meta( $post_id, '_tclas_members_only' );
 	}
+
+	// Registration URL
+	$reg_url = isset( $_POST['tclas_registration_url'] )
+		? esc_url_raw( wp_unslash( $_POST['tclas_registration_url'] ) )
+		: '';
+	if ( $reg_url ) {
+		update_post_meta( $post_id, '_tclas_registration_url', $reg_url );
+	} else {
+		delete_post_meta( $post_id, '_tclas_registration_url' );
+	}
 }
 add_action( 'save_post', 'tclas_events_meta_box_save' );
+
+// ── Featured event helper ──────────────────────────────────────────────────
+
+/**
+ * Return the current featured upcoming event, or null if none is set.
+ */
+function tclas_get_featured_event(): ?WP_Post {
+	if ( ! class_exists( 'Tribe__Events__Main' ) ) {
+		return null;
+	}
+
+	$events = tribe_get_events( [
+		'posts_per_page' => 1,
+		'start_date'     => date( 'Y-m-d' ),
+		'orderby'        => 'event_date',
+		'order'          => 'ASC',
+		'meta_key'       => '_tclas_featured_event',
+		'meta_value'     => '1',
+	] );
+
+	return ( is_array( $events ) && ! empty( $events ) ) ? $events[0] : null;
+}
+
+// ── Members-only badge in TEC list view ───────────────────────────────────
+
+/**
+ * Inject a "Members only" badge after the event title in TEC's list view.
+ */
+add_action( 'tribe_template_after_include', function ( string $file, string $name, object $template ): void {
+	if ( 'v2/list/event/title' !== $name ) {
+		return;
+	}
+
+	$event = $template->get( 'event' );
+	if ( ! $event instanceof WP_Post ) {
+		return;
+	}
+
+	if ( ! get_post_meta( $event->ID, '_tclas_members_only', true ) ) {
+		return;
+	}
+
+	$icon = '<svg aria-hidden="true" focusable="false" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+	echo '<div class="tclas-tec-members-badge">' . $icon . '<span>' . esc_html__( 'Members only', 'tclas' ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 10, 3 );
 
 /**
  * Render the events empty state.
