@@ -27,7 +27,7 @@
       drawer.classList.add('is-open');
       hamburger.setAttribute('aria-expanded', 'true');
       if (iconMenu)  iconMenu.style.display  = 'none';
-      if (iconClose) iconClose.style.display = '';
+      if (iconClose) iconClose.style.display = 'inline';
     }
 
     function closeMenu() {

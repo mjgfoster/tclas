@@ -288,7 +288,8 @@
 
 	@media (min-width: 768px) { min-height: 260px; }
 
-	.tclas-hero__title { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+	.tclas-hero__title    { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+	.tclas-hero__subtitle { font-size: 0.9rem; } // author · date · read time meta line
 }
 
 // ── Mobile ────────────────────────────────────────────────────────────────

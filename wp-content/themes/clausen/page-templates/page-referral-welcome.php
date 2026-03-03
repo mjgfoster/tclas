@@ -29,7 +29,7 @@ $price_student    = $price_student    ?: 15;
 
 	<!-- Intro -->
 	<div class="tclas-referral-landing__intro">
-		<div class="container-tclas container--narrow" style="text-align:center;">
+		<div class="container-tclas container--narrow">
 
 			<?php if ( $referrer_name ) : ?>
 				<div class="tclas-referral-landing__referred-by">
@@ -52,13 +52,13 @@ $price_student    = $price_student    ?: 15;
 			</div>
 
 			<h1><?php esc_html_e( 'Where the Twin Cities meet the Grand Duchy.', 'tclas' ); ?></h1>
-			<p style="font-size:1.15rem;max-width:42ch;margin:0 auto 2rem;">
+			<p class="tclas-referral-landing__lede">
 				<?php esc_html_e( "We're Minnesotans with Luxembourg in our bones, passports and hearts.", 'tclas' ); ?>
 				<?php echo tclas_ltz( 'Mir sinn hei', 'We are here', false ); ?> &mdash;
 				<?php esc_html_e( "and we'd love to meet you.", 'tclas' ); ?>
 			</p>
 
-			<div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+			<div class="tclas-referral-landing__cta-row">
 				<a href="<?php echo esc_url( $join_url ); ?>" class="btn btn-primary btn-lg">
 					<?php esc_html_e( 'Join TCLAS', 'tclas' ); ?>
 				</a>
@@ -82,11 +82,11 @@ $price_student    = $price_student    ?: 15;
 	</div>
 
 	<!-- Mini membership tiers -->
-	<div class="tclas-section bg-ardoise" style="background:var(--ardoise);">
-		<div class="container-tclas container--narrow" style="text-align:center;">
+	<div class="tclas-section bg-ardoise">
+		<div class="container-tclas container--narrow">
 			<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
-			<h2 style="color:var(--or-pale);"><?php esc_html_e( 'Simple, affordable, and worth every penny.', 'tclas' ); ?></h2>
-			<div class="tclas-tiers-mini" style="justify-content:center;max-width:600px;margin:2rem auto 0;">
+			<h2><?php esc_html_e( 'Simple, affordable, and worth every penny.', 'tclas' ); ?></h2>
+			<div class="tclas-tiers-mini">
 				<div class="tclas-tier-mini tclas-tier-mini--individual">
 					<span class="tclas-tier-mini__name"><?php esc_html_e( 'Individual', 'tclas' ); ?></span>
 					<span class="tclas-tier-mini__price">$<?php echo esc_html( $price_individual ); ?></span>
@@ -103,7 +103,7 @@ $price_student    = $price_student    ?: 15;
 					<span class="tclas-tier-mini__period"><?php esc_html_e( '/year', 'tclas' ); ?></span>
 				</div>
 			</div>
-			<p style="margin-top:2rem;">
+			<p class="tclas-referral-landing__tier-cta">
 				<a href="<?php echo esc_url( $join_url ); ?>" class="btn btn-primary btn-lg">
 					<?php esc_html_e( 'Join us today', 'tclas' ); ?>
 				</a>

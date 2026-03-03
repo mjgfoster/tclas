@@ -44,7 +44,7 @@
 							<?php echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'thumbnail', false, [ 'alt' => get_bloginfo( 'name' ) ] ); ?>
 						</div>
 					<?php else : ?>
-						<div class="tclas-brand__logo" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;color:#C0001A;font-size:1.4rem;font-weight:700;">🦁</div>
+						<div class="tclas-brand__logo tclas-brand__logo--fallback" aria-hidden="true">🦁</div>
 					<?php endif; ?>
 					<div class="tclas-brand__text">
 						<span class="tclas-brand__name">Twin Cities Luxembourg<wbr> American Society</span>
@@ -80,7 +80,7 @@
 					aria-label="<?php esc_attr_e( 'Toggle menu', 'tclas' ); ?>"
 				>
 					<svg class="tclas-hamburger__menu" aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-					<svg class="tclas-hamburger__close" aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+					<svg class="tclas-hamburger__close" aria-hidden="true" focusable="false" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 				</button>
 
 			</div><!-- .tclas-header__inner -->

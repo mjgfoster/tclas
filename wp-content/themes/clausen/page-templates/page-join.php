@@ -38,9 +38,9 @@ $checkout_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : home_
 </div>
 
 <!-- Intro -->
-<section class="tclas-section bg-white">
-	<div class="container-tclas container--narrow" style="text-align:center;">
-		<p style="font-size:1.15rem;max-width:48ch;margin:0 auto;">
+<section class="tclas-section bg-white tclas-join-intro">
+	<div class="container-tclas container--narrow">
+		<p class="tclas-join-lede">
 			<?php esc_html_e( 'Whether your Luxembourg story goes back five generations or five months — or you simply married into one — you belong here. Membership connects you to a warm, curious community that spans the Atlantic.', 'tclas' ); ?>
 		</p>
 	</div>
@@ -148,7 +148,7 @@ $checkout_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : home_
 
 <!-- Final CTA -->
 <section class="tclas-join-cta">
-	<div class="container-tclas" style="text-align:center;">
+	<div class="container-tclas">
 		<h2><?php echo tclas_ltz( 'Komm mat.', 'Come along.', false ); ?></h2>
 		<p><?php esc_html_e( 'Membership is open to anyone with a Luxembourg connection — and open to anyone curious enough to find one.', 'tclas' ); ?></p>
 		<a href="#tiers" class="btn btn-outline-light btn-lg">
