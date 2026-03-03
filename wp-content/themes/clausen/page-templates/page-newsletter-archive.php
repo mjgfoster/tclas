@@ -107,7 +107,16 @@ unset( $articles );
 						<?php foreach ( $articles as $a ) :
 							$p           = $a['post'];
 							$dept_terms  = wp_get_post_terms( $p->ID, 'tclas_department' );
-							$dept_label  = ! empty( $dept_terms ) ? $dept_terms[0]->name : '';
+							// Skip 'main-story' (structural term) when showing the visible label.
+							$dept_label  = '';
+							if ( ! is_wp_error( $dept_terms ) ) {
+								foreach ( $dept_terms as $t ) {
+									if ( $t->slug !== 'main-story' ) {
+										$dept_label = $t->name;
+										break;
+									}
+								}
+							}
 							$excerpt     = has_excerpt( $p->ID )
 								? wp_trim_words( get_the_excerpt( $p ), 20, '&hellip;' )
 								: wp_trim_words( $p->post_content, 20, '&hellip;' );

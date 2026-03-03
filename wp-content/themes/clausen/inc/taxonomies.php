@@ -59,56 +59,56 @@ function tclas_register_taxonomies(): void {
 		'rewrite'           => false,
 	] );
 
-	// Newsletter department (editorial section labels for Loon & Lion)
+	// Newsletter department + topic (unified: structural layout + public browsing)
+	// `main-story` slug is reserved — detected by templates to select the cover image.
+	// All other terms are bilingual (Luxembourgish name, English description) and
+	// browseable at /newsletter/topic/{slug}/.
 	register_taxonomy( 'tclas_department', [ 'post' ], [
 		'labels' => [
-			'name'          => __( 'Departments', 'tclas' ),
-			'singular_name' => __( 'Department', 'tclas' ),
-			'search_items'  => __( 'Search departments', 'tclas' ),
-			'all_items'     => __( 'All departments', 'tclas' ),
-			'edit_item'     => __( 'Edit department', 'tclas' ),
-			'add_new_item'  => __( 'Add department', 'tclas' ),
-			'menu_name'     => __( 'Departments', 'tclas' ),
+			'name'          => __( 'Newsletter topics', 'tclas' ),
+			'singular_name' => __( 'Newsletter topic', 'tclas' ),
+			'search_items'  => __( 'Search topics', 'tclas' ),
+			'all_items'     => __( 'All topics', 'tclas' ),
+			'edit_item'     => __( 'Edit topic', 'tclas' ),
+			'add_new_item'  => __( 'Add topic', 'tclas' ),
+			'menu_name'     => __( 'NL Topics', 'tclas' ),
 		],
 		'hierarchical'      => false,
-		'public'            => false,   // editorial metadata; no public archive
+		'public'            => true,
 		'show_ui'           => true,
 		'show_in_rest'      => true,
 		'show_admin_column' => true,
-		'rewrite'           => false,
-	] );
-
-	// News category (content pillars)
-	register_taxonomy( 'tclas_category', [ 'post' ], [
-		'labels' => [
-			'name'          => __( 'Content categories', 'tclas' ),
-			'singular_name' => __( 'Category', 'tclas' ),
-			'menu_name'     => __( 'TCLAS categories', 'tclas' ),
-		],
-		'hierarchical'      => true,
-		'public'            => true,
-		'show_in_rest'      => true,
-		'rewrite'           => [ 'slug' => 'category', 'with_front' => false ],
-		'show_admin_column' => true,
+		'rewrite'           => [ 'slug' => 'newsletter/topic', 'with_front' => false ],
 	] );
 }
 add_action( 'init', 'tclas_register_taxonomies' );
 
 /**
- * Seed the five fixed tclas_department terms on init.
- * Uses wp_insert_term() which is a no-op if the term already exists.
+ * Seed tclas_department terms on init.
+ *
+ * `main-story` is a structural term used by newsletter templates to identify
+ * the lead article (cover image source). All other terms are bilingual:
+ * name = Luxembourgish display name, description = English equivalent.
  */
 function tclas_seed_department_terms(): void {
-	$departments = [
-		'intro'      => 'Intro',
-		'main-story' => 'Main Story',
-		'community'  => 'Community',
-		'recipe'     => 'Recipe',
-		'news'       => 'News',
+	$terms = [
+		'main-story'     => [ 'name' => 'Main Story',     'desc' => ''               ],
+		'wellkomm'       => [ 'name' => 'Wëllkomm',       'desc' => 'Welcome'        ],
+		'communauteit'   => [ 'name' => 'Communautéit',   'desc' => 'Community'      ],
+		'an-der-kichen'  => [ 'name' => 'An der Kichen',  'desc' => 'In the Kitchen' ],
+		'geschicht'      => [ 'name' => 'Geschicht',      'desc' => 'History'        ],
+		'zu-letzebuerg'  => [ 'name' => 'Zu Lëtzebuerg',  'desc' => 'In Luxembourg'  ],
+		'traditiounen'   => [ 'name' => 'Traditiounen',   'desc' => 'Traditions'     ],
+		'eist-sprooch'   => [ 'name' => 'Eist Sprooch',   'desc' => 'Our Language'   ],
+		'evenementer'    => [ 'name' => 'Evenementer',    'desc' => 'Events'         ],
+		'spezialbericht' => [ 'name' => 'Spezialbericht', 'desc' => 'Special Report' ],
 	];
-	foreach ( $departments as $slug => $name ) {
+	foreach ( $terms as $slug => $data ) {
 		if ( ! term_exists( $slug, 'tclas_department' ) ) {
-			wp_insert_term( $name, 'tclas_department', [ 'slug' => $slug ] );
+			wp_insert_term( $data['name'], 'tclas_department', [
+				'slug'        => $slug,
+				'description' => $data['desc'],
+			] );
 		}
 	}
 }

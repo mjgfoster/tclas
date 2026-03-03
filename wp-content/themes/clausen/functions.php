@@ -44,6 +44,9 @@ $tclas_modules = [
 	'inc/member-profiles.php',    // profile helpers, rewrite, photo upload, founding badge
 	// ── Permanent redirects ───────────────────────────────────────────────
 	'inc/redirects.php',          // 301s: /quiz/, /directory/, /profile/, /member-hub/ancestral-map/
+	// ── Newsletter admin + routing ────────────────────────────────────────
+	'inc/newsletter-admin.php',   // Issues dashboard, Posts list column/filter, ACF helpers
+	'inc/newsletter-rewrite.php', // /newsletter/issue/{YYYY-MM}/ virtual URL
 ];
 
 foreach ( $tclas_modules as $module ) {

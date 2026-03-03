@@ -110,4 +110,17 @@
 
 	</header>
 
+	<?php
+	// Newsletter secondary nav — only on newsletter-related pages
+	if (
+		is_page_template( 'page-templates/page-newsletter.php' ) ||
+		is_page_template( 'page-templates/page-newsletter-archive.php' ) ||
+		get_query_var( 'tclas_newsletter_issue' ) ||
+		is_tax( 'tclas_department' ) ||
+		( is_single() && ! is_wp_error( get_the_terms( get_the_ID(), 'tclas_department' ) ) && get_the_terms( get_the_ID(), 'tclas_department' ) )
+	) {
+		get_template_part( 'template-parts/newsletter', 'nav' );
+	}
+	?>
+
 	<main id="main-content" tabindex="-1">
