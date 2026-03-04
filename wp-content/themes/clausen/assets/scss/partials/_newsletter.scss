@@ -40,7 +40,7 @@
 .newsletter-logo-link {
 	font-family: var(--font-serif);
 	font-size: 1.25rem;
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1.2;
 	flex-shrink: 0;
 	text-decoration: none;
@@ -65,7 +65,7 @@
 .newsletter-nav-link {
 	font-family: var(--font-sans);
 	font-size: .875rem;
-	font-weight: 400;
+	font-weight: 300;
 	padding: .375rem .75rem;
 	border-bottom: 2px solid transparent;
 	color: var(--c-body-text);
@@ -104,7 +104,7 @@
 	text-align: center;
 	font-family: var(--font-serif);
 	font-size: 1rem;
-	font-weight: 700;
+	font-weight: 600;
 	margin-bottom: .75rem;
 	padding-bottom: .75rem;
 	border-bottom: 1px solid rgba(69, 79, 85, .15);
@@ -124,7 +124,7 @@
 	flex: 1;
 	font-family: var(--font-sans);
 	font-size: .875rem;
-	font-weight: 400;
+	font-weight: 300;
 	padding: .5rem .75rem;
 	text-align: center;
 	border-bottom: 2px solid transparent;
@@ -154,7 +154,7 @@
 	padding: .5rem .75rem;
 	font-family: var(--font-sans);
 	font-size: .875rem;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-body-text);
 	background: transparent;
 	border: 1px solid rgba(69, 79, 85, .15);
@@ -218,7 +218,7 @@
 // Page header title — lighter weight, larger than default h1
 .tclas-nl-page-title {
 	font-size: clamp(2rem, 5vw, 3rem);
-	font-weight: 400;
+	font-weight: 300;
 }
 
 .tclas-nl-empty {
@@ -295,7 +295,7 @@
 .tclas-nl-dept {
 	display: block;
 	font-size: .75rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: .12em;
 	color: var(--c-muted);
@@ -306,7 +306,7 @@
 .tclas-nl-title {
 	font-family: var(--font-serif);
 	font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	line-height: 1.25;
 	margin: 0 0 .5rem;
@@ -346,7 +346,7 @@
 .tclas-nl-archive-link {
 	display: inline-block;
 	font-size: 1rem;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-ardoise);
 	text-decoration: none;
 	margin-top: 1rem;
@@ -455,7 +455,7 @@
 .tclas-issue-masthead {
 	font-family: var(--font-serif);
 	font-size: clamp(2.5rem, 6vw, 3.75rem);
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1.1;
 	margin: 0 0 1.5rem;
 
@@ -537,12 +537,12 @@
 	font-size: .75rem;
 	text-transform: uppercase;
 	letter-spacing: .1em;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-body-text);
 }
 
 .tclas-issue-dept__en {
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-muted);
 }
 
@@ -550,7 +550,7 @@
 .tclas-issue-title {
 	font-family: var(--font-serif);
 	font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	line-height: 1.25;
 	margin: 0 0 .5rem;
@@ -600,7 +600,7 @@
 
 .tclas-issue-back-link {
 	font-size: .9375rem;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-ardoise);
 	text-decoration: none;
 	transition: color .2s;
@@ -666,7 +666,7 @@
 // Small eyebrow above the masthead: "TCLAS NEWSLETTER • MARCH 2025"
 .tclas-nl-current-eyebrow {
 	font-size: .75rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: .12em;
 	color: var(--c-muted);
@@ -685,7 +685,7 @@
 	align-items: center;
 	gap: .375rem;
 	font-size: 1rem;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-ardoise);
 	text-decoration: none;
 	transition: color .2s;
@@ -715,7 +715,7 @@
 .tclas-nl-section-heading {
 	font-family: var(--font-serif);
 	font-size: clamp(1.5rem, 3vw, 2rem);
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	text-align: center;
 	margin-bottom: 2.5rem;
@@ -796,7 +796,7 @@
 .tclas-nl-topic-name {
 	font-family: var(--font-serif);
 	font-size: 1rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	line-height: 1.2;
 	transition: color .2s;
@@ -848,7 +848,7 @@
 	display: inline-block;
 	padding: .75rem 2rem;
 	font-size: .9375rem;
-	font-weight: 700;
+	font-weight: 600;
 	border-radius: 2px;
 	text-decoration: none;
 	transition: background .2s, color .2s, border-color .2s;
@@ -914,7 +914,7 @@
 .tclas-nl-prev-issue-date {
 	font-family: var(--font-serif);
 	font-size: clamp(1.375rem, 3vw, 1.875rem);
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-muted);
 	margin-bottom: 1.5rem;
 }
@@ -943,7 +943,7 @@
 	align-items: center;
 	gap: .375rem;
 	font-size: 1.0625rem;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-ardoise);
 	text-decoration: none;
 	transition: color .2s;

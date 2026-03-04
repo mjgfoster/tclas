@@ -14,7 +14,7 @@
 	color: rgba(235, 245, 252, .7);
 	font-family: var(--font-sans);
 	font-size: .8rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-decoration: none;
 	letter-spacing: .04em;
 	margin-bottom: .6rem;
@@ -29,7 +29,7 @@
 	gap: .25rem;
 	font-family: var(--font-sans);
 	font-size: .7rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: .07em;
 	padding: .2rem .55rem;
@@ -116,7 +116,7 @@
 	gap: .5rem;
 	font-family: var(--font-sans);
 	font-size: .78rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-muted);
 	cursor: pointer;
 	list-style: none;
@@ -134,7 +134,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 
 .tclas-field-privacy__current {
 	margin-left: auto;
-	font-weight: 400;
+	font-weight: 300;
 	color: var(--c-body-text);
 }
 
@@ -243,7 +243,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 .tclas-dir-card__name {
 	font-family: var(--font-sans);
 	font-size: .92rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	margin: 0 0 .2rem;
 	max-width: 100%;
@@ -314,7 +314,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 .tclas-profile-header__name {
 	font-family: var(--font-sans);
 	font-size: 1.4rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	margin: 0 0 .6rem;
 }
@@ -331,7 +331,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	font-size: .88rem;
 	margin: 0 0 .9rem;
 
-	dt { color: var(--c-muted); font-weight: 700; }
+	dt { color: var(--c-muted); font-weight: 600; }
 	dd { color: var(--c-body-text); margin: 0; }
 }
 
@@ -366,7 +366,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 .tclas-profile-section__title {
 	font-family: var(--font-sans);
 	font-size: .7rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: .09em;
 	color: var(--c-crimson);
@@ -385,7 +385,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 .tclas-profile-roots__label {
 	font-family: var(--font-sans);
 	font-size: .82rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-muted);
 	margin: 0 0 .45rem;
 }

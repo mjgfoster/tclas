@@ -8,7 +8,7 @@
 	align-items: center;
 	gap: .25rem;
 	font-size: .62rem;
-	font-weight: 700;
+	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: .07em;
 	padding: .2em .6em;
@@ -65,7 +65,7 @@
 		border: 2px solid var(--c-border);
 		color: var(--c-ardoise);
 		text-decoration: none;
-		font-weight: 700;
+		font-weight: 600;
 		font-size: .82rem;
 		transition: all .15s;
 
@@ -90,7 +90,7 @@
 	display: inline-flex;
 	align-items: center;
 	padding: .65rem 1.1rem;
-	font-weight: 700;
+	font-weight: 600;
 	font-size: .82rem;
 	color: var(--c-muted);
 	text-decoration: none;
@@ -119,7 +119,7 @@
 	border: 2px solid var(--c-border);
 	background: none;
 	font-size: .8rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-body-text);
 	cursor: pointer;
 	transition: all .15s;
@@ -148,10 +148,10 @@
 }
 
 .tclas-member-card__avatar  { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--c-border); flex-shrink: 0; }
-.tclas-member-card__name    { font-size: .9rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tclas-member-card__name    { font-size: .9rem; font-weight: 600; color: var(--c-ardoise); margin-bottom: .15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tclas-member-card__location{ font-size: .78rem; color: var(--c-muted); }
-.tclas-member-card__level   { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-crimson); margin-top: .2rem; }
-.tclas-member-card__commune { font-size: .6rem; color: var(--c-aigue); font-weight: 700; margin-top: .15rem; }
+.tclas-member-card__level   { font-size: .6rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--c-crimson); margin-top: .2rem; }
+.tclas-member-card__commune { font-size: .6rem; color: var(--c-aigue); font-weight: 600; margin-top: .15rem; }
 
 // ── Documents ─────────────────────────────────────────────────────────────
 .tclas-doc-list { display: flex; flex-direction: column; gap: .65rem; }
@@ -171,9 +171,9 @@
 }
 
 .tclas-doc-item__icon     { width: 36px; height: 36px; background: var(--c-body-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; color: var(--c-crimson); }
-.tclas-doc-item__name     { font-weight: 700; font-size: .85rem; display: block; }
+.tclas-doc-item__name     { font-weight: 600; font-size: .85rem; display: block; }
 .tclas-doc-item__meta     { font-size: .7rem; color: var(--c-muted); margin-top: .1rem; display: flex; gap: .65rem; }
-.tclas-doc-item__download { flex-shrink: 0; font-size: .82rem; font-weight: 700; color: var(--c-crimson); margin-left: auto; }
+.tclas-doc-item__download { flex-shrink: 0; font-size: .82rem; font-weight: 600; color: var(--c-crimson); margin-left: auto; }
 
 // ── Print ─────────────────────────────────────────────────────────────────
 @media print {

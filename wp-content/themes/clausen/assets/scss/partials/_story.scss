@@ -16,7 +16,7 @@
 
 .tclas-story-legend {
 	font-size: 1rem;
-	font-weight: 700;
+	font-weight: 600;
 	color: var(--c-ardoise);
 	margin-bottom: .35rem;
 	display: block;
@@ -90,14 +90,14 @@
 
 .tclas-trip-field-group      { display: flex; flex-direction: column; gap: .2rem; }
 .tclas-trip-field-group--full{ margin-bottom: .25rem; }
-.tclas-trip-label            { font-size: .75rem; font-weight: 700; color: var(--c-ardoise); }
+.tclas-trip-label            { font-size: .75rem; font-weight: 600; color: var(--c-ardoise); }
 .tclas-trip-month,.tclas-trip-purpose,.tclas-trip-notes { width: 100%; }
 .tclas-trip-notes            { resize: vertical; min-height: 3.5rem; }
 .tclas-trip-remove           { position: absolute; top: .5rem; right: .5rem; }
 
 // ── Privacy fields ────────────────────────────────────────────────────────
 .tclas-story-privacy-row    { margin-bottom: 1rem; }
-.tclas-story-privacy-label  { display: block; font-size: .82rem; font-weight: 700; color: var(--c-body-text); margin-bottom: .4rem; }
+.tclas-story-privacy-label  { display: block; font-size: .82rem; font-weight: 600; color: var(--c-body-text); margin-bottom: .4rem; }
 .tclas-story-radio-group    { display: flex; flex-wrap: wrap; gap: .5rem; }
 .tclas-story-radio          { display: flex; align-items: center; gap: .35rem; font-size: .85rem; cursor: pointer; }
 .tclas-story-check-row      { margin-bottom: .5rem; }
@@ -110,7 +110,7 @@
 // ── Sidebar column ────────────────────────────────────────────────────────
 .tclas-story-sidebar-col       { position: sticky; top: 88px; }
 .tclas-story-connections-preview{ margin-bottom: 1.5rem; }
-.tclas-story-sidebar-title     { font-size: 1rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .85rem; }
+.tclas-story-sidebar-title     { font-size: 1rem; font-weight: 600; color: var(--c-ardoise); margin-bottom: .85rem; }
 .tclas-story-no-connections    { margin-bottom: 1.5rem; }
 
 .tclas-story-tip-box {
@@ -119,13 +119,13 @@
 	padding: 1rem 1.25rem;
 }
 
-.tclas-story-tip-title { font-size: .85rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .65rem; }
+.tclas-story-tip-title { font-size: .85rem; font-weight: 600; color: var(--c-ardoise); margin-bottom: .65rem; }
 .tclas-story-tip-box ul{ font-size: .82rem; color: var(--c-muted); padding-left: 1.2rem; margin: 0; }
 .tclas-story-tip-box li{ margin-bottom: .35rem; }
 
 // ── Bio counter + social fields ───────────────────────────────────────────
 .tclas-bio-counter          { text-align: right; font-size: .78rem; color: var(--c-muted); }
 .tclas-story-social-group   { margin-bottom: .85rem; }
-.tclas-story-social-label    { display: block; font-size: .82rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .3rem; }
+.tclas-story-social-label    { display: block; font-size: .82rem; font-weight: 600; color: var(--c-ardoise); margin-bottom: .3rem; }
 .tclas-story-social-label--mt{ margin-top: 1rem; }
 .tclas-story-connections-more{ margin-top: .75rem; font-size: .82rem; }

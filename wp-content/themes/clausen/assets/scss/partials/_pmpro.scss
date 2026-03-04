@@ -37,13 +37,13 @@
 	.pmpro_card_title.pmpro_font-large {
 		font-family: var(--font-serif);
 		color: var(--c-ardoise);
-		font-weight: 400;
+		font-weight: 300;
 	}
 
 	h3,
 	.pmpro_section_title {
 		font-family: var(--font-sans);
-		font-weight: 700;
+		font-weight: 600;
 		color: var(--c-ardoise);
 		font-size: 0.875rem;
 		text-transform: uppercase;
@@ -93,7 +93,7 @@
 	}
 
 	.pmpro_form_label {
-		font-weight: 700;
+		font-weight: 600;
 		font-size: 0.875rem;
 		color: var(--c-body-text);
 	}
@@ -114,7 +114,7 @@
 		border-color: var(--c-crimson);
 		border-radius: var(--radius);
 		font-family: var(--font-sans);
-		font-weight: 700;
+		font-weight: 600;
 		letter-spacing: 0.02em;
 		box-shadow: var(--shadow-sm);
 		transition: background-color 0.2s, border-color 0.2s, color 0.2s;
@@ -219,7 +219,7 @@
 		thead th {
 			color: var(--c-ardoise);
 			font-size: 0.8125rem;
-			font-weight: 700;
+			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.05em;
 			border-bottom-color: var(--c-border-dk);
@@ -234,7 +234,7 @@
 		}
 
 		tfoot tr td {
-			font-weight: 700;
+			font-weight: 600;
 			border-top-color: var(--c-border-dk);
 		}
 	}
@@ -290,7 +290,7 @@
 	.pmpro_account-membership {
 		.pmpro_card_title {
 			font-family: var(--font-serif);
-			font-weight: 400;
+			font-weight: 300;
 		}
 	}
 
