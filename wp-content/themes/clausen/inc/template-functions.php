@@ -309,6 +309,37 @@ function tclas_ltz( string $phrase, string $translation, bool $echo = true ): st
 	return $html;
 }
 
+/**
+ * Shortcode wrapper for tclas_ltz().
+ *
+ * Usage (phrase as content, translation as attribute):
+ *   [ltz t="Hello"]Moien[/ltz]
+ *   [ltz t="We are here"]Mir sinn hei[/ltz]
+ *
+ * The full attribute name "translation" is also accepted:
+ *   [ltz translation="Hello"]Moien[/ltz]
+ */
+function tclas_ltz_shortcode( array $atts, ?string $content = null ): string {
+	$atts = shortcode_atts(
+		[
+			't'           => '',
+			'translation' => '',
+		],
+		$atts,
+		'ltz'
+	);
+
+	$phrase      = trim( $content ?? '' );
+	$translation = trim( $atts['t'] ?: $atts['translation'] );
+
+	if ( ! $phrase || ! $translation ) {
+		return $phrase; // Render plain text if either part is missing.
+	}
+
+	return tclas_ltz( $phrase, $translation, false );
+}
+add_shortcode( 'ltz', 'tclas_ltz_shortcode' );
+
 // ── Card helpers ──────────────────────────────────────────────────────────
 
 /**
