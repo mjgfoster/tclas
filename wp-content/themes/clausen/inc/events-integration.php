@@ -265,6 +265,39 @@ add_action( 'tribe_template_after_include', function ( $file, $name, $template )
 }, 10, 3 );
 
 /**
+ * Return past events as an array of post objects, newest first.
+ *
+ * @param int $limit  Number of events to return.
+ */
+function tclas_get_past_events( int $limit = 6 ): array {
+	if ( ! class_exists( 'Tribe__Events__Main' ) ) {
+		return [];
+	}
+
+	$today = current_time( 'Y-m-d H:i:s' );
+
+	$query = new WP_Query( [
+		'post_type'      => Tribe__Events__Main::POSTTYPE,
+		'posts_per_page' => $limit,
+		'post_status'    => 'publish',
+		'orderby'        => 'meta_value',
+		'meta_key'       => '_EventStartDate',
+		'order'          => 'DESC',
+		'meta_query'     => [
+			[
+				'key'     => '_EventEndDate',
+				'value'   => $today,
+				'compare' => '<',
+				'type'    => 'DATETIME',
+			],
+		],
+		'no_found_rows'  => true,
+	] );
+
+	return $query->posts;
+}
+
+/**
  * Render the events empty state.
  */
 // ── AP-style date/time formatting ─────────────────────────────────────────────

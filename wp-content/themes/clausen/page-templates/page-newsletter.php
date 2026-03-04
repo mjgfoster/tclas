@@ -155,10 +155,42 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 }
 ?>
 
+<!-- ── Newsletter sticky sub-nav ─────────────────────────────────────────── -->
+<nav class="tclas-nl-subnav" aria-label="<?php esc_attr_e( 'Newsletter sections', 'tclas' ); ?>" id="nl-subnav">
+	<div class="container-tclas">
+		<div class="tclas-nl-subnav__inner">
+			<span class="tclas-nl-subnav__brand" aria-hidden="true">
+				<?php esc_html_e( 'The Loon &amp; The Lion', 'tclas' ); ?>
+			</span>
+			<ul class="tclas-nl-subnav__links" role="list">
+				<li>
+					<a href="#nl-current" class="tclas-nl-subnav__link" data-nl-section="nl-current">
+						<?php esc_html_e( 'Current Issue', 'tclas' ); ?>
+					</a>
+				</li>
+				<?php if ( ! empty( $dept_terms ) ) : ?>
+				<li>
+					<a href="#nl-topics" class="tclas-nl-subnav__link" data-nl-section="nl-topics">
+						<?php esc_html_e( 'By Topic', 'tclas' ); ?>
+					</a>
+				</li>
+				<?php endif; ?>
+				<?php if ( ! empty( $prev_dates ) ) : ?>
+				<li>
+					<a href="#nl-prev" class="tclas-nl-subnav__link" data-nl-section="nl-prev">
+						<?php esc_html_e( 'Previous Issues', 'tclas' ); ?>
+					</a>
+				</li>
+				<?php endif; ?>
+			</ul>
+		</div>
+	</div>
+</nav>
+
 <!-- ══════════════════════════════════════════════════════════════════════════
      SECTION 1 — Current Issue
      ════════════════════════════════════════════════════════════════════════ -->
-<section class="tclas-section tclas-nl-current-section">
+<section class="tclas-section tclas-nl-current-section" id="nl-current">
 	<div class="container-tclas">
 
 		<?php if ( empty( $issue_posts ) ) : ?>
@@ -248,7 +280,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
      SECTION 2 — Browse by Topic
      ════════════════════════════════════════════════════════════════════════ -->
 <?php if ( ! empty( $dept_terms ) ) : ?>
-<section class="tclas-section tclas-nl-topics-section" aria-labelledby="tclas-nl-topics-heading">
+<section class="tclas-section tclas-nl-topics-section" id="nl-topics" aria-labelledby="tclas-nl-topics-heading">
 	<div class="container-tclas">
 
 		<h2 id="tclas-nl-topics-heading" class="tclas-nl-section-heading">
@@ -336,7 +368,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
      SECTION 4 — Previous Issues + Archive link
      ════════════════════════════════════════════════════════════════════════ -->
 <?php if ( ! empty( $prev_dates ) ) : ?>
-<section class="tclas-section" aria-labelledby="tclas-nl-prev-heading">
+<section class="tclas-section" id="nl-prev" aria-labelledby="tclas-nl-prev-heading">
 	<div class="container-tclas">
 
 		<h2 id="tclas-nl-prev-heading" class="tclas-nl-section-heading">

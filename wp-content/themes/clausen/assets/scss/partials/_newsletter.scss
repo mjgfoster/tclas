@@ -1078,3 +1078,82 @@
 	border-radius: var(--radius);
 	box-shadow: var(--shadow-md);
 }
+
+
+// =============================================================================
+//  tclas-nl-subnav — sticky section nav on page-newsletter.php
+// =============================================================================
+
+.tclas-nl-subnav {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	background: var(--c-ardoise);
+	border-bottom: 1px solid rgba(255, 255, 255, .1);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+.tclas-nl-subnav__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	padding: .7rem 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar { display: none; }
+}
+
+.tclas-nl-subnav__brand {
+	font-family: var(--font-serif);
+	font-size: .9rem;
+	font-weight: 700;
+	color: rgba(255, 255, 255, .65);
+	white-space: nowrap;
+	flex-shrink: 0;
+	letter-spacing: .01em;
+}
+
+.tclas-nl-subnav__links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: .25rem;
+	flex-shrink: 0;
+}
+
+.tclas-nl-subnav__link {
+	display: block;
+	padding: .35rem .75rem;
+	font-family: var(--font-sans);
+	font-size: .8rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .07em;
+	color: rgba(255, 255, 255, .7);
+	text-decoration: none;
+	border-radius: var(--radius);
+	white-space: nowrap;
+	transition: background .15s, color .15s;
+
+	&:hover {
+		background: rgba(255, 255, 255, .1);
+		color: #fff;
+	}
+
+	&.tclas-nl-subnav__link--active {
+		background: var(--c-gold);
+		color: var(--c-ardoise);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 2px;
+	}
+}
+
+@media (max-width: 480px) {
+	.tclas-nl-subnav__brand { display: none; }
+}

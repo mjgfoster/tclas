@@ -277,7 +277,55 @@ else :
 </section>
 <?php endif; ?>
 
-<?php echo tribe( Template_Bootstrap::class )->get_view_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+<?php
+// ── Upcoming events grid ───────────────────────────────────────────────────
+$_upcoming = function_exists( 'tclas_get_upcoming_events' ) ? tclas_get_upcoming_events( 9 ) : [];
+
+// Exclude the featured event so it doesn't appear twice.
+if ( $featured ) {
+	$_featured_id = $featured->ID;
+	$_upcoming    = array_filter( $_upcoming, fn( $e ) => $e->ID !== $_featured_id );
+}
+?>
+<section class="tclas-events-upcoming" aria-labelledby="events-upcoming-heading">
+	<div class="container-tclas">
+		<span class="tclas-eyebrow"><?php esc_html_e( 'On the calendar', 'tclas' ); ?></span>
+		<h2 id="events-upcoming-heading"><?php esc_html_e( 'Upcoming Events', 'tclas' ); ?></h2>
+
+		<?php if ( $_upcoming ) : ?>
+		<div class="tclas-event-grid">
+			<?php foreach ( $_upcoming as $_ev ) :
+				if ( function_exists( 'tclas_render_event_card' ) ) {
+					tclas_render_event_card( $_ev );
+				}
+			endforeach; ?>
+		</div>
+		<?php else : ?>
+			<?php if ( function_exists( 'tclas_render_events_empty' ) ) { tclas_render_events_empty(); } ?>
+		<?php endif; ?>
+	</div>
+</section>
+
+<?php
+// ── Past events grid ───────────────────────────────────────────────────────
+$_past = function_exists( 'tclas_get_past_events' ) ? tclas_get_past_events( 6 ) : [];
+if ( $_past ) :
+?>
+<section class="tclas-events-past" aria-labelledby="events-past-heading">
+	<div class="container-tclas">
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Archive', 'tclas' ); ?></span>
+		<h2 id="events-past-heading"><?php esc_html_e( 'Past Events', 'tclas' ); ?></h2>
+
+		<div class="tclas-event-grid tclas-event-grid--past">
+			<?php foreach ( $_past as $_ev ) :
+				if ( function_exists( 'tclas_render_event_card' ) ) {
+					tclas_render_event_card( $_ev );
+				}
+			endforeach; ?>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
 
 <?php endif; ?>
 

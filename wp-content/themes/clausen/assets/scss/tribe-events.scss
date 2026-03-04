@@ -4,6 +4,59 @@
  * Loaded only on TEC archive/event pages via inc/enqueue.php.
  */
 
+// ── Events archive — upcoming + past grids ───────────────────────────────
+
+.tclas-events-upcoming {
+	background: #fff;
+	padding: 3rem 0 4.5rem;
+
+	.tclas-eyebrow { display: block; margin-bottom: .5rem; }
+	h2             { margin-bottom: 2rem; }
+}
+
+.tclas-events-past {
+	background: var(--c-or-pale);
+	padding: 3rem 0 4.5rem;
+
+	.tclas-eyebrow { display: block; margin-bottom: .5rem; }
+	h2             { margin-bottom: 2rem; }
+}
+
+.tclas-event-grid {
+	display: grid;
+	gap: 1.5rem;
+
+	@media (min-width: 680px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	@media (min-width: 1000px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	&--past {
+		.tclas-event-card { opacity: .8; }
+	}
+}
+
+.tclas-events-empty {
+	padding: 3.5rem 0;
+	text-align: center;
+
+	&__ltz {
+		display:    block;
+		font-size:  1.25rem;
+		color:      var(--c-ardoise);
+		margin-bottom: .6rem;
+	}
+
+	&__translation {
+		font-style: italic;
+		font-size:  .95rem;
+		color:      var(--c-muted);
+	}
+}
+
 // ── Featured event hero ───────────────────────────────────────────────────
 .tclas-featured-event {
 	background: var(--c-or-pale);

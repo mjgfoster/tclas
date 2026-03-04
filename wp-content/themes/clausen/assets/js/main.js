@@ -238,6 +238,46 @@
     });
   }
 
+  // ── Newsletter sticky sub-nav scroll tracker ──────────────────────────────
+  function initNlSubnav() {
+    const nav = qs('.tclas-nl-subnav');
+    if (!nav) return;
+
+    const links    = qsa('.tclas-nl-subnav__link[data-nl-section]', nav);
+    const sections = [];
+
+    links.forEach(link => {
+      const id = link.dataset.nlSection;
+      const el = document.getElementById(id);
+      if (el) sections.push({ id, el, link });
+    });
+
+    if (!sections.length) return;
+
+    const ACTIVE = 'tclas-nl-subnav__link--active';
+
+    function setActive(id) {
+      links.forEach(l => l.classList.remove(ACTIVE));
+      const match = sections.find(s => s.id === id);
+      if (match) match.link.classList.add(ACTIVE);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        });
+      }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+      sections.forEach(s => observer.observe(s.el));
+    }
+
+    // Set initial active state on load.
+    setActive(sections[0].id);
+  }
+
   // ── Smooth scroll for anchor links ────────────────────────────────────────
   function initSmoothScroll() {
     qsa('a[href^="#"]').forEach(link => {
@@ -505,6 +545,7 @@
   ready(() => {
     initMobileNav();
     initNewsletterNav();
+    initNlSubnav();
     initHubSidebar();
     initRenewBanner();
     initReferralCopy();
