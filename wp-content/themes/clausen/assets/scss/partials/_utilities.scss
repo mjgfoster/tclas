@@ -7,7 +7,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: .25rem;
-	font-size: .62rem;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .07em;
@@ -15,17 +15,18 @@
 	line-height: 1.4;
 	white-space: nowrap;
 
-	&--crimson  { background: var(--c-crimson);  color: #fff; }
-	&--ardoise  { background: var(--c-ardoise);  color: var(--c-or-pale); }
-	&--vert     { background: var(--c-vert);     color: #fff; }
-	&--aigue    { background: var(--c-aigue);    color: #fff; }
-	&--outline  { background: transparent; border: 1.5px solid var(--c-crimson); color: var(--c-crimson); }
-	&--or-pale  { background: var(--c-or-pale);  color: var(--c-ardoise); }
+	&--neutral  { background: var(--c-body-text); color: #fff; }           // default: dark gray
+	&--ardoise  { background: var(--c-ardoise);   color: #fff; }           // blue
+	&--vert     { background: var(--c-vert);      color: #fff; }           // green
+	&--aigue    { background: var(--c-ardoise);   color: #fff; }           // maps to blue (ochre contrast too low)
+	&--crimson  { background: var(--c-body-text); color: #fff; }           // legacy: now neutral
+	&--outline  { background: transparent; border: 1.5px solid var(--c-ardoise); color: var(--c-ardoise); }
+	&--or-pale  { background: var(--c-or-pale);   color: var(--c-ardoise); }
 }
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────
 .tclas-breadcrumb {
-	font-size: .8rem;
+	font-size: .875rem;
 	color: var(--c-muted);
 	margin-bottom: 1.25rem;
 
@@ -42,7 +43,7 @@
 	li::after { content: '/'; color: var(--c-border-dk); margin-left: .3rem; }
 	li:last-child::after { display: none; }
 
-	a { color: var(--c-crimson); text-decoration: underline; }
+	a { color: var(--c-ardoise); text-decoration: underline; }
 
 	&--light { color: rgba(235,245,252,.6); a { color: rgba(235,245,252,.85); } }
 }
@@ -66,11 +67,11 @@
 		color: var(--c-ardoise);
 		text-decoration: none;
 		font-weight: 700;
-		font-size: .82rem;
+		font-size: .875rem;
 		transition: all .15s;
 
-		&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
-		&.current { background: var(--c-crimson); border-color: var(--c-crimson); color: #fff; }
+		&:hover  { border-color: var(--c-ardoise); color: var(--c-ardoise); }
+		&.current{ background: var(--c-ardoise); border-color: var(--c-ardoise); color: #fff; }
 	}
 }
 
@@ -91,7 +92,7 @@
 	align-items: center;
 	padding: .65rem 1.1rem;
 	font-weight: 700;
-	font-size: .82rem;
+	font-size: .875rem;
 	color: var(--c-muted);
 	text-decoration: none;
 	border-bottom: 3px solid transparent;
@@ -99,8 +100,8 @@
 	white-space: nowrap;
 	transition: color .15s, border-color .15s;
 
-	&:hover       { color: var(--c-crimson); text-decoration: none; }
-	&.is-active   { color: var(--c-crimson); border-bottom-color: var(--c-crimson); }
+	&:hover     { color: var(--c-ardoise); text-decoration: none; }
+	&.is-active { color: var(--c-ardoise); border-bottom-color: var(--c-ardoise); }
 }
 
 // ── Directory (old-style) ─────────────────────────────────────────────────
@@ -118,15 +119,15 @@
 	padding: .28rem .8rem;
 	border: 2px solid var(--c-border);
 	background: none;
-	font-size: .8rem;
+	font-size: .875rem;
 	font-weight: 700;
 	color: var(--c-body-text);
 	cursor: pointer;
 	transition: all .15s;
 	font-family: var(--font-sans);
 
-	&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
-	&.active{ background: var(--c-crimson); border-color: var(--c-crimson); color: #fff; }
+	&:hover { border-color: var(--c-ardoise); color: var(--c-ardoise); }
+	&.active{ background: var(--c-ardoise); border-color: var(--c-ardoise); color: #fff; }
 }
 
 .tclas-directory-grid {
@@ -150,8 +151,8 @@
 .tclas-member-card__avatar  { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--c-border); flex-shrink: 0; }
 .tclas-member-card__name    { font-size: .9rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tclas-member-card__location{ font-size: .78rem; color: var(--c-muted); }
-.tclas-member-card__level   { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-crimson); margin-top: .2rem; }
-.tclas-member-card__commune { font-size: .6rem; color: var(--c-aigue); font-weight: 700; margin-top: .15rem; }
+.tclas-member-card__level   { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-ardoise); margin-top: .2rem; }
+.tclas-member-card__commune { font-size: .75rem; color: var(--c-ardoise); font-weight: 700; margin-top: .15rem; }
 
 // ── Documents ─────────────────────────────────────────────────────────────
 .tclas-doc-list { display: flex; flex-direction: column; gap: .65rem; }
@@ -167,13 +168,13 @@
 	color: var(--c-ardoise);
 	transition: border-color .15s, box-shadow .15s;
 
-	&:hover { border-color: var(--c-crimson); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--c-ardoise); }
+	&:hover { border-color: var(--c-ardoise); box-shadow: var(--shadow-sm); text-decoration: none; color: var(--c-ardoise); }
 }
 
-.tclas-doc-item__icon     { width: 36px; height: 36px; background: var(--c-body-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; color: var(--c-crimson); }
-.tclas-doc-item__name     { font-weight: 700; font-size: .85rem; display: block; }
-.tclas-doc-item__meta     { font-size: .7rem; color: var(--c-muted); margin-top: .1rem; display: flex; gap: .65rem; }
-.tclas-doc-item__download { flex-shrink: 0; font-size: .82rem; font-weight: 700; color: var(--c-crimson); margin-left: auto; }
+.tclas-doc-item__icon     { width: 36px; height: 36px; background: var(--c-body-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; color: var(--c-ardoise); }
+.tclas-doc-item__name     { font-weight: 700; font-size: .875rem; display: block; }
+.tclas-doc-item__meta     { font-size: .75rem; color: var(--c-muted); margin-top: .1rem; display: flex; gap: .65rem; }
+.tclas-doc-item__download { flex-shrink: 0; font-size: .875rem; font-weight: 700; color: var(--c-ardoise); margin-left: auto; }
 
 // ── Print ─────────────────────────────────────────────────────────────────
 @media print {

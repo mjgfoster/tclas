@@ -21,9 +21,9 @@
 	white-space: nowrap;
 
 	&:focus-visible {
-		outline: 3px solid var(--c-crimson);
+		outline: 3px solid var(--c-ardoise);
 		outline-offset: 2px;
-		box-shadow: 0 0 0 6px rgba(227,30,38,.15);
+		box-shadow: 0 0 0 6px rgba(43,98,130,.18);
 	}
 
 	&:disabled {
@@ -56,7 +56,37 @@
 @keyframes tclas-spin { to { transform: rotate(360deg); } }
 
 // ── Variants ──────────────────────────────────────────────────────────────
+
+// Primary — solid blue; main page CTA
 .btn-primary {
+	background: var(--c-ardoise);
+	border-color: var(--c-ardoise);
+	color: #fff;
+
+	&:hover {
+		background: var(--c-ardoise-dk);
+		border-color: var(--c-ardoise-dk);
+		color: #fff;
+		text-decoration: none;
+	}
+}
+
+// Secondary — outlined blue; secondary / alternative actions
+.btn-secondary {
+	background: transparent;
+	border-color: var(--c-ardoise);
+	color: var(--c-ardoise);
+
+	&:hover {
+		background: var(--c-ardoise);
+		border-color: var(--c-ardoise);
+		color: #fff;
+		text-decoration: none;
+	}
+}
+
+// Danger — solid red; destructive actions only
+.btn-danger {
 	background: var(--c-crimson);
 	border-color: var(--c-crimson);
 	color: #fff;
@@ -69,20 +99,8 @@
 	}
 }
 
-.btn-secondary {
-	background: var(--c-ardoise);
-	border-color: var(--c-ardoise);
-	color: var(--c-or-pale);
-
-	&:hover {
-		background: var(--c-ardoise-dk);
-		border-color: var(--c-ardoise-dk);
-		color: #fff;
-		text-decoration: none;
-	}
-}
-
-.btn-outline-primary {
+// Danger outline — red outline; less-prominent destructive action
+.btn-danger-outline {
 	background: transparent;
 	border-color: var(--c-crimson);
 	color: var(--c-crimson);
@@ -90,6 +108,7 @@
 	&:hover { background: var(--c-crimson); color: #fff; text-decoration: none; }
 }
 
+// Light outline — for use on dark/ardoise backgrounds
 .btn-outline-light {
 	background: transparent;
 	border-color: var(--c-or-pale);
@@ -98,6 +117,30 @@
 	&:hover { background: var(--c-or-pale); color: var(--c-ardoise); text-decoration: none; }
 }
 
+// Ghost — text-only; subtle in-content action
+.btn-ghost {
+	background: transparent;
+	border: none;
+	color: var(--c-ardoise);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	padding-left: 0;
+	padding-right: 0;
+
+	&:hover { color: var(--c-ardoise-dk); text-decoration-thickness: 2px; }
+}
+
+// ── Legacy aliases (kept for backward compat) ──────────────────────────────
+// .btn-outline-primary was red outline; now maps to danger-outline
+.btn-outline-primary {
+	background: transparent;
+	border-color: var(--c-crimson);
+	color: var(--c-crimson);
+
+	&:hover { background: var(--c-crimson); color: #fff; text-decoration: none; }
+}
+
+// .btn-outline-ardoise is now identical to .btn-secondary
 .btn-outline-ardoise {
 	background: transparent;
 	border-color: var(--c-ardoise);
@@ -106,18 +149,6 @@
 	&:hover { background: var(--c-ardoise); color: var(--c-or-pale); text-decoration: none; }
 }
 
-.btn-ghost {
-	background: transparent;
-	border: none;
-	color: var(--c-crimson);
-	text-decoration: underline;
-	text-underline-offset: 3px;
-	padding-left: 0;
-	padding-right: 0;
-
-	&:hover { color: var(--c-crimson-dk); text-decoration-thickness: 2px; }
-}
-
 // ── Sizes ─────────────────────────────────────────────────────────────────
 .btn-lg { padding: .75rem 1.85rem; font-size: 1rem; }
-.btn-sm { padding: .35rem .85rem; font-size: .8rem; }
+.btn-sm { padding: .35rem .85rem; font-size: .875rem; }

@@ -141,8 +141,9 @@
 
 	&.active,
 	&[aria-current="page"] {
-		color: var(--c-crimson);
-		border-bottom-color: var(--c-crimson);
+		color: var(--c-ardoise);
+		border-bottom-color: var(--c-ardoise);
+		font-weight: 700;
 		text-decoration: none;
 	}
 

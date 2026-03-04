@@ -28,7 +28,7 @@
 	align-items: center;
 	gap: .25rem;
 	font-family: var(--font-sans);
-	font-size: .7rem;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .07em;
@@ -42,7 +42,7 @@
 	&--founding  { background: #e7e5e4; color: #336886; }
 	&--ancestors { background: var(--c-or-pale); color: var(--c-ardoise); border: 1px solid var(--c-border); }
 	&--family    { background: var(--c-or-pale); color: var(--c-muted);   border: 1px solid var(--c-border); }
-	&--sm        { font-size: .65rem; padding: .15rem .4rem; }
+	&--sm        { font-size: .72rem; padding: .15rem .4rem; }
 }
 
 // ── Photo upload widget ───────────────────────────────────────────────────
@@ -168,7 +168,7 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	color: var(--c-body-text);
 	min-width: 180px;
 
-	&:focus { outline: 3px solid var(--c-crimson); border-color: var(--c-crimson); }
+	&:focus { outline: 3px solid var(--c-ardoise); border-color: var(--c-ardoise); }
 }
 
 .tclas-dir-filters__search { flex: 1; min-width: 200px; .tclas-dir-filter-input { width: 100%; } }
@@ -365,11 +365,11 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 
 .tclas-profile-section__title {
 	font-family: var(--font-sans);
-	font-size: .7rem;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .09em;
-	color: var(--c-crimson);
+	color: var(--c-muted);
 	margin: 0 0 .85rem;
 }
 

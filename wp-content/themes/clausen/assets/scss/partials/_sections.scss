@@ -334,11 +334,11 @@
 .tclas-post-card__meta { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; flex-wrap: wrap; }
 
 .tclas-post-card__category {
-	font-size: .62rem;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .08em;
-	color: var(--c-crimson);
+	color: var(--c-ardoise);
 	text-decoration: none;
 
 	&:hover { text-decoration: underline; }
@@ -416,12 +416,12 @@
 	&:hover { background: rgba(255,255,255,.1); border-top-color: var(--c-or-pale); }
 
 	&--featured {
-		border-color: rgba(227,30,38,.5);
-		border-top-color: var(--c-crimson);
-		background: rgba(227,30,38,.1);
+		border-color: rgba(43,98,130,.5);
+		border-top-color: var(--c-ardoise);
+		background: rgba(43,98,130,.12);
 		position: relative;
 
-		&:hover { background: rgba(227,30,38,.14); }
+		&:hover { background: rgba(43,98,130,.18); }
 	}
 }
 
@@ -430,9 +430,9 @@
 	top: -11px;
 	left: 50%;
 	transform: translateX(-50%);
-	background: var(--c-crimson);
+	background: var(--c-ardoise);
 	color: #fff;
-	font-size: .62rem;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .08em;
@@ -442,7 +442,7 @@
 
 .tclas-tier__header { padding: 1.5rem 1.5rem 1rem; text-align: center; }
 .tclas-tier__invite { font-size: .9rem; font-style: italic; color: rgba(235,245,252,.75); margin-bottom: .85rem; display: block; }
-.tclas-tier__name   { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
+.tclas-tier__name   { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
 .tclas-tier__price  { font-size: 2.5rem; font-weight: 700; color: var(--c-or-pale); line-height: 1; }
 .tclas-tier__period { font-size: .8rem; color: rgba(235,245,252,.45); }
 .tclas-tier__body   { padding: 0 1.5rem 1.5rem; flex: 1; }
@@ -475,12 +475,12 @@
 
 // ── Join CTA ──────────────────────────────────────────────────────────────
 .tclas-join-cta {
-	background: var(--c-crimson);
+	background: var(--c-ardoise);
 	padding: 3rem 0;
 	text-align: center;
 
-	h2 { color: #fff; }
-	p  { color: rgba(255,255,255,.88); max-width: none; }
+	h2 { color: var(--c-or-pale); }
+	p  { color: rgba(235,245,252,.88); max-width: none; }
 }
 
 .tclas-join-cta__actions {
@@ -520,4 +520,4 @@
 }
 
 .tclas-countdown__num   { display: block; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; color: #fff; line-height: 1; }
-.tclas-countdown__label { display: block; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.5); margin-top: .2rem; }
+.tclas-countdown__label { display: block; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.5); margin-top: .2rem; }
