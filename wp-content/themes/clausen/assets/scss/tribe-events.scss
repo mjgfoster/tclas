@@ -369,7 +369,67 @@
 	box-shadow:     0 0 0 5px rgba(227, 30, 38, .18) !important;
 }
 
+// ── Single event: custom page header ──────────────────────────────────────
+
+// Back-link eyebrow (replaces generic "Community" eyebrow on single events)
+.tclas-event-header__back {
+	display: inline-block;
+	font-family: var(--font-sans);
+	font-size: .8rem;
+	font-weight: 700;
+	color: var(--c-muted);
+	text-decoration: none;
+	letter-spacing: .04em;
+	transition: color .15s;
+	margin-bottom: .35rem;
+
+	&:hover { color: var(--c-crimson); }
+}
+
+// Title row: h1 + optional Register button on same baseline
+.tclas-event-header__row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+}
+
+.tclas-event-header__cta {
+	flex-shrink: 0;
+	align-self: center;
+	white-space: nowrap;
+}
+
+.tclas-event-header__badges { margin-top: .6rem; }
+
+// Hero image (full-width, constrained to container, above TEC content)
+.tclas-event-hero { margin-bottom: 0; }
+
+.tclas-event-hero__img {
+	width: 100%;
+	height: clamp(220px, 35vw, 460px);
+	object-fit: cover;
+	border-radius: 0;
+	display: block;
+}
+
+// Hide TEC's own title on single pages (we render it as our page-header h1)
+.tribe-events-single .tribe-events-single-event-title { display: none !important; }
+
+// Hide TEC's featured image wrapper on single pages (we render it in .tclas-event-hero)
+.tribe-events-single .tribe-events-event-image { display: none !important; }
+
+@media (max-width: 600px) {
+	.tclas-event-header__row { flex-direction: column; gap: .75rem; }
+	.tclas-event-header__cta { align-self: flex-start; }
+}
+
 // ── Single event page ─────────────────────────────────────────────────────
+
+// TEC's "« All Events" back link — hidden; we render our own in the page header
+.tribe-events-single .tribe-events-back { display: none !important; }
+
 .tribe-events-back {
 	margin: 0 0 1.25rem !important;
 

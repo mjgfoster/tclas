@@ -16,6 +16,60 @@ use Tribe\Events\Views\V2\Template_Bootstrap;
 get_header();
 
 $featured = function_exists( 'tclas_get_featured_event' ) ? tclas_get_featured_event() : null;
+
+// ── Single event page ──────────────────────────────────────────────────────
+if ( is_singular( 'tribe_events' ) ) :
+
+	$eid          = get_queried_object_id();
+	$members_only = (bool) get_post_meta( $eid, '_tclas_members_only', true );
+	$reg_url      = get_post_meta( $eid, '_tclas_registration_url', true );
+	$events_url   = class_exists( 'Tribe__Events__Main' )
+		? get_post_type_archive_link( Tribe__Events__Main::POSTTYPE )
+		: home_url( '/events/' );
+
+	$icon_lock = '<svg aria-hidden="true" focusable="false" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+	?>
+
+<div class="tclas-page-header">
+	<div class="container-tclas">
+		<a href="<?php echo esc_url( $events_url ); ?>" class="tclas-eyebrow tclas-event-header__back">
+			&#8592; <?php esc_html_e( 'All Events', 'tclas' ); ?>
+		</a>
+		<div class="tclas-event-header__row">
+			<h1 class="tclas-page-header__title"><?php echo esc_html( get_the_title( $eid ) ); ?></h1>
+			<?php if ( $reg_url ) : ?>
+				<a
+					href="<?php echo esc_url( $reg_url ); ?>"
+					class="btn btn-primary tclas-event-header__cta"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<?php esc_html_e( 'Register now', 'tclas' ); ?>
+				</a>
+			<?php endif; ?>
+		</div>
+		<?php if ( $members_only ) : ?>
+			<div class="tclas-event-header__badges">
+				<span class="tclas-tec-members-badge">
+					<?php echo $icon_lock; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<span><?php esc_html_e( 'Members only', 'tclas' ); ?></span>
+				</span>
+			</div>
+		<?php endif; ?>
+	</div>
+</div>
+
+<?php if ( has_post_thumbnail( $eid ) ) : ?>
+<div class="tclas-event-hero">
+	<div class="container-tclas">
+		<?php echo get_the_post_thumbnail( $eid, 'large', [ 'class' => 'tclas-event-hero__img', 'loading' => 'eager' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	</div>
+</div>
+<?php endif; ?>
+
+<?php
+// ── Events archive page ────────────────────────────────────────────────────
+else :
 ?>
 
 <div class="tclas-page-header">
@@ -25,7 +79,7 @@ $featured = function_exists( 'tclas_get_featured_event' ) ? tclas_get_featured_e
 	</div>
 </div>
 
-<?php if ( $featured && ! is_singular( 'tribe_events' ) ) :
+<?php if ( $featured ) :
 	$f_id       = $featured->ID;
 	$f_title    = get_the_title( $f_id );
 	$f_start    = tribe_get_start_date( $f_id, false, 'U' );
@@ -97,6 +151,8 @@ $featured = function_exists( 'tclas_get_featured_event' ) ? tclas_get_featured_e
 		</div>
 	</div>
 </section>
+<?php endif; ?>
+
 <?php endif; ?>
 
 <?php echo tribe( Template_Bootstrap::class )->get_view_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
