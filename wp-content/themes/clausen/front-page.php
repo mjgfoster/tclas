@@ -101,6 +101,113 @@ get_header();
 	</div>
 </section>
 
+<!-- ── 3b. NEWSLETTER PREVIEW ────────────────────────────────────────────── -->
+<?php
+// Find the most-recent issue date
+$_nl_seed = get_posts( [
+	'post_type'      => 'post',
+	'post_status'    => 'publish',
+	'posts_per_page' => 1,
+	'meta_key'       => 'tclas_issue_date',
+	'orderby'        => 'meta_value',
+	'order'          => 'DESC',
+	'fields'         => 'ids',
+] );
+$_nl_date = $_nl_seed ? (string) get_post_meta( $_nl_seed[0], 'tclas_issue_date', true ) : '';
+?>
+<?php if ( $_nl_date ) : ?>
+<?php
+$_nl_posts = get_posts( [
+	'post_type'      => 'post',
+	'post_status'    => 'publish',
+	'posts_per_page' => -1,
+	'meta_query'     => [ [ 'key' => 'tclas_issue_date', 'value' => $_nl_date ] ],
+	'meta_key'       => 'tclas_issue_order',
+	'orderby'        => 'meta_value_num',
+	'order'          => 'ASC',
+] );
+
+// Issue display title
+$_nl_title = (string) get_post_meta( $_nl_seed[0], 'tclas_issue_title', true );
+if ( ! $_nl_title ) {
+	$_nl_dt    = DateTime::createFromFormat( 'Y-m', $_nl_date );
+	$_nl_title = $_nl_dt ? $_nl_dt->format( 'F Y' ) : $_nl_date;
+}
+
+// Cover image: main-story post with a featured image
+$_nl_cover_id = 0;
+foreach ( $_nl_posts as $_nlp ) {
+	$_nl_terms = wp_get_post_terms( $_nlp->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
+	if ( in_array( 'main-story', (array) $_nl_terms, true ) && has_post_thumbnail( $_nlp->ID ) ) {
+		$_nl_cover_id = $_nlp->ID;
+		break;
+	}
+}
+?>
+<section class="tclas-nl-preview" id="newsletter" aria-label="<?php esc_attr_e( 'Latest newsletter issue', 'tclas' ); ?>">
+	<div class="container-tclas">
+
+		<div class="tclas-nl-preview__header">
+			<div>
+				<span class="tclas-eyebrow"><?php esc_html_e( 'From the newsletter', 'tclas' ); ?></span>
+				<h2 class="tclas-nl-preview__title"><?php echo esc_html( $_nl_title ); ?></h2>
+			</div>
+			<a href="<?php echo esc_url( home_url( '/newsletter/' ) ); ?>" class="tclas-nl-preview__archives-link">
+				<?php esc_html_e( 'Browse all issues', 'tclas' ); ?>
+				<svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+			</a>
+		</div>
+
+		<div class="tclas-nl-preview__layout<?php echo $_nl_cover_id ? '' : ' tclas-nl-preview__layout--no-cover'; ?>">
+
+			<ol class="tclas-nl-preview__toc" role="list">
+				<?php foreach ( $_nl_posts as $_nlp ) :
+					$_nl_dept_terms = wp_get_post_terms( $_nlp->ID, 'tclas_department' );
+					$_nl_dept_lux   = '';
+					$_nl_dept_en    = '';
+					if ( ! is_wp_error( $_nl_dept_terms ) ) {
+						foreach ( $_nl_dept_terms as $_t ) {
+							if ( 'main-story' !== $_t->slug ) {
+								$_nl_dept_lux = $_t->name;
+								$_nl_dept_en  = $_t->description;
+								break;
+							}
+						}
+					}
+				?>
+				<li class="tclas-nl-preview__article">
+					<a href="<?php echo esc_url( get_permalink( $_nlp->ID ) ); ?>"
+					   class="tclas-nl-preview__article-link"
+					   aria-label="<?php echo esc_attr( sprintf( __( 'Read: %s', 'tclas' ), get_the_title( $_nlp ) ) ); ?>"
+					>
+						<?php if ( $_nl_dept_lux ) : ?>
+						<span class="tclas-issue-dept">
+							<span lang="lb"><?php echo esc_html( $_nl_dept_lux ); ?></span>
+							<?php if ( $_nl_dept_en ) : ?><span class="tclas-issue-dept__en"><?php echo esc_html( $_nl_dept_en ); ?></span><?php endif; ?>
+						</span>
+						<?php endif; ?>
+						<span class="tclas-nl-preview__article-title"><?php echo esc_html( get_the_title( $_nlp ) ); ?></span>
+					</a>
+				</li>
+				<?php endforeach; ?>
+			</ol>
+
+			<?php if ( $_nl_cover_id ) : ?>
+			<div class="tclas-nl-preview__cover">
+				<a href="<?php echo esc_url( get_permalink( $_nl_cover_id ) ); ?>" tabindex="-1" aria-hidden="true">
+					<?php echo get_the_post_thumbnail( $_nl_cover_id, 'large', [
+						'class' => 'tclas-nl-preview__cover-img',
+						'alt'   => '',
+					] ); ?>
+				</a>
+			</div>
+			<?php endif; ?>
+
+		</div><!-- /.tclas-nl-preview__layout -->
+	</div><!-- /.container-tclas -->
+</section>
+<?php endif; ?>
+
 <!-- ── 4. CITIZENSHIP CTA ────────────────────────────────────────────────── -->
 <section class="tclas-quiz-cta">
 	<div class="container-tclas container--narrow">

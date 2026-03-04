@@ -956,3 +956,125 @@
 		border-radius: 2px;
 	}
 }
+
+// ── Homepage newsletter preview ────────────────────────────────────────────
+.tclas-nl-preview {
+	background: var(--c-or-pale);
+	padding: 4rem 0;
+	border-top: 1px solid var(--c-border);
+}
+
+.tclas-nl-preview__header {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 2rem;
+
+	@media (max-width: 600px) {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: .5rem;
+	}
+}
+
+.tclas-nl-preview__title {
+	font-family: var(--font-serif);
+	font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+	color: var(--c-ardoise);
+	margin: .25rem 0 0;
+}
+
+.tclas-nl-preview__archives-link {
+	display: inline-flex;
+	align-items: center;
+	gap: .35rem;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	text-decoration: none;
+	white-space: nowrap;
+	flex-shrink: 0;
+
+	&:hover { color: var(--c-aigue); text-decoration: none; }
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+}
+
+.tclas-nl-preview__layout {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 2.5rem;
+	align-items: start;
+
+	&--no-cover { grid-template-columns: 1fr; }
+
+	@media (max-width: 700px) {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+}
+
+.tclas-nl-preview__toc {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.tclas-nl-preview__article {
+	border-bottom: 1px solid var(--c-border);
+
+	&:last-child { border-bottom: none; }
+}
+
+.tclas-nl-preview__article-link {
+	display: block;
+	padding: .75rem 0 .75rem .85rem;
+	border-left: 3px solid transparent;
+	text-decoration: none;
+	transition: border-color .15s;
+
+	&:hover {
+		border-left-color: var(--c-ardoise);
+		text-decoration: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	.tclas-issue-dept { margin-bottom: .2rem; }
+}
+
+.tclas-nl-preview__article-title {
+	display: block;
+	font-family: var(--font-sans);
+	font-size: .975rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	line-height: 1.35;
+}
+
+.tclas-nl-preview__cover {
+	position: sticky;
+	top: 6rem;
+
+	@media (max-width: 700px) { position: static; }
+}
+
+.tclas-nl-preview__cover-img {
+	width: 100%;
+	height: auto;
+	display: block;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-md);
+}
