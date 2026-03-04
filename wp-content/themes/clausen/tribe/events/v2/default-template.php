@@ -57,6 +57,25 @@ if ( is_singular( 'tribe_events' ) ) :
 	// Description
 	$description = apply_filters( 'the_content', get_post_field( 'post_content', $eid ) );
 
+	// Add to Calendar URLs
+	$end_date_meta = get_post_meta( $eid, '_EventEndDate', true ); // stored as 'Y-m-d H:i:s' local time
+	$end_ts        = $end_date_meta ? (int) strtotime( $end_date_meta ) : $start_ts + 7200;
+	$cal_title     = rawurlencode( get_the_title( $eid ) );
+	$cal_location  = rawurlencode( trim( implode( ', ', array_filter( [ $venue_name, $venue_addr, $venue_city ] ) ) ) );
+	$cal_details   = rawurlencode( wp_strip_all_tags( get_the_excerpt( $eid ) ) );
+	$gc_dates      = date( 'Ymd', $start_ts ) . 'T' . date( 'His', $start_ts )
+	               . '/' . date( 'Ymd', $end_ts ) . 'T' . date( 'His', $end_ts );
+	$url_gcal      = 'https://calendar.google.com/calendar/r/eventedit?text=' . $cal_title
+	               . '&dates=' . $gc_dates
+	               . '&details=' . $cal_details
+	               . '&location=' . $cal_location;
+	$url_ical      = add_query_arg( 'ical', '1', get_permalink( $eid ) );
+	$url_outlook   = 'https://outlook.live.com/calendar/0/deeplink/compose?subject=' . $cal_title
+	               . '&startdt=' . rawurlencode( date( 'Y-m-d\TH:i:s', $start_ts ) )
+	               . '&enddt=' . rawurlencode( date( 'Y-m-d\TH:i:s', $end_ts ) )
+	               . '&body=' . $cal_details
+	               . '&location=' . $cal_location;
+
 	// Icons
 	$icon_cal   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 	$icon_clock = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
@@ -75,16 +94,6 @@ if ( is_singular( 'tribe_events' ) ) :
 		</nav>
 		<div class="tclas-event-header__row">
 			<h1 class="tclas-page-header__title"><?php echo esc_html( get_the_title( $eid ) ); ?></h1>
-			<?php if ( $reg_url ) : ?>
-				<a
-					href="<?php echo esc_url( $reg_url ); ?>"
-					class="btn btn-primary tclas-event-header__cta"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<?php esc_html_e( 'Register now', 'tclas' ); ?>
-				</a>
-			<?php endif; ?>
 		</div>
 	</div>
 </div>
@@ -139,6 +148,21 @@ if ( is_singular( 'tribe_events' ) ) :
 					</li>
 					<?php endif; ?>
 				</ul>
+
+			<div class="tclas-event-atc">
+				<p class="tclas-event-atc__label"><?php esc_html_e( 'Add to calendar', 'tclas' ); ?></p>
+				<div class="tclas-event-atc__links">
+					<a href="<?php echo esc_url( $url_gcal ); ?>" target="_blank" rel="noopener noreferrer" class="tclas-event-atc__link">
+						<?php esc_html_e( 'Google Calendar', 'tclas' ); ?>
+					</a>
+					<a href="<?php echo esc_url( $url_ical ); ?>" class="tclas-event-atc__link">
+						<?php esc_html_e( 'iCal / Apple Calendar', 'tclas' ); ?>
+					</a>
+					<a href="<?php echo esc_url( $url_outlook ); ?>" target="_blank" rel="noopener noreferrer" class="tclas-event-atc__link">
+						<?php esc_html_e( 'Outlook', 'tclas' ); ?>
+					</a>
+				</div>
+			</div>
 			</aside>
 
 			<div class="tclas-event-main">

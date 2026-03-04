@@ -437,7 +437,7 @@
 
 .tclas-event-layout {
 	display:               grid;
-	grid-template-columns: 240px 1fr;
+	grid-template-columns: 300px 1fr;
 	column-gap:            3rem;
 	align-items:           start;
 }
@@ -494,6 +494,8 @@
 			width:       16px;
 			height:      16px;
 		}
+
+		> span { font-weight: 700; }
 	}
 
 	address {
@@ -548,7 +550,7 @@
 // Event description
 .tclas-event-description {
 	font-family: var(--font-serif);
-	font-size:   1.05rem;
+	font-size:   1.125rem;
 	line-height: 1.75;
 	color:       var(--c-body-text);
 
@@ -561,6 +563,42 @@
 		color:           var(--c-ardoise);
 		text-decoration: underline;
 		&:hover { color: var(--c-crimson); }
+	}
+}
+
+// Add to Calendar
+.tclas-event-atc {
+	margin-top:  1.75rem;
+	padding-top: 1.25rem;
+	border-top:  1px solid var(--c-border);
+
+	&__label {
+		font-family:    var(--font-sans);
+		font-size:      .72rem;
+		font-weight:    700;
+		text-transform: uppercase;
+		letter-spacing: .1em;
+		color:          var(--c-muted);
+		margin:         0 0 .65rem;
+	}
+
+	&__links {
+		display:        flex;
+		flex-direction: column;
+		gap:            .4rem;
+	}
+
+	&__link {
+		font-family:     var(--font-sans);
+		font-size:       .9rem;
+		color:           var(--c-ardoise);
+		text-decoration: none;
+		transition:      color .15s;
+
+		&:hover {
+			color:           var(--c-crimson);
+			text-decoration: underline;
+		}
 	}
 }
 
