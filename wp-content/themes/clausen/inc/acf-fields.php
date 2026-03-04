@@ -46,6 +46,15 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Get from Adobe Fonts → Web Projects. Default: pck6hdf (Skolar Sans).',
 			],
 			[
+				'key'           => 'field_footer_logo',
+				'label'         => 'Footer logo',
+				'name'          => 'footer_logo',
+				'type'          => 'image',
+				'return_format' => 'array',
+				'preview_size'  => 'thumbnail',
+				'instructions'  => 'Light/inverted version of the logo for use on the dark footer background. If left blank, falls back to the site custom logo.',
+			],
+			[
 				'key'   => 'field_footer_mc4wp_form_id',
 				'label' => 'Footer newsletter form ID',
 				'name'  => 'footer_mc4wp_form_id',
