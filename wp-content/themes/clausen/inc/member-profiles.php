@@ -161,6 +161,7 @@ function tclas_get_profile_data( int $user_id ): array {
 		'last_name'    => $user->last_name,
 		'photo_url'    => tclas_get_profile_photo_url( $user_id ),
 		'is_founding'  => tclas_is_founding_member( $user_id ),
+		'badges'       => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $user_id ) : [],
 		'member_since' => tclas_get_member_since_year( $user_id ),
 		'has_bio'      => ! empty( get_user_meta( $user_id, '_tclas_bio', true ) ),
 	];
@@ -258,6 +259,7 @@ function tclas_get_directory_members(): array {
 			                  ? (string) ( get_user_meta( $id, '_tclas_city', true ) ?: '' )
 			                  : '',
 			'is_founding'  => tclas_is_founding_member( $id ),
+			'badges'       => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $id ) : [],
 			'has_ancestors'=> ! empty( array_filter(
 				$communes_norm,
 				fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )

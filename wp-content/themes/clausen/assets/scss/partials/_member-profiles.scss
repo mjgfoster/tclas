@@ -36,7 +36,10 @@
 	border-radius: 99px;
 	white-space: nowrap;
 
-	&--founding  { background: var(--c-gold); color: var(--c-ardoise); }
+	// Member-assigned badges — Founding Member, Board Member, Bierger
+	&--member-badge { background: #e7e5e4; color: #336886; }
+	// Legacy alias (kept for backward compat — replaced by --member-badge in templates)
+	&--founding  { background: #e7e5e4; color: #336886; }
 	&--ancestors { background: var(--c-or-pale); color: var(--c-ardoise); border: 1px solid var(--c-border); }
 	&--family    { background: var(--c-or-pale); color: var(--c-muted);   border: 1px solid var(--c-border); }
 	&--sm        { font-size: .65rem; padding: .15rem .4rem; }

@@ -39,6 +39,9 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		// ── Has children ──────────────────────────────────────────────────────
 		update_user_meta( $uid, '_tclas_has_children', ! empty( $_POST['tclas_has_children'] ) ? 1 : 0 );
 
+		// ── Bierger (self-reported Luxembourg citizenship) ────────────────────
+		update_user_meta( $uid, '_tclas_badge_bierger', ! empty( $_POST['tclas_badge_bierger'] ) ? 1 : 0 );
+
 		// ── Travel log ────────────────────────────────────────────────────────
 		$raw_months  = (array) ( $_POST['tclas_trip_month_year'] ?? [] );
 		$raw_purpose = (array) ( $_POST['tclas_trip_purpose']    ?? [] );
@@ -131,6 +134,7 @@ $linkedin_url  = (string) ( get_user_meta( $user_id, '_tclas_linkedin_url',  tru
 $instagram_url = (string) ( get_user_meta( $user_id, '_tclas_instagram_url', true ) ?: '' );
 $family_names  = (array)  ( get_user_meta( $user_id, '_tclas_family_names',  true ) ?: [] );
 $has_children  = (bool)     get_user_meta( $user_id, '_tclas_has_children',  true );
+$is_bierger    = (bool)     get_user_meta( $user_id, '_tclas_badge_bierger', true );
 $field_privacy = (array)  ( get_user_meta( $user_id, '_tclas_field_privacy', true ) ?: [] );
 
 // Ensure at least one family name slot.
@@ -564,6 +568,25 @@ $profile_photo_url = $profile_photo_id
 
 							<?php tclas_story_privacy_toggle( 'family', $fp( 'family' ), __( 'family member names', 'tclas' ) ); ?>
 
+						</fieldset>
+
+						<!-- ── Luxembourg Citizenship ────────────────────────── -->
+						<fieldset class="tclas-story-fieldset">
+							<legend class="tclas-story-legend"><?php esc_html_e( 'Luxembourg Citizenship', 'tclas' ); ?></legend>
+							<p class="tclas-story-hint">
+								<?php esc_html_e( 'Check this if you are a Luxembourg citizen. A Bierger badge will appear on your member profile.', 'tclas' ); ?>
+							</p>
+							<div class="tclas-story-check-row">
+								<label class="tclas-story-checkbox">
+									<input
+										type="checkbox"
+										name="tclas_badge_bierger"
+										value="1"
+										<?php checked( $is_bierger ); ?>
+									>
+									<?php esc_html_e( 'I am a Luxembourg citizen (Bierger/Biergesch).', 'tclas' ); ?>
+								</label>
+							</div>
 						</fieldset>
 
 						<!-- ── Privacy ──────────────────────────────────────── -->

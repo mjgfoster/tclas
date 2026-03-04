@@ -42,6 +42,7 @@ $tclas_modules = [
 	'inc/lod-audio.php',          // LOD.lu pronunciation audio + Forvo fallback
 	// ── Member profiles & directory ───────────────────────────────────────
 	'inc/member-profiles.php',    // profile helpers, rewrite, photo upload, founding badge
+	'inc/member-badges.php',      // member badge registry: founding, board, bierger/citizen
 	// ── Permanent redirects ───────────────────────────────────────────────
 	'inc/redirects.php',          // 301s: /quiz/, /directory/, /profile/, /member-hub/ancestral-map/
 	// ── Newsletter admin + routing ────────────────────────────────────────

@@ -138,10 +138,19 @@ if ( $profile_username ) :
 					<h2 class="tclas-profile-header__name"><?php echo esc_html( $p['display_name'] ); ?></h2>
 
 					<!-- Badges -->
+					<?php
+					$badge_reg    = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
+					$active_slugs = $p['badges'] ?? [];
+					?>
 					<div class="tclas-profile-badges">
-						<?php if ( $p['is_founding'] ) : ?>
-							<span class="tclas-badge tclas-badge--founding">★ <?php esc_html_e( 'Founding Member', 'tclas' ); ?></span>
-						<?php endif; ?>
+						<?php foreach ( $active_slugs as $slug ) :
+							if ( ! isset( $badge_reg[ $slug ] ) ) continue;
+							$_def = $badge_reg[ $slug ];
+						?>
+							<span class="tclas-badge tclas-badge--member-badge">
+								<?php echo esc_html( $_def['icon'] ); ?> <?php echo esc_html( $_def['label'] ); ?>
+							</span>
+						<?php endforeach; ?>
 						<?php if ( $p['has_ancestors'] ) : ?>
 							<span class="tclas-badge tclas-badge--ancestors">🗺 <?php esc_html_e( 'Ancestors on map', 'tclas' ); ?></span>
 						<?php endif; ?>
@@ -363,9 +372,14 @@ else :
 							<p class="tclas-dir-card__city"><?php echo esc_html( $m['city'] ); ?></p>
 						<?php endif; ?>
 						<div class="tclas-dir-card__indicators">
-							<?php if ( $m['is_founding'] ) : ?>
-								<span class="tclas-badge tclas-badge--founding tclas-badge--sm" title="<?php esc_attr_e( 'Founding Member', 'tclas' ); ?>">★</span>
-							<?php endif; ?>
+							<?php
+							$_card_badge_reg = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
+							foreach ( $m['badges'] ?? [] as $_card_slug ) :
+								if ( ! isset( $_card_badge_reg[ $_card_slug ] ) ) continue;
+								$_card_def = $_card_badge_reg[ $_card_slug ];
+							?>
+								<span class="tclas-badge tclas-badge--member-badge tclas-badge--sm" title="<?php echo esc_attr( $_card_def['label'] ); ?>"><?php echo esc_html( $_card_def['icon'] ); ?></span>
+							<?php endforeach; ?>
 							<?php if ( $m['has_ancestors'] ) : ?>
 								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--ancestors" title="<?php esc_attr_e( 'Has ancestors on the map', 'tclas' ); ?>">🗺</span>
 							<?php endif; ?>
