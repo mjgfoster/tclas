@@ -369,255 +369,209 @@
 	box-shadow:     0 0 0 5px rgba(227, 30, 38, .18) !important;
 }
 
-// ── Single event: custom page header ──────────────────────────────────────
+// ── Single event: page header ─────────────────────────────────────────────
 
-// Back-link eyebrow (replaces generic "Community" eyebrow on single events)
-.tclas-event-header__back {
-	display: inline-block;
+// Breadcrumb: Home › Events › [title]
+.tclas-breadcrumb {
+	display:     flex;
+	align-items: center;
+	flex-wrap:   wrap;
+	gap:         .25rem .4rem;
 	font-family: var(--font-sans);
-	font-size: .8rem;
-	font-weight: 700;
-	color: var(--c-muted);
-	text-decoration: none;
-	letter-spacing: .04em;
-	transition: color .15s;
-	margin-bottom: .35rem;
+	font-size:   .78rem;
+	color:       var(--c-muted);
+	margin-bottom: .6rem;
 
-	&:hover { color: var(--c-crimson); }
+	a {
+		color:           var(--c-muted);
+		text-decoration: none;
+		transition:      color .15s;
+		&:hover { color: var(--c-crimson); }
+	}
+
+	&__sep     { color: var(--c-border-dk); }
+
+	&__current {
+		color:         var(--c-ardoise);
+		font-weight:   700;
+		overflow:      hidden;
+		text-overflow: ellipsis;
+		white-space:   nowrap;
+		max-width:     36ch;
+	}
 }
 
-// Title row: h1 + optional Register button on same baseline
+// Title row: h1 + optional Register button inline
 .tclas-event-header__row {
-	display: flex;
-	align-items: flex-start;
+	display:         flex;
+	align-items:     flex-start;
 	justify-content: space-between;
-	gap: 1.5rem;
-	flex-wrap: wrap;
+	gap:             1.5rem;
+	flex-wrap:       wrap;
 }
 
 .tclas-event-header__cta {
 	flex-shrink: 0;
-	align-self: center;
+	align-self:  center;
 	white-space: nowrap;
 }
-
-.tclas-event-header__badges { margin-top: .6rem; }
-
-// Hero image (full-width, constrained to container, above TEC content)
-.tclas-event-hero { margin-bottom: 0; }
-
-.tclas-event-hero__img {
-	width: 100%;
-	height: clamp(220px, 35vw, 460px);
-	object-fit: cover;
-	border-radius: 0;
-	display: block;
-}
-
-// Hide TEC's own title on single pages (we render it as our page-header h1)
-.tribe-events-single .tribe-events-single-event-title { display: none !important; }
-
-// Hide TEC's featured image wrapper on single pages (we render it in .tclas-event-hero)
-.tribe-events-single .tribe-events-event-image { display: none !important; }
 
 @media (max-width: 600px) {
 	.tclas-event-header__row { flex-direction: column; gap: .75rem; }
 	.tclas-event-header__cta { align-self: flex-start; }
 }
 
-// ── Single event page ─────────────────────────────────────────────────────
+// ── Single event: body layout ─────────────────────────────────────────────
 
-// TEC's "« All Events" back link — hidden; we render our own in the page header
-.tribe-events-single .tribe-events-back { display: none !important; }
+// Suppress any residual TEC elements (get_view_html not called on single; defensive)
+.tribe-events-single .tribe-events-single-event-title { display: none !important; }
+.tribe-events-single .tribe-events-event-image        { display: none !important; }
+.tribe-events-single .tribe-events-back               { display: none !important; }
+.tribe-events-schedule                                { display: none !important; }
+#tribe-events-footer                                  { display: none !important; }
+#tribe-events-header                                  { display: none !important; }
 
-.tribe-events-back {
-	margin: 0 0 1.25rem !important;
+.tclas-event-body {
+	padding: 2.5rem 0 5rem;
+}
+
+.tclas-event-layout {
+	display:               grid;
+	grid-template-columns: 240px 1fr;
+	column-gap:            3rem;
+	align-items:           start;
+}
+
+// Sticky sidebar
+.tclas-event-sidebar {
+	position: sticky;
+	top:      2rem;
+}
+
+// "Register now →" link at top of sidebar
+.tclas-event-register-link {
+	display:         flex;
+	align-items:     center;
+	justify-content: center;
+	background:      var(--c-crimson);
+	color:           #fff;
+	font-family:     var(--font-sans);
+	font-weight:     700;
+	font-size:       .95rem;
+	padding:         .7rem 1.1rem;
+	border-radius:   var(--radius);
+	text-decoration: none;
+	margin-bottom:   1.75rem;
+	transition:      background .15s;
+
+	&:hover { background: var(--c-crimson-dk); color: #fff; }
+}
+
+// Icon + text meta list (date, time, venue)
+.tclas-event-meta {
+	list-style:    none;
+	margin:        0;
+	padding:       0;
+	border-top:    1px solid var(--c-border);
+	padding-top:   1.25rem;
+	display:       flex;
+	flex-direction: column;
+	gap:           1.1rem;
+
+	li {
+		display:     flex;
+		align-items: flex-start;
+		gap:         .65rem;
+		font-family: var(--font-sans);
+		font-size:   1rem;
+		color:       var(--c-ardoise);
+		line-height: 1.4;
+
+		svg {
+			flex-shrink: 0;
+			color:       var(--c-crimson);
+			margin-top:  .15em;
+			width:       16px;
+			height:      16px;
+		}
+	}
+
+	address {
+		font-style:  normal;
+		line-height: 1.55;
+
+		strong { font-weight: 700; display: block; }
+		span   { font-size: .9rem; color: var(--c-muted); display: block; }
+	}
+}
+
+// Members-only notice in right column
+.tclas-event-members-notice {
+	display:        inline-flex;
+	align-items:    center;
+	gap:            .4rem;
+	background:     var(--c-ardoise);
+	color:          #fff;
+	font-family:    var(--font-sans);
+	font-size:      .72rem;
+	font-weight:    700;
+	text-transform: uppercase;
+	letter-spacing: .07em;
+	padding:        .3rem .7rem;
+	border-radius:  var(--radius);
+	margin-bottom:  1.25rem;
+
+	svg { flex-shrink: 0; }
+}
+
+// Featured image in right column — uncropped, with optional caption
+.tclas-event-image {
+	margin-bottom: 1.75rem;
+
+	&__img {
+		width:         100%;
+		height:        auto;
+		display:       block;
+		border-radius: var(--radius);
+	}
+
+	&__caption {
+		font-family:   var(--font-sans);
+		font-size:     .82rem;
+		color:         var(--c-muted);
+		padding:       .45rem .1rem;
+		border-bottom: 1px solid var(--c-border);
+		margin-bottom: 1rem;
+	}
+}
+
+// Event description
+.tclas-event-description {
+	font-family: var(--font-serif);
+	font-size:   1.05rem;
+	line-height: 1.75;
+	color:       var(--c-body-text);
+
+	p           { margin-bottom: 1em; }
+	p:last-child { margin-bottom: 0; }
+	strong, b   { font-weight: 700; }
+	em, i       { font-style: italic; }
 
 	a {
-		font-family:     var(--font-sans) !important;
-		font-size:       .85rem !important;
-		font-weight: 700 !important;
-		color:           var(--c-muted, #4E718A) !important;
-		text-decoration: none !important;
-		transition:      color .15s !important;
-
-		&:hover { color: var(--c-crimson, #E31E26) !important; }
+		color:           var(--c-ardoise);
+		text-decoration: underline;
+		&:hover { color: var(--c-crimson); }
 	}
-}
-
-.tribe-events-single-event-title {
-	font-family: var(--font-sans) !important;
-	font-size:   clamp(1.6rem, 3.5vw, 2.2rem) !important;
-	font-weight: 700 !important;
-	line-height: 1.2 !important;
-	color:       var(--c-ardoise, #0A2540) !important;
-	margin:      0 0 1.5rem !important;
-}
-
-.tribe-events-schedule { display: none !important; }
-
-#tribe-events-footer {
-	margin-top:  2rem !important;
-	padding-top: 1.25rem !important;
-	border-top:  1px solid var(--c-border, #D0D9E0) !important;
-}
-
-#tribe-events-header .tribe-events-nav-previous a,
-#tribe-events-header .tribe-events-nav-next a,
-#tribe-events-footer .tribe-events-nav-previous a,
-#tribe-events-footer .tribe-events-nav-next a {
-	font-family:     var(--font-sans) !important;
-	font-size:       .875rem !important;
-	font-weight: 700 !important;
-	color:           var(--c-muted, #4E718A) !important;
-	text-decoration: none !important;
-	transition:      color .15s !important;
-
-	&:hover { color: var(--c-crimson, #E31E26) !important; }
-}
-
-// Two-column article grid
-.tribe-events-single .tribe_events.type-tribe_events {
-	display:               grid !important;
-	grid-template-columns: 240px 1fr !important;
-	grid-template-rows:    auto 1fr !important;
-	column-gap:            2.5rem !important;
-	align-items:           start !important;
-}
-
-.tribe-events-single .tribe-events-single-event-description {
-	grid-column: 2 !important;
-	grid-row:    1 / 4 !important;
-	font-family: var(--font-sans) !important;
-	font-size:   1rem !important;
-	line-height: 1.75 !important;
-	color:       var(--c-body-text, #1a1a1a) !important;
-
-	p { margin-bottom: 1rem !important; }
-}
-
-.tribe-events-single .tribe-events-single-event-description .wp-post-image,
-.tribe-events-single .tribe-events-single-event-description img:first-of-type {
-	width:         100% !important;
-	height:        auto !important;
-	border-radius: var(--radius, 8px) !important;
-	margin-bottom: 1.25rem !important;
-	display:       block !important;
-}
-
-.tribe-events-single .tribe_events.type-tribe_events > .tribe-events.tribe-common {
-	grid-column:   1 !important;
-	grid-row:      1 !important;
-	margin-bottom: .75rem !important;
-}
-
-.tribe-events-single .tribe-events-event-meta.primary {
-	grid-column:   1 !important;
-	grid-row:      2 !important;
-	background:    var(--c-or-pale, #EBF5FC) !important;
-	border:        1px solid var(--c-border, #D0D9E0) !important;
-	border-radius: var(--radius, 8px) !important;
-	padding:       1rem 1.1rem !important;
-}
-
-.tribe-events-single .tribe-events-single-section-title { display: none !important; }
-
-.tribe-events-single .tribe-events-meta-list {
-	list-style: none !important;
-	margin:     0 !important;
-	padding:    0 !important;
-}
-
-.tribe-events-single .tribe-events-meta-item {
-	list-style:    none !important;
-	margin-bottom: .6rem !important;
-
-	&:last-child { margin-bottom: 0 !important; }
-}
-
-.tribe-events-single .tribe-events-meta-label {
-	display:        block !important;
-	font-family:    var(--font-sans) !important;
-	font-size:      .65rem !important;
-	font-weight: 700 !important;
-	text-transform: uppercase !important;
-	letter-spacing: .1em !important;
-	color:          var(--c-muted, #4E718A) !important;
-	margin-bottom:  .1rem !important;
-}
-
-.tribe-events-single .tribe-events-meta-value,
-.tribe-events-single .tribe-events-meta-value abbr,
-.tribe-events-single .tribe-events-meta-value div {
-	display:     block !important;
-	font-family: var(--font-sans) !important;
-	font-size:   .9rem !important;
-	font-weight: 700 !important;
-	color:       var(--c-ardoise, #0A2540) !important;
-	margin:      0 !important;
-	padding:     0 !important;
-}
-
-.tribe-events-single .tribe-events-c-subscribe-dropdown__button {
-	background:      var(--c-crimson, #E31E26) !important;
-	border-color:    var(--c-crimson, #E31E26) !important;
-	border-radius:   var(--radius, 8px) !important;
-	color:           #fff !important;
-	font-family:     var(--font-sans) !important;
-	font-weight: 700 !important;
-	font-size:       .85rem !important;
-	width:           100% !important;
-	justify-content: center !important;
-	transition:      background .15s, border-color .15s !important;
-
-	&:hover {
-		background:   var(--c-ardoise, #0A2540) !important;
-		border-color: var(--c-ardoise, #0A2540) !important;
-	}
-}
-
-.tribe-events-single .tribe-events-c-subscribe-dropdown__button-text,
-.tribe-events-single .tribe-events-c-subscribe-dropdown__button-icon svg {
-	color: #fff !important;
-	fill:  #fff !important;
-}
-
-.tribe-events-single .tribe-events-c-subscribe-dropdown__content {
-	border-radius: var(--radius, 8px) !important;
-	border-color:  var(--c-border, #D0D9E0) !important;
-}
-
-.tribe-events-single .tribe-events-c-subscribe-dropdown__list-item-link {
-	font-family:     var(--font-sans) !important;
-	font-weight: 700 !important;
-	color:           var(--c-ardoise, #0A2540) !important;
-	text-decoration: none !important;
-
-	&:hover { color: var(--c-crimson, #E31E26) !important; }
 }
 
 // ── Responsive ────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
-	.tribe-events-single .tribe_events.type-tribe_events {
-		grid-template-columns: 1fr !important;
-		grid-template-rows:    auto !important;
+	.tclas-event-layout {
+		grid-template-columns: 1fr;
+		row-gap:               1.75rem;
 	}
 
-	.tribe-events-single .tribe-events-single-event-description {
-		grid-column: 1 !important;
-		grid-row:    1 !important;
-	}
-
-	.tribe-events-single .tribe_events.type-tribe_events > .tribe-events.tribe-common {
-		grid-column: 1 !important;
-		grid-row:    2 !important;
-		margin-top:  1.5rem !important;
-	}
-
-	.tribe-events-single .tribe-events-event-meta.primary {
-		grid-column: 1 !important;
-		grid-row:    3 !important;
-	}
+	.tclas-event-sidebar { position: static; }
 }
 
 @media (max-width: 600px) {
