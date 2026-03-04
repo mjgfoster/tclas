@@ -13,7 +13,7 @@
 	h2 {
 		color: var(--c-ardoise);
 		font-size: clamp(2.25rem, 4vw, 3rem);
-		font-weight: 300;
+		font-weight: 500;
 		margin-bottom: 1rem;
 	}
 
@@ -37,14 +37,14 @@
 	h2 {
 		color: var(--c-or-pale);
 		font-size: clamp(2.25rem, 5vw, 3.75rem);
-		font-weight: 600;
+		font-weight: 700;
 		margin-bottom: 1rem;
 	}
 
 	p {
 		color: rgba(255,255,255,.9);
 		font-size: 1.25rem;
-		font-weight: 300;
+		font-weight: 500;
 		max-width: 42ch;
 		margin: 0 auto 2rem;
 		line-height: 1.6;
@@ -57,7 +57,7 @@
 	padding: 3.5rem 0;
 	text-align: center;
 
-	h2 { color: var(--c-ardoise); font-size: 1.875rem; font-weight: 600; margin-bottom: 0; }
+	h2 { color: var(--c-ardoise); font-size: 1.875rem; font-weight: 700; margin-bottom: 0; }
 }
 
 .tclas-join-bar__actions {
@@ -85,7 +85,7 @@
 
 .tclas-welcome__title  { color: var(--c-ardoise); }
 .tclas-welcome__body   { color: var(--c-body-text); font-size: 1.05rem; max-width: none; }
-.tclas-welcome__lux    { font-size: .8rem; font-weight: 600; color: var(--c-muted); font-style: italic; margin-top: 1.25rem; display: block; }
+.tclas-welcome__lux    { font-size: .8rem; font-weight: 700; color: var(--c-muted); font-style: italic; margin-top: 1.25rem; display: block; }
 
 .tclas-welcome__illustration {
 	width: 100%;
@@ -117,7 +117,7 @@
 	align-items: center;
 	gap: .4rem;
 	font-size: .875rem;
-	font-weight: 300;
+	font-weight: 500;
 	color: var(--c-ardoise);
 	text-decoration: none;
 	transition: color .15s;
@@ -143,7 +143,7 @@
 	padding: .75rem 1.5rem;
 	text-align: center;
 	font-size: .875rem;
-	font-weight: 600;
+	font-weight: 700;
 	color: var(--c-ardoise);
 	border: 2px solid var(--c-ardoise);
 	text-decoration: none;
@@ -206,7 +206,7 @@
 .tclas-event-card__title {
 	font-family: var(--font-serif);
 	font-size: 1.5rem;
-	font-weight: 600;
+	font-weight: 700;
 	color: var(--c-ardoise);
 	line-height: 1.3;
 	margin: 0 0 .5rem;
@@ -238,7 +238,7 @@
 	align-items: center;
 	gap: .45rem;
 	font-size: 1rem;
-	font-weight: 300;
+	font-weight: 500;
 	color: var(--c-ardoise);
 }
 
@@ -255,7 +255,7 @@
 	gap: .3rem;
 	margin-top: .75rem;
 	font-size: 9px;
-	font-weight: 600;
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .05em;
 	color: var(--c-ardoise);
@@ -266,7 +266,7 @@
 	padding: 3rem 1.5rem;
 	color: var(--c-muted);
 
-	.tclas-events-empty__ltz        { display: block; font-size: 1.15rem; font-weight: 600; color: var(--c-ardoise); margin-bottom: .35rem; }
+	.tclas-events-empty__ltz        { display: block; font-size: 1.15rem; font-weight: 700; color: var(--c-ardoise); margin-bottom: .35rem; }
 	.tclas-events-empty__translation { font-size: .875rem; font-style: italic; }
 }
 
@@ -335,7 +335,7 @@
 
 .tclas-post-card__category {
 	font-size: .62rem;
-	font-weight: 600;
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .08em;
 	color: var(--c-crimson);
@@ -348,7 +348,7 @@
 
 .tclas-post-card__title {
 	font-size: 1.05rem;
-	font-weight: 600;
+	font-weight: 700;
 	color: var(--c-ardoise);
 	margin-bottom: .5rem;
 	line-height: 1.3;
@@ -433,7 +433,7 @@
 	background: var(--c-crimson);
 	color: #fff;
 	font-size: .62rem;
-	font-weight: 600;
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .08em;
 	padding: .2em .85em;
@@ -442,8 +442,8 @@
 
 .tclas-tier__header { padding: 1.5rem 1.5rem 1rem; text-align: center; }
 .tclas-tier__invite { font-size: .9rem; font-style: italic; color: rgba(235,245,252,.75); margin-bottom: .85rem; display: block; }
-.tclas-tier__name   { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
-.tclas-tier__price  { font-size: 2.5rem; font-weight: 600; color: var(--c-or-pale); line-height: 1; }
+.tclas-tier__name   { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
+.tclas-tier__price  { font-size: 2.5rem; font-weight: 700; color: var(--c-or-pale); line-height: 1; }
 .tclas-tier__period { font-size: .8rem; color: rgba(235,245,252,.45); }
 .tclas-tier__body   { padding: 0 1.5rem 1.5rem; flex: 1; }
 
@@ -462,7 +462,7 @@
 		border-bottom: 1px solid rgba(235,245,252,.07);
 
 		&:last-child  { border-bottom: none; }
-		&::before     { content: '✓'; color: var(--c-vert); font-weight: 600; flex-shrink: 0; margin-top: .05em; }
+		&::before     { content: '✓'; color: var(--c-vert); font-weight: 700; flex-shrink: 0; margin-top: .05em; }
 
 		&.unavailable {
 			color: rgba(235,245,252,.3);
@@ -519,5 +519,5 @@
 	margin: 1.5rem 0;
 }
 
-.tclas-countdown__num   { display: block; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 600; color: #fff; line-height: 1; }
-.tclas-countdown__label { display: block; font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.5); margin-top: .2rem; }
+.tclas-countdown__num   { display: block; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; color: #fff; line-height: 1; }
+.tclas-countdown__label { display: block; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.5); margin-top: .2rem; }

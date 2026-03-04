@@ -24,7 +24,7 @@
 
 .tclas-conn-panel__title {
 	font-size: 1.05rem;
-	font-weight: 600;
+	font-weight: 700;
 	color: var(--c-ardoise);
 	margin: 0;
 	display: flex;
@@ -36,7 +36,7 @@
 	font-size: .8rem;
 	color: var(--c-crimson);
 	text-decoration: none;
-	font-weight: 600;
+	font-weight: 700;
 	white-space: nowrap;
 
 	&:hover { text-decoration: underline; }
@@ -54,7 +54,7 @@
 	margin-top: .85rem;
 	text-align: right;
 
-	a { color: var(--c-crimson); font-weight: 600; text-decoration: none; &:hover { text-decoration: underline; } }
+	a { color: var(--c-crimson); font-weight: 700; text-decoration: none; &:hover { text-decoration: underline; } }
 }
 
 // ── Badge (new-connection count dot) ─────────────────────────────────────
@@ -68,7 +68,7 @@
 	background: var(--c-crimson);
 	color: #fff;
 	font-size: .65rem;
-	font-weight: 600;
+	font-weight: 700;
 	border-radius: 999px;
 	line-height: 1;
 }
@@ -109,7 +109,7 @@
 	gap: .5rem;
 }
 
-.tclas-conn-card__strength { font-size: .62rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.tclas-conn-card__strength { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .tclas-conn-card--remarkable .tclas-conn-card__strength { color: var(--c-crimson); }
 .tclas-conn-card--strong     .tclas-conn-card__strength { color: #8a6000; }
 .tclas-conn-card--possible   .tclas-conn-card__strength { color: var(--c-aigue); }
@@ -140,7 +140,7 @@
 	align-items: center;
 	gap: .25rem;
 	font-size: .68rem;
-	font-weight: 600;
+	font-weight: 700;
 	padding: .2em .65em;
 	border-radius: 999px;
 

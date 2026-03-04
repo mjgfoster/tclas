@@ -18,10 +18,10 @@ function tclas_enqueue_assets(): void {
 	// so we never need to manually bump TCLAS_VERSION for asset updates.
 	$dir = get_template_directory();
 
-	// ── Adobe Fonts — Canada Type Gibson (sans) + Brando (serif) ────────────
+	// ── Adobe Fonts — Brando Sans (sans) + Brando (serif) ───────────────────
 	// Kit ID stored in ACF Theme Options field 'adobe_fonts_kit_id'.
-	// Kit includes: canada-type-gibson (300, 300i, 600, 600i) + brando (400, 400i, 700, 700i).
-	// CSS vars: --font-sans (Gibson), --font-serif (Brando).
+	// Kit includes: brando-sans (500, 500i, 700, 700i) + brando (500, 500i, 700, 700i).
+	// CSS vars: --font-sans (Brando Sans), --font-serif (Brando).
 	$kit_id = 'pck6hdf';
 	if ( function_exists( 'get_field' ) ) {
 		$acf_kit = sanitize_text_field( (string) get_field( 'adobe_fonts_kit_id', 'option' ) );
