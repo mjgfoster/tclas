@@ -1,5 +1,6 @@
-/* Luxembourg Citizenship Quiz — v1.4
+/* Luxembourg Citizenship Quiz — v1.5
  * Dynamic generation-tracing engine and decision logic.
+ * v1.5: Adds Belgium/borders clarifier question + June 9, 1815 date gate before evaluation.
  * Privacy update: year inputs replaced with a single "Born before 1969?" checkbox.
  * No personally identifiable dates are collected or stored.
  */
@@ -145,7 +146,7 @@
           history.push('generation_loop_' + state.currentGenIndex);
 
           if (country === 'luxembourg') {
-            evaluateEligibility();
+            renderStep('ancestor_borders');
           } else {
             state.currentGenIndex++;
             renderStep('generation_loop');
@@ -154,8 +155,66 @@
       }
     },
 
+    // ── Territory and date gate (inserted before evaluation) ─────────────────
+
+    ancestor_borders: {
+      progress: 70,
+      render: () => {
+        const rel = genLabels[state.currentGenIndex];
+        questionEl.textContent =
+          'Was your ' + rel + ' born in a town that is currently inside the Grand Duchy of Luxembourg?';
+        buttonsEl.innerHTML = '';
+
+        const noteEl = document.createElement('p');
+        noteEl.className = 'cq_label_hint';
+        noteEl.textContent =
+          'Note: The historical Province of Luxembourg \u2014 now in southeastern Belgium \u2014 is often confused with the modern Grand Duchy. They are different countries today.';
+        buttonsEl.appendChild(noteEl);
+
+        createOptionBtn('Yes \u2014 the Grand Duchy of Luxembourg', () => {
+          history.push('ancestor_borders');
+          renderStep('ancestor_date');
+        });
+        createOptionBtn('No \u2014 or possibly the Belgian Luxembourg province', () => {
+          renderStep('outcome_wrong_territory');
+        });
+        createOptionBtn('I\u2019m not sure', () => {
+          renderStep('outcome_unsure_territory');
+        });
+        buttonsEl.appendChild(makeBackButton());
+      }
+    },
+
+    ancestor_date: {
+      progress: 82,
+      render: () => {
+        const rel = genLabels[state.currentGenIndex];
+        questionEl.textContent =
+          'Was your ' + rel + ' born on or after June 9, 1815?';
+        buttonsEl.innerHTML = '';
+
+        const noteEl = document.createElement('p');
+        noteEl.className = 'cq_label_hint';
+        noteEl.textContent =
+          'June 9, 1815 is when the Congress of Vienna established Luxembourg as an independent Grand Duchy \u2014 the date from which its nationality laws apply.';
+        buttonsEl.appendChild(noteEl);
+
+        createOptionBtn('Yes \u2014 born 1815 or later', () => {
+          history.push('ancestor_date');
+          evaluateEligibility();
+        });
+        createOptionBtn('No \u2014 born before June 9, 1815', () => {
+          renderStep('outcome_pre_1815');
+        });
+        createOptionBtn('I\u2019m not sure', () => {
+          renderStep('outcome_unsure_date');
+        });
+        buttonsEl.appendChild(makeBackButton());
+      }
+    },
+
     living_check: {
-      progress: 85,
+      progress: 90,
       render: () => {
         questionEl.textContent =
           'Is the parent or grandparent who passes this Luxembourgish lineage to you currently living?';
@@ -209,6 +268,44 @@
       render: () => renderOutcomeScreen(
         'Your Luxembourgish connection appears to go back many generations.',
         'This quiz traces ancestry up to five generations (great-great-great-grandparent). Your Luxembourg connection appears to be six or more generations removed, which is outside the scope of the standard Article 7 pathway and beyond the reach of Article 23. While this makes qualifying by descent unlikely under current law, every family\u2019s records are different, and there may be details in your specific lineage that change the picture. We encourage you to consult directly with the Luxembourg Ministry of Justice or a citizenship specialist.',
+        null
+      )
+    },
+
+    // ── Territory and date gate outcomes ──────────────────────────────────────
+
+    outcome_wrong_territory: {
+      progress: 100,
+      render: () => renderOutcomeScreen(
+        'Your ancestor may have been born in Belgium, not Luxembourg.',
+        'The Province of Luxembourg \u2014 now part of southeastern Belgium \u2014 was historically part of the same region as the Grand Duchy until 1839, when the Treaty of London divided the territory. Modern Luxembourg citizenship law applies only to citizens of the Grand Duchy. If your ancestor was born in a town now in Belgium (such as Arlon, Bastogne, or Libramont), the Article 7 descent pathway does not apply to that line. We encourage you to double-check your ancestor\u2019s birthplace against a current map of the Grand Duchy of Luxembourg, then contact the Luxembourg Ministry of Justice if you have questions about your specific situation.',
+        null
+      )
+    },
+
+    outcome_pre_1815: {
+      progress: 100,
+      render: () => renderOutcomeScreen(
+        'Your ancestor predates Luxembourg\u2019s founding.',
+        'Luxembourg was established as an independent Grand Duchy on June 9, 1815, by the Congress of Vienna. Citizenship by descent under Articles 7 and 23 applies to descendants of citizens of the Grand Duchy from that date forward. An ancestor born before 1815 would not have been a citizen of the modern Luxembourg state as defined by current nationality law. While your family\u2019s historical connection to the region is genuine, the formal citizenship recovery pathway is unlikely to apply to this line. We encourage you to contact the Luxembourg Ministry of Justice directly if you believe your circumstances may be an exception.',
+        null
+      )
+    },
+
+    outcome_unsure_territory: {
+      progress: 100,
+      render: () => renderOutcomeScreen(
+        'Worth confirming before you go further.',
+        'The historical Province of Luxembourg and the modern Grand Duchy share a name and much of their history \u2014 but they are different countries today. The 1839 Treaty of London split the original duchy: the western, French-speaking portion became a Belgian province, while the eastern portion remained the independent Grand Duchy. If your ancestor\u2019s records show \u201cLuxembourg\u201d as a birthplace, cross-reference the specific commune against a current map of the Grand Duchy. The Luxembourg National Archives (ANLux) and genealogical databases such as Portail G\u00e9n\u00e9alogique Grand-Ducal can help confirm whether a town is inside modern Luxembourg. Once verified, you can retake this quiz with that detail confirmed.',
+        null
+      )
+    },
+
+    outcome_unsure_date: {
+      progress: 100,
+      render: () => renderOutcomeScreen(
+        'You\u2019ll want to confirm the birth year before applying.',
+        'The June 9, 1815 threshold matters for your application \u2014 that is when Luxembourg\u2019s nationality laws began. If you don\u2019t have a confirmed birth year for your Luxembourg ancestor, vital records offices, the Luxembourg National Archives (ANLux), or genealogical databases can help locate birth records. Parish registers (registres paroissiaux) and civil registration records (registres d\u2019\u00e9tat civil) from Luxembourg communes are increasingly digitized and searchable online. Once you have a confirmed birth year \u2014 even an approximate decade from a death certificate \u2014 you can retake this quiz or proceed to the consulate directly if the date is clearly after 1815.',
         null
       )
     }
@@ -300,7 +397,7 @@
       buttonsEl.insertAdjacentHTML('beforeend', `
         <div class="cq_cta_box">
           <p class="cq_cta_text"><strong>Want the full picture?</strong> TCLAS members have access to a detailed, step-by-step guide that walks through the complete application process for both Article 7 and Article 23. We also host occasional peer-to-peer citizenship workshops where members share firsthand experiences navigating the process.</p>
-          <a href="/membership/" class="cq_option_btn cq_submit_btn cq_cta_btn">Learn about TCLAS membership \u2192</a>
+          <a href="/join/" class="cq_option_btn cq_submit_btn cq_cta_btn">Learn about TCLAS membership \u2192</a>
         </div>
       `);
     }
