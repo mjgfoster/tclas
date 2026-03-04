@@ -18,10 +18,10 @@ function tclas_enqueue_assets(): void {
 	// so we never need to manually bump TCLAS_VERSION for asset updates.
 	$dir = get_template_directory();
 
-	// ── Adobe Fonts — Soleil (sans) + Freight Text Pro (serif) ─────────────
+	// ── Adobe Fonts — Source Sans Pro (sans) + Freight Text Pro (serif) ────
 	// Kit ID stored in ACF Theme Options field 'adobe_fonts_kit_id'.
-	// Kit includes: soleil (400, 400i, 700, 700i) + freight-text-pro (400, 400i, 700, 700i).
-	// CSS vars: --font-sans (Soleil), --font-serif (Freight Text Pro).
+	// Kit includes: source-sans-pro (400, 400i, 700, 700i) + freight-text-pro (400, 400i, 700, 700i).
+	// CSS vars: --font-sans (Source Sans Pro), --font-serif (Freight Text Pro).
 	$kit_id = 'pck6hdf';
 	if ( function_exists( 'get_field' ) ) {
 		$acf_kit = sanitize_text_field( (string) get_field( 'adobe_fonts_kit_id', 'option' ) );
