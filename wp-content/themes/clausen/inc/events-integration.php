@@ -280,7 +280,8 @@ function tclas_tec_ap_style_time( string $text ): string {
 	return $text;
 }
 add_filter( 'tribe_events_event_schedule_details', 'tclas_tec_ap_style_time', 20 );
-add_filter( 'tribe_get_start_time', 'tclas_tec_ap_style_time', 20 );
+add_filter( 'tribe_get_start_time',               'tclas_tec_ap_style_time', 20 );
+add_filter( 'tribe_get_end_time',                 'tclas_tec_ap_style_time', 20 );
 
 /**
  * Render the events empty state.
