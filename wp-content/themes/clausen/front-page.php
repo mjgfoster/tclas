@@ -104,7 +104,7 @@ get_header();
 <!-- ── 4. CITIZENSHIP CTA ────────────────────────────────────────────────── -->
 <section class="tclas-quiz-cta">
 	<div class="container-tclas container--narrow">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
 		<h2><?php esc_html_e( 'Think you might qualify?', 'tclas' ); ?></h2>
 		<p>Luxembourg recognizes citizenship through ancestry going back multiple generations. Our eligibility quiz walks you through the criteria for Articles 7, 23, and 7+23&mdash;in plain English.</p>
 		<a href="<?php echo esc_url( home_url( '/citizenship/' ) ); ?>" class="btn btn-primary btn-lg">

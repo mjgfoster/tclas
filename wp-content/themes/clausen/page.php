@@ -11,14 +11,14 @@ while ( have_posts() ) :
 	the_post();
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
 		<?php
 		$ancestors = get_ancestors( get_the_ID(), 'page' );
 		if ( $ancestors ) :
 			$parent = get_post( array_pop( $ancestors ) );
 		?>
-			<a href="<?php echo esc_url( get_permalink( $parent->ID ) ); ?>" class="tclas-eyebrow tclas-eyebrow--light" style="text-decoration:none;">
+			<a href="<?php echo esc_url( get_permalink( $parent->ID ) ); ?>" class="tclas-eyebrow" style="text-decoration:none;">
 				&larr; <?php echo esc_html( get_the_title( $parent->ID ) ); ?>
 			</a>
 		<?php endif; ?>

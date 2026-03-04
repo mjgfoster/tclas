@@ -59,9 +59,9 @@ foreach ( $all_users as $u ) {
 }
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light">
+		<span class="tclas-eyebrow">
 			<?php echo esc_html( $canton ); ?>
 		</span>
 		<h1 class="tclas-page-header__title">

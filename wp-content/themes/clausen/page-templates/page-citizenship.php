@@ -17,9 +17,9 @@ get_header();
 ?>
 
 <!-- ── Page header ──────────────────────────────────────────────────────── -->
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Do you qualify for Luxembourg citizenship?', 'tclas' ); ?></h1>
 	</div>
 </div>
@@ -181,7 +181,7 @@ get_header();
 <!-- ── Community CTA ─────────────────────────────────────────────────────── -->
 <section class="tclas-section bg-ardoise">
 	<div class="container-tclas container--narrow tclas-citizenship-cta">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'You\'re not alone in this', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'You\'re not alone in this', 'tclas' ); ?></span>
 		<h2><?php esc_html_e( 'TCLAS members have been through it.', 'tclas' ); ?></h2>
 		<p>
 			<?php esc_html_e( 'Dozens of our members are pursuing or have completed the citizenship process. Whether you\'re at the \'just curious\' stage or deep in the paperwork — their experience is part of what membership unlocks.', 'tclas' ); ?>

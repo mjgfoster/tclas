@@ -45,9 +45,9 @@ unset( $articles );
 // Issues are already newest-first (meta_value DESC in query)
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Newsletter Archive', 'tclas' ); ?></h1>
 	</div>
 </div>

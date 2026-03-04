@@ -8,9 +8,9 @@
 get_header();
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light">
+		<span class="tclas-eyebrow">
 			<?php
 			if ( is_category() ) {
 				esc_html_e( 'Category', 'tclas' );

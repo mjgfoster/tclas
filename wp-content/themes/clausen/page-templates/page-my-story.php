@@ -150,9 +150,9 @@ $profile_photo_url = $profile_photo_id
 	: '';
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Your profile', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Your profile', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'My Luxembourg Story', 'tclas' ); ?></h1>
 	</div>
 </div>

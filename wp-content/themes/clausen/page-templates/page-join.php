@@ -30,9 +30,9 @@ $checkout_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : home_
 ?>
 
 <!-- Page header -->
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Find your people.', 'tclas' ); ?></h1>
 	</div>
 </div>

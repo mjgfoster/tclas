@@ -20,9 +20,9 @@ get_header();
 // Member gate — both views require an active membership.
 if ( ! tclas_is_member() ) :
 ?>
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
 	</div>
 </div>
@@ -62,7 +62,7 @@ if ( $profile_username ) :
 
 	if ( ! $profile_user ) :
 ?>
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
 			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
@@ -90,7 +90,7 @@ if ( $profile_username ) :
 
 	if ( 'hidden' === $vis || ( 'board' === $vis && ! $is_board && ! current_user_can( 'manage_options' ) ) ) :
 ?>
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
 			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
@@ -115,7 +115,7 @@ if ( $profile_username ) :
 	$is_own_profile = ( get_current_user_id() === $profile_user->ID );
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
 			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
@@ -279,12 +279,12 @@ else :
 	sort( $cities );
 ?>
 
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>" class="tclas-back-link">
 			← <?php esc_html_e( 'Member Hub', 'tclas' ); ?>
 		</a>
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
 	</div>
 </div>

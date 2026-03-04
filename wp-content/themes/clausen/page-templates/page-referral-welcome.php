@@ -84,7 +84,7 @@ $price_student    = $price_student    ?: 15;
 	<!-- Mini membership tiers -->
 	<div class="tclas-section bg-ardoise">
 		<div class="container-tclas container--narrow">
-			<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
+			<span class="tclas-eyebrow"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 			<h2><?php esc_html_e( 'Simple, affordable, and worth every penny.', 'tclas' ); ?></h2>
 			<div class="tclas-tiers-mini">
 				<div class="tclas-tier-mini tclas-tier-mini--individual">

@@ -4,9 +4,8 @@
 // =============================================================================
 
 // ── Page header (shared) ──────────────────────────────────────────────────
-.tclas-page-header { padding: 2.5rem 0; }
-.tclas-page-header--ardoise { background: var(--c-ardoise); }
-.tclas-page-header__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: #fff; margin: 0; }
+.tclas-page-header { padding: 2rem 0 0 0; }
+.tclas-page-header__title { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--c-ardoise); margin: 0; }
 
 // ── Citizenship page ──────────────────────────────────────────────────────
 .tclas-citizenship-lede { font-size: 1.1rem; max-width: 62ch; }
