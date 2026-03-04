@@ -212,7 +212,7 @@
 	margin: 0 0 .5rem;
 	transition: color .2s;
 
-	.tclas-event-card:hover & { color: var(--c-crimson); }
+	.tclas-event-card:hover & { color: var(--c-ardoise); }
 }
 
 .tclas-event-card__excerpt {
@@ -243,7 +243,7 @@
 }
 
 .tclas-event-card__meta-icon {
-	color: var(--c-gold);
+	color: var(--c-crimson);
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -254,7 +254,7 @@
 	align-items: center;
 	gap: .3rem;
 	margin-top: .75rem;
-	font-size: 9px;
+	font-size: .75rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: .05em;
