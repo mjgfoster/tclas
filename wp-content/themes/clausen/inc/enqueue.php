@@ -128,6 +128,17 @@ function tclas_enqueue_assets(): void {
 		);
 	}
 
+	// ── MSP+LUX counter animation (MSP+LUX page only) ────────────────────
+	if ( is_page_template( 'page-templates/page-msp-lux.php' ) ) {
+		wp_enqueue_script(
+			'tclas-msp-lux',
+			TCLAS_ASSETS . '/js/msp-lux-counters.js',
+			[],
+			filemtime( $dir . '/assets/js/msp-lux-counters.js' ),
+			true
+		);
+	}
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}

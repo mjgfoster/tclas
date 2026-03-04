@@ -2,7 +2,7 @@
 
 **Board preview deadline**: March 22, 2026
 **Soft launch deadline**: April 18, 2026
-**Today**: March 1, 2026
+**Today**: March 3, 2026
 
 ---
 
@@ -37,14 +37,16 @@ All 8 decisions resolved. See `figma-gap-analysis.md §14` for the full log.
 | OD-7 | Donate track | **Hold entirely** — ship `/join/` with Membership + Volunteer only |
 | OD-8 | `/about/` in nav | **Keep** — nav is 7 items: About · Events · Newsletter · MSP+LUX · Ancestry · Citizenship · Join Us |
 
-**Still needed from you before Phase 2:**
-- Both hero photos (Minneapolis + Luxembourg City) in WP Media Library by **March 8**
-- Testimonials content (name, year, location, quote, photo) — at least 3 rows
-- Stats values confirmed (300+, 12+, 40, 150+ — or corrected numbers)
+**Phase 2 is unblocked.** Hero photos are in WP Media Library. ✓
+
+**Parking lot (deferred — org too young for meaningful content):**
+- Testimonials section — ACF repeater built, but content skipped for now; section will be omitted from homepage until content exists
+- Homepage stats — ACF repeater built, but values skipped; section will be omitted until confirmed
+- Instagram + LinkedIn URLs — fields exist in footer (render conditionally), URLs not yet available
 
 ---
 
-## Phase 1 — Foundation (Mar 3–7)
+## Phase 1 — Foundation ✓ COMPLETE (Mar 3)
 
 Low-risk groundwork. Everything else builds on top of this.
 
@@ -248,7 +250,10 @@ The two most complex remaining pieces.
 - Stub pages: wire up any needed page templates for /contact/ (contact form), /faq/ (accordion or simple page), others as needed
 - Cross-browser QA: Chrome, Firefox, Safari, Edge
 - Mobile/tablet QA at 375px, 768px, 1024px breakpoints
-- Accessibility pass: keyboard nav, focus styles, ARIA labels, color contrast on new sections
+- Accessibility pass: keyboard nav, ARIA labels, color contrast on new sections
+  - Replace `:focus {}` with `:focus-visible {}` on form inputs in `_forms.scss`, `_story.scss`, `_member-profiles.scss`, `_pmpro.scss`, `_footer.scss`
+  - Bump footer motto opacity (currently 40% at .75rem — borderline contrast)
+  - Review hero photo credit size (.62rem — acceptable for credits but worth checking)
 - Performance: ensure new hero images are properly sized (webp where possible, lazy-loaded), no layout shift
 - 301 redirect `/quiz/` → `/citizenship/` confirmed working
 - Check all footer links resolve to real pages

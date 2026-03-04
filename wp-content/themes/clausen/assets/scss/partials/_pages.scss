@@ -69,12 +69,216 @@
 	flex-wrap: wrap;
 }
 
+// ── Ancestry page ─────────────────────────────────────────────────────────
+.tclas-ancestry-intro .container-tclas { text-align: center; }
+.tclas-ancestry-lede { font-size: 1.15rem; max-width: 52ch; margin: 0 auto; }
+
+.tclas-ancestry-steps {
+	background: var(--c-or-pale);
+
+	h2 { margin-bottom: 2rem; }
+}
+
+.tclas-ancestry-step-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-width: 720px;
+}
+
+.tclas-ancestry-step {
+	display: grid;
+	grid-template-columns: 2.75rem 1fr;
+	gap: 0 1.75rem;
+	margin-bottom: 2.25rem;
+	align-items: start;
+
+	&:last-child { margin-bottom: 0; }
+
+	&__num {
+		font-size: 2rem;
+		font-weight: 700;
+		font-family: var(--font-sans);
+		color: var(--c-crimson);
+		line-height: 1.05;
+		padding-top: .1rem;
+		text-align: center;
+	}
+
+	&__content {
+		h3 {
+			font-size: 1.05rem;
+			font-weight: 700;
+			margin-bottom: .5rem;
+			color: var(--c-body-text);
+		}
+
+		p {
+			font-size: .92rem;
+			line-height: 1.65;
+			color: var(--c-body-text);
+			margin: 0;
+		}
+	}
+}
+
+.tclas-ancestry-map-cta {
+	background: var(--c-ardoise);
+	color: #fff;
+	padding: 5rem 0;
+	text-align: center;
+
+	.tclas-eyebrow--accent { color: var(--c-gold); }
+
+	h2 {
+		color: #fff;
+		margin-bottom: 1rem;
+	}
+
+	p {
+		max-width: 50ch;
+		margin: 0 auto 2rem;
+		color: rgba(255, 255, 255, 0.8);
+		font-size: 1rem;
+		line-height: 1.65;
+	}
+
+	&__inner { /* container-level layout handled by .container-tclas */ }
+}
+
+.tclas-ancestry-resources {
+	display: grid;
+	gap: 2.5rem;
+	margin-top: 2rem;
+
+	@media (min-width: 600px) { grid-template-columns: 1fr 1fr; }
+
+	&__col {
+		h3 {
+			font-size: .95rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: .08em;
+			color: var(--c-muted);
+			margin-bottom: .75rem;
+		}
+	}
+}
+
 // ── Join page intro / CTA ─────────────────────────────────────────────────
 .tclas-join-intro .container-tclas { text-align: center; }
 .tclas-join-lede                   { font-size: 1.15rem; max-width: 48ch; margin: 0 auto; }
 .tclas-join-cta   .container-tclas { text-align: center; }
 
-// ── Join page feature grid ────────────────────────────────────────────────
+// ── Tier note (replaces feature list) ─────────────────────────────────────
+.tclas-tier__note {
+	font-size: .85rem;
+	color: rgba(235, 245, 252, 0.6);
+	margin: 0;
+	text-align: center;
+}
+
+.tclas-tier__member-note {
+	display: block;
+	text-align: center;
+	font-size: .88rem;
+	color: var(--c-or-pale);
+	font-style: italic;
+	padding-bottom: .25rem;
+}
+
+// ── Member referral banner ─────────────────────────────────────────────────
+.tclas-join-referral {
+	background: var(--c-gold);
+	padding: 2.5rem 0;
+
+	&__inner {
+		display: flex;
+		align-items: center;
+		gap: 2.5rem;
+
+		@media (max-width: 700px) {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1.25rem;
+		}
+	}
+
+	&__text {
+		flex: 1;
+
+		h2 { margin: 0 0 .5rem; font-size: 1.35rem; }
+		p  { margin: 0; font-size: .95rem; }
+	}
+
+	&__action {
+		flex-shrink: 0;
+		width: 340px;
+
+		@media (max-width: 700px) { width: 100%; }
+	}
+
+	&__input-wrap {
+		display: flex;
+		gap: .5rem;
+	}
+
+	&__url {
+		flex: 1;
+		min-width: 0;
+		padding: .55rem .75rem;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		border-radius: var(--radius);
+		background: rgba(255, 255, 255, 0.85);
+		font-size: .85rem;
+		color: var(--c-body-text);
+	}
+
+	&__copy {
+		white-space: nowrap;
+		background: var(--c-ardoise);
+		color: #fff;
+		border: none;
+		padding: .55rem 1rem;
+		border-radius: var(--radius);
+		font-size: .85rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background .15s;
+
+		&:hover { background: var(--c-crimson-dk, #6b1f1f); }
+	}
+}
+
+// ── Join perks grid (6-up, collapses to 2-col then 1-col) ─────────────────
+.tclas-join-perks {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2rem 3rem;
+	margin-top: 2rem;
+
+	h3 { font-size: .95rem; margin-bottom: .4rem; }
+	p  { font-size: .88rem; color: var(--c-muted); margin: 0; line-height: 1.6; }
+
+	@media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+	@media (max-width: 540px) { grid-template-columns: 1fr; }
+}
+
+// ── Volunteer placeholder ──────────────────────────────────────────────────
+.tclas-join-volunteer {
+	background: var(--c-or-pale);
+	text-align: center;
+
+	h2 { margin-bottom: 1rem; }
+
+	&__placeholder {
+		color: var(--c-muted);
+		font-style: italic;
+		margin-bottom: 1.5rem;
+	}
+}
+
+// ── Join page feature grid (legacy — kept for safety) ─────────────────────
 .tclas-join-features {
 	display: grid;
 	grid-template-columns: repeat(3,1fr);

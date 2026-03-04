@@ -1,0 +1,405 @@
+// =============================================================================
+//  _msp-lux.scss — MSP+LUX comparison page
+//
+//  Minnesota (new 2024 state flag):  $mn-blue #003865 · $mn-gold #FFB81C
+//  Luxembourg (national flag):       $lux-red  #EF3340 · $lux-blue #00A3E0
+// =============================================================================
+
+$mn-blue:  #003865;
+$mn-gold:  #FFB81C;
+$lux-red:  #EF3340;
+$lux-blue: #00A3E0;
+
+// ── Page header ──────────────────────────────────────────────────────────────
+
+.tclas-msp-header__title {
+	font-size: clamp(2rem, 5vw, 3.5rem);
+	line-height: 1.1;
+}
+
+.tclas-msp-header__meets {
+	color: $mn-gold;
+}
+
+.tclas-msp-header__tagline {
+	margin-top: 1.25rem;
+	font-size: 1.1rem;
+	color: rgba(255, 255, 255, 0.75);
+	max-width: 52ch;
+}
+
+// ── By the Numbers ───────────────────────────────────────────────────────────
+
+.tclas-msp-numbers {
+	background: #fff;
+	padding: 4rem 0 4.5rem;
+
+	h2 {
+		margin-bottom: 2.5rem;
+	}
+}
+
+// ── Comparison block (wraps a table) ─────────────────────────────────────────
+
+.tclas-msp-compare {
+	margin-bottom: 3rem;
+	border-radius: var(--radius);
+	overflow: hidden;
+	box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	&__label {
+		margin: 0;
+		padding: .5rem 1.25rem;
+		background: #1a1a1a;
+		color: #fff;
+		font-size: .7rem;
+		font-weight: 700;
+		letter-spacing: .14em;
+		text-transform: uppercase;
+		text-align: center;
+	}
+}
+
+// ── Comparison table (role="table" grid) ─────────────────────────────────────
+
+.tclas-msp-table {
+	width: 100%;
+}
+
+// Header row — place name banners
+.tclas-msp-table__row--head {
+	display: grid;
+	grid-template-columns: 1fr 7rem 1fr;
+
+	@media (max-width: 599px) {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+// Data rows
+.tclas-msp-table__row {
+	display: grid;
+	grid-template-columns: 1fr 7rem 1fr;
+	grid-template-areas: "mn cat lux";
+
+	border-bottom: 1px solid var(--c-border);
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	@media (max-width: 599px) {
+		grid-template-columns: 1fr 1fr;
+		grid-template-areas:
+			"cat cat"
+			"mn  lux";
+	}
+}
+
+// Shared cell base
+.tclas-msp-table__cell {
+	padding: 1.1rem 1.25rem;
+}
+
+// Column header — place name
+.tclas-msp-table__place {
+	text-align: center;
+	font-weight: 700;
+	font-size: .95rem;
+	letter-spacing: .02em;
+
+	&--mn {
+		background: $mn-blue;
+		color: $mn-gold;
+	}
+
+	&--lux {
+		background: $lux-red;
+		color: #fff;
+	}
+}
+
+// Center column header (header row) — spacer
+.tclas-msp-table__spacer {
+	background: #2e2e2e;
+
+	@media (max-width: 599px) {
+		display: none;
+	}
+}
+
+// Center column — row label
+.tclas-msp-table__cat {
+	grid-area: cat;
+	background: #f8f7f5;
+	border-left: 1px solid var(--c-border);
+	border-right: 1px solid var(--c-border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: .68rem;
+	font-weight: 700;
+	letter-spacing: .12em;
+	text-transform: uppercase;
+	color: var(--c-muted);
+	line-height: 1.35;
+
+	@media (max-width: 599px) {
+		border-left: none;
+		border-right: none;
+		border-bottom: 1px solid var(--c-border);
+		justify-content: flex-start;
+		padding: .6rem 1.25rem;
+		background: #f0eeeb;
+	}
+}
+
+// Data cells — stat values
+.tclas-msp-table__stat {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	&--mn {
+		grid-area: mn;
+		text-align: right;
+		align-items: flex-end;
+		border-right: 1px solid var(--c-border);
+
+		.tclas-msp-stat__value {
+			color: $mn-blue;
+		}
+
+		@media (max-width: 599px) {
+			border-right: none;
+			text-align: center;
+			align-items: center;
+			border-right: 1px solid var(--c-border);
+		}
+	}
+
+	&--lux {
+		grid-area: lux;
+		text-align: left;
+		align-items: flex-start;
+		border-left: 1px solid var(--c-border);
+
+		.tclas-msp-stat__value {
+			color: $lux-red;
+		}
+
+		@media (max-width: 599px) {
+			text-align: center;
+			align-items: center;
+			border-left: none;
+		}
+	}
+}
+
+// ── Stat value & note ─────────────────────────────────────────────────────────
+
+.tclas-msp-stat__value {
+	display: inline;
+	font-size: 2rem;
+	font-weight: 700;
+	font-family: var(--font-sans);
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -.01em;
+}
+
+.tclas-msp-stat__era {
+	font-size: 1rem;
+	font-weight: 700;
+	color: $lux-red;
+	vertical-align: super;
+}
+
+.tclas-msp-stat__note {
+	display: block;
+	font-size: .75rem;
+	color: var(--c-muted);
+	margin-top: .3rem;
+	line-height: 1.45;
+}
+
+// ── The Connections (history grid) ───────────────────────────────────────────
+
+.tclas-msp-connections {
+	background: var(--c-ardoise);
+	color: #fff;
+	padding: 4rem 0 4.5rem;
+
+	.tclas-eyebrow--accent {
+		color: $mn-gold;
+
+		&::before {
+			background: $mn-gold;
+		}
+	}
+
+	h2 {
+		color: #fff;
+		margin-bottom: 2.5rem;
+	}
+}
+
+.tclas-msp-timeline {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 3px;
+
+	@media (min-width: 700px) {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	&__item {
+		background: rgba(255, 255, 255, 0.05);
+		padding: 2rem 1.75rem;
+		border-top: 3px solid rgba(255, 255, 255, 0.12);
+
+		// Alternate accent colors: odd = MN gold, even = LUX blue
+		&:nth-child(odd)  { border-top-color: $mn-gold; }
+		&:nth-child(even) { border-top-color: $lux-blue; }
+	}
+
+	&__year {
+		font-size: .72rem;
+		font-weight: 700;
+		letter-spacing: .14em;
+		text-transform: uppercase;
+		margin-bottom: .75rem;
+
+		// Match border accent color
+		.tclas-msp-timeline__item:nth-child(odd)  & { color: $mn-gold; }
+		.tclas-msp-timeline__item:nth-child(even) & { color: $lux-blue; }
+	}
+
+	&__content {
+		h3 {
+			font-size: 1.05rem;
+			font-weight: 700;
+			color: #fff;
+			margin-bottom: .6rem;
+		}
+
+		p {
+			font-size: .92rem;
+			color: rgba(255, 255, 255, 0.78);
+			line-height: 1.65;
+			margin: 0;
+		}
+	}
+}
+
+// ── Parallel Lives ───────────────────────────────────────────────────────────
+
+.tclas-msp-parallels {
+	background: var(--c-or-pale);
+	padding: 4rem 0 4.5rem;
+
+	h2 {
+		margin-bottom: 2rem;
+	}
+
+	&__grid {
+		display: grid;
+		gap: 1.25rem;
+
+		@media (min-width: 580px) {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+}
+
+.tclas-msp-parallel-card {
+	background: #fff;
+	border-radius: var(--radius);
+	padding: 1.75rem;
+	border-top: 4px solid $mn-gold;
+
+	// Alternate top border: MN gold / LUX red
+	&:nth-child(even) {
+		border-top-color: $lux-red;
+	}
+
+	&__icon {
+		font-size: 1.75rem;
+		margin-bottom: .75rem;
+		display: block;
+		line-height: 1;
+	}
+
+	p {
+		font-size: .92rem;
+		line-height: 1.65;
+		color: var(--c-body-text);
+		margin: 0;
+	}
+}
+
+// ── Resources ────────────────────────────────────────────────────────────────
+
+.tclas-msp-resources {
+	background: #fff;
+	padding: 4rem 0 4.5rem;
+
+	h2 {
+		margin-bottom: 2rem;
+	}
+
+	&__cols {
+		display: grid;
+		gap: 2.5rem;
+
+		@media (min-width: 600px) {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	&__col {
+		h3 {
+			font-size: .95rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: .08em;
+			color: var(--c-muted);
+			margin-bottom: .75rem;
+		}
+	}
+
+	&__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			border-bottom: 1px solid var(--c-border);
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
+		a {
+			display: block;
+			padding: .65rem 0;
+			color: var(--c-ardoise);
+			text-decoration: none;
+			font-size: .95rem;
+
+			&:hover,
+			&:focus-visible {
+				color: var(--c-crimson);
+				text-decoration: underline;
+			}
+		}
+	}
+}
