@@ -13,6 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 function tclas_enqueue_assets(): void {
 
+	// Filesystem path used for filemtime() version strings.
+	// filemtime() automatically busts the browser cache whenever a file changes,
+	// so we never need to manually bump TCLAS_VERSION for asset updates.
+	$dir = get_template_directory();
+
 	// ── Adobe Fonts — Proxima Nova (sans) + Freight Text Pro (serif) ────────
 	// Kit ID stored in ACF Theme Options field 'adobe_fonts_kit_id'.
 	// Update the kit in Adobe Fonts → Web Projects to include proxima-nova
@@ -46,7 +51,7 @@ function tclas_enqueue_assets(): void {
 		'tclas-main',
 		TCLAS_ASSETS . '/css/main.css',
 		[ 'bootstrap' ],
-		TCLAS_VERSION
+		filemtime( $dir . '/assets/css/main.css' )
 	);
 
 	// Inject lion watermark SVG URL dynamically so path survives theme/domain moves.
@@ -64,7 +69,7 @@ function tclas_enqueue_assets(): void {
 			'tclas-tribe-events',
 			TCLAS_ASSETS . '/css/tribe-events.css',
 			[ 'tclas-main' ],
-			TCLAS_VERSION
+			filemtime( $dir . '/assets/css/tribe-events.css' )
 		);
 	}
 
@@ -82,7 +87,7 @@ function tclas_enqueue_assets(): void {
 		'tclas-main',
 		TCLAS_ASSETS . '/js/main.js',
 		[ 'bootstrap' ],
-		TCLAS_VERSION,
+		filemtime( $dir . '/assets/js/main.js' ),
 		true
 	);
 
@@ -112,14 +117,14 @@ function tclas_enqueue_assets(): void {
 			'tclas-hero',
 			TCLAS_ASSETS . '/js/hero-slideshow.js',
 			[],
-			TCLAS_VERSION,
+			filemtime( $dir . '/assets/js/hero-slideshow.js' ),
 			true
 		);
 		wp_enqueue_script(
 			'tclas-hero-greeting',
 			TCLAS_ASSETS . '/js/hero-greeting.js',
 			[],
-			TCLAS_VERSION,
+			filemtime( $dir . '/assets/js/hero-greeting.js' ),
 			true
 		);
 	}
@@ -138,7 +143,7 @@ function tclas_enqueue_editor_assets(): void {
 		'tclas-editor',
 		TCLAS_ASSETS . '/css/main.css',
 		[],
-		TCLAS_VERSION
+		filemtime( get_template_directory() . '/assets/css/main.css' )
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'tclas_enqueue_editor_assets' );

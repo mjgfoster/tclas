@@ -46,6 +46,15 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Get from Adobe Fonts → Web Projects. Default: pck6hdf (Skolar Sans).',
 			],
 			[
+				'key'           => 'field_footer_logo',
+				'label'         => 'Footer logo',
+				'name'          => 'footer_logo',
+				'type'          => 'image',
+				'return_format' => 'array',
+				'preview_size'  => 'thumbnail',
+				'instructions'  => 'Light/inverted version of the logo for use on the dark footer background. If left blank, falls back to the site custom logo.',
+			],
+			[
 				'key'   => 'field_footer_mc4wp_form_id',
 				'label' => 'Footer newsletter form ID',
 				'name'  => 'footer_mc4wp_form_id',
@@ -534,6 +543,14 @@ function tclas_register_acf_fields(): void {
 				'type'         => 'text',
 				'placeholder'  => 'YYYY-MM',
 				'instructions' => 'Format: YYYY-MM (e.g. 2027-01). Groups this article with others in the same issue.',
+			],
+			[
+				'key'          => 'field_tclas_issue_title',
+				'label'        => 'Issue title',
+				'name'         => 'tclas_issue_title',
+				'type'         => 'text',
+				'placeholder'  => 'e.g. The Loon & the Lion — March 2026',
+				'instructions' => 'Display name for this issue. Shown on article pages above the headline. Falls back to a formatted date if left blank.',
 			],
 			[
 				'key'           => 'field_tclas_issue_order',

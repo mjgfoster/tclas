@@ -13,7 +13,20 @@
 
 					<!-- Brand column -->
 					<div class="tclas-footer__brand">
-						<?php if ( has_custom_logo() ) : ?>
+						<?php
+						// Use the footer-specific logo (light version) when set in Theme Options;
+						// fall back to the site custom logo.
+						$footer_logo = function_exists( 'get_field' ) ? get_field( 'footer_logo', 'option' ) : null;
+						if ( $footer_logo ) : ?>
+							<div class="tclas-footer__brand-logo">
+								<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+									<img src="<?php echo esc_url( $footer_logo['url'] ); ?>"
+									     alt="<?php echo esc_attr( $footer_logo['alt'] ?: get_bloginfo( 'name' ) ); ?>"
+									     width="<?php echo (int) $footer_logo['width']; ?>"
+									     height="<?php echo (int) $footer_logo['height']; ?>">
+								</a>
+							</div>
+						<?php elseif ( has_custom_logo() ) : ?>
 							<div class="tclas-footer__brand-logo">
 								<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'medium', false, [ 'alt' => get_bloginfo( 'name' ) ] ); ?></a>
 							</div>

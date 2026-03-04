@@ -53,6 +53,12 @@
 	max-width: 560px;
 
 	@media (min-width: 992px) { padding: 6rem 0; }
+
+	// Centered variant — used on the homepage greeting hero.
+	&--center {
+		max-width: none;
+		text-align: center;
+	}
 }
 
 .tclas-hero__eyebrow { color: rgba(235,245,252,.75); margin-bottom: .75rem; text-shadow: 0 1px 6px rgba(0,0,0,.55); }
@@ -78,11 +84,14 @@
 
 // ── Animated three-language greeting ─────────────────────────────────────
 
+// Words appear side-by-side, centered, accumulating one at a time.
 .tclas-hero__greeting {
-	display: grid;
-	margin: 0;
-
-	> * { grid-area: 1 / 1; }
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: baseline;
+	gap: 0 1.5rem;
+	margin: 0 0 2.5rem;
 }
 
 .tclas-hero__greeting-stage {
@@ -90,34 +99,20 @@
 	font-size: clamp(3rem, 8vw, 5.5rem);
 	font-weight: 700;
 	line-height: 1.05;
-	color: rgba(255,255,255,.45);
+	color: #fff;
 	opacity: 0;
-	transform: translateY(1.5rem);
+	transform: translateY(.75rem);
 	transition: opacity .5s ease, transform .5s ease;
-	pointer-events: none;
 
-	&[data-active] {
-		opacity: 1;
-		transform: none;
-		pointer-events: auto;
-	}
-
-	// Final stage is fully opaque
-	&[data-stage="2"] { color: #fff; }
+	// Each word fades in to its own target opacity and lifts into place.
+	&[data-stage="0"][data-active] { opacity: .70; transform: none; } // Bonjour.
+	&[data-stage="1"][data-active] { opacity: .85; transform: none; } // Hello.
+	&[data-stage="2"][data-active] { opacity: 1;   transform: none; } // Moien.
 }
 
+// CTAs are always visible — just center them.
 .tclas-hero__greeting-ctas {
-	margin-top: 2.5rem;
-	opacity: 0;
-	transform: translateY(1rem);
-	transition: opacity .6s ease .2s, transform .6s ease .2s;
-
-	&[hidden] { display: none; }
-
-	&.is-visible {
-		opacity: 1;
-		transform: none;
-	}
+	justify-content: center;
 }
 
 // Reduced motion: skip straight to final stage, no transitions
@@ -220,7 +215,7 @@
 		z-index: 10;
 	}
 
-	.tclas-hero__image-slide[data-previous="true"] { z-index: 5; }
+	.tclas-hero__image-slide[data-previous="true"] { z-index: 5; transform: translateY(0); } // hold in place; incoming slide reveals over it
 }
 
 // Reduced motion: fall back to crossfade on all viewports

@@ -23,15 +23,15 @@ get_header();
 	<div class="tclas-hero__overlay" aria-hidden="true"></div>
 
 	<div class="container-tclas">
-		<div class="tclas-hero__content">
+		<div class="tclas-hero__content tclas-hero__content--center">
 
-			<h1 class="tclas-hero__greeting" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>">
-				<span class="tclas-hero__greeting-stage" data-stage="0" data-active="true" lang="lb">W&euml;llkomm</span>
-				<span class="tclas-hero__greeting-stage" data-stage="1" lang="fr">Bienvenue</span>
-				<span class="tclas-hero__greeting-stage" data-stage="2"><?php esc_html_e( 'Welcome', 'tclas' ); ?></span>
+			<h1 class="tclas-hero__greeting" aria-label="Bonjour. Hello. Moien.">
+				<span class="tclas-hero__greeting-stage" data-stage="0" lang="fr">Bonjour.</span>
+				<span class="tclas-hero__greeting-stage" data-stage="1">Hello.</span>
+				<span class="tclas-hero__greeting-stage" data-stage="2" lang="lb">Moien.</span>
 			</h1>
 
-			<div class="tclas-hero__greeting-ctas tclas-hero__actions" hidden>
+			<div class="tclas-hero__greeting-ctas tclas-hero__actions">
 				<?php if ( ! tclas_is_member() ) : ?>
 					<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary btn-lg">
 						<?php esc_html_e( 'Join us', 'tclas' ); ?>
