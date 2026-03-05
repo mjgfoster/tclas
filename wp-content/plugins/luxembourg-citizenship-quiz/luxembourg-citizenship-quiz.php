@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Luxembourg Citizenship Quiz
  * Description: A dynamic, generation-by-generation shortcode quiz to determine eligibility for Luxembourgish citizenship.
- * Version: 1.5
+ * Version: 2.0
  * Author: Matthew J. Foster
  */
 
@@ -13,8 +13,8 @@ add_action( 'wp_enqueue_scripts', 'lcq_enqueue_quiz_scripts' );
 function lcq_enqueue_quiz_scripts() {
     global $post;
     if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'luxembourg_eligibility_quiz' ) ) {
-        wp_enqueue_style( 'lcq-quiz-styles', plugin_dir_url( __FILE__ ) . 'lcq-styles.css', array(), '1.5' );
-        wp_enqueue_script( 'lcq-quiz-script', plugin_dir_url( __FILE__ ) . 'lcq-quiz.js', array(), '1.5', true );
+        wp_enqueue_style( 'lcq-quiz-styles', plugin_dir_url( __FILE__ ) . 'lcq-styles.css', array(), '2.0' );
+        wp_enqueue_script( 'lcq-quiz-script', plugin_dir_url( __FILE__ ) . 'lcq-quiz.js', array(), '2.0', true );
         
         wp_localize_script( 'lcq-quiz-script', 'lcqData', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),

@@ -1,4 +1,4 @@
-/* Luxembourg Citizenship Quiz — v1.5
+/* Luxembourg Citizenship Quiz — v2.0
  * Styled to match the TCLAS / Clausen theme design system.
  * Uses theme CSS custom properties where available, with fallbacks.
  * Fallback hex values reflect the current Ciel Bleu palette.
@@ -47,9 +47,9 @@
 /* ── Question text ─────────────────────────────────────────────────────── */
 
 .cq_question_text {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     line-height: 1.6;
-    font-weight: 600;
+    font-weight: normal;
     margin: 0 0 1.5rem;
     color: var(--c-ardoise, #0A2540);
 }
@@ -201,6 +201,44 @@
     background: var(--c-ardoise, #0A2540);
     border-color: var(--c-ardoise, #0A2540);
     color: var(--c-or-pale, #EBF5FC);
+}
+
+/* ── Color-coded answer buttons ───────────────────────────────────────── */
+
+.cq_option_btn--yes {
+    background: #2e7d32;
+    border-color: #2e7d32;
+    color: #fff;
+}
+
+.cq_option_btn--yes:hover {
+    background: #1b5e20;
+    border-color: #1b5e20;
+    color: #fff;
+}
+
+.cq_option_btn--no {
+    background: #c62828;
+    border-color: #c62828;
+    color: #fff;
+}
+
+.cq_option_btn--no:hover {
+    background: #b71c1c;
+    border-color: #b71c1c;
+    color: #fff;
+}
+
+.cq_option_btn--neutral {
+    background: #546e7a;
+    border-color: #546e7a;
+    color: #fff;
+}
+
+.cq_option_btn--neutral:hover {
+    background: #37474f;
+    border-color: #37474f;
+    color: #fff;
 }
 
 .cq_submit_btn {
