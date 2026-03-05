@@ -15,6 +15,8 @@
     var data     = (typeof tclasMapData !== 'undefined') ? tclasMapData : {};
     var communes = data.communes || {};
     var storyUrl = data.storyUrl || '/member-hub/my-story/';
+    var isPublic = !!data.isPublic;
+    var joinUrl  = data.joinUrl || '/join/';
     var keys     = Object.keys(communes);
 
     // ── Empty state ───────────────────────────────────────────────────────
@@ -72,6 +74,10 @@
       var communeSlug  = slug;
       var profileUrl   = (data.communeBaseUrl || '/commune/') + communeSlug + '/';
 
+      var popupLink = isPublic
+        ? '<a href="' + joinUrl + '" class="tclas-map-popup-cta">Join TCLAS to connect &rarr;</a>'
+        : '<a href="' + profileUrl + '" class="tclas-map-popup-link">View commune profile &rarr;</a>';
+
       var popupHtml =
         '<div class="tclas-map-popup">' +
           '<strong class="tclas-map-popup-name">' + _esc(c.name)   + '</strong>' +
@@ -80,7 +86,7 @@
             c.count + ' TCLAS&nbsp;' + memberWord + ' ' + verbWord +
             ' ancestors from here' +
           '</span>' +
-          '<a href="' + profileUrl + '" class="tclas-map-popup-link">View commune profile &rarr;</a>' +
+          popupLink +
         '</div>';
 
       marker.bindPopup(popupHtml, { maxWidth: 240, className: 'tclas-map-popup-wrap' });

@@ -86,16 +86,19 @@ get_header();
 	</div>
 </section>
 
-<!-- ── Map CTA ───────────────────────────────────────────────────────────── -->
+<!-- ── Ancestral commune map ────────────────────────────────────────────── -->
 <section class="tclas-ancestry-map-cta" aria-labelledby="ancestry-map-heading">
 	<div class="container-tclas">
 		<div class="tclas-ancestry-map-cta__inner">
 			<span class="tclas-eyebrow tclas-eyebrow--accent"><?php esc_html_e( 'Community tool', 'tclas' ); ?></span>
 			<h2 id="ancestry-map-heading"><?php esc_html_e( 'Where do our roots lie?', 'tclas' ); ?></h2>
-			<p><?php esc_html_e( 'The TCLAS ancestral commune map shows the Luxembourg communes that our members trace their roots to. Find your commune, add your pin, and discover who else shares your ancestry.', 'tclas' ); ?></p>
-			<a href="<?php echo esc_url( home_url( '/map/' ) ); ?>" class="btn btn-outline-light btn-lg">
-				<?php esc_html_e( 'Explore the ancestral map', 'tclas' ); ?>
-			</a>
+			<p><?php esc_html_e( 'The TCLAS ancestral commune map shows the Luxembourg communes that our members trace their roots to. Find your commune and discover who else shares your ancestry.', 'tclas' ); ?></p>
+			<?php echo do_shortcode( '[tclas_ancestor_map public="true" height="420px"]' ); ?>
+			<?php if ( tclas_is_member() ) : ?>
+				<a href="<?php echo esc_url( home_url( '/map/' ) ); ?>" class="btn btn-outline-light" style="margin-top:1.5rem;">
+					<?php esc_html_e( 'Open full map →', 'tclas' ); ?>
+				</a>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>

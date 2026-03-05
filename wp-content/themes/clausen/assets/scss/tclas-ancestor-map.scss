@@ -66,6 +66,22 @@
 	&:hover { text-decoration: underline; }
 }
 
+// ── Popup CTA (public map variant) ───────────────────────────────────
+.tclas-map-popup-cta {
+	display: inline-block;
+	font-size: .78rem;
+	color: #fff;
+	background: var(--c-crimson, #8B3A3A);
+	text-decoration: none;
+	padding: .3rem .65rem;
+	border-radius: 3px;
+	margin-top: .4rem;
+	font-weight: 700;
+	transition: background .15s;
+
+	&:hover { background: var(--c-crimson-dk, #6b1f1f); color: #fff; }
+}
+
 // ── Empty state ───────────────────────────────────────────────────────────
 .tclas-map-empty {
 	font-size: .9rem;

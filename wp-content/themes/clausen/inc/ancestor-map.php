@@ -56,7 +56,8 @@ function tclas_register_ancestor_map_assets(): void {
 add_shortcode( 'tclas_ancestor_map', 'tclas_ancestor_map_shortcode' );
 
 function tclas_ancestor_map_shortcode( array $atts = [] ): string {
-    $atts = shortcode_atts( [ 'height' => '520px' ], $atts, 'tclas_ancestor_map' );
+    $atts = shortcode_atts( [ 'height' => '520px', 'public' => false ], $atts, 'tclas_ancestor_map' );
+    $is_public = filter_var( $atts['public'], FILTER_VALIDATE_BOOLEAN );
 
     // Build commune → count index
     $commune_counts = tclas_build_commune_counts();
@@ -81,6 +82,8 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
     wp_enqueue_script( 'tclas-ancestor-map' );
     wp_localize_script( 'tclas-ancestor-map', 'tclasMapData', [
         'communes'       => $map_communes,
+        'isPublic'       => $is_public,
+        'joinUrl'        => home_url( '/join/' ),
         'storyUrl'       => home_url( '/member-hub/my-story/' ),
         'communeBaseUrl' => home_url( '/commune/' ),
         'totalCount'     => array_sum( $commune_counts ),
@@ -97,8 +100,11 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
              role="img"
              aria-label="Map of ancestral communes in Luxembourg"></div>
         <p class="tclas-map-caption">
-            Circles mark Luxembourg villages where TCLAS members trace their ancestry.
-            Larger circles = more members. Tap or hover for details.
+            <?php if ( $is_public ) : ?>
+                Gold circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.
+            <?php else : ?>
+                Circles mark Luxembourg villages where TCLAS members trace their ancestry. Larger circles = more members. Tap or hover for details.
+            <?php endif; ?>
         </p>
     </div>
     <?php

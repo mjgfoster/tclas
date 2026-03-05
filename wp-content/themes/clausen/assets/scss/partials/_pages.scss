@@ -145,6 +145,9 @@
 	}
 
 	&__inner { /* container-level layout handled by .container-tclas */ }
+
+	.tclas-map-wrapper { margin-top: 2rem; }
+	.tclas-map-caption { color: rgba(255, 255, 255, 0.6); }
 }
 
 .tclas-ancestry-resources {
