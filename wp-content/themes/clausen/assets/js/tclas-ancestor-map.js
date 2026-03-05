@@ -78,6 +78,12 @@
         ? '<a href="' + joinUrl + '" class="tclas-map-popup-cta">Join TCLAS to connect &rarr;</a>'
         : '<a href="' + profileUrl + '" class="tclas-map-popup-link">View commune profile &rarr;</a>';
 
+      var surnamesHtml = '';
+      if (c.surnames && c.surnames.length > 0) {
+        surnamesHtml = '<span class="tclas-map-popup-surnames">Surnames: ' +
+          c.surnames.map(_esc).join(', ') + '</span>';
+      }
+
       var popupHtml =
         '<div class="tclas-map-popup">' +
           '<strong class="tclas-map-popup-name">' + _esc(c.name)   + '</strong>' +
@@ -86,6 +92,7 @@
             c.count + ' TCLAS&nbsp;' + memberWord + ' ' + verbWord +
             ' ancestors from here' +
           '</span>' +
+          surnamesHtml +
           popupLink +
         '</div>';
 
@@ -132,10 +139,17 @@
         }
         var cantonCell = document.createElement('td');
         cantonCell.textContent = c.canton;
+        var surnameCell = document.createElement('td');
+        surnameCell.textContent = (c.surnames && c.surnames.length > 0)
+          ? c.surnames.join(', ')
+          : '—';
+        surnameCell.style.fontSize = '.82rem';
+        surnameCell.style.color = '#777';
         var countCell = document.createElement('td');
         countCell.textContent = c.count;
         tr.appendChild(nameCell);
         tr.appendChild(cantonCell);
+        tr.appendChild(surnameCell);
         tr.appendChild(countCell);
         listBody.appendChild(tr);
       });

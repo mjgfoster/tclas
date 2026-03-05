@@ -59,22 +59,23 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
     $atts = shortcode_atts( [ 'height' => '520px', 'public' => false ], $atts, 'tclas_ancestor_map' );
     $is_public = filter_var( $atts['public'], FILTER_VALIDATE_BOOLEAN );
 
-    // Build commune → count index
-    $commune_counts = tclas_build_commune_counts();
+    // Build commune → {count, surnames} index
+    $commune_data = tclas_build_commune_data();
 
     // Build map data payload (only communes with ≥1 member)
     $all_communes = tclas_get_communes();
     $map_communes = [];
 
-    foreach ( $commune_counts as $slug => $count ) {
+    foreach ( $commune_data as $slug => $d ) {
         if ( ! isset( $all_communes[ $slug ] ) ) continue;
         $c = $all_communes[ $slug ];
         $map_communes[ $slug ] = [
-            'name'   => $c['name'],
-            'canton' => $c['canton'],
-            'lat'    => (float) $c['lat'],
-            'lng'    => (float) $c['lng'],
-            'count'  => (int) $count,
+            'name'     => $c['name'],
+            'canton'   => $c['canton'],
+            'lat'      => (float) $c['lat'],
+            'lng'      => (float) $c['lng'],
+            'count'    => (int) $d['count'],
+            'surnames' => array_values( array_slice( $d['surnames'], 0, 12 ) ), // cap at 12 for popup
         ];
     }
 
@@ -86,7 +87,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         'joinUrl'        => home_url( '/join/' ),
         'storyUrl'       => home_url( '/member-hub/my-story/' ),
         'communeBaseUrl' => home_url( '/commune/' ),
-        'totalCount'     => array_sum( $commune_counts ),
+        'totalCount'     => array_sum( array_column( $commune_data, 'count' ) ),
     ] );
 
     $height = esc_attr( $atts['height'] );
@@ -113,6 +114,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
                     <tr>
                         <th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
                         <th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
+                        <th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th>
                         <th scope="col"><?php esc_html_e( 'Members', 'tclas' ); ?></th>
                     </tr>
                 </thead>
@@ -134,11 +136,14 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
 // ── Data helpers ──────────────────────────────────────────────────────────────
 
 /**
- * Query all users with commune data and return a slug → count array.
+ * Query all users with lineage data and return a slug → {count, surnames[]} array.
+ * Collects associated surnames per commune (aggregated, anonymous).
  * Results are cached in a transient for 1 hour.
+ *
+ * @return array<string, array{count: int, surnames: string[]}>
  */
-function tclas_build_commune_counts(): array {
-    $cached = get_transient( 'tclas_commune_counts' );
+function tclas_build_commune_data(): array {
+    $cached = get_transient( 'tclas_commune_data' );
     if ( is_array( $cached ) ) {
         return $cached;
     }
@@ -150,52 +155,85 @@ function tclas_build_commune_counts(): array {
             "SELECT DISTINCT mu.user_id
              FROM {$wpdb->prefix}pmpro_memberships_users mu
              INNER JOIN {$wpdb->usermeta} um
-               ON um.user_id = mu.user_id AND um.meta_key = '_tclas_communes_norm'
+               ON um.user_id = mu.user_id AND um.meta_key = '_tclas_lineages'
              WHERE mu.status = 'active'"
         );
     } else {
         $users = get_users( [
-            'meta_key'     => '_tclas_communes_norm',
+            'meta_key'     => '_tclas_lineages',
             'meta_compare' => 'EXISTS',
             'fields'       => 'ids',
             'number'       => -1,
         ] );
     }
 
-    $counts = [];
+    $data = []; // slug → ['count' => int, 'surnames_set' => [name => true]]
 
     foreach ( $users as $user_id ) {
-        // Exclude hidden profiles from the aggregate ('hidden' is the canonical _tclas_visibility value)
         $visibility = get_user_meta( $user_id, '_tclas_visibility', true );
         if ( 'hidden' === $visibility ) {
             continue;
         }
 
-        $raw = get_user_meta( $user_id, '_tclas_communes_norm', true );
-        $communes = is_array( $raw ) ? $raw : maybe_unserialize( $raw );
-        if ( ! is_array( $communes ) ) {
+        $lineages = get_user_meta( $user_id, '_tclas_lineages', true );
+        $lineages = is_array( $lineages ) ? $lineages : maybe_unserialize( $lineages );
+        if ( ! is_array( $lineages ) ) {
             continue;
         }
 
-        foreach ( $communes as $slug ) {
-            $slug = sanitize_key( $slug );
+        foreach ( $lineages as $l ) {
+            $slug = sanitize_key( $l['commune_norm'] ?? '' );
             if ( '' === $slug || str_starts_with( $slug, 'unresolved:' ) ) {
                 continue;
             }
-            $counts[ $slug ] = ( $counts[ $slug ] ?? 0 ) + 1;
+
+            if ( ! isset( $data[ $slug ] ) ) {
+                $data[ $slug ] = [ 'count' => 0, 'surnames_set' => [] ];
+            }
+            $data[ $slug ]['count']++;
+
+            // Collect raw surname labels (use the raw display form, not normalised).
+            $s_raw = is_array( $l['surnames_raw'] ?? null ) ? $l['surnames_raw'] : [];
+            foreach ( $s_raw as $sname ) {
+                $sname = trim( $sname );
+                if ( '' !== $sname ) {
+                    $data[ $slug ]['surnames_set'][ $sname ] = true;
+                }
+            }
         }
     }
 
-    arsort( $counts );
-    set_transient( 'tclas_commune_counts', $counts, HOUR_IN_SECONDS );
-    return $counts;
+    // Flatten to final shape.
+    $result = [];
+    foreach ( $data as $slug => $d ) {
+        $surnames = array_keys( $d['surnames_set'] );
+        sort( $surnames );
+        $result[ $slug ] = [
+            'count'    => $d['count'],
+            'surnames' => $surnames,
+        ];
+    }
+
+    // Sort by count descending.
+    uasort( $result, fn( $a, $b ) => $b['count'] <=> $a['count'] );
+    set_transient( 'tclas_commune_data', $result, HOUR_IN_SECONDS );
+    return $result;
 }
 
 /**
- * Bust the commune counts transient whenever a member updates their story.
+ * Backward-compat wrapper: return just the slug → count array.
+ */
+function tclas_build_commune_counts(): array {
+    $data = tclas_build_commune_data();
+    return array_map( fn( $d ) => $d['count'], $data );
+}
+
+/**
+ * Bust the commune data transient whenever a member updates their story.
  * Hooked in connections.php after profile save.
  */
 add_action( 'tclas_member_story_saved', 'tclas_bust_commune_counts_cache' );
 function tclas_bust_commune_counts_cache(): void {
-    delete_transient( 'tclas_commune_counts' );
+    delete_transient( 'tclas_commune_data' );
+    delete_transient( 'tclas_commune_counts' ); // legacy key
 }

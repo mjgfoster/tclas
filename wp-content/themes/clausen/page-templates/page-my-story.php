@@ -88,12 +88,12 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		}
 		update_user_meta( $uid, '_tclas_field_privacy', $field_privacy );
 
-		// ── Ancestral communes + surnames (+ connection engine) ───────────────
-		$communes = array_filter( (array) ( $_POST['tclas_communes'] ?? [] ), 'strlen' );
-		$surnames = array_filter( (array) ( $_POST['tclas_surnames'] ?? [] ), 'strlen' );
+		// ── Ancestral lineages + connection engine ────────────────────────────
+		$lineages_input  = tclas_parse_lineage_post_data( $_POST );
+		$unassigned_raw  = array_filter( (array) ( $_POST['tclas_unassigned_surnames'] ?? [] ), 'strlen' );
 		$visibility      = sanitize_text_field( $_POST['tclas_visibility']    ?? 'members' );
 		$open_to_contact = ! empty( $_POST['tclas_open_to_contact'] );
-		tclas_save_member_story( $uid, $communes, $surnames, $visibility, $open_to_contact );
+		tclas_save_member_story( $uid, $lineages_input, $unassigned_raw, $visibility, $open_to_contact );
 
 		$count        = count( tclas_get_connections( $uid ) );
 		$save_message = $count > 0
@@ -113,14 +113,27 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 }
 
 // ── Load current user data ──────────────────────────────────────────────────
-$user_id       = get_current_user_id();
-$communes      = (array) ( get_user_meta( $user_id, '_tclas_communes_raw',  true ) ?: [] );
-$surnames      = (array) ( get_user_meta( $user_id, '_tclas_surnames_raw',  true ) ?: [] );
-$visibility    = get_user_meta( $user_id, '_tclas_visibility', true ) ?: 'members';
-$open_to_contact = (bool) get_user_meta( $user_id, '_tclas_open_to_contact', true );
+$user_id          = get_current_user_id();
+$lineages         = (array) ( get_user_meta( $user_id, '_tclas_lineages',                true ) ?: [] );
+$unassigned_raw   = (array) ( get_user_meta( $user_id, '_tclas_unassigned_surnames_raw',  true ) ?: [] );
+$visibility       = get_user_meta( $user_id, '_tclas_visibility', true ) ?: 'members';
+$open_to_contact  = (bool) get_user_meta( $user_id, '_tclas_open_to_contact', true );
 
-while ( count( $communes ) < 2 ) { $communes[] = ''; }
-while ( count( $surnames ) < 2 ) { $surnames[] = ''; }
+// Ensure at least one empty lineage card for new users.
+if ( empty( $lineages ) ) {
+	$lineages[] = [ 'commune_raw' => '', 'surnames_raw' => [ '' ] ];
+}
+// Ensure each card has at least one surname slot.
+foreach ( $lineages as &$_l ) {
+	if ( empty( $_l['surnames_raw'] ) ) {
+		$_l['surnames_raw'] = [ '' ];
+	}
+}
+unset( $_l );
+// Ensure at least one empty unassigned slot.
+if ( empty( $unassigned_raw ) ) {
+	$unassigned_raw[] = '';
+}
 
 $trips = (array) ( get_user_meta( $user_id, '_tclas_trips', true ) ?: [] );
 if ( empty( $trips ) ) {
@@ -283,76 +296,103 @@ $profile_photo_url = $profile_photo_id
 
 						</fieldset>
 
-						<!-- ── Communes ─────────────────────────────────────── -->
+						<!-- ── Ancestral lineages ──────────────────────────── -->
 						<fieldset class="tclas-story-fieldset">
 							<legend class="tclas-story-legend">
-								<?php esc_html_e( 'Ancestral communes', 'tclas' ); ?>
+								<?php esc_html_e( 'Ancestral lineages', 'tclas' ); ?>
 							</legend>
 							<p class="tclas-story-hint">
-								<?php esc_html_e( 'The Luxembourg communes (towns or villages) where your ancestors were born or lived. Try French, German, or Luxembourgish spellings — we\'ll match them automatically. e.g. "Clerf" or "Clervaux" are the same.', 'tclas' ); ?>
+								<?php esc_html_e( 'Pair each commune with the family surnames you trace there. Try French, German, or Luxembourgish spellings — we match them automatically. e.g. "Clerf" and "Clervaux" are the same.', 'tclas' ); ?>
 							</p>
 
-							<div id="tclas-communes-list" class="tclas-repeater-list">
-								<?php foreach ( $communes as $i => $commune ) : ?>
-									<div class="tclas-repeater-row" data-index="<?php echo (int) $i; ?>">
-										<input
-											type="text"
-											name="tclas_communes[]"
-											value="<?php echo esc_attr( $commune ); ?>"
-											class="tclas-story-input"
-											placeholder="<?php esc_attr_e( 'e.g. Echternach', 'tclas' ); ?>"
-											autocomplete="off"
-											list="tclas-commune-options"
-											aria-label="<?php esc_attr_e( 'Ancestral commune', 'tclas' ); ?>"
+							<div id="tclas-lineage-list" class="tclas-lineage-list">
+								<?php foreach ( $lineages as $ci => $lineage ) : ?>
+									<div class="tclas-lineage-card" data-card-index="<?php echo (int) $ci; ?>">
+										<div class="tclas-lineage-card__header">
+											<input
+												type="text"
+												name="tclas_lineage_commune[]"
+												value="<?php echo esc_attr( $lineage['commune_raw'] ?? '' ); ?>"
+												class="tclas-story-input tclas-lineage-commune-input"
+												placeholder="<?php esc_attr_e( 'e.g. Echternach', 'tclas' ); ?>"
+												autocomplete="off"
+												list="tclas-commune-options"
+												aria-label="<?php esc_attr_e( 'Ancestral commune', 'tclas' ); ?>"
+											>
+											<?php if ( $ci > 0 ) : ?>
+												<button
+													type="button"
+													class="tclas-repeater-remove tclas-lineage-remove-card"
+													aria-label="<?php esc_attr_e( 'Remove this lineage', 'tclas' ); ?>"
+												>×</button>
+											<?php endif; ?>
+										</div>
+										<div class="tclas-lineage-card__surnames">
+											<?php foreach ( ( (array) ( $lineage['surnames_raw'] ?? [] ) ) as $si => $sraw ) : ?>
+												<div class="tclas-repeater-row">
+													<input
+														type="text"
+														name="tclas_lineage_surnames[<?php echo (int) $ci; ?>][]"
+														value="<?php echo esc_attr( $sraw ); ?>"
+														class="tclas-story-input"
+														placeholder="<?php esc_attr_e( 'e.g. Kieffer', 'tclas' ); ?>"
+														autocomplete="off"
+														aria-label="<?php esc_attr_e( 'Paired surname', 'tclas' ); ?>"
+													>
+													<?php if ( $si > 0 ) : ?>
+														<button
+															type="button"
+															class="tclas-repeater-remove"
+															aria-label="<?php esc_attr_e( 'Remove this surname', 'tclas' ); ?>"
+														>×</button>
+													<?php endif; ?>
+												</div>
+											<?php endforeach; ?>
+										</div>
+										<button
+											type="button"
+											class="btn btn-sm btn-link tclas-lineage-add-surname"
 										>
-										<?php if ( $i > 0 ) : ?>
-											<button
-												type="button"
-												class="tclas-repeater-remove"
-												aria-label="<?php esc_attr_e( 'Remove this commune', 'tclas' ); ?>"
-											>×</button>
-										<?php endif; ?>
+											<?php esc_html_e( '+ Add surname', 'tclas' ); ?>
+										</button>
 									</div>
 								<?php endforeach; ?>
 							</div>
 
 							<button
 								type="button"
-								class="btn btn-sm btn-outline-ardoise tclas-repeater-add"
-								data-target="tclas-communes-list"
-								data-placeholder="<?php esc_attr_e( 'e.g. Remich', 'tclas' ); ?>"
-								data-name="tclas_communes[]"
-								data-list="tclas-commune-options"
+								class="btn btn-sm btn-outline-ardoise"
+								id="tclas-lineage-add-card"
 							>
-								<?php esc_html_e( '+ Add another commune', 'tclas' ); ?>
+								<?php esc_html_e( '+ Add another commune lineage', 'tclas' ); ?>
 							</button>
 
-							<?php tclas_story_privacy_toggle( 'ancestry', $fp( 'ancestry' ), __( 'ancestral communes and surnames', 'tclas' ) ); ?>
+							<?php tclas_story_privacy_toggle( 'ancestry', $fp( 'ancestry' ), __( 'ancestral lineages and surnames', 'tclas' ) ); ?>
 
 						</fieldset>
 
-						<!-- ── Surnames ─────────────────────────────────────── -->
+						<!-- ── Unassigned surnames ─────────────────────────── -->
 						<fieldset class="tclas-story-fieldset">
 							<legend class="tclas-story-legend">
-								<?php esc_html_e( 'Luxembourg surnames in your family tree', 'tclas' ); ?>
+								<?php esc_html_e( 'Other family surnames', 'tclas' ); ?>
 							</legend>
 							<p class="tclas-story-hint">
-								<?php esc_html_e( 'Include original spellings and any Americanised versions you know — e.g. both "Schmitt" and "Smith". We check known variants automatically, so one entry is often enough.', 'tclas' ); ?>
+								<?php esc_html_e( 'Surnames you haven\'t tied to a specific commune yet. We\'ll still match them with other members.', 'tclas' ); ?>
 							</p>
 
-							<div id="tclas-surnames-list" class="tclas-repeater-list">
-								<?php foreach ( $surnames as $i => $surname ) : ?>
-									<div class="tclas-repeater-row" data-index="<?php echo (int) $i; ?>">
+							<div id="tclas-unassigned-list" class="tclas-repeater-list">
+								<?php foreach ( $unassigned_raw as $ui => $ua ) : ?>
+									<div class="tclas-repeater-row" data-index="<?php echo (int) $ui; ?>">
 										<input
 											type="text"
-											name="tclas_surnames[]"
-											value="<?php echo esc_attr( $surname ); ?>"
+											name="tclas_unassigned_surnames[]"
+											value="<?php echo esc_attr( $ua ); ?>"
 											class="tclas-story-input"
-											placeholder="<?php esc_attr_e( 'e.g. Kieffer', 'tclas' ); ?>"
+											placeholder="<?php esc_attr_e( 'e.g. Wagner', 'tclas' ); ?>"
 											autocomplete="off"
-											aria-label="<?php esc_attr_e( 'Luxembourg surname', 'tclas' ); ?>"
+											aria-label="<?php esc_attr_e( 'Unassigned surname', 'tclas' ); ?>"
 										>
-										<?php if ( $i > 0 ) : ?>
+										<?php if ( $ui > 0 ) : ?>
 											<button
 												type="button"
 												class="tclas-repeater-remove"
@@ -366,17 +406,16 @@ $profile_photo_url = $profile_photo_id
 							<button
 								type="button"
 								class="btn btn-sm btn-outline-ardoise tclas-repeater-add"
-								data-target="tclas-surnames-list"
-								data-placeholder="<?php esc_attr_e( 'e.g. Wagner', 'tclas' ); ?>"
-								data-name="tclas_surnames[]"
+								data-target="tclas-unassigned-list"
+								data-placeholder="<?php esc_attr_e( 'e.g. Schmitt', 'tclas' ); ?>"
+								data-name="tclas_unassigned_surnames[]"
 							>
 								<?php esc_html_e( '+ Add another surname', 'tclas' ); ?>
 							</button>
 
 							<p class="tclas-story-hint tclas-story-hint--mt">
-								<?php esc_html_e( 'Ancestry privacy is shared with the communes section above.', 'tclas' ); ?>
+								<?php esc_html_e( 'Ancestry privacy is shared with the lineages section above.', 'tclas' ); ?>
 							</p>
-
 						</fieldset>
 
 						<!-- ── Travel Log ───────────────────────────────────── -->

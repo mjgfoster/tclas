@@ -407,7 +407,7 @@
     const form = qs('#tclas-my-story-form');
     if (!form) return;
 
-    // ── Add row ────────────────────────────────────────────────────────
+    // ── Generic repeater: add row ──────────────────────────────────────
     qsa('.tclas-repeater-add').forEach(btn => {
       btn.addEventListener('click', () => {
         const listId = btn.dataset.target;
@@ -441,7 +441,7 @@
       });
     });
 
-    // ── Remove row (delegated on each list container) ──────────────────
+    // ── Generic repeater: remove row (delegated) ────────────────────────
     qsa('.tclas-repeater-list').forEach(list => {
       list.addEventListener('click', (e) => {
         const btn = e.target.closest('.tclas-repeater-remove');
@@ -455,6 +455,9 @@
       });
     });
 
+    // ── Lineage card repeater ──────────────────────────────────────────
+    initLineageRepeater();
+
     // ── Save feedback: swap button text briefly ────────────────────────
     form.addEventListener('submit', () => {
       const submitBtn = qs('[type="submit"]', form);
@@ -463,6 +466,109 @@
           ? tclasData.strings.connSaving
           : 'Saving…';
         submitBtn.disabled = true;
+      }
+    });
+  }
+
+  // ── Lineage card repeater (commune → surnames) ──────────────────────────
+  function initLineageRepeater() {
+    const lineageList = qs('#tclas-lineage-list');
+    const addCardBtn  = qs('#tclas-lineage-add-card');
+    if (!lineageList) return;
+
+    // Track next card index for unique name attributes.
+    var cardIndex = lineageList.querySelectorAll('.tclas-lineage-card').length;
+
+    // ── Add new lineage card ──────────────────────────────────────────
+    if (addCardBtn) {
+      addCardBtn.addEventListener('click', () => {
+        var idx = cardIndex++;
+        var card = document.createElement('div');
+        card.className = 'tclas-lineage-card';
+        card.setAttribute('data-card-index', idx);
+
+        card.innerHTML =
+          '<div class="tclas-lineage-card__header">' +
+            '<input type="text" name="tclas_lineage_commune[]"' +
+            ' class="tclas-story-input tclas-lineage-commune-input"' +
+            ' placeholder="e.g. Remich" autocomplete="off"' +
+            ' list="tclas-commune-options"' +
+            ' aria-label="Ancestral commune">' +
+            '<button type="button" class="tclas-repeater-remove tclas-lineage-remove-card"' +
+            ' aria-label="Remove this lineage">\u00d7</button>' +
+          '</div>' +
+          '<div class="tclas-lineage-card__surnames">' +
+            '<div class="tclas-repeater-row">' +
+              '<input type="text" name="tclas_lineage_surnames[' + idx + '][]"' +
+              ' class="tclas-story-input"' +
+              ' placeholder="e.g. Kieffer" autocomplete="off"' +
+              ' aria-label="Paired surname">' +
+            '</div>' +
+          '</div>' +
+          '<button type="button" class="btn btn-sm btn-link tclas-lineage-add-surname">' +
+            '+ Add surname' +
+          '</button>';
+
+        lineageList.appendChild(card);
+        card.querySelector('.tclas-lineage-commune-input').focus();
+      });
+    }
+
+    // ── Delegated events on the lineage list ──────────────────────────
+    lineageList.addEventListener('click', (e) => {
+      var target = e.target;
+
+      // ── Remove entire card ──────────────────────────────────────────
+      if (target.closest('.tclas-lineage-remove-card')) {
+        var card = target.closest('.tclas-lineage-card');
+        if (card) {
+          card.style.opacity = '0';
+          card.style.transition = 'opacity .2s';
+          setTimeout(() => card.remove(), 220);
+        }
+        return;
+      }
+
+      // ── Remove a single surname row ─────────────────────────────────
+      if (target.closest('.tclas-repeater-remove')) {
+        var row = target.closest('.tclas-repeater-row');
+        if (row) {
+          row.style.opacity = '0';
+          row.style.transition = 'opacity .2s';
+          setTimeout(() => row.remove(), 220);
+        }
+        return;
+      }
+
+      // ── Add surname to a card ───────────────────────────────────────
+      if (target.closest('.tclas-lineage-add-surname')) {
+        var card = target.closest('.tclas-lineage-card');
+        if (!card) return;
+        var idx      = card.getAttribute('data-card-index');
+        var surnames = card.querySelector('.tclas-lineage-card__surnames');
+        if (!surnames) return;
+
+        var row = document.createElement('div');
+        row.className = 'tclas-repeater-row';
+
+        var input = document.createElement('input');
+        input.type         = 'text';
+        input.name         = 'tclas_lineage_surnames[' + idx + '][]';
+        input.className    = 'tclas-story-input';
+        input.placeholder  = 'e.g. Wagner';
+        input.autocomplete = 'off';
+        input.setAttribute('aria-label', 'Paired surname');
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type      = 'button';
+        removeBtn.className = 'tclas-repeater-remove';
+        removeBtn.setAttribute('aria-label', 'Remove');
+        removeBtn.textContent = '\u00d7';
+
+        row.appendChild(input);
+        row.appendChild(removeBtn);
+        surnames.appendChild(row);
+        input.focus();
       }
     });
   }

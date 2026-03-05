@@ -215,28 +215,38 @@ if ( $profile_username ) :
 				</div>
 			<?php endif; ?>
 
-			<!-- ── Ancestral communes & surnames ───────────────────────── -->
-			<?php if ( ! empty( $p['communes_raw'] ) || ! empty( $p['surnames_raw'] ) ) : ?>
+			<!-- ── Ancestral lineages ──────────────────────────────────── -->
+			<?php if ( ! empty( $p['lineages'] ) || ! empty( $p['unassigned_surnames_raw'] ) ) : ?>
 				<div class="tclas-profile-section">
 					<h3 class="tclas-profile-section__title"><?php esc_html_e( 'Luxembourg roots', 'tclas' ); ?></h3>
 
-					<?php if ( ! empty( $p['communes_raw'] ) ) : ?>
-						<div class="tclas-profile-roots">
-							<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Ancestral communes', 'tclas' ); ?></h4>
-							<div class="tclas-profile-pills">
-								<?php foreach ( $p['communes_raw'] as $commune ) : ?>
-									<span class="tclas-conn-pill tclas-conn-pill--commune">🏛 <?php echo esc_html( $commune ); ?></span>
-								<?php endforeach; ?>
-							</div>
+					<?php foreach ( $p['lineages'] as $lineage ) :
+						$commune_label = $lineage['commune_raw'] ?? '';
+						$paired_names  = array_filter( (array) ( $lineage['surnames_raw'] ?? [] ), 'strlen' );
+						if ( '' === $commune_label ) continue;
+					?>
+						<div class="tclas-profile-lineage">
+							<h4 class="tclas-profile-lineage__commune">
+								<span class="tclas-conn-pill tclas-conn-pill--commune">🏛 <?php echo esc_html( $commune_label ); ?></span>
+							</h4>
+							<?php if ( ! empty( $paired_names ) ) : ?>
+								<div class="tclas-profile-lineage__surnames">
+									<?php foreach ( $paired_names as $sname ) : ?>
+										<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $sname ); ?></span>
+									<?php endforeach; ?>
+								</div>
+							<?php endif; ?>
 						</div>
-					<?php endif; ?>
+					<?php endforeach; ?>
 
-					<?php if ( ! empty( $p['surnames_raw'] ) ) : ?>
-						<div class="tclas-profile-roots">
-							<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Family surnames', 'tclas' ); ?></h4>
+					<?php
+					$ua_names = array_filter( (array) ( $p['unassigned_surnames_raw'] ?? [] ), 'strlen' );
+					if ( ! empty( $ua_names ) ) : ?>
+						<div class="tclas-profile-unassigned">
+							<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Other family surnames', 'tclas' ); ?></h4>
 							<div class="tclas-profile-pills">
-								<?php foreach ( $p['surnames_raw'] as $surname ) : ?>
-									<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $surname ); ?></span>
+								<?php foreach ( $ua_names as $sname ) : ?>
+									<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $sname ); ?></span>
 								<?php endforeach; ?>
 							</div>
 						</div>

@@ -392,3 +392,28 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 
 .tclas-profile-pills       { display: flex; flex-wrap: wrap; gap: .4rem; }
 .tclas-profile-family-names{ font-family: var(--font-sans); font-size: .92rem; color: var(--c-body-text); margin: 0; }
+
+// ── Grouped lineage display ──────────────────────────────────────────────
+.tclas-profile-lineage     { margin-bottom: 1rem; &:last-child { margin-bottom: 0; } }
+
+.tclas-profile-lineage__commune {
+	font-family: var(--font-sans);
+	font-size: .88rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin: 0 0 .35rem;
+}
+
+.tclas-profile-lineage__surnames {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .3rem;
+	padding-left: .85rem;
+	border-left: 2px solid var(--c-or-pale);
+}
+
+.tclas-profile-unassigned {
+	margin-top: .75rem;
+	padding-top: .75rem;
+	border-top: 1px solid var(--c-border);
+}

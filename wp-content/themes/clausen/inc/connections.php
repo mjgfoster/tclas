@@ -4,18 +4,18 @@
  *
  * Data flow:
  *   1. Member saves profile via page-my-story.php (POST form).
- *   2. tclas_save_member_story() normalises input and stores two user meta keys
- *      per data type: raw (preserved for display) and normalised (used for comparison).
+ *   2. tclas_save_member_story() normalises input and stores structured lineage
+ *      data (commune→surname pairings) plus derived flat arrays.
  *   3. tclas_compute_connections() runs immediately after save, then nightly via
  *      WP-Cron for the full member base.
  *   4. Results are cached in _tclas_connections_cache user meta.
  *   5. The dashboard panel reads from cache; AJAX endpoints handle dismiss/seen.
  *
  * User meta keys:
- *   _tclas_communes_raw         string[]   Original user input (display)
- *   _tclas_communes_norm        string[]   Canonical commune slugs (match)
- *   _tclas_surnames_raw         string[]   Original user input (display)
- *   _tclas_surnames_norm        string[]   Canonical cluster heads (match)
+ *   _tclas_lineages             array[]    [{commune_raw, commune_norm, surnames_raw[], surnames_norm[]}]
+ *   _tclas_unassigned_surnames_raw  string[]  Surnames without a known commune (display)
+ *   _tclas_unassigned_surnames_norm string[]  Normalised cluster heads (match)
+ *   _tclas_communes_norm        string[]   Derived flat array of commune slugs (map + queries)
  *   _tclas_visibility           string     'members' | 'board' | 'hidden'
  *   _tclas_open_to_contact      int        1 | 0
  *   _tclas_profile_complete     int        1 once ≥1 commune or surname saved
@@ -162,98 +162,144 @@ function tclas_levenshtein_threshold( string $s ): int {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Persist a member's Luxembourg story fields.
+ * Persist a member's Luxembourg story fields using the lineage model.
+ *
+ * Lineage model: each commune has zero or more paired surnames. Surnames
+ * without a known commune go in the "unassigned" bucket.
  *
  * Called both from the frontend POST handler (page-my-story.php) and the
  * WP admin user-edit screen.
  *
- * @param int      $user_id         WP user ID.
- * @param string[] $communes_raw    Free-text commune inputs (unsanitised).
- * @param string[] $surnames_raw    Free-text surname inputs (unsanitised).
- * @param string   $visibility      'members' | 'board' | 'hidden'.
- * @param bool     $open_to_contact Whether the member accepts hub messages.
+ * @param int      $user_id              WP user ID.
+ * @param array    $lineages_input       [{commune_raw: string, surnames_raw: string[]}]
+ * @param string[] $unassigned_raw       Surnames without a known commune (unsanitised).
+ * @param string   $visibility           'members' | 'board' | 'hidden'.
+ * @param bool     $open_to_contact      Whether the member accepts hub messages.
  */
 function tclas_save_member_story(
 	int    $user_id,
-	array  $communes_raw,
-	array  $surnames_raw,
+	array  $lineages_input,
+	array  $unassigned_raw,
 	string $visibility      = 'members',
 	bool   $open_to_contact = true
 ): void {
 
-	// ── Sanitise and resolve communes ──────────────────────────────────
-	$communes_clean = [];
+	$lineages       = [];
 	$communes_norm  = [];
 	$unresolved     = [];
-	$seen_communes  = []; // track duplicates by normalised form
+	$seen_communes  = [];
 
-	foreach ( $communes_raw as $raw ) {
-		$raw = sanitize_text_field( $raw );
-		if ( '' === $raw ) {
+	// ── Process lineage cards (commune + paired surnames) ─────────────
+	foreach ( $lineages_input as $card ) {
+		$commune_raw = sanitize_text_field( $card['commune_raw'] ?? '' );
+		if ( '' === $commune_raw ) {
 			continue;
 		}
-		$key = mb_strtolower( trim( $raw ) );
+
+		// Deduplicate communes (case-insensitive).
+		$key = mb_strtolower( trim( $commune_raw ) );
 		if ( isset( $seen_communes[ $key ] ) ) {
-			continue; // skip duplicate input
+			continue;
 		}
 		$seen_communes[ $key ] = true;
-		$communes_clean[] = $raw;
-		$slug = tclas_resolve_commune( $raw );
-		if ( $slug ) {
-			$communes_norm[] = $slug;
-		} else {
-			$unresolved[] = [ 'type' => 'commune', 'value' => $raw, 'user_id' => $user_id ];
-			// Store raw as lowercase-stripped so it still matches exact duplicates.
-			$communes_norm[] = 'unresolved:' . tclas_normalize_string( $raw );
+
+		// Resolve commune.
+		$commune_slug = tclas_resolve_commune( $commune_raw );
+		if ( ! $commune_slug ) {
+			$unresolved[]  = [ 'type' => 'commune', 'value' => $commune_raw, 'user_id' => $user_id ];
+			$commune_slug  = 'unresolved:' . tclas_normalize_string( $commune_raw );
 		}
+		$communes_norm[] = $commune_slug;
+
+		// Process paired surnames.
+		$surnames_raw_list  = (array) ( $card['surnames_raw'] ?? [] );
+		$s_raw_clean        = [];
+		$s_norm_clean       = [];
+		$seen_surnames_card = [];
+
+		foreach ( $surnames_raw_list as $sraw ) {
+			$sraw = sanitize_text_field( $sraw );
+			if ( '' === $sraw ) {
+				continue;
+			}
+			$skey = mb_strtolower( trim( $sraw ) );
+			if ( isset( $seen_surnames_card[ $skey ] ) ) {
+				continue;
+			}
+			$seen_surnames_card[ $skey ] = true;
+
+			$s_raw_clean[] = $sraw;
+			$head = tclas_resolve_surname( $sraw );
+			if ( $head ) {
+				$s_norm_clean[] = $head;
+			} else {
+				$unresolved[]   = [ 'type' => 'surname', 'value' => $sraw, 'user_id' => $user_id ];
+				$s_norm_clean[] = 'unresolved:' . tclas_normalize_string( $sraw );
+			}
+		}
+
+		$lineages[] = [
+			'commune_raw'   => $commune_raw,
+			'commune_norm'  => $commune_slug,
+			'surnames_raw'  => $s_raw_clean,
+			'surnames_norm' => array_values( array_unique( $s_norm_clean ) ),
+		];
 	}
 
-	// ── Sanitise and resolve surnames ──────────────────────────────────
-	$surnames_clean = [];
-	$surnames_norm  = [];
-	$seen_surnames  = [];
+	// ── Process unassigned surnames ───────────────────────────────────
+	$ua_raw_clean    = [];
+	$ua_norm_clean   = [];
+	$seen_unassigned = [];
 
-	foreach ( $surnames_raw as $raw ) {
-		$raw = sanitize_text_field( $raw );
-		if ( '' === $raw ) {
+	foreach ( $unassigned_raw as $sraw ) {
+		$sraw = sanitize_text_field( $sraw );
+		if ( '' === $sraw ) {
 			continue;
 		}
-		$key = mb_strtolower( trim( $raw ) );
-		if ( isset( $seen_surnames[ $key ] ) ) {
-			continue; // skip duplicate input
+		$skey = mb_strtolower( trim( $sraw ) );
+		if ( isset( $seen_unassigned[ $skey ] ) ) {
+			continue;
 		}
-		$seen_surnames[ $key ] = true;
-		$surnames_clean[] = $raw;
-		$head = tclas_resolve_surname( $raw );
+		$seen_unassigned[ $skey ] = true;
+
+		$ua_raw_clean[] = $sraw;
+		$head = tclas_resolve_surname( $sraw );
 		if ( $head ) {
-			$surnames_norm[] = $head;
+			$ua_norm_clean[] = $head;
 		} else {
-			$unresolved[] = [ 'type' => 'surname', 'value' => $raw, 'user_id' => $user_id ];
-			$surnames_norm[] = 'unresolved:' . tclas_normalize_string( $raw );
+			$unresolved[]    = [ 'type' => 'surname', 'value' => $sraw, 'user_id' => $user_id ];
+			$ua_norm_clean[] = 'unresolved:' . tclas_normalize_string( $sraw );
 		}
 	}
 
 	// ── Persist user meta ──────────────────────────────────────────────
-	update_user_meta( $user_id, '_tclas_communes_raw',  $communes_clean );
-	update_user_meta( $user_id, '_tclas_communes_norm', array_unique( $communes_norm ) );
-	update_user_meta( $user_id, '_tclas_surnames_raw',  $surnames_clean );
-	update_user_meta( $user_id, '_tclas_surnames_norm', array_unique( $surnames_norm ) );
+	update_user_meta( $user_id, '_tclas_lineages',                $lineages );
+	update_user_meta( $user_id, '_tclas_unassigned_surnames_raw',  $ua_raw_clean );
+	update_user_meta( $user_id, '_tclas_unassigned_surnames_norm', array_values( array_unique( $ua_norm_clean ) ) );
+	update_user_meta( $user_id, '_tclas_communes_norm',           array_values( array_unique( $communes_norm ) ) );
+
+	// Clean up legacy flat keys.
+	delete_user_meta( $user_id, '_tclas_communes_raw' );
+	delete_user_meta( $user_id, '_tclas_surnames_raw' );
+	delete_user_meta( $user_id, '_tclas_surnames_norm' );
 
 	$allowed_vis = [ 'members', 'board', 'hidden' ];
-	update_user_meta( $user_id, '_tclas_visibility',   in_array( $visibility, $allowed_vis, true ) ? $visibility : 'members' );
-	update_user_meta( $user_id, '_tclas_open_to_contact', $open_to_contact ? 1 : 0 );
+	update_user_meta( $user_id, '_tclas_visibility',      in_array( $visibility, $allowed_vis, true ) ? $visibility : 'members' );
+	update_user_meta( $user_id, '_tclas_open_to_contact',  $open_to_contact ? 1 : 0 );
 
-	$complete = ( ! empty( $communes_clean ) || ! empty( $surnames_clean ) ) ? 1 : 0;
+	$has_communes  = ! empty( $lineages );
+	$has_surnames  = ! empty( $ua_raw_clean )
+		|| ! empty( array_filter( $lineages, fn( $l ) => ! empty( $l['surnames_raw'] ) ) );
+	$complete      = ( $has_communes || $has_surnames ) ? 1 : 0;
 	update_user_meta( $user_id, '_tclas_profile_complete', $complete );
 
 	// ── Queue unresolved entries for admin review ──────────────────────
 	if ( ! empty( $unresolved ) ) {
 		$queue = get_option( 'tclas_unresolved_entries', [] );
 		foreach ( $unresolved as $entry ) {
-			// Deduplicate by value.
-			$key = $entry['type'] . ':' . $entry['value'];
-			if ( ! isset( $queue[ $key ] ) ) {
-				$queue[ $key ] = array_merge( $entry, [ 'submitted_at' => time() ] );
+			$qkey = $entry['type'] . ':' . $entry['value'];
+			if ( ! isset( $queue[ $qkey ] ) ) {
+				$queue[ $qkey ] = array_merge( $entry, [ 'submitted_at' => time() ] );
 			}
 		}
 		update_option( 'tclas_unresolved_entries', $queue, false );
@@ -267,6 +313,44 @@ function tclas_save_member_story(
 
 	// ── Bust the ancestor-map commune-count transient ───────────────────
 	do_action( 'tclas_member_story_saved', $user_id );
+}
+
+/**
+ * Helper: collect all surname norms from a user's lineages + unassigned bucket.
+ *
+ * @return string[] Flat array of normalised surname heads.
+ */
+function tclas_get_all_surname_norms( int $user_id ): array {
+	$lineages   = (array) ( get_user_meta( $user_id, '_tclas_lineages', true ) ?: [] );
+	$unassigned = (array) ( get_user_meta( $user_id, '_tclas_unassigned_surnames_norm', true ) ?: [] );
+
+	$all = $unassigned;
+	foreach ( $lineages as $l ) {
+		if ( ! empty( $l['surnames_norm'] ) && is_array( $l['surnames_norm'] ) ) {
+			$all = array_merge( $all, $l['surnames_norm'] );
+		}
+	}
+	return array_values( array_unique( $all ) );
+}
+
+/**
+ * Helper: build a commune_slug → [surname_norm, …] map from lineages.
+ *
+ * @return array<string, string[]> Commune slug to array of normalised surnames.
+ */
+function tclas_lineage_pairs( int $user_id ): array {
+	$lineages = (array) ( get_user_meta( $user_id, '_tclas_lineages', true ) ?: [] );
+	$pairs    = [];
+	foreach ( $lineages as $l ) {
+		$slug = $l['commune_norm'] ?? '';
+		if ( '' === $slug ) {
+			continue;
+		}
+		$pairs[ $slug ] = array_values( array_unique(
+			is_array( $l['surnames_norm'] ?? null ) ? $l['surnames_norm'] : []
+		) );
+	}
+	return $pairs;
 }
 
 /**
@@ -329,6 +413,11 @@ function tclas_get_members_with_profiles( int $exclude_user_id = 0 ): array {
 /**
  * Compute (or refresh) connections for a given user and cache results.
  *
+ * Three-tier matching:
+ *   - Paired:       same surname associated with the same commune by both members.
+ *   - Commune-only: shared commune, no paired surname overlap.
+ *   - Surname-only: shared surname (from any lineage or unassigned), not already paired.
+ *
  * Uses a single bulk meta query to avoid N+1 overhead.
  *
  * @return array Connection objects keyed by matched user ID.
@@ -336,10 +425,9 @@ function tclas_get_members_with_profiles( int $exclude_user_id = 0 ): array {
 function tclas_compute_connections( int $user_id ): array {
 	global $wpdb;
 
-	$my_communes = (array) ( get_user_meta( $user_id, '_tclas_communes_norm', true ) ?: [] );
-	$my_surnames = (array) ( get_user_meta( $user_id, '_tclas_surnames_norm', true ) ?: [] );
-	$my_raw_comm = (array) ( get_user_meta( $user_id, '_tclas_communes_raw', true ) ?: [] );
-	$my_raw_surv = (array) ( get_user_meta( $user_id, '_tclas_surnames_raw', true ) ?: [] );
+	$my_communes  = (array) ( get_user_meta( $user_id, '_tclas_communes_norm', true ) ?: [] );
+	$my_surnames  = tclas_get_all_surname_norms( $user_id );
+	$my_pairs     = tclas_lineage_pairs( $user_id );
 
 	$connections = [];
 
@@ -350,7 +438,6 @@ function tclas_compute_connections( int $user_id ): array {
 	}
 
 	// Get candidate IDs (active members with completed profiles).
-	// Pull all active PMPro member IDs.
 	if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$ids = $wpdb->get_col( $wpdb->prepare(
 			"SELECT DISTINCT user_id
@@ -377,8 +464,8 @@ function tclas_compute_connections( int $user_id ): array {
 	// Bulk-load all relevant meta for candidates in a single query.
 	$meta_keys = [
 		'_tclas_profile_complete', '_tclas_visibility',
-		'_tclas_communes_norm', '_tclas_surnames_norm',
-		'_tclas_communes_raw', '_tclas_surnames_raw',
+		'_tclas_communes_norm', '_tclas_lineages',
+		'_tclas_unassigned_surnames_norm',
 	];
 	$id_placeholders  = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 	$key_placeholders = implode( ',', array_fill( 0, count( $meta_keys ), '%s' ) );
@@ -415,38 +502,77 @@ function tclas_compute_connections( int $user_id ): array {
 			continue;
 		}
 
-		// Deserialize commune/surname data.
+		// Deserialize candidate data.
 		$their_communes = maybe_unserialize( $cmeta['_tclas_communes_norm'] ?? '' );
 		$their_communes = is_array( $their_communes ) ? $their_communes : [];
-		$their_surnames = maybe_unserialize( $cmeta['_tclas_surnames_norm'] ?? '' );
-		$their_surnames = is_array( $their_surnames ) ? $their_surnames : [];
 
+		$their_lineages = maybe_unserialize( $cmeta['_tclas_lineages'] ?? '' );
+		$their_lineages = is_array( $their_lineages ) ? $their_lineages : [];
+
+		$their_unassigned = maybe_unserialize( $cmeta['_tclas_unassigned_surnames_norm'] ?? '' );
+		$their_unassigned = is_array( $their_unassigned ) ? $their_unassigned : [];
+
+		// Build their pairs + all-surname set.
+		$their_pairs = [];
+		$their_all_surnames = $their_unassigned;
+		foreach ( $their_lineages as $l ) {
+			$slug = $l['commune_norm'] ?? '';
+			if ( '' !== $slug && ! empty( $l['surnames_norm'] ) && is_array( $l['surnames_norm'] ) ) {
+				$their_pairs[ $slug ] = array_values( array_unique( $l['surnames_norm'] ) );
+				$their_all_surnames   = array_merge( $their_all_surnames, $l['surnames_norm'] );
+			}
+		}
+		$their_all_surnames = array_values( array_unique( $their_all_surnames ) );
+
+		// ── Compute three tiers ──────────────────────────────────────
+		$paired_matches   = []; // [{commune: slug, surname: head}, …]
+		$commune_only     = []; // [slug, …]
+		$surname_only     = []; // [head, …]
+		$paired_surnames  = []; // Track which surnames are already paired.
+
+		// Shared communes.
 		$shared_comm = array_values( array_intersect( $my_communes, $their_communes ) );
-		$shared_surv = array_values( array_intersect( $my_surnames, $their_surnames ) );
 
-		if ( empty( $shared_comm ) && empty( $shared_surv ) ) {
+		// For each shared commune, look for paired surname overlaps.
+		foreach ( $shared_comm as $slug ) {
+			$my_surv_in_comm    = $my_pairs[ $slug ] ?? [];
+			$their_surv_in_comm = $their_pairs[ $slug ] ?? [];
+			$paired_in_comm     = array_values( array_intersect( $my_surv_in_comm, $their_surv_in_comm ) );
+
+			if ( ! empty( $paired_in_comm ) ) {
+				foreach ( $paired_in_comm as $head ) {
+					$paired_matches[]             = [ 'commune' => $slug, 'surname' => $head ];
+					$paired_surnames[ $head ]      = true;
+				}
+			} else {
+				$commune_only[] = $slug;
+			}
+		}
+
+		// Surname-only: shared surnames not already counted as paired.
+		$shared_surv = array_values( array_intersect( $my_surnames, $their_all_surnames ) );
+		foreach ( $shared_surv as $head ) {
+			if ( ! isset( $paired_surnames[ $head ] ) ) {
+				$surname_only[] = $head;
+			}
+		}
+
+		if ( empty( $paired_matches ) && empty( $commune_only ) && empty( $surname_only ) ) {
 			continue;
 		}
 
 		// Preserve existing seen/dismissed state when re-computing.
 		$prev = $existing[ $candidate_id ] ?? [];
 
-		// Variant checks — use pre-loaded raw data.
-		$their_raw_comm = maybe_unserialize( $cmeta['_tclas_communes_raw'] ?? '' );
-		$their_raw_comm = is_array( $their_raw_comm ) ? $their_raw_comm : [];
-		$their_raw_surv = maybe_unserialize( $cmeta['_tclas_surnames_raw'] ?? '' );
-		$their_raw_surv = is_array( $their_raw_surv ) ? $their_raw_surv : [];
-
 		$connections[ $candidate_id ] = [
-			'user_id'           => $candidate_id,
-			'shared_communes'   => $shared_comm,
-			'shared_surnames'   => $shared_surv,
-			'score'             => tclas_connection_score( $shared_comm, $shared_surv ),
-			'computed_at'       => time(),
-			'seen'              => $prev['seen']      ?? false,
-			'dismissed'         => $prev['dismissed'] ?? false,
-			'variant_commune'   => ! empty( $shared_comm ) && $my_raw_comm !== $their_raw_comm,
-			'variant_surname'   => ! empty( $shared_surv ) && $my_raw_surv !== $their_raw_surv,
+			'user_id'         => $candidate_id,
+			'paired_matches'  => $paired_matches,
+			'commune_only'    => $commune_only,
+			'surname_only'    => $surname_only,
+			'score'           => tclas_connection_score( $paired_matches, $commune_only, $surname_only ),
+			'computed_at'     => time(),
+			'seen'            => $prev['seen']      ?? false,
+			'dismissed'       => $prev['dismissed'] ?? false,
 		];
 	}
 
@@ -460,55 +586,30 @@ function tclas_compute_connections( int $user_id ): array {
 }
 
 /**
- * Score a set of shared communes and surnames.
+ * Score a connection using the three-tier model.
  *
- * Scoring matrix (from architecture doc):
- *   1 shared commune   → 2 pts
- *   Each additional    → +1 pt
- *   1 shared surname   → 2 pts
- *   Each additional    → +1 pt
- *   Same commune AND surname on same person → +4 bonus
+ * Scoring matrix:
+ *   Paired (commune+surname): 6 pts first, +3 each additional.
+ *   Commune-only:             2 pts first, +1 each additional.
+ *   Surname-only:             2 pts first, +1 each additional.
  */
-function tclas_connection_score( array $communes, array $surnames ): int {
+function tclas_connection_score( array $paired, array $commune_only, array $surname_only ): int {
 	$score = 0;
+	$pc = count( $paired );
+	$cc = count( $commune_only );
+	$sc = count( $surname_only );
 
-	if ( count( $communes ) > 0 ) {
-		$score += 2 + max( 0, count( $communes ) - 1 );
+	if ( $pc > 0 ) {
+		$score += 6 + max( 0, $pc - 1 ) * 3;
 	}
-	if ( count( $surnames ) > 0 ) {
-		$score += 2 + max( 0, count( $surnames ) - 1 );
+	if ( $cc > 0 ) {
+		$score += 2 + max( 0, $cc - 1 );
 	}
-	if ( count( $communes ) > 0 && count( $surnames ) > 0 ) {
-		$score += 4; // bonus for sharing both
+	if ( $sc > 0 ) {
+		$score += 2 + max( 0, $sc - 1 );
 	}
 
 	return $score;
-}
-
-/**
- * Return true if the match was made via a variant-resolved commune
- * (i.e. the two users used different spellings of the same commune).
- */
-function tclas_has_variant_commune( int $uid_a, int $uid_b, array $shared_slugs ): bool {
-	if ( empty( $shared_slugs ) ) {
-		return false;
-	}
-	$raw_a = (array) ( get_user_meta( $uid_a, '_tclas_communes_raw', true ) ?: [] );
-	$raw_b = (array) ( get_user_meta( $uid_b, '_tclas_communes_raw', true ) ?: [] );
-	// If they stored the same raw value we're not showing a variant notice.
-	return $raw_a !== $raw_b;
-}
-
-/**
- * Return true if the surname match was made across variant spellings.
- */
-function tclas_has_variant_surname( int $uid_a, int $uid_b, array $shared_heads ): bool {
-	if ( empty( $shared_heads ) ) {
-		return false;
-	}
-	$raw_a = (array) ( get_user_meta( $uid_a, '_tclas_surnames_raw', true ) ?: [] );
-	$raw_b = (array) ( get_user_meta( $uid_b, '_tclas_surnames_raw', true ) ?: [] );
-	return $raw_a !== $raw_b;
 }
 
 /**
@@ -556,50 +657,64 @@ function tclas_connection_strength( int $score ): array {
 }
 
 /**
- * Build the display labels (raw values) for a list of canonical slugs/heads
- * as entered by user $for_user_id — or, if not found, fall back to the
- * canonical label from the data tables.
+ * Build the display label for a single canonical commune slug,
+ * using the user's own raw entry if available.
  */
-function tclas_display_communes( array $slugs, int $for_user_id ): array {
-	$raw   = (array) ( get_user_meta( $for_user_id, '_tclas_communes_raw', true ) ?: [] );
-	$norms = (array) ( get_user_meta( $for_user_id, '_tclas_communes_norm', true ) ?: [] );
-	$all   = tclas_commune_aliases();
-
-	$labels = [];
-	foreach ( $slugs as $slug ) {
-		// Try to find the user's own raw entry for this slug.
-		$idx = array_search( $slug, $norms, true );
-		if ( false !== $idx && isset( $raw[ $idx ] ) ) {
-			$labels[] = $raw[ $idx ];
-		} elseif ( isset( $all[ $slug ] ) ) {
-			$labels[] = $all[ $slug ]['label'];
-		} else {
-			$labels[] = ucwords( str_replace( '-', ' ', $slug ) );
+function tclas_display_commune( string $slug, int $for_user_id ): string {
+	$lineages = (array) ( get_user_meta( $for_user_id, '_tclas_lineages', true ) ?: [] );
+	foreach ( $lineages as $l ) {
+		if ( ( $l['commune_norm'] ?? '' ) === $slug ) {
+			return $l['commune_raw'] ?? '';
 		}
 	}
-	return $labels;
+	$all = tclas_commune_aliases();
+	if ( isset( $all[ $slug ] ) ) {
+		return $all[ $slug ]['label'];
+	}
+	return ucwords( str_replace( '-', ' ', $slug ) );
+}
+
+/**
+ * Build the display labels (raw values) for a list of canonical commune slugs.
+ */
+function tclas_display_communes( array $slugs, int $for_user_id ): array {
+	return array_map( fn( $slug ) => tclas_display_commune( $slug, $for_user_id ), $slugs );
+}
+
+/**
+ * Build the display label for a single canonical surname cluster head,
+ * using the user's own raw entry if available.
+ */
+function tclas_display_surname( string $head, int $for_user_id ): string {
+	// Search lineages first.
+	$lineages = (array) ( get_user_meta( $for_user_id, '_tclas_lineages', true ) ?: [] );
+	foreach ( $lineages as $l ) {
+		$norms = is_array( $l['surnames_norm'] ?? null ) ? $l['surnames_norm'] : [];
+		$raws  = is_array( $l['surnames_raw']  ?? null ) ? $l['surnames_raw']  : [];
+		$idx   = array_search( $head, $norms, true );
+		if ( false !== $idx && isset( $raws[ $idx ] ) ) {
+			return $raws[ $idx ];
+		}
+	}
+	// Search unassigned.
+	$ua_raw  = (array) ( get_user_meta( $for_user_id, '_tclas_unassigned_surnames_raw',  true ) ?: [] );
+	$ua_norm = (array) ( get_user_meta( $for_user_id, '_tclas_unassigned_surnames_norm', true ) ?: [] );
+	$idx     = array_search( $head, $ua_norm, true );
+	if ( false !== $idx && isset( $ua_raw[ $idx ] ) ) {
+		return $ua_raw[ $idx ];
+	}
+	$all = tclas_surname_clusters();
+	if ( isset( $all[ $head ] ) ) {
+		return $all[ $head ]['label'];
+	}
+	return ucfirst( $head );
 }
 
 /**
  * Build display labels for canonical surname cluster heads.
  */
 function tclas_display_surnames( array $heads, int $for_user_id ): array {
-	$raw   = (array) ( get_user_meta( $for_user_id, '_tclas_surnames_raw', true ) ?: [] );
-	$norms = (array) ( get_user_meta( $for_user_id, '_tclas_surnames_norm', true ) ?: [] );
-	$all   = tclas_surname_clusters();
-
-	$labels = [];
-	foreach ( $heads as $head ) {
-		$idx = array_search( $head, $norms, true );
-		if ( false !== $idx && isset( $raw[ $idx ] ) ) {
-			$labels[] = $raw[ $idx ];
-		} elseif ( isset( $all[ $head ] ) ) {
-			$labels[] = $all[ $head ]['label'];
-		} else {
-			$labels[] = ucfirst( $head );
-		}
-	}
-	return $labels;
+	return array_map( fn( $head ) => tclas_display_surname( $head, $for_user_id ), $heads );
 }
 
 /**
@@ -616,8 +731,7 @@ function tclas_human_list( array $items ): string {
 /**
  * Generate the connection sentence for a pair of users.
  *
- * When the match was made via variant spellings (Smith/Schmitt), the sentence
- * discloses both forms rather than silently merging them.
+ * Uses the three-tier model: paired, commune-only, surname-only.
  *
  * @return string  Plain text (already escaped).
  */
@@ -627,71 +741,71 @@ function tclas_connection_sentence(
 	array $connection
 ): string {
 	$their_name = esc_html( get_the_author_meta( 'display_name', $their_id ) );
-	$c_count    = count( $connection['shared_communes'] );
-	$s_count    = count( $connection['shared_surnames'] );
 
-	// Build display labels from each user's own raw values.
-	$my_comm_labels    = tclas_display_communes( $connection['shared_communes'], $my_id );
-	$their_comm_labels = tclas_display_communes( $connection['shared_communes'], $their_id );
-	$my_surv_labels    = tclas_display_surnames( $connection['shared_surnames'], $my_id );
-	$their_surv_labels = tclas_display_surnames( $connection['shared_surnames'], $their_id );
+	$paired   = $connection['paired_matches'] ?? [];
+	$c_only   = $connection['commune_only']   ?? [];
+	$s_only   = $connection['surname_only']   ?? [];
 
-	// Detect variant spellings (user A and B stored different raw values for same canonical).
-	$comm_variants = ( $my_comm_labels !== $their_comm_labels );
-	$surv_variants = ( $my_surv_labels !== $their_surv_labels );
+	$parts = [];
 
-	// ── Both commune and surname shared ────────────────────────────────
-	if ( $c_count > 0 && $s_count > 0 ) {
-		$commune_str = tclas_human_list( $my_comm_labels );
-		$surname_str = tclas_human_list( $my_surv_labels );
-
-		if ( $surv_variants ) {
-			$their_surv_str = tclas_human_list( $their_surv_labels );
-			return sprintf(
-				/* translators: 1: their name 2: commune 3: my surname 4: their surname */
-				esc_html__( 'You and %1$s both have roots in %2$s and may share family through the %3$s / %4$s name.', 'tclas' ),
-				$their_name, $commune_str, $surname_str, $their_surv_str
-			);
+	// ── Paired matches (strongest signal) ──────────────────────────────
+	if ( ! empty( $paired ) ) {
+		// Group by commune for natural phrasing.
+		$by_commune = [];
+		foreach ( $paired as $p ) {
+			$by_commune[ $p['commune'] ][] = $p['surname'];
 		}
 
-		return sprintf(
-			/* translators: 1: their name 2: commune 3: surname */
-			esc_html__( 'You and %1$s both have roots in %2$s and share the surname %3$s.', 'tclas' ),
-			$their_name, $commune_str, $surname_str
-		);
-	}
-
-	// ── Commune only ───────────────────────────────────────────────────
-	if ( $c_count > 0 ) {
-		if ( $comm_variants ) {
-			$commune_str       = tclas_human_list( $my_comm_labels );
-			$their_commune_str = tclas_human_list( $their_comm_labels );
-			return sprintf(
-				esc_html__( 'You and %1$s both have ancestry in %2$s (also known as %3$s).', 'tclas' ),
-				$their_name, $commune_str, $their_commune_str
+		$pair_phrases = [];
+		foreach ( $by_commune as $slug => $heads ) {
+			$commune_label = esc_html( tclas_display_commune( $slug, $my_id ) );
+			$surname_list  = tclas_human_list( tclas_display_surnames( $heads, $my_id ) );
+			$pair_phrases[] = sprintf(
+				/* translators: 1: surname(s) 2: commune */
+				esc_html__( 'the %1$s name in %2$s', 'tclas' ),
+				$surname_list,
+				$commune_label
 			);
 		}
-		return sprintf(
-			esc_html__( 'You and %1$s both have ancestry in %2$s.', 'tclas' ),
-			$their_name, tclas_human_list( $my_comm_labels )
-		);
-	}
-
-	// ── Surname only ───────────────────────────────────────────────────
-	if ( $surv_variants ) {
-		return sprintf(
-			esc_html__( 'You and %1$s may share family through the %2$s / %3$s name.', 'tclas' ),
+		$parts[] = sprintf(
+			/* translators: 1: their name 2: lineage details */
+			esc_html__( 'You and %1$s both trace %2$s — probable kinship!', 'tclas' ),
 			$their_name,
-			tclas_human_list( $my_surv_labels ),
-			tclas_human_list( $their_surv_labels )
+			implode( '; ', $pair_phrases )
 		);
 	}
 
-	return sprintf(
-		esc_html__( 'You and %1$s share the surname %2$s.', 'tclas' ),
-		$their_name,
-		tclas_human_list( $my_surv_labels )
-	);
+	// ── Commune-only matches ───────────────────────────────────────────
+	if ( ! empty( $c_only ) ) {
+		$comm_labels = tclas_display_communes( $c_only, $my_id );
+		$parts[]     = empty( $parts )
+			? sprintf(
+				esc_html__( 'You and %1$s both have ancestry in %2$s.', 'tclas' ),
+				$their_name,
+				tclas_human_list( $comm_labels )
+			)
+			: sprintf(
+				esc_html__( 'You also share roots in %s.', 'tclas' ),
+				tclas_human_list( $comm_labels )
+			);
+	}
+
+	// ── Surname-only matches ───────────────────────────────────────────
+	if ( ! empty( $s_only ) ) {
+		$surv_labels = tclas_display_surnames( $s_only, $my_id );
+		$parts[]     = empty( $parts )
+			? sprintf(
+				esc_html__( 'You and %1$s share the surname %2$s.', 'tclas' ),
+				$their_name,
+				tclas_human_list( $surv_labels )
+			)
+			: sprintf(
+				esc_html__( 'You also share the surname %s.', 'tclas' ),
+				tclas_human_list( $surv_labels )
+			);
+	}
+
+	return implode( ' ', $parts );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -827,12 +941,13 @@ function tclas_ajax_save_my_story(): void {
 		wp_send_json_error( 'not_member' );
 	}
 
-	$communes        = array_filter( (array) ( $_POST['communes'] ?? [] ), 'strlen' );
-	$surnames        = array_filter( (array) ( $_POST['surnames'] ?? [] ), 'strlen' );
-	$visibility      = sanitize_text_field( $_POST['visibility'] ?? 'members' );
+	// Build lineage input from POST.
+	$lineages_input = tclas_parse_lineage_post_data( $_POST );
+	$unassigned_raw = array_filter( (array) ( $_POST['tclas_unassigned_surnames'] ?? [] ), 'strlen' );
+	$visibility     = sanitize_text_field( $_POST['visibility'] ?? 'members' );
 	$open_to_contact = ! empty( $_POST['open_to_contact'] );
 
-	tclas_save_member_story( $user_id, $communes, $surnames, $visibility, $open_to_contact );
+	tclas_save_member_story( $user_id, $lineages_input, $unassigned_raw, $visibility, $open_to_contact );
 
 	$count = count( tclas_get_connections( $user_id ) );
 
@@ -852,6 +967,34 @@ function tclas_ajax_save_my_story(): void {
 }
 add_action( 'wp_ajax_tclas_save_my_story', 'tclas_ajax_save_my_story' );
 
+/**
+ * Parse lineage POST data from the form into the structured format.
+ *
+ * Expected POST keys:
+ *   tclas_lineage_commune[]        — one commune per card
+ *   tclas_lineage_surnames[0][]    — surnames for card 0
+ *   tclas_lineage_surnames[1][]    — surnames for card 1, etc.
+ *
+ * @return array [{commune_raw: string, surnames_raw: string[]}, …]
+ */
+function tclas_parse_lineage_post_data( array $post ): array {
+	$communes_raw = (array) ( $post['tclas_lineage_commune'] ?? [] );
+	$surnames_all = (array) ( $post['tclas_lineage_surnames'] ?? [] );
+
+	$lineages = [];
+	foreach ( $communes_raw as $i => $commune ) {
+		$commune = trim( (string) $commune );
+		if ( '' === $commune ) {
+			continue;
+		}
+		$lineages[] = [
+			'commune_raw'  => $commune,
+			'surnames_raw' => array_filter( (array) ( $surnames_all[ $i ] ?? [] ), 'strlen' ),
+		];
+	}
+	return $lineages;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 7 — WP Admin: user profile fields + unresolved queue
 // ═══════════════════════════════════════════════════════════════════════════
@@ -864,29 +1007,46 @@ function tclas_admin_user_profile_fields( WP_User $user ): void {
 		return;
 	}
 
-	$communes        = (array) ( get_user_meta( $user->ID, '_tclas_communes_raw',  true ) ?: [] );
-	$surnames        = (array) ( get_user_meta( $user->ID, '_tclas_surnames_raw',  true ) ?: [] );
+	$lineages        = (array) ( get_user_meta( $user->ID, '_tclas_lineages',                true ) ?: [] );
+	$unassigned_raw  = (array) ( get_user_meta( $user->ID, '_tclas_unassigned_surnames_raw',  true ) ?: [] );
 	$visibility      = get_user_meta( $user->ID, '_tclas_visibility', true ) ?: 'members';
 	$open_to_contact = (bool) get_user_meta( $user->ID, '_tclas_open_to_contact', true );
 	?>
 	<h2><?php esc_html_e( 'Luxembourg Story (TCLAS)', 'tclas' ); ?></h2>
 	<table class="form-table">
 		<tr>
-			<th><?php esc_html_e( 'Ancestral Communes', 'tclas' ); ?></th>
+			<th><?php esc_html_e( 'Ancestral lineages', 'tclas' ); ?></th>
 			<td>
-				<?php foreach ( $communes as $i => $c ) : ?>
-					<p><input type="text" name="tclas_communes[]" value="<?php echo esc_attr( $c ); ?>" class="regular-text"></p>
+				<p class="description"><?php esc_html_e( 'Commune → paired surnames. One commune per row, comma-separated surnames.', 'tclas' ); ?></p>
+				<?php foreach ( $lineages as $i => $l ) : ?>
+					<p style="margin-bottom:.5rem;">
+						<input type="text" name="tclas_lineage_commune[]"
+							   value="<?php echo esc_attr( $l['commune_raw'] ?? '' ); ?>"
+							   class="regular-text" placeholder="<?php esc_attr_e( 'Commune', 'tclas' ); ?>"
+							   style="width:180px;">
+						→
+						<input type="text" name="tclas_lineage_surnames_csv[]"
+							   value="<?php echo esc_attr( implode( ', ', (array) ( $l['surnames_raw'] ?? [] ) ) ); ?>"
+							   class="regular-text" placeholder="<?php esc_attr_e( 'Surnames (comma-separated)', 'tclas' ); ?>"
+							   style="width:320px;">
+					</p>
 				<?php endforeach; ?>
-				<p><input type="text" name="tclas_communes[]" value="" class="regular-text" placeholder="<?php esc_attr_e( 'Add commune…', 'tclas' ); ?>"></p>
+				<p style="margin-bottom:.5rem;">
+					<input type="text" name="tclas_lineage_commune[]" value="" class="regular-text"
+						   placeholder="<?php esc_attr_e( 'Add commune…', 'tclas' ); ?>" style="width:180px;">
+					→
+					<input type="text" name="tclas_lineage_surnames_csv[]" value="" class="regular-text"
+						   placeholder="<?php esc_attr_e( 'Surnames (comma-separated)', 'tclas' ); ?>" style="width:320px;">
+				</p>
 			</td>
 		</tr>
 		<tr>
-			<th><?php esc_html_e( 'Luxembourg Surnames', 'tclas' ); ?></th>
+			<th><?php esc_html_e( 'Unassigned surnames', 'tclas' ); ?></th>
 			<td>
-				<?php foreach ( $surnames as $i => $s ) : ?>
-					<p><input type="text" name="tclas_surnames[]" value="<?php echo esc_attr( $s ); ?>" class="regular-text"></p>
+				<?php foreach ( $unassigned_raw as $s ) : ?>
+					<p><input type="text" name="tclas_unassigned_surnames[]" value="<?php echo esc_attr( $s ); ?>" class="regular-text"></p>
 				<?php endforeach; ?>
-				<p><input type="text" name="tclas_surnames[]" value="" class="regular-text" placeholder="<?php esc_attr_e( 'Add surname…', 'tclas' ); ?>"></p>
+				<p><input type="text" name="tclas_unassigned_surnames[]" value="" class="regular-text" placeholder="<?php esc_attr_e( 'Add surname…', 'tclas' ); ?>"></p>
 			</td>
 		</tr>
 		<tr>
@@ -929,12 +1089,31 @@ function tclas_admin_save_user_profile( int $user_id ): void {
 		return;
 	}
 
-	$communes        = array_filter( (array) ( $_POST['tclas_communes'] ?? [] ), 'strlen' );
-	$surnames        = array_filter( (array) ( $_POST['tclas_surnames'] ?? [] ), 'strlen' );
+	// Build lineage input from admin fields (CSV surnames per commune).
+	$admin_communes = (array) ( $_POST['tclas_lineage_commune']      ?? [] );
+	$admin_csvs     = (array) ( $_POST['tclas_lineage_surnames_csv'] ?? [] );
+
+	$lineages_input = [];
+	foreach ( $admin_communes as $i => $commune ) {
+		$commune = trim( (string) $commune );
+		if ( '' === $commune ) {
+			continue;
+		}
+		$csv     = trim( (string) ( $admin_csvs[ $i ] ?? '' ) );
+		$surnames = '' !== $csv
+			? array_values( array_filter( array_map( 'trim', explode( ',', $csv ) ), 'strlen' ) )
+			: [];
+		$lineages_input[] = [
+			'commune_raw'  => $commune,
+			'surnames_raw' => $surnames,
+		];
+	}
+
+	$unassigned_raw  = array_filter( (array) ( $_POST['tclas_unassigned_surnames'] ?? [] ), 'strlen' );
 	$visibility      = sanitize_text_field( $_POST['tclas_visibility'] ?? 'members' );
 	$open_to_contact = ! empty( $_POST['tclas_open_to_contact'] );
 
-	tclas_save_member_story( $user_id, $communes, $surnames, $visibility, $open_to_contact );
+	tclas_save_member_story( $user_id, $lineages_input, $unassigned_raw, $visibility, $open_to_contact );
 }
 add_action( 'personal_options_update',  'tclas_admin_save_user_profile' );
 add_action( 'edit_user_profile_update', 'tclas_admin_save_user_profile' );
