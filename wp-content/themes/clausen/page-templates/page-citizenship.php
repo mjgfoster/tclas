@@ -46,10 +46,12 @@ get_header();
 
 <!-- ── Eligibility quiz ──────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-bg-warm" id="quiz">
-	<div class="container-tclas container--narrow">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
-		<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
-		<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
+	<div class="container-tclas">
+		<div class="tclas-quiz-intro">
+			<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
+			<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
+			<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
+		</div>
 		<div class="tclas-quiz-wrapper">
 			<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
 		</div>

@@ -9,10 +9,13 @@
 	'use strict';
 
 	// ── DOM References ─────────────────────────────────────────────────────
-	const container   = document.getElementById('lcq-quiz-container');
-	const questionEl  = document.getElementById('lcq-question-text');
-	const buttonsEl   = document.getElementById('lcq-button-container');
-	const progressBar = document.getElementById('lcq-progress-bar');
+	const container     = document.getElementById('lcq-quiz-container');
+	const questionEl    = document.getElementById('lcq-question-text');
+	const buttonsEl     = document.getElementById('lcq-button-container');
+	const progressBar   = document.getElementById('lcq-progress-bar');
+	const layoutEl      = document.getElementById('lcq-quiz-layout');
+	const sidebarEl     = document.getElementById('lcq-lineage-sidebar');
+	const lineageListEl = document.getElementById('lcq-lineage-list');
 
 	if (!container) return;
 
@@ -66,10 +69,12 @@
 		const prev = history.pop();
 		if (!prev) {
 			state = freshState();
+			hideSidebar();
 			renderStep('gate_ancestor');
 			return;
 		}
 		state = prev.state;
+		if (state.lineage.length === 0) hideSidebar();
 		renderStep(prev.step);
 	}
 
@@ -79,6 +84,12 @@
 		if (!step) return;
 		if (step.progress != null) setProgress(step.progress);
 		step.render();
+
+		// Update lineage sidebar when lineage data exists
+		if (state.lineage.length > 0) {
+			showSidebar();
+			renderLineage();
+		}
 	}
 
 	// variant: 'yes' | 'no' | 'neutral' | null
@@ -105,6 +116,136 @@
 		btn.textContent = '\u2190 Back';
 		btn.addEventListener('click', goBack);
 		buttonsEl.appendChild(btn);
+	}
+
+	// ── Lineage sidebar ─────────────────────────────────────────────────
+
+	function showSidebar() {
+		if (!sidebarEl) return;
+		sidebarEl.removeAttribute('hidden');
+		if (layoutEl) layoutEl.classList.add('cq_layout--with-sidebar');
+	}
+
+	function hideSidebar() {
+		if (!sidebarEl) return;
+		sidebarEl.setAttribute('hidden', '');
+		if (layoutEl) layoutEl.classList.remove('cq_layout--with-sidebar');
+	}
+
+	function buildNode(label, tags, nodeState) {
+		var li = document.createElement('li');
+		li.className = 'cq_lineage_node';
+		if (nodeState) li.classList.add('cq_lineage_node--' + nodeState);
+
+		var dot = document.createElement('span');
+		dot.className = 'cq_lineage_node__dot';
+		dot.setAttribute('aria-hidden', 'true');
+		li.appendChild(dot);
+
+		var info = document.createElement('div');
+		info.className = 'cq_lineage_node__info';
+
+		var labelEl = document.createElement('span');
+		labelEl.className = 'cq_lineage_node__label';
+		labelEl.textContent = label;
+		info.appendChild(labelEl);
+
+		var filtered = tags.filter(function (t) { return t !== null; });
+		if (filtered.length > 0) {
+			var tagsEl = document.createElement('div');
+			tagsEl.className = 'cq_lineage_node__tags';
+			filtered.forEach(function (text) {
+				var tag = document.createElement('span');
+				tag.className = 'cq_lineage_tag';
+				if (text === 'Born in Luxembourg') tag.classList.add('cq_lineage_tag--lux');
+				if (text === 'Born before 1969')   tag.classList.add('cq_lineage_tag--pre69');
+				tag.textContent = text;
+				tagsEl.appendChild(tag);
+			});
+			info.appendChild(tagsEl);
+		}
+
+		li.appendChild(info);
+		return li;
+	}
+
+	function renderLineage() {
+		if (!lineageListEl) return;
+		lineageListEl.innerHTML = '';
+
+		// "You" node — always first
+		lineageListEl.appendChild(buildNode('You', [
+			state.userBornBefore1969 === true  ? 'Born before 1969' : null,
+			state.userBornBefore1969 === false ? 'Born after 1969'  : null
+		], 'done'));
+
+		// Each lineage person
+		for (var i = 0; i < state.lineage.length; i++) {
+			var person = state.lineage[i];
+			if (!person) continue;
+
+			var tags = [];
+			if (person.bornBefore1969 === true)  tags.push('Born before 1969');
+			if (person.bornBefore1969 === false) tags.push('Born after 1969');
+			if (person.bornInLux === true)        tags.push('Born in Luxembourg');
+
+			var ns = 'done';
+			if (person.bornInLux === true) {
+				ns = 'lux';
+			} else if (i === state.genIndex && person.bornInLux === null) {
+				ns = 'active';
+			}
+
+			lineageListEl.appendChild(buildNode(person.label, tags, ns));
+		}
+	}
+
+	function renderInlineLineage() {
+		var wrapper = document.createElement('div');
+		wrapper.className = 'cq_lineage_inline';
+
+		var title = document.createElement('h4');
+		title.className = 'cq_lineage_inline__title';
+		title.textContent = 'What you entered';
+		wrapper.appendChild(title);
+
+		var list = document.createElement('ol');
+		list.className = 'cq_lineage_list';
+
+		list.appendChild(buildNode('You', [
+			state.userBornBefore1969 === true  ? 'Born before 1969' : null,
+			state.userBornBefore1969 === false ? 'Born after 1969'  : null
+		], 'done'));
+
+		for (var i = 0; i <= state.genIndex; i++) {
+			var person = state.lineage[i];
+			if (!person) continue;
+			var tags = [];
+			if (person.bornBefore1969 === true)  tags.push('Born before 1969');
+			if (person.bornBefore1969 === false) tags.push('Born after 1969');
+			if (person.bornInLux === true)        tags.push('Born in Luxembourg');
+			var ns = person.bornInLux === true ? 'lux' : 'done';
+			list.appendChild(buildNode(person.label, tags, ns));
+		}
+
+		wrapper.appendChild(list);
+		buttonsEl.insertBefore(wrapper, buttonsEl.firstChild);
+	}
+
+	function buildLineageText() {
+		if (state.lineage.length === 0) return '';
+		var lines = ['Your lineage:'];
+		lines.push('- You' + (state.userBornBefore1969 ? ' (born before 1969)' : ' (born after 1969)'));
+		for (var i = 0; i <= state.genIndex; i++) {
+			var p = state.lineage[i];
+			if (!p) continue;
+			var parts = [p.label];
+			if (p.bornBefore1969 === true)  parts.push('born before 1969');
+			if (p.bornBefore1969 === false) parts.push('born after 1969');
+			if (p.bornInLux === true)        parts.push('born in Luxembourg');
+			lines.push('- ' + parts.join(', '));
+		}
+		return lines.join('\n');
 	}
 
 	// ── 1969 skip helper ─────────────────────────────────────────────────
@@ -649,6 +790,12 @@
 		questionEl.textContent = headline;
 		buttonsEl.innerHTML    = '';
 
+		// Lineage summary (sidebar final update + mobile inline)
+		if (state.lineage.length > 0) {
+			renderLineage();
+			renderInlineLineage();
+		}
+
 		// Body text
 		var bodyEl = document.createElement('p');
 		bodyEl.className   = 'cq_outcome_body';
@@ -700,7 +847,8 @@
 			payload.append('action',      'lcq_send_results');
 			payload.append('nonce',       (typeof lcqData !== 'undefined') ? lcqData.nonce : '');
 			payload.append('email',       email);
-			payload.append('result_text', headline + '\n\n' + bodyText);
+			var lineageText = buildLineageText();
+			payload.append('result_text', headline + '\n\n' + (lineageText ? lineageText + '\n\n' : '') + bodyText);
 
 			var ajaxUrl = (typeof lcqData !== 'undefined')
 				? lcqData.ajax_url
@@ -725,6 +873,7 @@
 		restartBtn.addEventListener('click', function () {
 			history = [];
 			state   = freshState();
+			hideSidebar();
 			renderStep('gate_ancestor');
 		});
 		buttonsEl.appendChild(restartBtn);

@@ -28,21 +28,30 @@ add_shortcode( 'luxembourg_eligibility_quiz', 'lcq_eligibility_quiz_shortcode' )
 function lcq_eligibility_quiz_shortcode() {
     ob_start(); ?>
     
-    <div id="lcq-quiz-container" class="cq_quiz_container" aria-live="polite" aria-atomic="true">
-        
-        <div class="cq_progress_wrapper">
-            <div id="lcq-progress-bar" 
-                 class="cq_progress_bar" 
-                 role="progressbar" 
-                 aria-valuemin="0" 
-                 aria-valuemax="100" 
-                 aria-valuenow="0" 
-                 style="width: 0%; transition: width 0.3s ease;">
+    <div id="lcq-quiz-layout" class="cq_layout">
+
+        <div id="lcq-quiz-container" class="cq_quiz_container" aria-live="polite" aria-atomic="true">
+
+            <div class="cq_progress_wrapper">
+                <div id="lcq-progress-bar"
+                     class="cq_progress_bar"
+                     role="progressbar"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     aria-valuenow="0"
+                     style="width: 0%; transition: width 0.3s ease;">
+                </div>
             </div>
+
+            <h3 id="lcq-question-text" class="cq_question_text">Loading quiz...</h3>
+            <div id="lcq-button-container" class="cq_button_container"></div>
         </div>
 
-        <h3 id="lcq-question-text" class="cq_question_text">Loading quiz...</h3>
-        <div id="lcq-button-container" class="cq_button_container"></div>
+        <aside id="lcq-lineage-sidebar" class="cq_sidebar" aria-label="Your family tree" hidden>
+            <h4 class="cq_sidebar__title">Your family tree</h4>
+            <ol id="lcq-lineage-list" class="cq_lineage_list"></ol>
+        </aside>
+
     </div>
 
     <?php
