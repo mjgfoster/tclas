@@ -47,3 +47,23 @@ add_action( 'init', 'tclas_cleanup_head' );
 add_filter( 'language_attributes', function( string $output ): string {
 	return $output; // WordPress handles this via get_language_attributes()
 } );
+
+/**
+ * Render a simple breadcrumb: Home › Page Title.
+ *
+ * @param string $title  Override for the current page title (optional).
+ * @param bool   $light  Use light variant for dark backgrounds.
+ */
+function tclas_breadcrumb( string $title = '', bool $light = false ): void {
+	if ( ! $title ) {
+		$title = get_the_title();
+	}
+	$class = 'tclas-breadcrumb' . ( $light ? ' tclas-breadcrumb--light' : '' );
+	?>
+	<nav class="<?php echo esc_attr( $class ); ?>" aria-label="<?php esc_attr_e( 'Breadcrumb', 'tclas' ); ?>">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'tclas' ); ?></a>
+		<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
+		<span class="tclas-breadcrumb__current" aria-current="page"><?php echo esc_html( $title ); ?></span>
+	</nav>
+	<?php
+}

@@ -19,6 +19,7 @@ get_header();
 <!-- ── Page header ──────────────────────────────────────────────────────── -->
 <div class="tclas-page-header tclas-page-header--ardoise tclas-msp-header">
 	<div class="container-tclas">
+		<?php tclas_breadcrumb( '', true ); ?>
 		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Minnesota · Luxembourg', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title tclas-msp-header__title">
 			Minneapolis&ndash;Saint Paul<br>

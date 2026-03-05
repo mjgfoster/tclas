@@ -57,7 +57,7 @@ function tclas_pmpro_after_checkout( int $user_id, object $morder ): void {
 			],
 		] );
 	} catch ( Exception $e ) {
-		// Fail silently — not critical
+		error_log( 'TCLAS Mailchimp subscribe failed for user ' . $user_id . ': ' . $e->getMessage() );
 	}
 
 	// Credit referral if present
@@ -143,7 +143,7 @@ function tclas_pmpro_after_change_membership_level( int $level_id, int $user_id 
 		$hash   = md5( strtolower( $email ) );
 		$api->update_list_member( $list_id, $hash, [ 'status' => 'unsubscribed' ] );
 	} catch ( Exception $e ) {
-		// Fail silently
+		error_log( 'TCLAS Mailchimp unsubscribe failed for user ' . $user_id . ': ' . $e->getMessage() );
 	}
 }
 add_action( 'pmpro_after_change_membership_level', 'tclas_pmpro_after_change_membership_level', 10, 2 );

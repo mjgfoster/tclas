@@ -33,6 +33,7 @@ $is_member    = tclas_is_member();
 <!-- ── Page header ──────────────────────────────────────────────────────── -->
 <div class="tclas-page-header tclas-page-header--ardoise">
 	<div class="container-tclas">
+		<?php tclas_breadcrumb( '', true ); ?>
 		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Find your people.', 'tclas' ); ?></h1>
 	</div>

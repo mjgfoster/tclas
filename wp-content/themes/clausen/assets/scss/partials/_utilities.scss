@@ -178,8 +178,44 @@
 
 // ── Print ─────────────────────────────────────────────────────────────────
 @media print {
-	.tclas-header,.tclas-footer,.tclas-hub-sidebar,.skip-link,.tclas-renewal-banner { display: none !important; }
+	// Hide chrome & interactive elements
+	.tclas-header,
+	.tclas-footer,
+	.tclas-hub-sidebar,
+	.tclas-hub-sidebar-backdrop,
+	.tclas-hub-mobile-toggle,
+	.skip-link,
+	.tclas-renewal-banner,
+	.tclas-renew-banner,
+	.tclas-nl-subnav,
+	.tclas-map-wrapper,
+	.tclas-ancestor-map,
+	.tclas-join-bar,
+	.tclas-hero,
+	.tclas-event-atc,
+	.btn { display: none !important; }
+
 	body { background: #fff; color: #000; }
 	a { color: #000; }
 	a[href]::after { content: ' (' attr(href) ')'; font-size: .8em; }
+
+	// Flatten multi-column layouts to single column
+	.tclas-event-layout,
+	.tclas-about-layout,
+	.tclas-commune-layout,
+	.tclas-story-layout,
+	.tclas-hub-grid,
+	.tclas-events__grid,
+	.tclas-event-grid { display: block !important; }
+
+	// Ensure images don't overflow
+	img { max-width: 100% !important; height: auto !important; }
+
+	// No backgrounds on sections
+	section, .tclas-section, .tclas-page-header { background: none !important; color: #000 !important; }
+	.tclas-page-header__title { color: #000 !important; }
+	.tclas-eyebrow { color: #555 !important; }
+
+	// Avoid page breaks inside cards and articles
+	.tclas-event-card, .tclas-hub-card, .tclas-board-card, article { break-inside: avoid; }
 }

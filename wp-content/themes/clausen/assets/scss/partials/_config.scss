@@ -4,6 +4,8 @@
 
 // ── CSS custom properties (runtime tokens) ────────────────────────────────
 :root {
+	color-scheme: light; // Prevent system dark mode from inverting form controls & scrollbars
+
 	// ── Brand blues ─────────────────────────────────────────────────────
 	--c-ardoise:      #2B6282;   // Vibrant Ardennes Blue — brand primary, footer, dark sections
 	--c-ardoise-dk:   #1E4A66;   // Deeper blue — hover states, dropdown backgrounds
