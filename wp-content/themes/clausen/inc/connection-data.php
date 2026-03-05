@@ -594,10 +594,6 @@ function tclas_surname_clusters(): array {
 			'label'    => 'Simon',
 			'variants' => [ 'simon', 'symon', 'simons' ],
 		],
-		'hansen'     => [
-			'label'    => 'Hansen',
-			'variants' => [ 'hansen', 'hanson' ],
-		],
 		'bissen'     => [
 			'label'    => 'Bissen',
 			'variants' => [ 'bissen', 'bison' ],
@@ -658,10 +654,6 @@ function tclas_surname_clusters(): array {
 		'thill'      => [
 			'label'    => 'Thill',
 			'variants' => [ 'thill', 'thil', 'till' ],
-		],
-		'welter'     => [
-			'label'    => 'Welter',
-			'variants' => [ 'welter', 'walter', 'waltert' ],
 		],
 		'weiss'      => [
 			'label'    => 'Weiss',

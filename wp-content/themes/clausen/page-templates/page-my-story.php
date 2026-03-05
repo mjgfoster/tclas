@@ -251,6 +251,7 @@ $profile_photo_url = $profile_photo_id
 							<p class="tclas-story-hint tclas-story-hint--mt-lg">
 								<?php esc_html_e( "A short introduction for other members — your Luxembourg connection, what you're researching, or what you love about Lëtzebuergesch culture. Max 800 characters.", 'tclas' ); ?>
 							</p>
+							<label for="tclas-bio-field" class="sr-only"><?php esc_html_e( 'Bio', 'tclas' ); ?></label>
 							<textarea
 								name="tclas_bio"
 								class="tclas-story-input"
@@ -597,8 +598,8 @@ $profile_photo_url = $profile_photo_id
 							</p>
 
 							<div class="tclas-story-privacy-row">
-								<label class="tclas-story-privacy-label"><?php esc_html_e( 'Who can see my profile?', 'tclas' ); ?></label>
-								<div class="tclas-story-radio-group" role="radiogroup">
+								<label class="tclas-story-privacy-label" id="visibility-label"><?php esc_html_e( 'Who can see my profile?', 'tclas' ); ?></label>
+								<div class="tclas-story-radio-group" role="radiogroup" aria-labelledby="visibility-label">
 									<?php
 									$vis_options = [
 										'members' => __( 'All members', 'tclas' ),

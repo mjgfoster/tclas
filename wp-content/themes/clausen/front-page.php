@@ -55,10 +55,10 @@ get_header();
 </section>
 
 <!-- ── 2. MISSION ───────────────────────────────────────────────────────── -->
-<section class="tclas-mission" id="about">
+<section class="tclas-mission" id="about" aria-labelledby="about-heading">
 	<div class="container-tclas container--narrow">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'About TCLAS', 'tclas' ); ?></span>
-		<h2><?php esc_html_e( 'Who we are', 'tclas' ); ?></h2>
+		<h2 id="about-heading"><?php esc_html_e( 'Who we are', 'tclas' ); ?></h2>
 		<p>TCLAS&mdash;the Twin Cities Luxembourg American Society&mdash;is a group based in the Minneapolis&ndash;Saint Paul, Minnesota, metro that brings together Americans of Luxembourgish descent, dual citizens of Luxembourg and the United States, and expatriate Luxembourgers living in the Upper Midwest.</p>
 		<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-ardoise">
 			<?php esc_html_e( 'Learn more', 'tclas' ); ?>
@@ -209,10 +209,10 @@ foreach ( $_nl_posts as $_nlp ) {
 <?php endif; ?>
 
 <!-- ── 4. CITIZENSHIP CTA ────────────────────────────────────────────────── -->
-<section class="tclas-quiz-cta">
+<section class="tclas-quiz-cta" aria-labelledby="quiz-cta-heading">
 	<div class="container-tclas container--narrow">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
-		<h2><?php esc_html_e( 'Think you might qualify?', 'tclas' ); ?></h2>
+		<h2 id="quiz-cta-heading"><?php esc_html_e( 'Think you might qualify?', 'tclas' ); ?></h2>
 		<p>Luxembourg recognizes citizenship through ancestry going back multiple generations. Our eligibility quiz walks you through the criteria for Articles 7, 23, and 7+23&mdash;in plain English.</p>
 		<a href="<?php echo esc_url( home_url( '/citizenship/' ) ); ?>" class="btn btn-primary btn-lg">
 			<?php esc_html_e( 'Check your eligibility', 'tclas' ); ?>
@@ -222,9 +222,9 @@ foreach ( $_nl_posts as $_nlp ) {
 
 <!-- ── 5. JOIN BAR ───────────────────────────────────────────────────────── -->
 <?php if ( ! tclas_is_member() ) : ?>
-<section class="tclas-join-bar">
+<section class="tclas-join-bar" aria-labelledby="join-bar-heading">
 	<div class="container-tclas">
-		<h2><?php esc_html_e( 'Join the community', 'tclas' ); ?></h2>
+		<h2 id="join-bar-heading"><?php esc_html_e( 'Join the community', 'tclas' ); ?></h2>
 		<div class="tclas-join-bar__actions">
 			<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-secondary btn-lg">
 				<?php esc_html_e( 'Become a member', 'tclas' ); ?>

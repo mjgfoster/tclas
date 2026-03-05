@@ -122,7 +122,7 @@ foreach ( $all_users as $u ) {
 				<?php endif; ?>
 
 				<div style="margin-top:1.5rem">
-					<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>" class="btn btn-sm btn-outline-ardoise">
+					<a href="<?php echo esc_url( home_url( '/ancestry/' ) ); ?>" class="btn btn-sm btn-outline-ardoise">
 						<?php esc_html_e( '← View all communes on map', 'tclas' ); ?>
 					</a>
 				</div>
