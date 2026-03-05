@@ -190,22 +190,30 @@ function tclas_render_connections_panel(): void {
 							<?php echo tclas_connection_sentence( $user_id, (int) $other_id, $conn ); ?>
 						</p>
 
-						<!-- Shared data pills -->
-						<?php if ( ! empty( $conn['shared_communes'] ) ) : ?>
+						<!-- Shared data pills (three-tier) -->
+						<?php if ( ! empty( $conn['paired_matches'] ) ) : ?>
 							<div class="tclas-conn-card__pills">
-								<?php foreach ( $conn['shared_communes'] as $slug ) :
-									$communes = tclas_commune_aliases();
-									$label    = $communes[ $slug ]['label'] ?? ucwords( str_replace( '-', ' ', $slug ) );
+								<?php foreach ( $conn['paired_matches'] as $pm ) :
+									$c_label = tclas_display_commune( $pm['commune'], $user_id );
+									$s_label = tclas_display_surname( $pm['surname'], $user_id );
+									?>
+									<span class="tclas-conn-pill tclas-conn-pill--paired">🏛👤 <?php echo esc_html( $s_label . ' — ' . $c_label ); ?></span>
+								<?php endforeach; ?>
+							</div>
+						<?php endif; ?>
+						<?php if ( ! empty( $conn['commune_only'] ) ) : ?>
+							<div class="tclas-conn-card__pills">
+								<?php foreach ( $conn['commune_only'] as $slug ) :
+									$label = tclas_display_commune( $slug, $user_id );
 									?>
 									<span class="tclas-conn-pill tclas-conn-pill--commune">🏛 <?php echo esc_html( $label ); ?></span>
 								<?php endforeach; ?>
 							</div>
 						<?php endif; ?>
-						<?php if ( ! empty( $conn['shared_surnames'] ) ) : ?>
+						<?php if ( ! empty( $conn['surname_only'] ) ) : ?>
 							<div class="tclas-conn-card__pills">
-								<?php foreach ( $conn['shared_surnames'] as $head ) :
-									$clusters = tclas_surname_clusters();
-									$label    = $clusters[ $head ]['label'] ?? ucfirst( $head );
+								<?php foreach ( $conn['surname_only'] as $head ) :
+									$label = tclas_display_surname( $head, $user_id );
 									?>
 									<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $label ); ?></span>
 								<?php endforeach; ?>

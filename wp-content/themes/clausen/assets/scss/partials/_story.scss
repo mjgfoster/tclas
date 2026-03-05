@@ -122,6 +122,49 @@
 .tclas-story-tip-box ul{ font-size: .82rem; color: var(--c-muted); padding-left: 1.2rem; margin: 0; }
 .tclas-story-tip-box li{ margin-bottom: .35rem; }
 
+// ── Lineage cards ────────────────────────────────────────────────────
+.tclas-lineage-list { display: flex; flex-direction: column; gap: .75rem; margin-bottom: .75rem; }
+
+.tclas-lineage-card {
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	padding: .75rem;
+	background: #fff;
+	transition: opacity .2s;
+}
+
+.tclas-lineage-card__header {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	margin-bottom: .5rem;
+
+	.tclas-lineage-commune-input { font-weight: 700; }
+}
+
+.tclas-lineage-card__surnames {
+	display: flex;
+	flex-direction: column;
+	gap: .35rem;
+	padding-left: 1rem;
+	border-left: 2px solid var(--c-or-pale);
+	margin-bottom: .35rem;
+}
+
+.tclas-lineage-add-surname {
+	font-size: .78rem;
+	color: var(--c-muted);
+	padding: .1rem 0;
+	margin-left: 1rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: 600;
+
+	&:hover { color: var(--c-crimson); }
+}
+
 // ── Bio counter + social fields ───────────────────────────────────────────
 .tclas-bio-counter          { text-align: right; font-size: .78rem; color: var(--c-muted); }
 .tclas-story-social-group   { margin-bottom: .85rem; }

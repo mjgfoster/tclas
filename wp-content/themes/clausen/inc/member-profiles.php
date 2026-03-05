@@ -199,17 +199,23 @@ function tclas_get_profile_data( int $user_id ): array {
 		? (bool) get_user_meta( $user_id, '_tclas_has_children', true )
 		: false;
 
-	// Ancestry (separate field privacy check).
-	$data['communes_raw'] = tclas_profile_field_visible( $user_id, 'ancestry' )
-		? (array) ( get_user_meta( $user_id, '_tclas_communes_raw', true ) ?: [] )
+	// Ancestry — lineage model (separate field privacy check).
+	$ancestry_visible = tclas_profile_field_visible( $user_id, 'ancestry' );
+	$data['lineages'] = $ancestry_visible
+		? (array) ( get_user_meta( $user_id, '_tclas_lineages', true ) ?: [] )
 		: [];
-	$data['surnames_raw'] = tclas_profile_field_visible( $user_id, 'ancestry' )
-		? (array) ( get_user_meta( $user_id, '_tclas_surnames_raw', true ) ?: [] )
+	$data['unassigned_surnames_raw'] = $ancestry_visible
+		? (array) ( get_user_meta( $user_id, '_tclas_unassigned_surnames_raw', true ) ?: [] )
 		: [];
 
+	// Legacy keys (backward compat for any remaining template code).
+	$data['communes_raw'] = $ancestry_visible
+		? array_column( $data['lineages'], 'commune_raw' )
+		: [];
+	$data['surnames_raw'] = []; // No longer a flat list.
+
 	// Has-ancestors indicator: always computed (based on normalized slugs, independent of privacy).
-	// This shows on directory cards even when ancestry field privacy is 'hidden'.
-	$communes_norm        = (array) ( get_user_meta( $user_id, '_tclas_communes_norm', true ) ?: [] );
+	$communes_norm         = (array) ( get_user_meta( $user_id, '_tclas_communes_norm', true ) ?: [] );
 	$data['has_ancestors'] = ! empty( array_filter(
 		$communes_norm,
 		fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )
