@@ -104,6 +104,60 @@
     } else {
       map.setView([49.75, 6.10], 9);
     }
+
+    // ── List view toggle ──────────────────────────────────────────────────
+    var toggleBtn = document.getElementById('tclas-map-view-toggle');
+    var listEl    = document.getElementById('tclas-map-list');
+    var listBody  = document.getElementById('tclas-map-list-body');
+
+    if (toggleBtn && listEl && listBody) {
+      // Build table rows, sorted by count descending
+      var sorted = keys.slice().sort(function (a, b) {
+        return communes[b].count - communes[a].count;
+      });
+
+      var profileBase = isPublic ? joinUrl : (data.communeBaseUrl || '/commune/');
+
+      sorted.forEach(function (slug) {
+        var c = communes[slug];
+        var tr = document.createElement('tr');
+        var nameCell = document.createElement('td');
+        if (isPublic) {
+          nameCell.textContent = c.name;
+        } else {
+          var link = document.createElement('a');
+          link.href = profileBase + slug + '/';
+          link.textContent = c.name;
+          nameCell.appendChild(link);
+        }
+        var cantonCell = document.createElement('td');
+        cantonCell.textContent = c.canton;
+        var countCell = document.createElement('td');
+        countCell.textContent = c.count;
+        tr.appendChild(nameCell);
+        tr.appendChild(cantonCell);
+        tr.appendChild(countCell);
+        listBody.appendChild(tr);
+      });
+
+      toggleBtn.addEventListener('click', function () {
+        var showing = toggleBtn.getAttribute('aria-pressed') === 'true';
+        if (showing) {
+          // Switch back to map
+          el.hidden = false;
+          listEl.hidden = true;
+          toggleBtn.setAttribute('aria-pressed', 'false');
+          toggleBtn.querySelector('span').textContent = 'View as list';
+          map.invalidateSize();
+        } else {
+          // Switch to list
+          el.hidden = true;
+          listEl.hidden = false;
+          toggleBtn.setAttribute('aria-pressed', 'true');
+          toggleBtn.querySelector('span').textContent = 'View as map';
+        }
+      });
+    }
   });
 
   // Minimal HTML-escape helper (Leaflet.Util.escapeHtml may not exist in all builds)

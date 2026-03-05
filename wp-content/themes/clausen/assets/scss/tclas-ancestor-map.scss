@@ -94,6 +94,76 @@
 	a { color: var(--c-crimson, #E31E26); text-decoration: underline; }
 }
 
+// ── Toolbar ───────────────────────────────────────────────────────────────
+.tclas-map-toolbar {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: .5rem;
+}
+
+.tclas-map-view-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+	background: none;
+	border: 1px solid var(--c-border, #ddd);
+	border-radius: var(--radius, 8px);
+	padding: .35rem .75rem;
+	font-size: .8rem;
+	font-weight: 600;
+	color: var(--c-ardoise, #2B6282);
+	cursor: pointer;
+	transition: background .15s, border-color .15s;
+	font-family: inherit;
+
+	&:hover { background: var(--c-or-pale, #FAF9F6); border-color: var(--c-ardoise, #2B6282); }
+	&[aria-pressed="true"] { background: var(--c-ardoise, #2B6282); color: #fff; border-color: var(--c-ardoise, #2B6282); }
+}
+
+// ── List view ─────────────────────────────────────────────────────────────
+.tclas-map-list {
+	border: 1px solid var(--c-border, #ddd);
+	border-radius: var(--radius, 8px);
+	overflow: hidden;
+}
+
+.tclas-map-list__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: .88rem;
+
+	th {
+		background: var(--c-or-pale, #FAF9F6);
+		font-weight: 700;
+		font-size: .78rem;
+		text-transform: uppercase;
+		letter-spacing: .04em;
+		color: var(--c-muted, #777);
+		text-align: left;
+		padding: .6rem .75rem;
+		border-bottom: 1px solid var(--c-border, #ddd);
+	}
+
+	td {
+		padding: .5rem .75rem;
+		border-bottom: 1px solid rgba(0,0,0,.05);
+		vertical-align: middle;
+	}
+
+	// Members count column — right-align
+	th:last-child, td:last-child { text-align: right; }
+
+	tr:last-child td { border-bottom: none; }
+
+	a {
+		color: var(--c-ardoise, #2B6282);
+		text-decoration: none;
+		font-weight: 600;
+
+		&:hover { text-decoration: underline; }
+	}
+}
+
 // ── Responsive ────────────────────────────────────────────────────────────
 @media (max-width: 640px) {
 	.tclas-ancestor-map { height: 340px; }

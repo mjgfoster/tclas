@@ -39,8 +39,8 @@ function tclas_commune_aliases(): array {
 	$data = [
 
 		// ── Major cities / canton seats ────────────────────────────────
-		'luxembourg-city'    => [
-			'label'   => 'Luxembourg City',
+		'luxembourg'         => [
+			'label'   => 'Luxembourg',
 			'aliases' => [
 				'luxembourg', 'luxembourg city', 'luxembourg-ville',
 				'luxembourg ville', 'letzebuerg', 'luzembuerg',
@@ -115,9 +115,9 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Ermsdorf',
 			'aliases' => [ 'ermsdorf' ],
 		],
-		'feulen'             => [
-			'label'   => 'Feulen',
-			'aliases' => [ 'feulen', 'feelen' ],
+		'niederfeulen'       => [
+			'label'   => 'Niederfeulen',
+			'aliases' => [ 'feulen', 'feelen', 'niederfeulen' ],
 		],
 		'mertzig'            => [
 			'label'   => 'Mertzig',
@@ -149,12 +149,12 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Consthum',
 			'aliases' => [ 'consthum' ],
 		],
-		'kiischpelt'         => [
-			'label'   => 'Kiischpelt',
-			'aliases' => [ 'kiischpelt', 'kischpelt' ],
+		'kautenbach'         => [
+			'label'   => 'Kautenbach',
+			'aliases' => [ 'kiischpelt', 'kischpelt', 'kautenbach' ],
 		],
-		'parc-hosingen'      => [
-			'label'   => 'Parc Hosingen',
+		'hosingen'           => [
+			'label'   => 'Hosingen',
 			'aliases' => [ 'parc hosingen', 'hosingen' ],
 		],
 		'putscheid'          => [
@@ -227,9 +227,9 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Mertert',
 			'aliases' => [ 'mertert', 'maertert' ],
 		],
-		'rosport-mompach'    => [
-			'label'   => 'Rosport-Mompach',
-			'aliases' => [ 'rosport', 'mompach', 'rosport-mompach', 'rosport mompach' ],
+		'rosport'            => [
+			'label'   => 'Rosport',
+			'aliases' => [ 'rosport', 'rosport-mompach', 'rosport mompach' ],
 		],
 		'stadtbredimus'      => [
 			'label'   => 'Stadtbredimus',
@@ -257,13 +257,13 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Bissen',
 			'aliases' => [ 'bissen' ],
 		],
-		'fischbach'          => [
+		'fischbach-mersch'   => [
 			'label'   => 'Fischbach',
 			'aliases' => [ 'fischbach', 'feschbach' ],
 		],
-		'helperknapp'        => [
-			'label'   => 'Helperknapp',
-			'aliases' => [ 'helperknapp' ],
+		'tuntange'           => [
+			'label'   => 'Tuntange',
+			'aliases' => [ 'helperknapp', 'tuntange' ],
 		],
 		'lintgen'            => [
 			'label'   => 'Lintgen',
@@ -374,7 +374,7 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Boulaide',
 			'aliases' => [ 'boulaide', 'bauschelt', 'buschelt' ],
 		],
-		'eschweiler'         => [
+		'eschweiler-wiltz'   => [
 			'label'   => 'Eschweiler',
 			'aliases' => [ 'eschweiler' ],
 		],
@@ -382,19 +382,19 @@ function tclas_commune_aliases(): array {
 			'label'   => 'Grosbous',
 			'aliases' => [ 'grosbous', 'groussbus' ],
 		],
-		'preizerdaul'        => [
-			'label'   => 'Préizerdaul',
-			'aliases' => [ 'preizerdaul' ],
+		'pratz'              => [
+			'label'   => 'Pratz',
+			'aliases' => [ 'preizerdaul', 'pratz' ],
 		],
 		'rambrouch'          => [
 			'label'   => 'Rambrouch',
 			'aliases' => [ 'rambrouch', 'rambrich' ],
 		],
-		'redange-sur-attert' => [
-			'label'   => 'Redange-sur-Attert',
+		'redange-attert'     => [
+			'label'   => 'Redange/Attert',
 			'aliases' => [
 				'redange', 'redange-sur-attert', 'redange sur attert',
-				'redange-attert', 'redenig',
+				'redange-attert', 'redange/attert', 'redenig',
 			],
 		],
 		'saeul'              => [
@@ -418,11 +418,11 @@ function tclas_commune_aliases(): array {
 				'esch an der sauer', 'esch/sure',
 			],
 		],
-		'lac-de-la-haute-sure' => [
-			'label'   => 'Lac de la Haute-Sûre',
+		'bavigne'            => [
+			'label'   => 'Bavigne',
 			'aliases' => [
 				'lac de la haute sure', 'lac de la haute-sure',
-				'haute-sure', 'hautsauer',
+				'haute-sure', 'hautsauer', 'bavigne',
 			],
 		],
 

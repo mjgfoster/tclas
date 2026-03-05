@@ -94,16 +94,36 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
     ob_start();
     ?>
     <div class="tclas-map-wrapper">
+        <div class="tclas-map-toolbar">
+            <button type="button" class="tclas-map-view-toggle" id="tclas-map-view-toggle"
+                    aria-pressed="false"
+                    aria-label="<?php esc_attr_e( 'View as list', 'tclas' ); ?>">
+                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                <span><?php esc_html_e( 'View as list', 'tclas' ); ?></span>
+            </button>
+        </div>
         <div id="tclas-ancestor-map"
              class="tclas-ancestor-map"
              style="height:<?php echo $height; ?>"
              role="img"
-             aria-label="Map of ancestral communes in Luxembourg"></div>
+             aria-label="<?php esc_attr_e( 'Map of ancestral communes in Luxembourg', 'tclas' ); ?>"></div>
+        <div id="tclas-map-list" class="tclas-map-list" hidden>
+            <table class="tclas-map-list__table" role="table">
+                <thead>
+                    <tr>
+                        <th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
+                        <th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
+                        <th scope="col"><?php esc_html_e( 'Members', 'tclas' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody id="tclas-map-list-body"></tbody>
+            </table>
+        </div>
         <p class="tclas-map-caption">
             <?php if ( $is_public ) : ?>
-                Gold circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.
+                <?php esc_html_e( 'Gold circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.', 'tclas' ); ?>
             <?php else : ?>
-                Circles mark Luxembourg villages where TCLAS members trace their ancestry. Larger circles = more members. Tap or hover for details.
+                <?php esc_html_e( 'Circles mark Luxembourg villages where TCLAS members trace their ancestry. Larger circles = more members. Tap or hover for details.', 'tclas' ); ?>
             <?php endif; ?>
         </p>
     </div>

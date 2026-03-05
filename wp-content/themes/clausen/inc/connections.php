@@ -691,7 +691,8 @@ function tclas_connection_sentence(
  */
 function tclas_schedule_connection_cron(): void {
 	if ( ! wp_next_scheduled( 'tclas_connection_cron' ) ) {
-		wp_schedule_event( strtotime( 'tomorrow 02:00:00' ), 'daily', 'tclas_connection_cron' );
+		$tomorrow_2am = wp_date( 'U', strtotime( 'tomorrow 02:00:00', current_datetime()->getTimestamp() ) );
+		wp_schedule_event( (int) $tomorrow_2am, 'daily', 'tclas_connection_cron' );
 	}
 }
 add_action( 'init', 'tclas_schedule_connection_cron' );

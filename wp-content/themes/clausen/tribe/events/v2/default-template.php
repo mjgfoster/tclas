@@ -81,7 +81,45 @@ if ( is_singular( 'tribe_events' ) ) :
 	$icon_clock = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 	$icon_pin   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 	$icon_lock  = '<svg aria-hidden="true" focusable="false" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+
+	// ── Event JSON-LD structured data ─────────────────────────────────────
+	$start_date_meta = get_post_meta( $eid, '_EventStartDate', true );
+	$end_date_full   = $end_date_meta ?: $start_date_meta;
+	$jsonld = [
+		'@context'    => 'https://schema.org',
+		'@type'       => 'Event',
+		'name'        => get_the_title( $eid ),
+		'startDate'   => $start_date_meta ? date( 'c', strtotime( $start_date_meta ) ) : '',
+		'endDate'     => $end_date_full ? date( 'c', strtotime( $end_date_full ) ) : '',
+		'description' => wp_strip_all_tags( get_the_excerpt( $eid ) ),
+		'url'         => get_permalink( $eid ),
+		'organizer'   => [
+			'@type' => 'Organization',
+			'name'  => 'TCLAS — Twin Cities Luxembourg American Society',
+			'url'   => home_url( '/' ),
+		],
+	];
+	if ( $venue_name ) {
+		$jsonld['location'] = [
+			'@type'   => 'Place',
+			'name'    => $venue_name,
+			'address' => [
+				'@type'           => 'PostalAddress',
+				'streetAddress'   => $venue_addr,
+				'addressLocality' => $venue_city,
+				'addressRegion'   => $venue_state ?: 'MN',
+				'addressCountry'  => $venue_country ?: 'US',
+			],
+		];
+	}
+	if ( $thumb_id ) {
+		$jsonld['image'] = wp_get_attachment_url( $thumb_id );
+	}
+	if ( $reg_url ) {
+		$jsonld['eventAttendanceMode'] = 'https://schema.org/OfflineEventAttendanceMode';
+	}
 	?>
+	<script type="application/ld+json"><?php echo wp_json_encode( $jsonld, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ); ?></script>
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
