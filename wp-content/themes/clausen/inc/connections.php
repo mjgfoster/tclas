@@ -185,12 +185,18 @@ function tclas_save_member_story(
 	$communes_clean = [];
 	$communes_norm  = [];
 	$unresolved     = [];
+	$seen_communes  = []; // track duplicates by normalised form
 
 	foreach ( $communes_raw as $raw ) {
 		$raw = sanitize_text_field( $raw );
 		if ( '' === $raw ) {
 			continue;
 		}
+		$key = mb_strtolower( trim( $raw ) );
+		if ( isset( $seen_communes[ $key ] ) ) {
+			continue; // skip duplicate input
+		}
+		$seen_communes[ $key ] = true;
 		$communes_clean[] = $raw;
 		$slug = tclas_resolve_commune( $raw );
 		if ( $slug ) {
@@ -205,12 +211,18 @@ function tclas_save_member_story(
 	// ── Sanitise and resolve surnames ──────────────────────────────────
 	$surnames_clean = [];
 	$surnames_norm  = [];
+	$seen_surnames  = [];
 
 	foreach ( $surnames_raw as $raw ) {
 		$raw = sanitize_text_field( $raw );
 		if ( '' === $raw ) {
 			continue;
 		}
+		$key = mb_strtolower( trim( $raw ) );
+		if ( isset( $seen_surnames[ $key ] ) ) {
+			continue; // skip duplicate input
+		}
+		$seen_surnames[ $key ] = true;
 		$surnames_clean[] = $raw;
 		$head = tclas_resolve_surname( $raw );
 		if ( $head ) {
