@@ -40,13 +40,13 @@ function tclas_register_ancestor_map_assets(): void {
         'tclas-ancestor-map',
         get_template_directory_uri() . '/assets/css/tclas-ancestor-map.css',
         [ 'leaflet' ],
-        TCLAS_VERSION
+        filemtime( get_template_directory() . '/assets/css/tclas-ancestor-map.css' )
     );
     wp_register_script(
         'tclas-ancestor-map',
         get_template_directory_uri() . '/assets/js/tclas-ancestor-map.js',
         [ 'leaflet' ],
-        TCLAS_VERSION,
+        filemtime( get_template_directory() . '/assets/js/tclas-ancestor-map.js' ),
         true
     );
 }
@@ -123,12 +123,24 @@ function tclas_build_commune_counts(): array {
         return $cached;
     }
 
-    $users = get_users( [
-        'meta_key'     => '_tclas_communes_norm',
-        'meta_compare' => 'EXISTS',
-        'fields'       => 'ids',
-        'number'       => -1,
-    ] );
+    // Only count active PMPro members (not expired/cancelled).
+    global $wpdb;
+    if ( $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}pmpro_memberships_users'" ) ) {
+        $users = $wpdb->get_col(
+            "SELECT DISTINCT mu.user_id
+             FROM {$wpdb->prefix}pmpro_memberships_users mu
+             INNER JOIN {$wpdb->usermeta} um
+               ON um.user_id = mu.user_id AND um.meta_key = '_tclas_communes_norm'
+             WHERE mu.status = 'active'"
+        );
+    } else {
+        $users = get_users( [
+            'meta_key'     => '_tclas_communes_norm',
+            'meta_compare' => 'EXISTS',
+            'fields'       => 'ids',
+            'number'       => -1,
+        ] );
+    }
 
     $counts = [];
 

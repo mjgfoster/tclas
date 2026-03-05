@@ -41,10 +41,9 @@ input[type="email"]::placeholder,
 input[type="search"]::placeholder,
 textarea::placeholder { color: #b0a89e; }
 
-input:focus,select:focus,textarea:focus,.form-control:focus {
+input:focus-visible,select:focus-visible,textarea:focus-visible,.form-control:focus-visible {
 	border-color: var(--c-crimson);
 	box-shadow: 0 0 0 3px rgba(227,30,38,.15);
-	outline: none;
 }
 
 input:disabled,select:disabled,textarea:disabled {

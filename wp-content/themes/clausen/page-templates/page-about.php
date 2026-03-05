@@ -50,7 +50,7 @@ get_header();
 						<div class="tclas-board-card">
 							<?php if ( has_post_thumbnail() ) : ?>
 								<div class="tclas-board-card__photo">
-									<?php the_post_thumbnail( 'tclas-square', [ 'class' => 'tclas-board-card__img' ] ); ?>
+									<?php the_post_thumbnail( 'tclas-square', [ 'class' => 'tclas-board-card__img', 'alt' => get_the_title() ] ); ?>
 								</div>
 							<?php else : ?>
 								<div class="tclas-board-card__photo tclas-illustration-placeholder" aria-hidden="true"></div>

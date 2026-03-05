@@ -19,7 +19,7 @@ function tclas_get_upcoming_events( int $limit = 3 ): array {
 
 	$events = tribe_get_events( [
 		'posts_per_page' => $limit,
-		'start_date'     => date( 'Y-m-d' ),
+		'start_date'     => wp_date( 'Y-m-d' ),
 		'orderby'        => 'event_date',
 		'order'          => 'ASC',
 	] );
@@ -61,7 +61,7 @@ function tclas_render_event_card( WP_Post $event ): void {
 			</div>
 
 			<div class="tclas-event-card__content">
-				<time class="sr-only" datetime="<?php echo esc_attr( date( 'Y-m-d', $start ) ); ?>">
+				<time class="sr-only" datetime="<?php echo esc_attr( wp_date( 'Y-m-d', $start ) ); ?>">
 					<?php echo esc_html( $date_str ); ?>
 				</time>
 
@@ -229,7 +229,7 @@ function tclas_get_featured_event(): ?WP_Post {
 
 	$events = tribe_get_events( [
 		'posts_per_page' => 1,
-		'start_date'     => date( 'Y-m-d' ),
+		'start_date'     => wp_date( 'Y-m-d' ),
 		'orderby'        => 'event_date',
 		'order'          => 'ASC',
 		'meta_key'       => '_tclas_featured_event',

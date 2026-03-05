@@ -67,7 +67,7 @@ get_header();
 	<!-- Featured image -->
 	<?php if ( has_post_thumbnail() ) : ?>
 		<div class="tclas-story__hero">
-			<?php the_post_thumbnail( 'tclas-hero', [ 'class' => 'tclas-story__hero-img', 'loading' => 'eager' ] ); ?>
+			<?php the_post_thumbnail( 'tclas-hero', [ 'class' => 'tclas-story__hero-img', 'loading' => 'eager', 'alt' => get_the_title() ] ); ?>
 		</div>
 	<?php endif; ?>
 

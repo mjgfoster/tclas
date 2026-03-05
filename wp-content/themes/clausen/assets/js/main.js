@@ -64,12 +64,48 @@
     const backdrop  = qs('.tclas-hub-sidebar-backdrop');
     if (!sidebar || !toggle) return;
 
-    function open()  { sidebar.classList.add('is-open');    backdrop && backdrop.classList.add('is-visible'); document.body.style.overflow = 'hidden'; }
-    function close() { sidebar.classList.remove('is-open'); backdrop && backdrop.classList.remove('is-visible'); document.body.style.overflow = ''; }
+    function getFocusable() {
+      return qsa('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])', sidebar);
+    }
+
+    function trapFocus(e) {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    function open() {
+      sidebar.classList.add('is-open');
+      sidebar.setAttribute('role', 'dialog');
+      sidebar.setAttribute('aria-modal', 'true');
+      backdrop && backdrop.classList.add('is-visible');
+      document.body.style.overflow = 'hidden';
+      // Move focus into sidebar
+      var first = getFocusable()[0];
+      if (first) first.focus();
+      sidebar.addEventListener('keydown', trapFocus);
+    }
+
+    function close() {
+      sidebar.classList.remove('is-open');
+      sidebar.removeAttribute('role');
+      sidebar.removeAttribute('aria-modal');
+      backdrop && backdrop.classList.remove('is-visible');
+      document.body.style.overflow = '';
+      sidebar.removeEventListener('keydown', trapFocus);
+      toggle.focus();
+    }
 
     toggle.addEventListener('click', open);
     backdrop && backdrop.addEventListener('click', close);
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && sidebar.classList.contains('is-open')) close(); });
   }
 
   // ── Renew banner dismiss ───────────────────────────────────────────────────

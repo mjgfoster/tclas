@@ -81,7 +81,7 @@
 		}
 	}
 
-	// ── Interaction: pause on hover / focus ────────────────────────────────
+	// ── Interaction: pause on hover / focus / tab visibility ──────────────
 
 	function bindPause() {
 		var hero = document.querySelector( '.tclas-hero' );
@@ -90,6 +90,15 @@
 		hero.addEventListener( 'mouseleave', start );
 		hero.addEventListener( 'focusin',    stop );
 		hero.addEventListener( 'focusout',   start );
+
+		// Pause when tab is hidden (saves cycles, avoids queued transitions).
+		document.addEventListener( 'visibilitychange', function () {
+			if ( document.hidden ) {
+				stop();
+			} else {
+				start();
+			}
+		} );
 	}
 
 	// ── Init ───────────────────────────────────────────────────────────────

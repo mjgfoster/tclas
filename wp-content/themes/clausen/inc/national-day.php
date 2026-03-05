@@ -27,9 +27,9 @@ function tclas_is_national_day_season(): bool {
 	if ( function_exists( 'get_field' ) && get_field( 'national_day_mode', 'option' ) ) {
 		return true;
 	}
-	$now   = current_time( 'timestamp' );
-	$month = (int) date( 'n', $now );
-	$day   = (int) date( 'j', $now );
+	$now   = current_datetime();
+	$month = (int) $now->format( 'n' );
+	$day   = (int) $now->format( 'j' );
 	if ( $month !== 6 ) {
 		return false;
 	}

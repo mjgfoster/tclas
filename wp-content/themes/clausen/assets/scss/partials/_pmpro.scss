@@ -79,17 +79,16 @@
 		transition: border-color 0.2s, box-shadow 0.2s;
 	}
 
-	.pmpro_form_input-text:focus,
-	.pmpro_form_input-email:focus,
-	.pmpro_form_input-url:focus,
-	.pmpro_form_input-password:focus,
-	.pmpro_form_input-search:focus,
-	.pmpro_form_input-select:focus,
-	.pmpro_form_input-number:focus,
-	.pmpro_form_input-textarea:focus {
+	.pmpro_form_input-text:focus-visible,
+	.pmpro_form_input-email:focus-visible,
+	.pmpro_form_input-url:focus-visible,
+	.pmpro_form_input-password:focus-visible,
+	.pmpro_form_input-search:focus-visible,
+	.pmpro_form_input-select:focus-visible,
+	.pmpro_form_input-number:focus-visible,
+	.pmpro_form_input-textarea:focus-visible {
 		border-color: var(--c-ardoise);
 		box-shadow: 0 0 0 3px rgba(43, 98, 130, 0.15);
-		outline: none;
 	}
 
 	.pmpro_form_label {

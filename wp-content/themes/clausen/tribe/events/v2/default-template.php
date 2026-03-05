@@ -102,7 +102,7 @@ if ( is_singular( 'tribe_events' ) ) :
 	<div class="container-tclas">
 		<div class="tclas-event-layout">
 
-			<aside class="tclas-event-sidebar">
+			<aside class="tclas-event-sidebar" aria-label="<?php esc_attr_e( 'Event details', 'tclas' ); ?>">
 				<?php if ( $reg_url ) : ?>
 					<a
 						href="<?php echo esc_url( $reg_url ); ?>"
@@ -168,7 +168,7 @@ if ( is_singular( 'tribe_events' ) ) :
 			<div class="tclas-event-main">
 				<?php if ( $thumb_id ) : ?>
 					<figure class="tclas-event-image">
-						<?php echo get_the_post_thumbnail( $eid, 'large', [ 'class' => 'tclas-event-image__img', 'loading' => 'eager' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo get_the_post_thumbnail( $eid, 'large', [ 'class' => 'tclas-event-image__img', 'loading' => 'eager', 'alt' => get_the_title( $eid ) ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<?php if ( $caption ) : ?>
 							<figcaption class="tclas-event-image__caption"><?php echo esc_html( $caption ); ?></figcaption>
 						<?php endif; ?>
@@ -228,7 +228,7 @@ else :
 
 			<div class="tclas-featured-event__image">
 				<?php if ( $f_img ) : ?>
-					<img src="<?php echo esc_url( $f_img ); ?>" alt="<?php echo esc_attr( $f_title ); ?>">
+					<img src="<?php echo esc_url( $f_img ); ?>" alt="">
 				<?php else : ?>
 					<div class="tclas-featured-event__image-placeholder" aria-hidden="true"></div>
 				<?php endif; ?>

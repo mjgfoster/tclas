@@ -23,7 +23,7 @@ get_header();
 					<?php get_template_part( 'template-parts/content/card', 'post' ); ?>
 				<?php endwhile; ?>
 			</div>
-			<div class="tclas-pagination">
+			<nav class="tclas-pagination" aria-label="<?php esc_attr_e( 'Pagination', 'tclas' ); ?>">
 				<?php
 				echo wp_kses_post( paginate_links( [
 					'type'      => 'list',
@@ -31,7 +31,7 @@ get_header();
 					'next_text' => '&rarr;',
 				] ) );
 				?>
-			</div>
+			</nav>
 		<?php else : ?>
 			<p><?php esc_html_e( 'No posts found.', 'tclas' ); ?></p>
 		<?php endif; ?>

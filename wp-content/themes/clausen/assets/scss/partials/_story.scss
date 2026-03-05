@@ -42,10 +42,9 @@
 	border-radius: var(--radius);
 	transition: border-color .15s;
 
-	&:focus {
+	&:focus-visible {
 		border-color: var(--c-crimson);
 		box-shadow: 0 0 0 3px rgba(227,30,38,.12);
-		outline: none;
 	}
 }
 
@@ -53,8 +52,8 @@
 	background: none;
 	border: 1px solid var(--c-border);
 	color: var(--c-muted);
-	width: 1.8rem;
-	height: 1.8rem;
+	min-width: 44px;
+	min-height: 44px;
 	display: flex;
 	align-items: center;
 	justify-content: center;

@@ -129,11 +129,10 @@
 	font-size: .9rem !important;
 }
 
-#pmpro_checkout input:focus,
-#pmpro_checkout select:focus {
+#pmpro_checkout input:focus-visible,
+#pmpro_checkout select:focus-visible {
 	border-color: var(--c-crimson) !important;
 	box-shadow: 0 0 0 3px rgba(227,30,38,.15) !important;
-	outline: none !important;
 }
 
 // PMPro levels page table

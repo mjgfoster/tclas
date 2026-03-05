@@ -17,7 +17,7 @@ $user = wp_get_current_user();
 	<!-- Sidebar -->
 	<aside class="tclas-hub-sidebar" aria-label="<?php esc_attr_e( 'Member hub navigation', 'tclas' ); ?>">
 		<div class="tclas-hub-sidebar__user">
-			<?php echo get_avatar( $user->ID, 42, '', '', [ 'class' => 'tclas-hub-sidebar__avatar' ] ); ?>
+			<?php echo get_avatar( $user->ID, 42, '', esc_attr( $user->display_name ), [ 'class' => 'tclas-hub-sidebar__avatar' ] ); ?>
 			<div>
 				<p class="tclas-hub-sidebar__name"><?php echo esc_html( $user->display_name ); ?></p>
 				<?php if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) :
