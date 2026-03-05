@@ -222,8 +222,15 @@ function tclas_get_profile_data( int $user_id ): array {
  * Return a lean array of all visible members for the directory, sorted by last name.
  * Only the fields needed for directory cards are fetched — full profile data is
  * loaded on-demand for individual profile views.
+ *
+ * Results are cached in a transient for 1 hour to avoid N+1 query overhead.
  */
 function tclas_get_directory_members(): array {
+	$cached = get_transient( 'tclas_directory_members' );
+	if ( is_array( $cached ) ) {
+		return $cached;
+	}
+
 	if ( ! function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		return [];
 	}
@@ -235,10 +242,49 @@ function tclas_get_directory_members(): array {
 		 WHERE status = 'active'"
 	);
 
+	if ( empty( $ids ) ) {
+		set_transient( 'tclas_directory_members', [], HOUR_IN_SECONDS );
+		return [];
+	}
+
+	// Bulk-load all relevant user meta into WordPress object cache.
+	// This converts N+1 queries per user into a single SQL query.
+	$meta_keys = [
+		'_tclas_visibility', '_tclas_profile_photo', '_tclas_city',
+		'_tclas_bio', '_tclas_communes_norm', '_tclas_founding_member',
+		'_tclas_field_privacy', '_tclas_badge_board', '_tclas_badge_bierger',
+	];
+	$id_placeholders  = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+	$key_placeholders = implode( ',', array_fill( 0, count( $meta_keys ), '%s' ) );
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	$meta_rows = $wpdb->get_results( $wpdb->prepare(
+		"SELECT user_id, meta_key, meta_value
+		 FROM {$wpdb->usermeta}
+		 WHERE user_id IN ({$id_placeholders})
+		   AND meta_key IN ({$key_placeholders})",
+		...array_merge( array_map( 'intval', $ids ), $meta_keys )
+	) );
+
+	// Index meta by user_id → meta_key → meta_value.
+	$meta_index = [];
+	foreach ( $meta_rows as $row ) {
+		$meta_index[ (int) $row->user_id ][ $row->meta_key ] = $row->meta_value;
+	}
+
+	// Bulk-fetch founding member start dates.
+	$startdates = $wpdb->get_results( $wpdb->prepare(
+		"SELECT user_id, MIN(startdate) AS earliest
+		 FROM {$wpdb->prefix}pmpro_memberships_users
+		 WHERE user_id IN ({$id_placeholders}) AND status = 'active'
+		 GROUP BY user_id",
+		...array_map( 'intval', $ids )
+	), OBJECT_K );
+
 	$members = [];
 	foreach ( $ids as $raw_id ) {
-		$id  = (int) $raw_id;
-		$vis = get_user_meta( $id, '_tclas_visibility', true ) ?: 'members';
+		$id   = (int) $raw_id;
+		$meta = $meta_index[ $id ] ?? [];
+		$vis  = $meta['_tclas_visibility'] ?? 'members';
 		if ( 'hidden' === $vis ) {
 			continue;
 		}
@@ -247,24 +293,59 @@ function tclas_get_directory_members(): array {
 			continue;
 		}
 
-		$communes_norm = (array) ( get_user_meta( $id, '_tclas_communes_norm', true ) ?: [] );
+		// Founding member — check flag first, then start date.
+		$is_founding = ! empty( $meta['_tclas_founding_member'] );
+		if ( ! $is_founding && isset( $startdates[ $id ] ) ) {
+			$is_founding = '2026' === date( 'Y', strtotime( $startdates[ $id ]->earliest ) );
+		}
+
+		// Communes.
+		$communes_raw  = $meta['_tclas_communes_norm'] ?? '';
+		$communes_norm = is_array( $communes_raw ) ? $communes_raw : ( maybe_unserialize( $communes_raw ) ?: [] );
+
+		// Field privacy.
+		$privacy_raw = $meta['_tclas_field_privacy'] ?? '';
+		$privacy     = is_array( $privacy_raw ) ? $privacy_raw : ( maybe_unserialize( $privacy_raw ) ?: [] );
+
+		// Badges (inline — avoids calling tclas_get_user_badges per user).
+		$badges = [];
+		if ( $is_founding ) {
+			$badges[] = [ 'key' => 'founding', 'label' => 'Founding Member' ];
+		}
+		if ( ! empty( $meta['_tclas_badge_board'] ) ) {
+			$badges[] = [ 'key' => 'board', 'label' => 'Board Member' ];
+		}
+		if ( ! empty( $meta['_tclas_badge_bierger'] ) ) {
+			$badges[] = [ 'key' => 'bierger', 'label' => 'Bierger' ];
+		}
+
+		// Photo.
+		$photo_id  = (int) ( $meta['_tclas_profile_photo'] ?? 0 );
+		$photo_url = '';
+		if ( $photo_id ) {
+			$photo_url = wp_get_attachment_image_url( $photo_id, 'thumbnail' ) ?: '';
+		}
+		if ( ! $photo_url ) {
+			$photo_url = get_avatar_url( $id, [ 'size' => 150 ] );
+		}
+
 		$members[] = [
 			'user_id'      => $id,
 			'username'     => $user->user_nicename,
 			'display_name' => $user->display_name,
 			'first_name'   => $user->first_name,
 			'last_name'    => $user->last_name,
-			'photo_url'    => tclas_get_profile_photo_url( $id, 'thumbnail' ),
-			'city'         => tclas_profile_field_visible( $id, 'city' )
-			                  ? (string) ( get_user_meta( $id, '_tclas_city', true ) ?: '' )
+			'photo_url'    => $photo_url,
+			'city'         => ( ( $privacy['city'] ?? 'members' ) !== 'hidden' )
+			                  ? (string) ( $meta['_tclas_city'] ?? '' )
 			                  : '',
-			'is_founding'  => tclas_is_founding_member( $id ),
-			'badges'       => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $id ) : [],
+			'is_founding'  => $is_founding,
+			'badges'       => $badges,
 			'has_ancestors'=> ! empty( array_filter(
 				$communes_norm,
 				fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )
 			) ),
-			'has_bio'      => ! empty( get_user_meta( $id, '_tclas_bio', true ) ),
+			'has_bio'      => ! empty( $meta['_tclas_bio'] ?? '' ),
 		];
 	}
 
@@ -277,7 +358,18 @@ function tclas_get_directory_members(): array {
 		return strcmp( strtolower( $a['first_name'] ), strtolower( $b['first_name'] ) );
 	} );
 
+	set_transient( 'tclas_directory_members', $members, HOUR_IN_SECONDS );
 	return $members;
+}
+
+/**
+ * Bust the directory transient when a member updates their profile
+ * or when membership status changes.
+ */
+add_action( 'tclas_member_story_saved', 'tclas_bust_directory_cache' );
+add_action( 'pmpro_after_change_membership_level', 'tclas_bust_directory_cache' );
+function tclas_bust_directory_cache(): void {
+	delete_transient( 'tclas_directory_members' );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -419,14 +511,14 @@ function tclas_enqueue_profile_assets(): void {
 		'tclas-member-profiles',
 		TCLAS_ASSETS . '/css/member-profiles.css',
 		[ 'tclas-main' ],
-		TCLAS_VERSION
+		filemtime( get_template_directory() . '/assets/css/member-profiles.css' )
 	);
 
 	wp_enqueue_script(
 		'tclas-member-profiles',
 		TCLAS_ASSETS . '/js/member-profiles.js',
 		[ 'tclas-main' ],
-		TCLAS_VERSION,
+		filemtime( get_template_directory() . '/assets/js/member-profiles.js' ),
 		true
 	);
 

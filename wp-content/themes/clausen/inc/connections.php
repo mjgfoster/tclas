@@ -317,11 +317,17 @@ function tclas_get_members_with_profiles( int $exclude_user_id = 0 ): array {
 /**
  * Compute (or refresh) connections for a given user and cache results.
  *
+ * Uses a single bulk meta query to avoid N+1 overhead.
+ *
  * @return array Connection objects keyed by matched user ID.
  */
 function tclas_compute_connections( int $user_id ): array {
+	global $wpdb;
+
 	$my_communes = (array) ( get_user_meta( $user_id, '_tclas_communes_norm', true ) ?: [] );
 	$my_surnames = (array) ( get_user_meta( $user_id, '_tclas_surnames_norm', true ) ?: [] );
+	$my_raw_comm = (array) ( get_user_meta( $user_id, '_tclas_communes_raw', true ) ?: [] );
+	$my_raw_surv = (array) ( get_user_meta( $user_id, '_tclas_surnames_raw', true ) ?: [] );
 
 	$connections = [];
 
@@ -331,9 +337,77 @@ function tclas_compute_connections( int $user_id ): array {
 		return [];
 	}
 
-	foreach ( tclas_get_members_with_profiles( $user_id ) as $candidate_id ) {
-		$their_communes = (array) ( get_user_meta( $candidate_id, '_tclas_communes_norm', true ) ?: [] );
-		$their_surnames = (array) ( get_user_meta( $candidate_id, '_tclas_surnames_norm', true ) ?: [] );
+	// Get candidate IDs (active members with completed profiles).
+	// Pull all active PMPro member IDs.
+	if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+		$ids = $wpdb->get_col( $wpdb->prepare(
+			"SELECT DISTINCT user_id
+			 FROM {$wpdb->prefix}pmpro_memberships_users
+			 WHERE status = 'active'
+			   AND user_id != %d",
+			$user_id
+		) );
+	} else {
+		$ids = get_users( [
+			'fields'  => 'ID',
+			'exclude' => [ $user_id ],
+			'number'  => 1000,
+		] );
+	}
+
+	$ids = array_map( 'intval', $ids );
+	if ( empty( $ids ) ) {
+		update_user_meta( $user_id, '_tclas_connections_cache', [] );
+		update_user_meta( $user_id, '_tclas_connections_computed_at', time() );
+		return [];
+	}
+
+	// Bulk-load all relevant meta for candidates in a single query.
+	$meta_keys = [
+		'_tclas_profile_complete', '_tclas_visibility',
+		'_tclas_communes_norm', '_tclas_surnames_norm',
+		'_tclas_communes_raw', '_tclas_surnames_raw',
+	];
+	$id_placeholders  = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+	$key_placeholders = implode( ',', array_fill( 0, count( $meta_keys ), '%s' ) );
+	// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	$meta_rows = $wpdb->get_results( $wpdb->prepare(
+		"SELECT user_id, meta_key, meta_value
+		 FROM {$wpdb->usermeta}
+		 WHERE user_id IN ({$id_placeholders})
+		   AND meta_key IN ({$key_placeholders})",
+		...array_merge( $ids, $meta_keys )
+	) );
+
+	// Index meta by user_id → meta_key → meta_value.
+	$meta_index = [];
+	foreach ( $meta_rows as $row ) {
+		$meta_index[ (int) $row->user_id ][ $row->meta_key ] = $row->meta_value;
+	}
+
+	// Load existing cache once (not per candidate).
+	$existing = get_user_meta( $user_id, '_tclas_connections_cache', true );
+	if ( ! is_array( $existing ) ) {
+		$existing = [];
+	}
+
+	foreach ( $ids as $candidate_id ) {
+		$cmeta = $meta_index[ $candidate_id ] ?? [];
+
+		// Filter: must have complete profile and not be hidden.
+		if ( empty( $cmeta['_tclas_profile_complete'] ) ) {
+			continue;
+		}
+		$vis = $cmeta['_tclas_visibility'] ?? 'members';
+		if ( 'hidden' === $vis ) {
+			continue;
+		}
+
+		// Deserialize commune/surname data.
+		$their_communes = maybe_unserialize( $cmeta['_tclas_communes_norm'] ?? '' );
+		$their_communes = is_array( $their_communes ) ? $their_communes : [];
+		$their_surnames = maybe_unserialize( $cmeta['_tclas_surnames_norm'] ?? '' );
+		$their_surnames = is_array( $their_surnames ) ? $their_surnames : [];
 
 		$shared_comm = array_values( array_intersect( $my_communes, $their_communes ) );
 		$shared_surv = array_values( array_intersect( $my_surnames, $their_surnames ) );
@@ -343,19 +417,24 @@ function tclas_compute_connections( int $user_id ): array {
 		}
 
 		// Preserve existing seen/dismissed state when re-computing.
-		$existing = get_user_meta( $user_id, '_tclas_connections_cache', true );
-		$prev     = is_array( $existing ) ? ( $existing[ $candidate_id ] ?? [] ) : [];
+		$prev = $existing[ $candidate_id ] ?? [];
+
+		// Variant checks — use pre-loaded raw data.
+		$their_raw_comm = maybe_unserialize( $cmeta['_tclas_communes_raw'] ?? '' );
+		$their_raw_comm = is_array( $their_raw_comm ) ? $their_raw_comm : [];
+		$their_raw_surv = maybe_unserialize( $cmeta['_tclas_surnames_raw'] ?? '' );
+		$their_raw_surv = is_array( $their_raw_surv ) ? $their_raw_surv : [];
 
 		$connections[ $candidate_id ] = [
 			'user_id'           => $candidate_id,
-			'shared_communes'   => $shared_comm,  // canonical slugs
-			'shared_surnames'   => $shared_surv,  // canonical cluster heads
+			'shared_communes'   => $shared_comm,
+			'shared_surnames'   => $shared_surv,
 			'score'             => tclas_connection_score( $shared_comm, $shared_surv ),
 			'computed_at'       => time(),
 			'seen'              => $prev['seen']      ?? false,
 			'dismissed'         => $prev['dismissed'] ?? false,
-			'variant_commune'   => tclas_has_variant_commune( $user_id, $candidate_id, $shared_comm ),
-			'variant_surname'   => tclas_has_variant_surname( $user_id, $candidate_id, $shared_surv ),
+			'variant_commune'   => ! empty( $shared_comm ) && $my_raw_comm !== $their_raw_comm,
+			'variant_surname'   => ! empty( $shared_surv ) && $my_raw_surv !== $their_raw_surv,
 		];
 	}
 

@@ -115,20 +115,20 @@ get_header();
 			<div class="tclas-ancestry-resources__col">
 				<h3><?php esc_html_e( 'Luxembourg archives', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Archives nationales de Luxembourg (ANLux)', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'vdai.lu &mdash; civil registration records online', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Portail.lu &mdash; government records portal', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Genealogy Luxembourg (online community)', 'tclas' ); ?></a></li>
+					<li><a href="https://anlux.public.lu/fr/rechercher/genealogie.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Archives nationales de Luxembourg (ANLux)', 'tclas' ); ?></a></li>
+					<li><a href="https://data.matricula-online.eu/en/LU/luxemburg/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Matricula &mdash; parish records online', 'tclas' ); ?></a></li>
+					<li><a href="https://luxembourg.public.lu/en/society-and-culture/population/genealogy.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg.public.lu &mdash; government genealogy guide', 'tclas' ); ?></a></li>
+					<li><a href="https://www.luxroots.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'LuxRoots &mdash; genealogy community', 'tclas' ); ?></a></li>
 				</ul>
 			</div>
 
 			<div class="tclas-ancestry-resources__col">
 				<h3><?php esc_html_e( 'U.S. &amp; Minnesota', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FamilySearch &mdash; free records database', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ancestry.com &mdash; immigration &amp; census records', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; state records', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
+					<li><a href="https://www.familysearch.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FamilySearch &mdash; free records database', 'tclas' ); ?></a></li>
+					<li><a href="https://www.ancestry.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ancestry.com &mdash; immigration &amp; census records', 'tclas' ); ?></a></li>
+					<li><a href="https://www.mnhs.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; state records', 'tclas' ); ?></a></li>
+					<li><a href="https://www.exploreminnesota.com/profile/rollingstone-luxembourg-heritage-museum/2655" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
 				</ul>
 			</div>
 

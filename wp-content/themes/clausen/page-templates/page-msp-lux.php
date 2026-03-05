@@ -262,18 +262,18 @@ get_header();
 			<div class="tclas-msp-resources__col">
 				<h3><?php esc_html_e( 'Luxembourg', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg for Finance', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Visit Luxembourg', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg American Chamber of Commerce', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Portail.lu &mdash; citizenship &amp; residency', 'tclas' ); ?></a></li>
+					<li><a href="https://www.luxembourgforfinance.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg for Finance', 'tclas' ); ?></a></li>
+					<li><a href="https://www.visitluxembourg.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Visit Luxembourg', 'tclas' ); ?></a></li>
+					<li><a href="https://www.laccnyc.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg American Chamber of Commerce', 'tclas' ); ?></a></li>
+					<li><a href="https://guichet.public.lu/en.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Guichet.lu &mdash; citizenship &amp; residency', 'tclas' ); ?></a></li>
 				</ul>
 			</div>
 
 			<div class="tclas-msp-resources__col">
 				<h3><?php esc_html_e( 'Minnesota', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
-					<li><a href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; immigration records', 'tclas' ); ?></a></li>
+					<li><a href="https://www.exploreminnesota.com/profile/rollingstone-luxembourg-heritage-museum/2655" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
+					<li><a href="https://www.mnhs.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; immigration records', 'tclas' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/ancestry/' ) ); ?>"><?php esc_html_e( 'TCLAS ancestry resources', 'tclas' ); ?></a></li>
 				</ul>
 			</div>

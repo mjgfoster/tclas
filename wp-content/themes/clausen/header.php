@@ -9,8 +9,6 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<a class="tclas-skip-link" href="#main-content"><?php esc_html_e( 'Skip to main content', 'tclas' ); ?></a>
-
 <div id="page">
 
 	<?php

@@ -160,7 +160,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 	<div class="container-tclas">
 		<div class="tclas-nl-subnav__inner">
 			<span class="tclas-nl-subnav__brand" aria-hidden="true">
-				<?php esc_html_e( 'The Loon &amp; The Lion', 'tclas' ); ?>
+				<?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?>
 			</span>
 			<ul class="tclas-nl-subnav__links" role="list">
 				<li>

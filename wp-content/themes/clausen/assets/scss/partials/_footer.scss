@@ -38,10 +38,10 @@
 }
 
 .tclas-footer__brand-logo { margin-bottom: .75rem; img { max-width: 64px; height: auto; display: block; } }
-.tclas-footer__brand-tagline { display: block; font-size: .8rem; font-style: italic; color: rgba(235,245,252,.55); margin-top: .25rem; }
+.tclas-footer__brand-tagline { display: block; font-size: .8rem; font-style: italic; color: rgba(235,245,252,.75); margin-top: .25rem; }
 .tclas-footer__brand-name { font-family: var(--font-serif); font-size: 1rem; font-weight: 700; color: var(--c-or-pale); line-height: 1.2; }
-.tclas-footer__brand-desc { font-size: .82rem; color: rgba(235,245,252,.55); max-width: 30ch; line-height: 1.55; margin-top: .5rem; }
-.tclas-footer__motto { font-size: .75rem; font-style: italic; color: rgba(235,245,252,.4); margin-top: .5rem; }
+.tclas-footer__brand-desc { font-size: .82rem; color: rgba(235,245,252,.75); max-width: 30ch; line-height: 1.55; margin-top: .5rem; }
+.tclas-footer__motto { font-size: .75rem; font-style: italic; color: rgba(235,245,252,.5); margin-top: .5rem; }
 
 .tclas-footer__col-title {
 	font-family: var(--font-sans);
@@ -62,7 +62,7 @@
 
 	a {
 		font-size: .82rem;
-		color: rgba(235,245,252,.65);
+		color: rgba(235,245,252,.78);
 		text-decoration: none;
 		transition: color .15s;
 
@@ -72,7 +72,7 @@
 
 .tclas-footer__newsletter {
 	// Description paragraphs (outside the form itself)
-	> p { font-size: .82rem; color: rgba(235,245,252,.65); margin-bottom: .75rem; max-width: none; line-height: 1.5; }
+	> p { font-size: .82rem; color: rgba(235,245,252,.78); margin-bottom: .75rem; max-width: none; line-height: 1.5; }
 
 	// ── Inline layout: works for both .form-row and MC4WP's .mc4wp-form-fields ──
 	.form-row,
@@ -96,12 +96,11 @@
 		color: var(--c-or-pale);
 		font-size: .82rem;
 		padding: .5rem .75rem;
-		outline: none;
 		font-family: var(--font-sans);
 		min-width: 0; // prevents flex overflow
 
 		&::placeholder { color: rgba(235,245,252,.35); }
-		&:focus { border-color: var(--c-gold); background: rgba(255,255,255,.12); }
+		&:focus-visible { border-color: var(--c-gold); background: rgba(255,255,255,.12); }
 	}
 
 	// Target both .btn class and MC4WP's native submit input
@@ -128,7 +127,7 @@
 	border-top: 1px solid rgba(235,245,252,.08);
 	padding: 1.1rem 0;
 	font-size: .75rem;
-	color: rgba(235,245,252,.38);
+	color: rgba(235,245,252,.6);
 
 	.container-tclas {
 		display: flex;
@@ -139,7 +138,7 @@
 	}
 
 	a {
-		color: rgba(235,245,252,.45);
+		color: rgba(235,245,252,.68);
 		text-decoration: none;
 
 		&:hover { color: var(--c-or-pale); text-decoration: underline; }

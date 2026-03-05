@@ -122,6 +122,11 @@
 	cursor: pointer;
 	padding: .1rem .35rem;
 	line-height: 1;
+	min-width: 44px;
+	min-height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	transition: color .12s;
 
 	&:hover { color: var(--c-crimson); }
