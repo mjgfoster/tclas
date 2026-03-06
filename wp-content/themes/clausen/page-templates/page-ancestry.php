@@ -28,9 +28,16 @@ get_header();
 <!-- ── Intro ─────────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-ancestry-intro">
 	<div class="container-tclas container--narrow">
+		<?php
+		$anc_lede = function_exists( 'get_field' ) ? get_field( 'anc_lede' ) : '';
+		if ( $anc_lede ) {
+			echo '<div class="tclas-ancestry-lede">' . wp_kses_post( $anc_lede ) . '</div>';
+		} else {
+		?>
 		<p class="tclas-ancestry-lede">
 			<?php esc_html_e( 'Tens of thousands of Luxembourgers settled in Minnesota between the 1840s and early 1900s. If your family is among them, the records are out there &mdash; and more accessible than you might think.', 'tclas' ); ?>
 		</p>
+		<?php } ?>
 	</div>
 </section>
 
@@ -42,6 +49,17 @@ get_header();
 		<h2 id="ancestry-steps-heading"><?php esc_html_e( 'Research your Luxembourg roots', 'tclas' ); ?></h2>
 
 		<ol class="tclas-ancestry-step-list" role="list">
+		<?php if ( function_exists( 'have_rows' ) && have_rows( 'anc_steps' ) ) : ?>
+			<?php $anc_step_n = 0; while ( have_rows( 'anc_steps' ) ) : the_row(); $anc_step_n++; ?>
+			<li class="tclas-ancestry-step">
+				<div class="tclas-ancestry-step__num" aria-hidden="true"><?php echo esc_html( $anc_step_n ); ?></div>
+				<div class="tclas-ancestry-step__content">
+					<h3><?php echo esc_html( get_sub_field( 'step_title' ) ); ?></h3>
+					<div><?php echo wp_kses_post( get_sub_field( 'step_body' ) ); ?></div>
+				</div>
+			</li>
+			<?php endwhile; ?>
+		<?php else : ?>
 
 			<li class="tclas-ancestry-step">
 				<div class="tclas-ancestry-step__num" aria-hidden="true">1</div>
@@ -83,6 +101,7 @@ get_header();
 				</div>
 			</li>
 
+		<?php endif; ?>
 		</ol>
 	</div>
 </section>
@@ -116,20 +135,32 @@ get_header();
 			<div class="tclas-ancestry-resources__col">
 				<h3><?php esc_html_e( 'Luxembourg archives', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'anc_resources_lux' ) ) : ?>
+					<?php while ( have_rows( 'anc_resources_lux' ) ) : the_row(); ?>
+					<li><a href="<?php echo esc_url( get_sub_field( 'res_url' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_sub_field( 'res_label' ) ); ?></a></li>
+					<?php endwhile; ?>
+				<?php else : ?>
 					<li><a href="https://anlux.public.lu/fr/rechercher/genealogie.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Archives nationales de Luxembourg (ANLux)', 'tclas' ); ?></a></li>
-					<li><a href="https://data.matricula-online.eu/en/LU/luxemburg/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Matricula &mdash; parish records online', 'tclas' ); ?></a></li>
-					<li><a href="https://luxembourg.public.lu/en/society-and-culture/population/genealogy.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg.public.lu &mdash; government genealogy guide', 'tclas' ); ?></a></li>
-					<li><a href="https://www.luxroots.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'LuxRoots &mdash; genealogy community', 'tclas' ); ?></a></li>
+					<li><a href="https://data.matricula-online.eu/en/LU/luxemburg/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Matricula — parish records online', 'tclas' ); ?></a></li>
+					<li><a href="https://luxembourg.public.lu/en/society-and-culture/population/genealogy.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg.public.lu — government genealogy guide', 'tclas' ); ?></a></li>
+					<li><a href="https://www.luxroots.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'LuxRoots — genealogy community', 'tclas' ); ?></a></li>
+				<?php endif; ?>
 				</ul>
 			</div>
 
 			<div class="tclas-ancestry-resources__col">
 				<h3><?php esc_html_e( 'U.S. &amp; Minnesota', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
-					<li><a href="https://www.familysearch.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FamilySearch &mdash; free records database', 'tclas' ); ?></a></li>
-					<li><a href="https://www.ancestry.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ancestry.com &mdash; immigration &amp; census records', 'tclas' ); ?></a></li>
-					<li><a href="https://www.mnhs.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; state records', 'tclas' ); ?></a></li>
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'anc_resources_us' ) ) : ?>
+					<?php while ( have_rows( 'anc_resources_us' ) ) : the_row(); ?>
+					<li><a href="<?php echo esc_url( get_sub_field( 'res_url' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_sub_field( 'res_label' ) ); ?></a></li>
+					<?php endwhile; ?>
+				<?php else : ?>
+					<li><a href="https://www.familysearch.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'FamilySearch — free records database', 'tclas' ); ?></a></li>
+					<li><a href="https://www.ancestry.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ancestry.com — immigration & census records', 'tclas' ); ?></a></li>
+					<li><a href="https://www.mnhs.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society — state records', 'tclas' ); ?></a></li>
 					<li><a href="https://www.exploreminnesota.com/profile/rollingstone-luxembourg-heritage-museum/2655" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
+				<?php endif; ?>
 				</ul>
 			</div>
 

@@ -25,7 +25,8 @@ get_header();
 			Minneapolis&ndash;Saint Paul<br>
 			<span class="tclas-msp-header__meets"><?php esc_html_e( 'meets Luxembourg', 'tclas' ); ?></span>
 		</h1>
-		<p class="tclas-msp-header__tagline"><?php esc_html_e( 'Two (relatively) small places that somehow end up leading the pack.', 'tclas' ); ?></p>
+		<?php $msp_tagline = function_exists( 'get_field' ) ? get_field( 'msp_tagline' ) : ''; ?>
+		<p class="tclas-msp-header__tagline"><?php echo esc_html( $msp_tagline ?: 'Two (relatively) small places that somehow end up leading the pack.' ); ?></p>
 	</div>
 </div>
 
@@ -37,26 +38,53 @@ get_header();
 		<h2 id="msp-numbers-heading"><?php esc_html_e( 'Side by side', 'tclas' ); ?></h2>
 
 		<!-- ── City vs City ── -->
+		<?php
+		$msp_city_mn_hdr  = function_exists( 'get_field' ) ? get_field( 'msp_city_mn_header' ) : '';
+		$msp_city_lux_hdr = function_exists( 'get_field' ) ? get_field( 'msp_city_lux_header' ) : '';
+		$msp_city_mn_hdr  = $msp_city_mn_hdr ?: 'Minneapolis';
+		$msp_city_lux_hdr = $msp_city_lux_hdr ?: 'Luxembourg City';
+		?>
 		<div class="tclas-msp-compare">
 			<p class="tclas-msp-compare__label"><?php esc_html_e( 'City to city', 'tclas' ); ?></p>
 
-			<div class="tclas-msp-table" role="table" aria-label="<?php esc_attr_e( 'Minneapolis vs. Luxembourg City', 'tclas' ); ?>">
+			<div class="tclas-msp-table" role="table" aria-label="<?php echo esc_attr( $msp_city_mn_hdr . ' vs. ' . $msp_city_lux_hdr ); ?>">
 
 				<div class="tclas-msp-table__head" role="rowgroup">
 					<div class="tclas-msp-table__row tclas-msp-table__row--head" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__place tclas-msp-table__place--mn" role="columnheader">
-							<?php esc_html_e( 'Minneapolis', 'tclas' ); ?>
+							<?php echo esc_html( $msp_city_mn_hdr ); ?>
 						</div>
 						<div class="tclas-msp-table__cell tclas-msp-table__spacer" role="columnheader">
 							<span class="screen-reader-text"><?php esc_html_e( 'Statistic', 'tclas' ); ?></span>
 						</div>
 						<div class="tclas-msp-table__cell tclas-msp-table__place tclas-msp-table__place--lux" role="columnheader">
-							<?php esc_html_e( 'Luxembourg City', 'tclas' ); ?>
+							<?php echo esc_html( $msp_city_lux_hdr ); ?>
 						</div>
 					</div>
 				</div>
 
 				<div class="tclas-msp-table__body" role="rowgroup">
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_city_stats' ) ) : ?>
+					<?php while ( have_rows( 'msp_city_stats' ) ) : the_row(); ?>
+					<div class="tclas-msp-table__row" role="row">
+						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"></span>
+							<?php if ( $mn_suffix = get_sub_field( 'mn_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $mn_suffix ); ?></span><?php endif; ?>
+							<?php if ( $mn_note = get_sub_field( 'mn_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $mn_note ); ?></span><?php endif; ?>
+						</div>
+						<div class="tclas-msp-table__cell tclas-msp-table__cat" role="rowheader"><?php echo esc_html( get_sub_field( 'stat_label' ) ); ?></div>
+						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--lux" role="cell">
+							<?php if ( get_sub_field( 'lux_is_emoji' ) ) : ?>
+							<span class="tclas-msp-stat__value" aria-hidden="true"><?php echo esc_html( get_sub_field( 'lux_value' ) ); ?></span>
+							<?php else : ?>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"></span>
+							<?php endif; ?>
+							<?php if ( $lux_suffix = get_sub_field( 'lux_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $lux_suffix ); ?></span><?php endif; ?>
+							<?php if ( $lux_note = get_sub_field( 'lux_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $lux_note ); ?></span><?php endif; ?>
+						</div>
+					</div>
+					<?php endwhile; ?>
+				<?php else : ?>
 
 					<div class="tclas-msp-table__row" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
@@ -92,31 +120,59 @@ get_header();
 						</div>
 					</div>
 
+				<?php endif; ?>
 				</div><!-- /.tclas-msp-table__body -->
 			</div><!-- /.tclas-msp-table -->
 		</div><!-- /.tclas-msp-compare -->
 
 		<!-- ── Metro vs Country ── -->
+		<?php
+		$msp_metro_mn_hdr  = function_exists( 'get_field' ) ? get_field( 'msp_metro_mn_header' ) : '';
+		$msp_metro_lux_hdr = function_exists( 'get_field' ) ? get_field( 'msp_metro_lux_header' ) : '';
+		$msp_metro_mn_hdr  = $msp_metro_mn_hdr ?: 'Twin Cities metro';
+		$msp_metro_lux_hdr = $msp_metro_lux_hdr ?: 'Luxembourg';
+		?>
 		<div class="tclas-msp-compare">
 			<p class="tclas-msp-compare__label"><?php esc_html_e( 'Region to region', 'tclas' ); ?></p>
 
-			<div class="tclas-msp-table" role="table" aria-label="<?php esc_attr_e( 'Twin Cities metro vs. Luxembourg', 'tclas' ); ?>">
+			<div class="tclas-msp-table" role="table" aria-label="<?php echo esc_attr( $msp_metro_mn_hdr . ' vs. ' . $msp_metro_lux_hdr ); ?>">
 
 				<div class="tclas-msp-table__head" role="rowgroup">
 					<div class="tclas-msp-table__row tclas-msp-table__row--head" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__place tclas-msp-table__place--mn" role="columnheader">
-							<?php esc_html_e( 'Twin Cities metro', 'tclas' ); ?>
+							<?php echo esc_html( $msp_metro_mn_hdr ); ?>
 						</div>
 						<div class="tclas-msp-table__cell tclas-msp-table__spacer" role="columnheader">
 							<span class="screen-reader-text"><?php esc_html_e( 'Statistic', 'tclas' ); ?></span>
 						</div>
 						<div class="tclas-msp-table__cell tclas-msp-table__place tclas-msp-table__place--lux" role="columnheader">
-							<?php esc_html_e( 'Luxembourg', 'tclas' ); ?>
+							<?php echo esc_html( $msp_metro_lux_hdr ); ?>
 						</div>
 					</div>
 				</div>
 
 				<div class="tclas-msp-table__body" role="rowgroup">
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_metro_stats' ) ) : ?>
+					<?php while ( have_rows( 'msp_metro_stats' ) ) : the_row(); ?>
+					<div class="tclas-msp-table__row" role="row">
+						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"></span>
+							<?php if ( $mn_suffix = get_sub_field( 'mn_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $mn_suffix ); ?></span><?php endif; ?>
+							<?php if ( $mn_note = get_sub_field( 'mn_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $mn_note ); ?></span><?php endif; ?>
+						</div>
+						<div class="tclas-msp-table__cell tclas-msp-table__cat" role="rowheader"><?php echo esc_html( get_sub_field( 'stat_label' ) ); ?></div>
+						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--lux" role="cell">
+							<?php if ( get_sub_field( 'lux_is_emoji' ) ) : ?>
+							<span class="tclas-msp-stat__value" aria-hidden="true"><?php echo esc_html( get_sub_field( 'lux_value' ) ); ?></span>
+							<?php else : ?>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"></span>
+							<?php endif; ?>
+							<?php if ( $lux_suffix = get_sub_field( 'lux_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $lux_suffix ); ?></span><?php endif; ?>
+							<?php if ( $lux_note = get_sub_field( 'lux_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $lux_note ); ?></span><?php endif; ?>
+						</div>
+					</div>
+					<?php endwhile; ?>
+				<?php else : ?>
 
 					<div class="tclas-msp-table__row" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
@@ -155,7 +211,7 @@ get_header();
 					<div class="tclas-msp-table__row" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
 							<span class="tclas-msp-stat__value" data-count="2040" data-format="int">2,040</span>
-							<span class="tclas-msp-stat__note"><?php esc_html_e( 'Luxembourg dual citizens &mdash; more than any other U.S. metro', 'tclas' ); ?></span>
+							<span class="tclas-msp-stat__note"><?php esc_html_e( 'Luxembourg dual citizens — more than any other U.S. metro', 'tclas' ); ?></span>
 						</div>
 						<div class="tclas-msp-table__cell tclas-msp-table__cat" role="rowheader"><?php esc_html_e( 'Our connection', 'tclas' ); ?></div>
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--lux" role="cell">
@@ -164,6 +220,7 @@ get_header();
 						</div>
 					</div>
 
+				<?php endif; ?>
 				</div><!-- /.tclas-msp-table__body -->
 			</div><!-- /.tclas-msp-table -->
 		</div><!-- /.tclas-msp-compare -->
@@ -179,6 +236,17 @@ get_header();
 		<h2 id="msp-connections-heading"><?php esc_html_e( 'The connections', 'tclas' ); ?></h2>
 
 		<ol class="tclas-msp-timeline" role="list">
+		<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_timeline' ) ) : ?>
+			<?php while ( have_rows( 'msp_timeline' ) ) : the_row(); ?>
+			<li class="tclas-msp-timeline__item">
+				<div class="tclas-msp-timeline__year"><?php echo esc_html( get_sub_field( 'tl_year' ) ); ?></div>
+				<div class="tclas-msp-timeline__content">
+					<h3><?php echo esc_html( get_sub_field( 'tl_title' ) ); ?></h3>
+					<?php echo wp_kses_post( get_sub_field( 'tl_body' ) ); ?>
+				</div>
+			</li>
+			<?php endwhile; ?>
+		<?php else : ?>
 
 			<li class="tclas-msp-timeline__item">
 				<div class="tclas-msp-timeline__year">1840s&ndash;1880s</div>
@@ -212,6 +280,7 @@ get_header();
 				</div>
 			</li>
 
+		<?php endif; ?>
 		</ol>
 
 	</div>
@@ -225,6 +294,16 @@ get_header();
 		<h2 id="msp-parallels-heading"><?php esc_html_e( 'Parallel lives', 'tclas' ); ?></h2>
 
 		<div class="tclas-msp-parallels__grid">
+		<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_parallels' ) ) : ?>
+			<?php while ( have_rows( 'msp_parallels' ) ) : the_row(); ?>
+			<div class="tclas-msp-parallel-card">
+				<?php if ( $pl_icon = get_sub_field( 'pl_icon' ) ) : ?>
+				<div class="tclas-msp-parallel-card__icon" aria-hidden="true"><?php echo esc_html( $pl_icon ); ?></div>
+				<?php endif; ?>
+				<div><?php echo wp_kses_post( get_sub_field( 'pl_body' ) ); ?></div>
+			</div>
+			<?php endwhile; ?>
+		<?php else : ?>
 
 			<div class="tclas-msp-parallel-card">
 				<div class="tclas-msp-parallel-card__icon" aria-hidden="true">&#127970;</div>
@@ -246,6 +325,7 @@ get_header();
 				<p>Tim Walz, Minnesota&rsquo;s 41st governor, has Luxembourgish roots. He&rsquo;s in good company: Luxembourg-descended families have shaped Minnesota politics, medicine, and industry for 150 years.</p>
 			</div>
 
+		<?php endif; ?>
 		</div>
 
 	</div>
@@ -263,19 +343,31 @@ get_header();
 			<div class="tclas-msp-resources__col">
 				<h3><?php esc_html_e( 'Luxembourg', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_resources_lux' ) ) : ?>
+					<?php while ( have_rows( 'msp_resources_lux' ) ) : the_row(); ?>
+					<li><a href="<?php echo esc_url( get_sub_field( 'res_url' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_sub_field( 'res_label' ) ); ?></a></li>
+					<?php endwhile; ?>
+				<?php else : ?>
 					<li><a href="https://www.luxembourgforfinance.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg for Finance', 'tclas' ); ?></a></li>
 					<li><a href="https://www.visitluxembourg.com/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Visit Luxembourg', 'tclas' ); ?></a></li>
 					<li><a href="https://www.laccnyc.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg American Chamber of Commerce', 'tclas' ); ?></a></li>
 					<li><a href="https://guichet.public.lu/en.html" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Guichet.lu &mdash; citizenship &amp; residency', 'tclas' ); ?></a></li>
+				<?php endif; ?>
 				</ul>
 			</div>
 
 			<div class="tclas-msp-resources__col">
 				<h3><?php esc_html_e( 'Minnesota', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
+				<?php if ( function_exists( 'have_rows' ) && have_rows( 'msp_resources_mn' ) ) : ?>
+					<?php while ( have_rows( 'msp_resources_mn' ) ) : the_row(); ?>
+					<li><a href="<?php echo esc_url( get_sub_field( 'res_url' ) ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_sub_field( 'res_label' ) ); ?></a></li>
+					<?php endwhile; ?>
+				<?php else : ?>
 					<li><a href="https://www.exploreminnesota.com/profile/rollingstone-luxembourg-heritage-museum/2655" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Luxembourg Heritage Museum, Rollingstone', 'tclas' ); ?></a></li>
 					<li><a href="https://www.mnhs.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Minnesota Historical Society &mdash; immigration records', 'tclas' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/ancestry/' ) ); ?>"><?php esc_html_e( 'TCLAS ancestry resources', 'tclas' ); ?></a></li>
+				<?php endif; ?>
 				</ul>
 			</div>
 

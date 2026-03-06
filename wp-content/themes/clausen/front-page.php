@@ -59,7 +59,14 @@ get_header();
 	<div class="container-tclas container--narrow">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'About TCLAS', 'tclas' ); ?></span>
 		<h2 id="about-heading"><?php esc_html_e( 'Who we are', 'tclas' ); ?></h2>
+		<?php
+		$hp_mission = function_exists( 'get_field' ) ? get_field( 'hp_mission_body' ) : '';
+		if ( $hp_mission ) {
+			echo wp_kses_post( $hp_mission );
+		} else {
+		?>
 		<p>TCLAS&mdash;the Twin Cities Luxembourg American Society&mdash;is a group based in the Minneapolis&ndash;Saint Paul, Minnesota, metro that brings together Americans of Luxembourgish descent, dual citizens of Luxembourg and the United States, and expatriate Luxembourgers living in the Upper Midwest.</p>
+		<?php } ?>
 		<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-ardoise">
 			<?php esc_html_e( 'Learn more', 'tclas' ); ?>
 		</a>
@@ -212,8 +219,16 @@ foreach ( $_nl_posts as $_nlp ) {
 <section class="tclas-quiz-cta" aria-labelledby="quiz-cta-heading">
 	<div class="container-tclas container--narrow">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
-		<h2 id="quiz-cta-heading"><?php esc_html_e( 'Think you might qualify?', 'tclas' ); ?></h2>
+		<?php
+		$hp_cta_heading = function_exists( 'get_field' ) ? get_field( 'hp_cta_heading' ) : '';
+		$hp_cta_body    = function_exists( 'get_field' ) ? get_field( 'hp_cta_body' ) : '';
+		?>
+		<h2 id="quiz-cta-heading"><?php echo esc_html( $hp_cta_heading ?: 'Think you might qualify?' ); ?></h2>
+		<?php if ( $hp_cta_body ) : ?>
+			<?php echo wp_kses_post( $hp_cta_body ); ?>
+		<?php else : ?>
 		<p>Luxembourg recognizes citizenship through ancestry going back multiple generations. Our eligibility quiz walks you through the criteria for Articles 7, 23, and 7+23&mdash;in plain English.</p>
+		<?php endif; ?>
 		<a href="<?php echo esc_url( home_url( '/citizenship/' ) ); ?>" class="btn btn-primary btn-lg">
 			<?php esc_html_e( 'Check your eligibility', 'tclas' ); ?>
 		</a>
