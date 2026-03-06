@@ -21,7 +21,7 @@ get_header();
 	<div class="container-tclas">
 		<?php tclas_breadcrumb(); ?>
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
-		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Do you qualify for Luxembourg citizenship?', 'tclas' ); ?></h1>
+		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 	</div>
 </div>
 

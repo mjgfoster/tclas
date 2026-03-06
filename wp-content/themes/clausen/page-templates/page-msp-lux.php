@@ -21,10 +21,7 @@ get_header();
 	<div class="container-tclas">
 		<?php tclas_breadcrumb( '', true ); ?>
 		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Minnesota · Luxembourg', 'tclas' ); ?></span>
-		<h1 class="tclas-page-header__title tclas-msp-header__title">
-			Minneapolis&ndash;Saint Paul<br>
-			<span class="tclas-msp-header__meets"><?php esc_html_e( 'meets Luxembourg', 'tclas' ); ?></span>
-		</h1>
+		<h1 class="tclas-page-header__title tclas-msp-header__title"><?php the_title(); ?></h1>
 		<?php $msp_tagline = function_exists( 'get_field' ) ? get_field( 'msp_tagline' ) : ''; ?>
 		<p class="tclas-msp-header__tagline"><?php echo esc_html( $msp_tagline ?: 'Two (relatively) small places that somehow end up leading the pack.' ); ?></p>
 	</div>
