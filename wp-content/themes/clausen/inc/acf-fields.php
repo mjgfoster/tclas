@@ -55,12 +55,12 @@ function tclas_register_acf_fields(): void {
 				'instructions'  => 'Light/inverted version of the logo for use on the dark footer background. If left blank, falls back to the site custom logo.',
 			],
 			[
-				'key'   => 'field_footer_mc4wp_form_id',
+				'key'   => 'field_footer_newsletter_form_id',
 				'label' => 'Footer newsletter form ID',
-				'name'  => 'footer_mc4wp_form_id',
+				'name'  => 'footer_newsletter_form_id',
 				'type'  => 'number',
 				'default_value' => 0,
-				'instructions' => 'MC4WP form ID for the footer signup. Set after creating a form in Mailchimp for WP.',
+				'instructions' => 'Brevo form ID for the footer signup. Set after creating a form in the Brevo plugin.',
 			],
 			[
 				'key'   => 'field_referral_base_url',
@@ -70,11 +70,12 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'URL of the referral welcome page, e.g. https://twincities.lu/welcome/. Leave blank to auto-detect.',
 			],
 			[
-				'key'   => 'field_mailchimp_members_list_id',
-				'label' => 'Mailchimp members list ID',
-				'name'  => 'mailchimp_members_list_id',
-				'type'  => 'text',
-				'instructions' => 'Used for auto-subscribe on PMPro activation.',
+				'key'   => 'field_brevo_members_list_id',
+				'label' => 'Brevo members list ID',
+				'name'  => 'brevo_members_list_id',
+				'type'  => 'number',
+				'default_value' => 0,
+				'instructions' => 'Brevo list ID for member sync. Used by FuseWP if manual overrides are needed.',
 			],
 			[
 				'key'   => 'field_facebook_group_url',

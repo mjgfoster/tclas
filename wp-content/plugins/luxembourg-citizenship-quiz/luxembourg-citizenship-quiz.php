@@ -58,7 +58,7 @@ function lcq_eligibility_quiz_shortcode() {
     return ob_get_clean();
 }
 
-// AJAX Handler for Emailing Results (Retained from v1.1)
+// AJAX Handler for Emailing Results + Brevo Subscribe
 add_action( 'wp_ajax_lcq_send_results', 'lcq_handle_email_submission' );
 add_action( 'wp_ajax_nopriv_lcq_send_results', 'lcq_handle_email_submission' );
 function lcq_handle_email_submission() {
@@ -69,6 +69,13 @@ function lcq_handle_email_submission() {
 
     if ( ! is_email( $email ) ) {
         wp_send_json_error( 'Invalid email address.' );
+    }
+
+    // Subscribe to Brevo (General Subscribers list) with quiz-completer tag
+    if ( function_exists( 'tclas_brevo_subscribe' ) ) {
+        $general_list_id = (int) get_option( 'lcq_brevo_list_id', 0 );
+        $list_ids = $general_list_id ? [ $general_list_id ] : [];
+        tclas_brevo_subscribe( $email, [], $list_ids, 'quiz-completer' );
     }
 
     $subject = 'Your Luxembourg Citizenship Eligibility Results';

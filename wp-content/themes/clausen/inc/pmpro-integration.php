@@ -25,42 +25,9 @@ function tclas_pmpro_after_login_redirect( string $redirect, string $requested_r
 add_filter( 'login_redirect', 'tclas_pmpro_after_login_redirect', 10, 3 );
 
 /**
- * Auto-subscribe new members to Mailchimp members list via MC4WP.
+ * Credit referral after checkout (Brevo member sync handled by FuseWP).
  */
 function tclas_pmpro_after_checkout( int $user_id, object $morder ): void {
-	if ( ! function_exists( 'mc4wp_get_api_v3' ) ) {
-		return;
-	}
-
-	$list_id = function_exists( 'get_field' )
-		? sanitize_text_field( (string) get_field( 'mailchimp_members_list_id', 'option' ) )
-		: '';
-
-	if ( ! $list_id ) {
-		return;
-	}
-
-	$user  = get_userdata( $user_id );
-	$email = $user ? $user->user_email : '';
-	if ( ! $email ) {
-		return;
-	}
-
-	try {
-		$api = mc4wp_get_api_v3();
-		$api->add_list_member( $list_id, [
-			'email_address' => $email,
-			'status'        => 'subscribed',
-			'merge_fields'  => [
-				'FNAME' => $user->first_name ?? '',
-				'LNAME' => $user->last_name ?? '',
-			],
-		] );
-	} catch ( Exception $e ) {
-		error_log( 'TCLAS Mailchimp subscribe failed for user ' . $user_id . ': ' . $e->getMessage() );
-	}
-
-	// Credit referral if present
 	tclas_credit_referral( $user_id );
 }
 add_action( 'pmpro_after_checkout', 'tclas_pmpro_after_checkout', 10, 2 );
@@ -112,38 +79,5 @@ function tclas_pmpro_levels_shortcode( string $content ): string {
 }
 add_filter( 'pmpro_levels_page_content', 'tclas_pmpro_levels_shortcode' );
 
-/**
- * Unsubscribe cancelled members from Mailchimp members list.
- */
-function tclas_pmpro_after_change_membership_level( int $level_id, int $user_id ): void {
-	if ( $level_id !== 0 ) {
-		return; // Only act on cancellation (level_id = 0)
-	}
-
-	if ( ! function_exists( 'mc4wp_get_api_v3' ) ) {
-		return;
-	}
-
-	$list_id = function_exists( 'get_field' )
-		? sanitize_text_field( (string) get_field( 'mailchimp_members_list_id', 'option' ) )
-		: '';
-
-	if ( ! $list_id ) {
-		return;
-	}
-
-	$user  = get_userdata( $user_id );
-	$email = $user ? $user->user_email : '';
-	if ( ! $email ) {
-		return;
-	}
-
-	try {
-		$api    = mc4wp_get_api_v3();
-		$hash   = md5( strtolower( $email ) );
-		$api->update_list_member( $list_id, $hash, [ 'status' => 'unsubscribed' ] );
-	} catch ( Exception $e ) {
-		error_log( 'TCLAS Mailchimp unsubscribe failed for user ' . $user_id . ': ' . $e->getMessage() );
-	}
-}
-add_action( 'pmpro_after_change_membership_level', 'tclas_pmpro_after_change_membership_level', 10, 2 );
+// Member subscribe/unsubscribe sync is handled by FuseWP → Brevo.
+// No custom Mailchimp hooks needed.

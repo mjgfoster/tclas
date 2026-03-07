@@ -178,16 +178,16 @@
 	}
 }
 
-// ── MC4WP ─────────────────────────────────────────────────────────────────
-.mc4wp-form label {
+// ── Brevo (newsletter forms) ──────────────────────────────────────────────
+.sib-form label {
 	display: block !important;
 	margin-bottom: .35rem !important;
 	font-weight: 700 !important;
 	font-size: .82rem !important;
 }
 
-.mc4wp-form input[type="email"],
-.mc4wp-form input[type="text"] {
+.sib-form input[type="email"],
+.sib-form input[type="text"] {
 	border: 2px solid var(--c-input-border) !important;
 	border-radius: 0 !important;
 	padding: .5rem .8rem !important;
@@ -196,7 +196,8 @@
 	width: 100% !important;
 }
 
-.mc4wp-form input[type="submit"] {
+.sib-form input[type="submit"],
+.sib-form button[type="submit"] {
 	background: var(--c-crimson) !important;
 	border: none !important;
 	color: #fff !important;
@@ -207,6 +208,5 @@
 	font-family: var(--font-sans) !important;
 }
 
-.mc4wp-alert         { padding: .75rem 1rem; margin: .75rem 0; font-size: .85rem; }
-.mc4wp-alert-success { background: rgba(61,107,79,.1); color: #2a4c37; border-left: 3px solid var(--c-vert); }
-.mc4wp-alert-error   { background: rgba(227,30,38,.06); color: #8a1318; border-left: 3px solid var(--c-crimson); }
+.sib-form .sib-form-message-panel--success { background: rgba(61,107,79,.1); color: #2a4c37; border-left: 3px solid var(--c-vert); padding: .75rem 1rem; margin: .75rem 0; font-size: .85rem; }
+.sib-form .sib-form-message-panel--error   { background: rgba(227,30,38,.06); color: #8a1318; border-left: 3px solid var(--c-crimson); padding: .75rem 1rem; margin: .75rem 0; font-size: .85rem; }

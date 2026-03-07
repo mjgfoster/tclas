@@ -74,14 +74,15 @@
 	// Description paragraphs (outside the form itself)
 	> p { font-size: .82rem; color: rgba(235,245,252,.78); margin-bottom: .75rem; max-width: none; line-height: 1.5; }
 
-	// ── Inline layout: works for both .form-row and MC4WP's .mc4wp-form-fields ──
+	// ── Inline layout: works for both .form-row and Brevo's .sib-form-block ──
 	.form-row,
-	.mc4wp-form-fields {
+	.sib-form-block {
 		display: flex;
 		gap: 0;
 		align-items: stretch;
 
-		// MC4WP wraps each field in a <p> — flatten those into flex items
+		// Brevo wraps each field in a div — flatten those into flex items
+		> div,
 		> p {
 			margin: 0;
 			display: contents; // lets children participate directly in the flex row
@@ -103,7 +104,7 @@
 		&:focus-visible { border-color: var(--c-gold); background: rgba(255,255,255,.12); }
 	}
 
-	// Target both .btn class and MC4WP's native submit input
+	// Target both .btn class and Brevo's native submit input/button
 	.btn,
 	input[type="submit"] {
 		flex-shrink: 0;

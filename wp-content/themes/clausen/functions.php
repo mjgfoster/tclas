@@ -25,7 +25,7 @@ $tclas_modules = [
 	'inc/accessibility.php',
 	'inc/acf-fields.php',
 	'inc/pmpro-integration.php',
-	'inc/mcawp-integration.php',
+	'inc/brevo-integration.php',
 	'inc/events-integration.php',
 	'inc/member-hub.php',
 	'inc/national-day.php',
