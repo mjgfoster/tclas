@@ -23,7 +23,7 @@ function tclas_register_taxonomies(): void {
 		'hierarchical'      => false,
 		'public'            => true,
 		'show_in_rest'      => true,
-		'rewrite'           => [ 'slug' => 'commune', 'with_front' => false ],
+		'rewrite'           => [ 'slug' => 'member-hub/ancestral-map/commune', 'with_front' => false ],
 		'show_admin_column' => true,
 	] );
 
@@ -113,3 +113,36 @@ function tclas_seed_department_terms(): void {
 	}
 }
 add_action( 'init', 'tclas_seed_department_terms', 20 );
+
+/**
+ * Seed tclas_commune terms from the commune-data.php lookup table.
+ *
+ * Runs once and sets a transient so the 583-entry loop doesn't fire on every
+ * page load. Delete the transient (`wp transient delete tclas_communes_seeded`)
+ * to re-seed after data changes.
+ */
+function tclas_seed_commune_terms(): void {
+	if ( get_transient( 'tclas_communes_seeded' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'tclas_get_communes' ) ) {
+		return;
+	}
+
+	$communes = tclas_get_communes();
+
+	foreach ( $communes as $slug => $c ) {
+		if ( ! term_exists( $slug, 'tclas_commune' ) ) {
+			wp_insert_term( $c['name'], 'tclas_commune', [
+				'slug'        => $slug,
+				'description' => $c['lux'] ?? '',
+			] );
+		}
+	}
+
+	// Mark as seeded; flush rewrites so /commune/{slug}/ URLs resolve.
+	set_transient( 'tclas_communes_seeded', '1', YEAR_IN_SECONDS );
+	flush_rewrite_rules();
+}
+add_action( 'init', 'tclas_seed_commune_terms', 25 );

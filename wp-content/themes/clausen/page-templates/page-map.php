@@ -2,7 +2,8 @@
 /**
  * Template Name: Ancestral Map page
  *
- * Member-gated map showing ancestral communes of TCLAS members.
+ * Member-gated full map showing ancestral communes of TCLAS members.
+ * Lives at /member-hub/ancestral-map/.
  *
  * @package TCLAS
  */
@@ -12,6 +13,7 @@ get_header();
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
+		<?php tclas_breadcrumb(); ?>
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Member community', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 	</div>
@@ -43,9 +45,13 @@ get_header();
 
 		<?php else : ?>
 
-			<div class="tclas-prose">
-				<?php the_content(); ?>
+			<div class="tclas-member-map-intro">
+				<p>
+					<?php esc_html_e( 'Explore the Luxembourg communes where TCLAS members trace their roots. Tap a commune to see surnames and connect with fellow members.', 'tclas' ); ?>
+				</p>
 			</div>
+
+			<?php echo do_shortcode( '[tclas_ancestor_map layout="split"]' ); ?>
 
 		<?php endif; ?>
 

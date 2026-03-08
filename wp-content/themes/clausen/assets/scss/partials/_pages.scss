@@ -71,83 +71,43 @@
 }
 
 // ── Ancestry page ─────────────────────────────────────────────────────────
-.tclas-ancestry-intro .container-tclas { text-align: center; }
-.tclas-ancestry-lede { font-size: 1.15rem; max-width: 52ch; margin: 0 auto; }
 
-.tclas-ancestry-steps {
-	background: var(--c-or-pale);
-
-	h2 { margin-bottom: 2rem; }
-}
-
-.tclas-ancestry-step-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	max-width: 720px;
-}
-
-.tclas-ancestry-step {
+// Two-column grid: intro (left 2fr) + map (right 3fr)
+.tclas-ancestry-grid {
 	display: grid;
-	grid-template-columns: 2.75rem 1fr;
-	gap: 0 1.75rem;
-	margin-bottom: 2.25rem;
+	grid-template-columns: 2fr 3fr;
+	gap: 3rem;
 	align-items: start;
 
-	&:last-child { margin-bottom: 0; }
-
-	&__num {
-		font-size: 2rem;
-		font-weight: 700;
-		font-family: var(--font-sans);
-		color: var(--c-crimson);
-		line-height: 1.05;
-		padding-top: .1rem;
-		text-align: center;
-	}
-
-	&__content {
-		h3 {
-			font-size: 1.05rem;
-			font-weight: 700;
-			margin-bottom: .5rem;
-			color: var(--c-body-text);
-		}
-
-		p {
-			font-size: .92rem;
-			line-height: 1.65;
-			color: var(--c-body-text);
-			margin: 0;
-		}
-	}
+	@media (max-width: 768px) { grid-template-columns: 1fr; }
 }
 
-.tclas-ancestry-map-cta {
-	background: var(--c-ardoise);
-	color: #fff;
-	padding: 5rem 0;
-	text-align: center;
-
-	.tclas-eyebrow--accent { color: var(--c-gold); }
-
-	h2 {
-		color: #fff;
-		margin-bottom: 1rem;
-	}
-
+.tclas-ancestry-grid__content {
 	p {
-		max-width: 50ch;
-		margin: 0 auto 2rem;
-		color: rgba(255, 255, 255, 0.8);
-		font-size: 1rem;
-		line-height: 1.65;
+		font-size: 1.05rem;
+		line-height: 1.7;
 	}
 
-	&__inner { /* container-level layout handled by .container-tclas */ }
+	.btn { margin-top: 1.5rem; }
+}
 
-	.tclas-map-wrapper { margin-top: 2rem; }
-	.tclas-map-caption { color: rgba(255, 255, 255, 0.6); }
+.tclas-ancestry-grid__map {
+	position: sticky;
+	top: 6rem;
+
+	.tclas-ancestor-map { height: 600px !important; }
+	.tclas-map-wrapper  { margin-top: 0; }
+
+	@media (max-width: 768px) {
+		position: static;
+		order: -1;
+
+		.tclas-ancestor-map { height: 480px !important; }
+	}
+
+	@media (max-width: 600px) {
+		.tclas-ancestor-map { height: 400px !important; }
+	}
 }
 
 .tclas-ancestry-resources {
@@ -167,6 +127,14 @@
 			margin-bottom: .75rem;
 		}
 	}
+}
+
+// ── Member map page (/member-hub/ancestral-map/) ─────────────────────────
+.tclas-member-map-intro {
+	max-width: 62ch;
+	margin-bottom: 1rem;
+
+	p { font-size: 1.05rem; line-height: 1.7; color: var(--c-body-text); }
 }
 
 // ── Join page intro / CTA ─────────────────────────────────────────────────
@@ -483,49 +451,338 @@
 // ── Commune profile ───────────────────────────────────────────────────────
 .tclas-commune-layout {
 	display: grid;
-	grid-template-columns: 1fr 2fr;
-	gap: 2.5rem;
+	grid-template-columns: 1fr 2fr 1.5fr;
+	gap: 2rem;
 	align-items: start;
 
-	@media (max-width: 700px) { grid-template-columns: 1fr; }
+	@media (max-width: 960px) { grid-template-columns: 1fr 1fr; }
+	@media (max-width: 600px) { grid-template-columns: 1fr; }
 }
 
-.tclas-commune-fact-col   { position: sticky; top: 6rem; @media (max-width: 700px) { position: static; } }
-.tclas-commune-fact-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--c-muted); margin: .75rem 0 .2rem; }
-.tclas-commune-audio      { margin: .75rem 0; display: flex; flex-direction: column; gap: .35rem; audio { width: 100%; border-radius: var(--radius); } }
-.tclas-commune-ext-links  { display: flex; flex-direction: column; gap: .4rem; margin-top: .5rem; }
+// Canton subtitle below the H1
+.tclas-commune-subtitle {
+	font-size: 1.1rem;
+	font-style: italic;
+	color: var(--c-ardoise);
+	opacity: .7;
+	margin: .3rem 0 0;
+}
 
-.tclas-commune-ext-link {
+// Col 1: Fact sidebar
+.tclas-commune-fact-col {
+	position: sticky;
+	top: 6rem;
+
+	@media (max-width: 960px) {
+		position: static;
+		// On tablet two-col: facts span full width above map + members
+		grid-column: 1 / -1;
+		display: flex;
+		flex-wrap: wrap;
+		gap: .5rem 2rem;
+		align-items: baseline;
+	}
+
+	@media (max-width: 600px) {
+		display: block;
+	}
+}
+
+// Col 2: Map column
+.tclas-commune-map-col {
+	position: sticky;
+	top: 6rem;
+
+	@media (max-width: 960px) { position: static; }
+}
+
+.tclas-commune-mini-map {
+	width: 100%;
+	height: 480px;
+	border-radius: var(--radius);
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+
+	@media (max-width: 960px) { height: 360px; }
+	@media (max-width: 600px) { height: 280px; }
+}
+
+// Luxembourgish name + play button
+.tclas-commune-pronun {
+	margin-bottom: 0;
+	padding-bottom: .75rem;
+	border-bottom: 1px dotted rgba(43, 98, 130, .25);
+}
+
+.tclas-commune-pronun__row {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+
+.tclas-commune-pronun__name {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--c-ardoise);
+}
+
+.tclas-commune-pronun__play {
 	display: inline-flex;
 	align-items: center;
-	gap: .35rem;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	border: 1.5px solid var(--c-ardoise);
+	background: transparent;
+	color: var(--c-ardoise);
+	cursor: pointer;
+	padding: 0;
+	flex-shrink: 0;
+	transition: background .15s, color .15s;
+
+	svg { margin-left: 2px; } // optical centering for play triangle
+
+	&:hover {
+		background: var(--c-ardoise);
+		color: #fff;
+	}
+
+	&.is-playing {
+		background: var(--c-crimson);
+		border-color: var(--c-crimson);
+		color: #fff;
+	}
+}
+
+.tclas-commune-pronun__credit {
+	display: block;
+	font-size: .72rem;
+	font-style: italic;
+	color: var(--c-muted);
+	margin-top: .3rem;
+
+	a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+
+		&:hover { color: var(--c-ardoise); }
+	}
+}
+
+.tclas-commune-facts {
+	margin: 0;
+
+	dt {
+		font-size: .78rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--c-ardoise);
+		margin-top: .75rem;
+
+		[lang="lb"] { font-style: normal; }
+	}
+
+	dd {
+		margin: .15rem 0 0;
+		font-size: 1.125rem;
+		font-weight: 600;
+		padding-bottom: .75rem;
+		border-bottom: 1px dotted rgba(43, 98, 130, .25);
+	}
+}
+
+.tclas-commune-facts__en {
+	font-weight: 400;
+	color: var(--c-muted);
+	margin-left: .25em;
+}
+
+.tclas-commune-ext-links {
+	display: flex;
+	flex-direction: column;
+	gap: .4rem;
+	margin-top: 1rem;
+}
+
+.tclas-commune-ext-link {
 	font-size: .88rem;
-	color: var(--c-aigue);
+	color: var(--c-crimson);
 	text-decoration: none;
 
 	&:hover { text-decoration: underline; }
 }
 
-.tclas-commune-mini-map       { width: 100%; height: 200px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--c-border); margin-bottom: 1rem; }
-.tclas-commune-member-grid    { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
+.tclas-commune-back-link {
+	display: inline-block;
+	margin-top: 1.5rem;
+	font-size: .88rem;
+	color: var(--c-ardoise);
+	text-decoration: none;
+	font-weight: 600;
 
-.tclas-commune-member-card {
-	background: #fff;
-	border: 1px solid var(--c-border);
-	border-radius: var(--radius);
-	padding: 1rem;
+	&:hover { text-decoration: underline; }
+}
+
+// Section title
+.tclas-commune-section-title {
+	font-size: 1.15rem;
+	color: var(--c-ardoise);
+	margin: 0 0 1.5rem;
+}
+
+// Surname groups
+.tclas-surname-group {
+	margin-bottom: 1.5rem;
+
+	&:last-child { margin-bottom: 0; }
+}
+
+.tclas-surname-group__heading {
+	font-size: .85rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: var(--c-muted);
+	border-bottom: 1px solid var(--c-border);
+	padding-bottom: .4rem;
+	margin: 0 0 .5rem;
+}
+
+.tclas-surname-group__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.tclas-surname-group__member {
 	display: flex;
 	align-items: center;
 	gap: .75rem;
-	text-decoration: none;
-	color: var(--c-ardoise);
-	transition: border-color .15s, box-shadow .15s;
+	padding: .5rem 0;
+	border-bottom: 1px solid rgba(0, 0, 0, .04);
 
-	&:hover { border-color: var(--c-crimson); box-shadow: var(--shadow-sm); }
-	img { border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; }
+	&:last-child { border-bottom: none; }
 }
 
-.tclas-commune-empty { text-align: center; padding: 3rem 1rem; color: var(--c-muted); }
+.tclas-surname-group__avatar {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.tclas-surname-group__name {
+	flex: 1;
+	font-weight: 600;
+	color: var(--c-ardoise);
+	font-size: .92rem;
+}
+
+.tclas-surname-group__link {
+	font-size: .82rem;
+	color: var(--c-crimson);
+	text-decoration: none;
+	white-space: nowrap;
+
+	&:hover { text-decoration: underline; }
+}
+
+// Empty state
+.tclas-commune-empty {
+	text-align: center;
+	padding: 3rem 1rem;
+	color: var(--c-muted);
+}
+
+// "Have roots here?" prompt
+.tclas-commune-add-prompt {
+	margin-top: 1.5rem;
+	font-size: .88rem;
+	color: var(--c-muted);
+
+	a { color: var(--c-crimson); text-decoration: none; &:hover { text-decoration: underline; } }
+}
+
+// ── Communes index ────────────────────────────────────────────────────────
+.tclas-commune-index__letters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .35rem;
+	margin-bottom: 1.5rem;
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: var(--radius);
+		font-size: .82rem;
+		font-weight: 700;
+		color: var(--c-ardoise);
+		text-decoration: none;
+		background: var(--c-or-pale);
+		transition: background .15s, color .15s;
+
+		&:hover {
+			background: var(--c-ardoise);
+			color: #fff;
+		}
+	}
+}
+
+.tclas-commune-index__table {
+	width: 100%;
+	border-collapse: collapse;
+
+	th {
+		text-align: left;
+		font-size: .72rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--c-muted);
+		padding: .5rem .75rem;
+		border-bottom: 2px solid var(--c-border);
+	}
+
+	td {
+		padding: .55rem .75rem;
+		font-size: 1.125rem;
+		border-bottom: 1px solid rgba(0, 0, 0, .04);
+	}
+
+	tr:not(.tclas-commune-index__letter-row) {
+		cursor: pointer;
+		transition: background .1s;
+
+		&:hover { background: var(--c-or-pale); }
+	}
+
+	a {
+		color: var(--c-crimson);
+		text-decoration: none;
+		font-weight: 600;
+
+		&:hover { text-decoration: underline; }
+	}
+
+	[lang="lb"] {
+		color: var(--c-muted);
+	}
+}
+
+.tclas-commune-index__letter-row td {
+	font-size: 1.1rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	padding-top: 1.25rem;
+	border-bottom: 1px solid var(--c-border);
+	background: none;
+}
 
 // ── Member profile (styles from main.css) ────────────────────────────────
 .tclas-profile-layout {
@@ -562,7 +819,7 @@
 	align-items: center;
 	gap: .35rem;
 	font-size: .88rem;
-	color: var(--c-aigue);
+	color: var(--c-crimson);
 	text-decoration: none;
 	padding: .3rem .5rem;
 	min-height: 44px;
@@ -570,7 +827,7 @@
 	border-radius: var(--radius);
 	transition: border-color .15s;
 
-	&:hover { border-color: var(--c-crimson); color: var(--c-crimson); }
+	&:hover { border-color: var(--c-crimson-dk); color: var(--c-crimson-dk); }
 }
 
 .tclas-profile-social { display: flex; gap: .6rem; margin-top: 1rem; flex-wrap: wrap; }
@@ -618,7 +875,7 @@
 .tclas-profile-back-link,
 .tclas-profile-edit-link {
 	font-size: .82rem;
-	color: var(--c-aigue);
+	color: var(--c-crimson);
 	text-decoration: none;
 	min-height: 44px;
 	display: inline-flex;
@@ -675,4 +932,4 @@
 
 .tclas-directory__avatar   { border-radius: 50%; flex-shrink: 0; }
 .tclas-directory__name     { display: block; font-size: .92rem; color: var(--c-ardoise); }
-.tclas-directory__view-link{ display: block; font-size: .75rem; color: var(--c-aigue); margin-top: .15rem; }
+.tclas-directory__view-link{ display: block; font-size: .75rem; color: var(--c-crimson); margin-top: .15rem; }

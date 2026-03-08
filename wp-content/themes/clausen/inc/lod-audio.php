@@ -56,52 +56,58 @@ function tclas_get_commune_audio( string $commune_name, string $slug ): ?string 
 }
 
 /**
- * Query LOD.lu via SPARQL to find an audio recording for a place name.
+ * Fetch pronunciation audio from LOD.lu REST API.
  *
- * The LOD.lu endpoint uses the Luxembourgish Geonames-linked dataset which
- * may include foaf:depiction or dbp:pronounciation links for some entries.
- * We query for rdfs:label matching the commune name and look for any audio
- * property (mo:recording, schema:audio, etc.).
+ * Two-step lookup:
+ * 1. Search: GET /api/lb/advanced-search?query={name} → find the LOD article ID
+ * 2. Entry:  GET /api/lb/entry/{id} → extract entry.audioFiles.ogg
  *
- * @param string $name  Commune name to look up.
- * @return string|null  Audio URL or null.
+ * @param string $name  Luxembourgish commune name (e.g. "Conter").
+ * @return string|null  Audio file URL (OGG), or null if unavailable.
  */
 function tclas_lod_lu_fetch( string $name ): ?string {
-	// URL-encode the SPARQL query
-	$sparql = sprintf(
-		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX schema: <https://schema.org/>
-SELECT ?audio WHERE {
-  ?place rdfs:label "%s"@lb .
-  { ?place schema:audio ?audio . }
-  UNION { ?place <http://purl.org/ontology/mo/recording> ?audio . }
-} LIMIT 1',
-		esc_sql( $name )
-	);
+	// Step 1: Search for the article by Luxembourgish name
+	$search_url = add_query_arg( 'query', $name, 'https://lod.lu/api/lb/advanced-search' );
 
-	$endpoint = 'https://data.lod.lu/sparql';
-	$url      = add_query_arg( [
-		'query'  => $sparql,
-		'format' => 'application/sparql-results+json',
-	], $endpoint );
-
-	$response = wp_remote_get( $url, [
-		'timeout' => 8,
-		'headers' => [ 'Accept' => 'application/sparql-results+json' ],
-	] );
-
-	if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+	$search_response = wp_remote_get( $search_url, [ 'timeout' => 8 ] );
+	if ( is_wp_error( $search_response ) || wp_remote_retrieve_response_code( $search_response ) !== 200 ) {
 		return null;
 	}
 
-	$body = json_decode( wp_remote_retrieve_body( $response ), true );
-	$bindings = $body['results']['bindings'] ?? [];
+	$search_data = json_decode( wp_remote_retrieve_body( $search_response ), true );
+	$results     = $search_data['results'] ?? [];
 
-	if ( ! empty( $bindings ) && ! empty( $bindings[0]['audio']['value'] ) ) {
-		return esc_url_raw( $bindings[0]['audio']['value'] );
+	if ( empty( $results ) ) {
+		return null;
 	}
 
-	return null;
+	// Find an exact lemma match (case-insensitive) to avoid false positives
+	$lod_id = null;
+	foreach ( $results as $r ) {
+		if ( mb_strtolower( $r['word_lb'] ?? '' ) === mb_strtolower( $name ) ) {
+			$lod_id = $r['id'] ?? $r['article_id'] ?? null;
+			break;
+		}
+	}
+	if ( ! $lod_id ) {
+		return null;
+	}
+
+	// Step 2: Fetch the full entry to get the headword audio
+	$entry_url = 'https://lod.lu/api/lb/entry/' . rawurlencode( $lod_id );
+
+	$entry_response = wp_remote_get( $entry_url, [ 'timeout' => 8 ] );
+	if ( is_wp_error( $entry_response ) || wp_remote_retrieve_response_code( $entry_response ) !== 200 ) {
+		return null;
+	}
+
+	$entry_data = json_decode( wp_remote_retrieve_body( $entry_response ), true );
+	$audio      = $entry_data['entry']['audioFiles'] ?? [];
+
+	// Prefer OGG (wider browser support for <audio>), fall back to AAC
+	$audio_url = $audio['ogg'] ?? $audio['aac'] ?? null;
+
+	return $audio_url ? esc_url_raw( $audio_url ) : null;
 }
 
 /**
@@ -135,28 +141,39 @@ function tclas_forvo_fetch( string $name, string $api_key ): ?string {
 }
 
 /**
- * Render an audio player HTML block for a commune, or nothing if unavailable.
+ * Render the Luxembourgish name with an inline play button and LOD attribution.
  *
- * @param string $commune_name  Official Luxembourgish name.
- * @param string $slug          Commune slug.
- * @return string               HTML string (may be empty).
+ * If no audio is available, renders just the name without a button.
+ *
+ * @param string $commune_name  Luxembourgish commune name (e.g. "Conter").
+ * @param string $slug          Commune slug for cache key.
+ * @return string               HTML string.
  */
 function tclas_commune_audio_html( string $commune_name, string $slug ): string {
 	$audio_url = tclas_get_commune_audio( $commune_name, $slug );
-	if ( ! $audio_url ) {
-		return '';
-	}
 
 	ob_start();
 	?>
-	<div class="tclas-commune-audio">
-		<audio controls preload="none" aria-label="<?php echo esc_attr( sprintf( __( 'Pronunciation of %s', 'tclas' ), $commune_name ) ); ?>">
-			<source src="<?php echo esc_url( $audio_url ); ?>">
-			<a href="<?php echo esc_url( $audio_url ); ?>" target="_blank" rel="noopener">
-				<?php esc_html_e( 'Listen to pronunciation', 'tclas' ); ?>
-			</a>
-		</audio>
-		<span class="tclas-commune-fact-label"><?php esc_html_e( 'Native pronunciation', 'tclas' ); ?></span>
+	<div class="tclas-commune-pronun">
+		<span class="tclas-commune-pronun__row">
+			<span class="tclas-commune-pronun__name" lang="lb"><?php echo esc_html( $commune_name ); ?></span>
+			<?php if ( $audio_url ) : ?>
+			<button type="button" class="tclas-commune-pronun__play"
+				data-audio-src="<?php echo esc_url( $audio_url ); ?>"
+				aria-label="<?php echo esc_attr( sprintf( __( 'Listen to pronunciation of %s', 'tclas' ), $commune_name ) ); ?>">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="4,2 14,8 4,14"/></svg>
+			</button>
+			<?php endif; ?>
+		</span>
+		<?php if ( $audio_url ) : ?>
+		<span class="tclas-commune-pronun__credit">
+			<?php printf(
+				/* translators: %s: link to LOD.lu */
+				esc_html__( 'Audio from %s', 'tclas' ),
+				'<a href="https://lod.lu" target="_blank" rel="noopener noreferrer">Lëtzebuerger Online Dictionnaire</a>'
+			); ?>
+		</span>
+		<?php endif; ?>
 	</div>
 	<?php
 	return ob_get_clean();
