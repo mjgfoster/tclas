@@ -85,22 +85,22 @@
       var profileUrl   = (data.communeBaseUrl || '/commune/') + communeSlug + '/';
 
       var popupLink = isPublic
-        ? '<a href="' + joinUrl + '" class="tclas-map-popup-cta">Join TCLAS to connect &rarr;</a>'
-        : '<a href="' + profileUrl + '" class="tclas-map-popup-link">View commune profile &rarr;</a>';
+        ? '<a href="' + joinUrl + '" class="tclas-map-popup-cta">Join to connect →</a>'
+        : '<a href="' + profileUrl + '" class="tclas-map-popup-link">View commune profile →</a>';
 
       var surnamesHtml = '';
-      if (c.surnames && c.surnames.length > 0) {
+      if (!isPublic && c.surnames && c.surnames.length > 0) {
         surnamesHtml = '<span class="tclas-map-popup-surnames">Surnames: ' +
           c.surnames.map(_esc).join(', ') + '</span>';
       }
 
       var popupHtml =
         '<div class="tclas-map-popup">' +
-          '<strong class="tclas-map-popup-name">' + _esc(c.name)   + '</strong>' +
-          '<span  class="tclas-map-popup-canton">' + _esc(c.canton) + '</span>' +
-          '<span  class="tclas-map-popup-count">'  +
-            c.count + ' TCLAS&nbsp;' + memberWord + ' ' + verbWord +
-            ' ancestors from here' +
+          '<span class="tclas-map-popup-name">' + _esc(c.name) + '</span>' +
+          '<span class="tclas-map-popup-canton">' + _esc(c.canton) + ' Canton</span>' +
+          '<span class="tclas-map-popup-count">' +
+            '<strong>' + c.count + '</strong> TCLAS ' + memberWord + ' ' + verbWord +
+            ' roots here' +
           '</span>' +
           surnamesHtml +
           popupLink +
@@ -110,17 +110,31 @@
     });
 
     // ── Fit bounds ────────────────────────────────────────────────────────
-    if (latlngs.length === 1) {
-      map.setView(latlngs[0], 11);
-    } else if (latlngs.length > 1) {
-      try {
-        map.fitBounds(latlngs, { padding: [40, 40], maxZoom: 12 });
-      } catch (e) {
-        map.setView([49.75, 6.10], 9);
+    // Luxembourg's full extent — ensure all of the country is always visible
+    var luxBounds = [[49.45, 5.73], [50.18, 6.53]];
+
+    function fitMap() {
+      if (latlngs.length === 0) {
+        map.fitBounds(luxBounds, { padding: [20, 20] });
+      } else {
+        // Merge marker positions with Luxembourg extent so the whole
+        // country shows even when markers cluster in one area.
+        var allPoints = latlngs.concat(luxBounds);
+        try {
+          map.fitBounds(allPoints, { padding: [20, 20], maxZoom: 12 });
+        } catch (e) {
+          map.setView([49.815, 6.13], 9);
+        }
       }
-    } else {
-      map.setView([49.75, 6.10], 9);
     }
+
+    fitMap();
+
+    // Re-fit after layout settles (CSS grid may resize the container)
+    setTimeout(function () {
+      map.invalidateSize();
+      fitMap();
+    }, 200);
 
     // ── List view toggle ──────────────────────────────────────────────────
     var toggleBtn = document.getElementById('tclas-map-view-toggle');

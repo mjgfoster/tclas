@@ -71,83 +71,43 @@
 }
 
 // ── Ancestry page ─────────────────────────────────────────────────────────
-.tclas-ancestry-intro .container-tclas { text-align: center; }
-.tclas-ancestry-lede { font-size: 1.15rem; max-width: 52ch; margin: 0 auto; }
 
-.tclas-ancestry-steps {
-	background: var(--c-or-pale);
-
-	h2 { margin-bottom: 2rem; }
-}
-
-.tclas-ancestry-step-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	max-width: 720px;
-}
-
-.tclas-ancestry-step {
+// Two-column grid: intro (left 2fr) + map (right 3fr)
+.tclas-ancestry-grid {
 	display: grid;
-	grid-template-columns: 2.75rem 1fr;
-	gap: 0 1.75rem;
-	margin-bottom: 2.25rem;
+	grid-template-columns: 2fr 3fr;
+	gap: 3rem;
 	align-items: start;
 
-	&:last-child { margin-bottom: 0; }
-
-	&__num {
-		font-size: 2rem;
-		font-weight: 700;
-		font-family: var(--font-sans);
-		color: var(--c-crimson);
-		line-height: 1.05;
-		padding-top: .1rem;
-		text-align: center;
-	}
-
-	&__content {
-		h3 {
-			font-size: 1.05rem;
-			font-weight: 700;
-			margin-bottom: .5rem;
-			color: var(--c-body-text);
-		}
-
-		p {
-			font-size: .92rem;
-			line-height: 1.65;
-			color: var(--c-body-text);
-			margin: 0;
-		}
-	}
+	@media (max-width: 768px) { grid-template-columns: 1fr; }
 }
 
-.tclas-ancestry-map-cta {
-	background: var(--c-ardoise);
-	color: #fff;
-	padding: 5rem 0;
-	text-align: center;
-
-	.tclas-eyebrow--accent { color: var(--c-gold); }
-
-	h2 {
-		color: #fff;
-		margin-bottom: 1rem;
-	}
-
+.tclas-ancestry-grid__content {
 	p {
-		max-width: 50ch;
-		margin: 0 auto 2rem;
-		color: rgba(255, 255, 255, 0.8);
-		font-size: 1rem;
-		line-height: 1.65;
+		font-size: 1.05rem;
+		line-height: 1.7;
 	}
 
-	&__inner { /* container-level layout handled by .container-tclas */ }
+	.btn { margin-top: 1.5rem; }
+}
 
-	.tclas-map-wrapper { margin-top: 2rem; }
-	.tclas-map-caption { color: rgba(255, 255, 255, 0.6); }
+.tclas-ancestry-grid__map {
+	position: sticky;
+	top: 6rem;
+
+	.tclas-ancestor-map { height: 600px !important; }
+	.tclas-map-wrapper  { margin-top: 0; }
+
+	@media (max-width: 768px) {
+		position: static;
+		order: -1;
+
+		.tclas-ancestor-map { height: 480px !important; }
+	}
+
+	@media (max-width: 600px) {
+		.tclas-ancestor-map { height: 400px !important; }
+	}
 }
 
 .tclas-ancestry-resources {

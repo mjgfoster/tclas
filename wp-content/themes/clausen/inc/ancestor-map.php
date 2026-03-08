@@ -134,7 +134,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         </div>
         <p class="tclas-map-caption">
             <?php if ( $is_public ) : ?>
-                <?php esc_html_e( 'Gold circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.', 'tclas' ); ?>
+                <?php esc_html_e( 'Circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.', 'tclas' ); ?>
             <?php else : ?>
                 <?php esc_html_e( 'Circles mark Luxembourg villages where TCLAS members trace their ancestry. Larger circles = more members. Tap or hover for details.', 'tclas' ); ?>
             <?php endif; ?>
