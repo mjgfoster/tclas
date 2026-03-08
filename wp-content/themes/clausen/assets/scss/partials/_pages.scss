@@ -607,8 +607,14 @@
 	margin-top: 1rem;
 }
 
+.tclas-commune-gemeng-links {
+	display: flex;
+	gap: .75rem;
+	margin-top: .25rem;
+}
+
 .tclas-commune-ext-link {
-	font-size: .88rem;
+	font-size: .85rem;
 	color: var(--c-crimson);
 	text-decoration: none;
 

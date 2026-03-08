@@ -126,7 +126,13 @@ wp_enqueue_script( 'leaflet' );
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Commune', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php echo esc_html( $name ); ?></h1>
 		<?php if ( $canton ) : ?>
-		<p class="tclas-commune-subtitle"><?php echo esc_html( $canton ); ?> Canton</p>
+		<p class="tclas-commune-subtitle"><?php
+			// Show municipality in subtitle when it differs from the place name
+			if ( $municipality && mb_strtolower( $municipality ) !== mb_strtolower( $name ) ) {
+				echo esc_html( $municipality ) . ', ';
+			}
+			echo esc_html( $canton );
+		?> Canton</p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -145,8 +151,24 @@ wp_enqueue_script( 'leaflet' );
 
 				<dl class="tclas-commune-facts">
 					<?php if ( $municipality ) : ?>
-					<dt><span lang="lb">Gemeng</span> <span class="tclas-commune-facts__en">Commune</span></dt>
-					<dd><?php echo esc_html( $municipality ); ?></dd>
+					<dt><span lang="lb">Gemeng</span> <span class="tclas-commune-facts__en">Municipality</span></dt>
+					<dd>
+						<?php echo esc_html( $municipality ); ?>
+						<?php if ( $wikipedia_url || $lux_website ) : ?>
+						<span class="tclas-commune-gemeng-links">
+							<?php if ( $lux_website ) : ?>
+							<a href="<?php echo esc_url( $lux_website ); ?>" class="tclas-commune-ext-link" target="_blank" rel="noopener noreferrer">
+								Official site ↗
+							</a>
+							<?php endif; ?>
+							<?php if ( $wikipedia_url ) : ?>
+							<a href="<?php echo esc_url( $wikipedia_url ); ?>" class="tclas-commune-ext-link" target="_blank" rel="noopener noreferrer">
+								Wikipedia ↗
+							</a>
+							<?php endif; ?>
+						</span>
+						<?php endif; ?>
+					</dd>
 					<?php endif; ?>
 
 					<?php if ( $canton ) : ?>
@@ -162,21 +184,6 @@ wp_enqueue_script( 'leaflet' );
 					<dd><?php echo count( $surname_groups ); ?></dd>
 					<?php endif; ?>
 				</dl>
-
-				<?php if ( $wikipedia_url || $lux_website ) : ?>
-				<div class="tclas-commune-ext-links">
-					<?php if ( $wikipedia_url ) : ?>
-					<a href="<?php echo esc_url( $wikipedia_url ); ?>" class="tclas-commune-ext-link" target="_blank" rel="noopener noreferrer">
-						Wikipedia
-					</a>
-					<?php endif; ?>
-					<?php if ( $lux_website ) : ?>
-					<a href="<?php echo esc_url( $lux_website ); ?>" class="tclas-commune-ext-link" target="_blank" rel="noopener noreferrer">
-						Official website
-					</a>
-					<?php endif; ?>
-				</div>
-				<?php endif; ?>
 
 				<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>" class="tclas-commune-back-link">
 					&larr; <?php esc_html_e( 'Back to map', 'tclas' ); ?>
