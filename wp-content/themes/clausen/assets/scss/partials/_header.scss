@@ -42,7 +42,6 @@
 .tclas-brand {
 	display: flex;
 	align-items: center;
-	gap: .75rem;
 	text-decoration: none;
 	flex-shrink: 0;
 	transition: opacity .2s;
@@ -56,34 +55,10 @@
 	}
 }
 
-.tclas-brand__logo {
-	width: 48px;
+.tclas-brand__lockup {
 	height: 48px;
-	flex-shrink: 0;
-	overflow: hidden;
-
-	img { width: 100%; height: 100%; object-fit: contain; display: block; }
-}
-
-// Emoji fallback (when no custom logo is set in the Customizer)
-.tclas-brand__logo--fallback {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #C0001A; // Luxembourg flag red — intentional, distinct from --c-crimson
-	font-size: 1.4rem;
-	font-weight: 700;
-}
-
-.tclas-brand__name {
-	font-family: var(--font-serif);
-	font-size: 1.125rem;
-	font-weight: 700;
-	color: var(--c-ardoise);
-	line-height: 1.25;
-	letter-spacing: -0.025em;
-
-	@media (max-width: 479px) { display: none; }
+	width: auto;
+	display: block;
 }
 
 // ── Desktop navigation ────────────────────────────────────────────────────

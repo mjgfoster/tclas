@@ -37,16 +37,7 @@
 
 				<!-- Brand -->
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="tclas-brand" rel="home">
-					<?php if ( has_custom_logo() ) : ?>
-						<div class="tclas-brand__logo">
-							<?php echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'thumbnail', false, [ 'alt' => get_bloginfo( 'name' ) ] ); ?>
-						</div>
-					<?php else : ?>
-						<div class="tclas-brand__logo tclas-brand__logo--fallback" aria-hidden="true">🦁</div>
-					<?php endif; ?>
-					<div class="tclas-brand__text">
-						<span class="tclas-brand__name">Twin Cities Luxembourg<wbr> American Society</span>
-					</div>
+					<img class="tclas-brand__lockup" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo-header.svg' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="322" height="144">
 				</a>
 
 				<!-- Desktop navigation -->

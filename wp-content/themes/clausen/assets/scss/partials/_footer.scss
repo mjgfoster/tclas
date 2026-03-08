@@ -37,9 +37,8 @@
 	@media (max-width: 575px) { grid-template-columns: 1fr; }
 }
 
-.tclas-footer__brand-logo { margin-bottom: .75rem; img { max-width: 64px; height: auto; display: block; } }
+.tclas-footer__brand-logo { margin-bottom: .75rem; img { max-width: 260px; height: auto; display: block; } }
 .tclas-footer__brand-tagline { display: block; font-size: .8rem; font-style: italic; color: rgba(235,245,252,.75); margin-top: .25rem; }
-.tclas-footer__brand-name { font-family: var(--font-serif); font-size: 1rem; font-weight: 700; color: var(--c-or-pale); line-height: 1.2; }
 .tclas-footer__brand-desc { font-size: .82rem; color: rgba(235,245,252,.75); max-width: 30ch; line-height: 1.55; margin-top: .5rem; }
 .tclas-footer__motto { font-size: .75rem; font-style: italic; color: rgba(235,245,252,.5); margin-top: .5rem; }
 
