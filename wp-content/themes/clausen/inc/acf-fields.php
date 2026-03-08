@@ -63,6 +63,14 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Brevo form ID for the footer signup. Set after creating a form in the Brevo plugin.',
 			],
 			[
+				'key'           => 'field_donate_form_id',
+				'label'         => 'GiveWP donation form ID',
+				'name'          => 'donate_form_id',
+				'type'          => 'number',
+				'default_value' => 0,
+				'instructions'  => 'GiveWP form ID for the donate page. Create a form in Donations > Add Form, then enter its ID here.',
+			],
+			[
 				'key'   => 'field_referral_base_url',
 				'label' => 'Referral landing page URL',
 				'name'  => 'referral_base_url',
@@ -1211,6 +1219,60 @@ function tclas_register_acf_fields(): void {
 						'wrapper' => [ 'width' => '50' ],
 					],
 				],
+			],
+		],
+	] );
+	// ── Donate page content ─────────────────────────────────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_donate',
+		'title'    => 'Donate page content',
+		'location' => [ [ [ 'param' => 'page_template', 'operator' => '==', 'value' => 'page-templates/page-donate.php' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_donate_lede',
+				'label'        => 'Introduction',
+				'name'         => 'donate_lede',
+				'type'         => 'wysiwyg',
+				'toolbar'      => 'basic',
+				'media_upload' => 0,
+				'tabs'         => 'visual',
+				'instructions' => 'Lede paragraph below the page header. Why donations matter.',
+			],
+			[
+				'key'          => 'field_donate_impact_items',
+				'label'        => 'Impact items',
+				'name'         => 'donate_impact_items',
+				'type'         => 'repeater',
+				'layout'       => 'block',
+				'min'          => 1,
+				'max'          => 6,
+				'button_label' => 'Add impact item',
+				'instructions' => '"Where your gift goes" cards. Each has a title and description.',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_donate_impact_title',
+						'label'   => 'Title',
+						'name'    => 'impact_title',
+						'type'    => 'text',
+						'wrapper' => [ 'width' => '30' ],
+					],
+					[
+						'key'     => 'field_donate_impact_desc',
+						'label'   => 'Description',
+						'name'    => 'impact_desc',
+						'type'    => 'textarea',
+						'rows'    => 3,
+						'wrapper' => [ 'width' => '70' ],
+					],
+				],
+			],
+			[
+				'key'          => 'field_donate_tax_note',
+				'label'        => 'Tax deductibility note',
+				'name'         => 'donate_tax_note',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'Displayed below the donation form. E.g. "TCLAS is a 501(c)(3) nonprofit. Your gift is tax-deductible..."',
 			],
 		],
 	] );

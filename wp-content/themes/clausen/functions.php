@@ -26,6 +26,7 @@ $tclas_modules = [
 	'inc/acf-fields.php',
 	'inc/pmpro-integration.php',
 	'inc/brevo-integration.php',
+	'inc/givewp-integration.php',
 	'inc/events-integration.php',
 	'inc/member-hub.php',
 	'inc/national-day.php',

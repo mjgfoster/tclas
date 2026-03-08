@@ -1,0 +1,190 @@
+// =============================================================================
+//  _givewp.scss — GiveWP donation form integration
+//
+//  Strategy: override GiveWP's CSS custom properties to map to our design
+//  tokens, then add targeted aesthetic overrides for buttons and inputs.
+//  Mirrors the approach in _pmpro.scss.
+// =============================================================================
+
+@use 'config' as *;
+
+// ── Donate page layout ──────────────────────────────────────────────────
+
+.tclas-donate-intro .container-tclas { text-align: center; }
+
+.tclas-donate-lede {
+	font-size: 1.15rem;
+	max-width: 52ch;
+	margin: 0 auto;
+}
+
+.tclas-donate-impact {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 2rem 3rem;
+	margin-top: 2rem;
+
+	@include bp($bp-sm) { grid-template-columns: 1fr; }
+}
+
+.tclas-donate-impact__item {
+	h3 {
+		font-size: .95rem;
+		margin-bottom: .4rem;
+	}
+
+	p {
+		font-size: .88rem;
+		color: var(--c-muted);
+		margin: 0;
+		line-height: 1.6;
+	}
+}
+
+.tclas-donate-form-heading {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
+.tclas-donate-tax-note {
+	font-size: .82rem;
+	color: var(--c-muted);
+	text-align: center;
+	margin-top: 2rem;
+	font-style: italic;
+	max-width: 52ch;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tclas-donate-cta {
+	text-align: center;
+
+	h2 { color: var(--c-or-pale); }
+
+	p {
+		color: rgba(235, 245, 252, .88);
+		max-width: 48ch;
+		margin: 0 auto 1.75rem;
+	}
+}
+
+// ── GiveWP form overrides ───────────────────────────────────────────────
+// Scope all overrides to .tclas-donate-form to avoid bleeding into admin.
+
+.tclas-donate-form {
+	max-width: 600px;
+	margin: 0 auto;
+
+	// ── Token overrides (v3 Visual Builder custom properties) ────────
+	--givewp-primary-color: var(--c-crimson);
+	--givewp-primary-color-hover: var(--c-crimson-dk);
+	--givewp-font-family: var(--font-sans);
+
+	// ── Typography ──────────────────────────────────────────────────
+	font-family: var(--font-sans);
+	color: var(--c-body-text);
+
+	h2, h3 {
+		font-family: var(--font-serif);
+		color: var(--c-ardoise);
+	}
+
+	label {
+		font-weight: 700;
+		font-size: .875rem;
+		color: var(--c-body-text);
+	}
+
+	// ── Inputs ──────────────────────────────────────────────────────
+	input[type="text"],
+	input[type="email"],
+	input[type="number"],
+	input[type="tel"],
+	select,
+	textarea {
+		border-color: var(--c-border);
+		border-radius: var(--radius);
+		font-family: var(--font-sans);
+		font-size: 1rem;
+		transition: border-color 0.2s, box-shadow 0.2s;
+
+		&:focus-visible {
+			border-color: var(--c-ardoise);
+			box-shadow: 0 0 0 3px rgba(43, 98, 130, 0.15);
+			outline: none;
+		}
+	}
+
+	// ── Donation amount buttons ─────────────────────────────────────
+	// GiveWP renders preset amounts as selectable buttons.
+	.give-donation-levels-wrap .give-donation-level-btn,
+	[class*="donationAmount"] button {
+		border: 2px solid var(--c-border);
+		border-radius: var(--radius);
+		background: #fff;
+		color: var(--c-ardoise);
+		font-family: var(--font-sans);
+		font-weight: 700;
+		transition: border-color 0.2s, background 0.2s, color 0.2s;
+
+		&:hover {
+			border-color: var(--c-ardoise);
+			background: var(--c-or-pale);
+		}
+
+		&.give-default-level,
+		&[aria-pressed="true"],
+		&.active {
+			border-color: var(--c-crimson);
+			background: var(--c-crimson);
+			color: #fff;
+		}
+	}
+
+	// ── Submit button ───────────────────────────────────────────────
+	button[type="submit"],
+	.give-submit,
+	.givewp-donation-form-submit-btn,
+	[class*="DonateBtn"] {
+		background-color: var(--c-crimson);
+		border-color: var(--c-crimson);
+		border-radius: var(--radius);
+		font-family: var(--font-sans);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		width: 100%;
+		padding: 0.875rem 1.5rem;
+		font-size: 1.05rem;
+		transition: background-color 0.2s, border-color 0.2s;
+
+		&:hover,
+		&:focus {
+			background-color: var(--c-crimson-dk);
+			border-color: var(--c-crimson-dk);
+			color: #fff;
+		}
+	}
+
+	// ── Cards / sections ────────────────────────────────────────────
+	.give-form-wrap,
+	[class*="formSection"] {
+		border-color: var(--c-border);
+		border-radius: var(--radius);
+	}
+
+	// ── Error messages ──────────────────────────────────────────────
+	.give-error {
+		border-radius: var(--radius);
+		font-size: 0.9375rem;
+	}
+}
+
+// ── Fallback placeholder ────────────────────────────────────────────────
+.tclas-donate-form--fallback {
+	background: var(--c-or-pale);
+	border: 2px dashed var(--c-border);
+	border-radius: var(--radius);
+	padding: 3rem 2rem;
+	text-align: center;
+}
