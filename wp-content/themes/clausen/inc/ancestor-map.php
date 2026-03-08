@@ -81,6 +81,16 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
 
     wp_enqueue_style( 'tclas-ancestor-map' );
     wp_enqueue_script( 'tclas-ancestor-map' );
+    // Mapbox config from Theme Options (falls back to CartoDB Positron if not set).
+    $mapbox_token = get_field( 'mapbox_access_token', 'option' );
+    $mapbox_style = get_field( 'mapbox_style_url', 'option' ) ?: 'mapbox://styles/tclas/cmmhutark001u01s98p0uakek';
+
+    // Convert mapbox://styles/user/id → tile URL path components.
+    $mapbox_tile_url = '';
+    if ( $mapbox_token && preg_match( '#^mapbox://styles/(.+)$#', $mapbox_style, $m ) ) {
+        $mapbox_tile_url = 'https://api.mapbox.com/styles/v1/' . $m[1] . '/tiles/256/{z}/{x}/{y}@2x?access_token=' . $mapbox_token;
+    }
+
     wp_localize_script( 'tclas-ancestor-map', 'tclasMapData', [
         'communes'       => $map_communes,
         'isPublic'       => $is_public,
@@ -88,6 +98,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         'storyUrl'       => home_url( '/member-hub/my-story/' ),
         'communeBaseUrl' => home_url( '/commune/' ),
         'totalCount'     => array_sum( array_column( $commune_data, 'count' ) ),
+        'mapboxTileUrl'  => $mapbox_tile_url,
     ] );
 
     $height = esc_attr( $atts['height'] );

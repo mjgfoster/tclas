@@ -71,6 +71,21 @@ function tclas_register_acf_fields(): void {
 				'instructions'  => 'GiveWP form ID for the donate page. Create a form in Donations > Add Form, then enter its ID here.',
 			],
 			[
+				'key'          => 'field_mapbox_access_token',
+				'label'        => 'Mapbox access token',
+				'name'         => 'mapbox_access_token',
+				'type'         => 'text',
+				'instructions' => 'Public access token from mapbox.com → Account → Tokens. Used for the ancestral commune map.',
+			],
+			[
+				'key'          => 'field_mapbox_style_url',
+				'label'        => 'Mapbox style URL',
+				'name'         => 'mapbox_style_url',
+				'type'         => 'text',
+				'default_value' => 'mapbox://styles/tclas/cmmhutark001u01s98p0uakek',
+				'instructions' => 'Style URL from Mapbox Studio (format: mapbox://styles/username/styleid).',
+			],
+			[
 				'key'   => 'field_referral_base_url',
 				'label' => 'Referral landing page URL',
 				'name'  => 'referral_base_url',

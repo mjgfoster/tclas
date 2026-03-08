@@ -38,14 +38,24 @@
       maxZoom: 16,
     });
 
-    // CartoDB Positron — light base map, minimal visual noise
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ' +
-        '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 19,
-    }).addTo(map);
+    // Tile layer: custom Mapbox style if configured, otherwise CartoDB Positron fallback
+    if (data.mapboxTileUrl) {
+      L.tileLayer(data.mapboxTileUrl, {
+        attribution:
+          '&copy; <a href="https://www.mapbox.com/about/maps/" target="_blank" rel="noopener">Mapbox</a> ' +
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+        tileSize: 256,
+        maxZoom: 18,
+      }).addTo(map);
+    } else {
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, ' +
+          '&copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(map);
+    }
 
     // ── Markers ───────────────────────────────────────────────────────────
     var latlngs = [];
@@ -59,14 +69,14 @@
 
       latlngs.push(ll);
 
-      // MN Gold markers for the "wine bar" aesthetic
+      // Crimson markers on pastel canton backgrounds
       var marker = L.circleMarker(ll, {
         radius:      radius,
-        fillColor:   '#D4AF37',
-        color:       '#0A2540',
+        fillColor:   '#8B3A3A',
+        color:       '#FFFFFF',
         weight:      2,
         opacity:     0.9,
-        fillOpacity: 0.75,
+        fillOpacity: 0.8,
       }).addTo(map);
 
       var memberWord   = c.count === 1 ? 'member' : 'members';
