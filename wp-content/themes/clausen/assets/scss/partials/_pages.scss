@@ -129,6 +129,14 @@
 	}
 }
 
+// ── Member map page (/member-hub/ancestral-map/) ─────────────────────────
+.tclas-member-map-intro {
+	max-width: 62ch;
+	margin-bottom: 1rem;
+
+	p { font-size: 1.05rem; line-height: 1.7; color: var(--c-body-text); }
+}
+
 // ── Join page intro / CTA ─────────────────────────────────────────────────
 .tclas-join-intro .container-tclas { text-align: center; }
 .tclas-join-lede                   { font-size: 1.15rem; max-width: 48ch; margin: 0 auto; }

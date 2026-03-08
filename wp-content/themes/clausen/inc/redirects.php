@@ -17,8 +17,8 @@ add_action( 'template_redirect', function () {
 		// Legacy standalone pages replaced by member-hub structure
 		'directory/'                => 'member-hub/profiles/',
 		'profile/'                  => 'member-hub/profiles/',
-		// Old member-hub child duplicate of /ancestry/
-		'member-hub/ancestral-map/' => 'ancestry/',
+		// /map/ slug moved into member-hub (not yet needed pre-launch)
+		// 'map/'                   => 'member-hub/ancestral-map/',
 	];
 
 	// Strip query string and normalise to trailing-slash for comparison.
