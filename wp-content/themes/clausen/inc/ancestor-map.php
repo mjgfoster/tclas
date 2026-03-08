@@ -56,8 +56,9 @@ function tclas_register_ancestor_map_assets(): void {
 add_shortcode( 'tclas_ancestor_map', 'tclas_ancestor_map_shortcode' );
 
 function tclas_ancestor_map_shortcode( array $atts = [] ): string {
-    $atts = shortcode_atts( [ 'height' => '520px', 'public' => false ], $atts, 'tclas_ancestor_map' );
-    $is_public = filter_var( $atts['public'], FILTER_VALIDATE_BOOLEAN );
+    $atts = shortcode_atts( [ 'height' => '520px', 'public' => false, 'layout' => '' ], $atts, 'tclas_ancestor_map' );
+    $is_public  = filter_var( $atts['public'], FILTER_VALIDATE_BOOLEAN );
+    $is_split   = ( 'split' === $atts['layout'] );
 
     // Build commune → {count, surnames} index
     $commune_data = tclas_build_commune_data();
@@ -94,18 +95,56 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
     wp_localize_script( 'tclas-ancestor-map', 'tclasMapData', [
         'communes'       => $map_communes,
         'isPublic'       => $is_public,
+        'layout'         => $is_split ? 'split' : 'default',
         'joinUrl'        => home_url( '/join/' ),
         'storyUrl'       => home_url( '/member-hub/my-story/' ),
-        'communeBaseUrl' => home_url( '/commune/' ),
+        'communeBaseUrl' => home_url( '/member-hub/ancestral-map/commune/' ),
         'totalCount'     => array_sum( array_column( $commune_data, 'count' ) ),
         'mapboxTileUrl'  => $mapbox_tile_url,
     ] );
 
-    $height = esc_attr( $atts['height'] );
+    $height     = esc_attr( $atts['height'] );
+    $wrap_class = 'tclas-map-wrapper' . ( $is_split ? ' tclas-map-wrapper--split' : '' );
 
     ob_start();
     ?>
-    <div class="tclas-map-wrapper">
+    <div class="<?php echo esc_attr( $wrap_class ); ?>">
+
+        <?php if ( $is_split ) : ?>
+        <!-- Split layout: map + live-filtered list side by side -->
+        <div class="tclas-map-split">
+            <div class="tclas-map-split__map">
+                <div id="tclas-ancestor-map"
+                     class="tclas-ancestor-map"
+                     role="img"
+                     aria-label="<?php esc_attr_e( 'Map of ancestral communes in Luxembourg', 'tclas' ); ?>"></div>
+            </div>
+            <div class="tclas-map-split__list">
+                <div class="tclas-map-split__list-header">
+                    <input type="search" id="tclas-map-list-search"
+                           class="tclas-map-split__search"
+                           placeholder="<?php esc_attr_e( 'Search communes or surnames…', 'tclas' ); ?>"
+                           autocomplete="off" />
+                    <span class="tclas-map-split__count" id="tclas-map-list-count"></span>
+                </div>
+                <div class="tclas-map-split__list-scroll">
+                    <table class="tclas-map-list__table" role="table">
+                        <thead>
+                            <tr>
+                                <th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
+                                <th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
+                                <th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th>
+                                <th scope="col"><?php esc_html_e( 'Members', 'tclas' ); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tclas-map-list-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <?php else : ?>
+        <!-- Default layout: toggle between map and list -->
         <div class="tclas-map-toolbar">
             <button type="button" class="tclas-map-view-toggle" id="tclas-map-view-toggle"
                     aria-pressed="false"
@@ -132,6 +171,8 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
                 <tbody id="tclas-map-list-body"></tbody>
             </table>
         </div>
+        <?php endif; ?>
+
         <p class="tclas-map-caption">
             <?php if ( $is_public ) : ?>
                 <?php esc_html_e( 'Circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.', 'tclas' ); ?>

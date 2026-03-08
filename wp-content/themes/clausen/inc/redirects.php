@@ -31,4 +31,16 @@ add_action( 'template_redirect', function () {
 			exit;
 		}
 	}
+
+	// Prefix-based redirects: /commune/{slug}/ → /member-hub/ancestral-map/commune/{slug}/
+	$prefix_redirects = [
+		'commune/' => 'member-hub/ancestral-map/commune/',
+	];
+	foreach ( $prefix_redirects as $old_prefix => $new_prefix ) {
+		if ( strpos( $request, $base . $old_prefix ) === 0 ) {
+			$remainder = substr( $request, strlen( $base . $old_prefix ) );
+			wp_safe_redirect( home_url( '/' . $new_prefix . $remainder ), 301 );
+			exit;
+		}
+	}
 }, 1 );

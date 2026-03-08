@@ -16,6 +16,7 @@
     var communes = data.communes || {};
     var storyUrl = data.storyUrl || '/member-hub/my-story/';
     var isPublic = !!data.isPublic;
+    var isSplit  = data.layout === 'split';
     var joinUrl  = data.joinUrl || '/join/';
     var keys     = Object.keys(communes);
 
@@ -59,6 +60,7 @@
 
     // ── Markers ───────────────────────────────────────────────────────────
     var latlngs = [];
+    var markerMap = {}; // slug → { marker, latlng }
 
     keys.forEach(function (slug) {
       var c = communes[slug];
@@ -78,6 +80,8 @@
         opacity:     0.9,
         fillOpacity: 0.8,
       }).addTo(map);
+
+      markerMap[slug] = { marker: marker, latlng: L.latLng(ll[0], ll[1]) };
 
       var memberWord   = c.count === 1 ? 'member' : 'members';
       var verbWord     = c.count === 1 ? 'has'    : 'have';
@@ -136,65 +140,161 @@
       fitMap();
     }, 200);
 
-    // ── List view toggle ──────────────────────────────────────────────────
-    var toggleBtn = document.getElementById('tclas-map-view-toggle');
-    var listEl    = document.getElementById('tclas-map-list');
-    var listBody  = document.getElementById('tclas-map-list-body');
+    // ── List helpers ──────────────────────────────────────────────────────
+    var listBody   = document.getElementById('tclas-map-list-body');
+    var countEl    = document.getElementById('tclas-map-list-count');
+    var profileBase = isPublic ? joinUrl : (data.communeBaseUrl || '/commune/');
 
-    if (toggleBtn && listEl && listBody) {
-      // Build table rows, sorted by count descending
-      var sorted = keys.slice().sort(function (a, b) {
-        return communes[b].count - communes[a].count;
-      });
+    var MAX_SURNAMES = 3; // show this many, then "+N more" link
 
-      var profileBase = isPublic ? joinUrl : (data.communeBaseUrl || '/commune/');
+    function buildRow(slug) {
+      var c = communes[slug];
+      var tr = document.createElement('tr');
+      var communeUrl = profileBase + slug + '/';
 
-      sorted.forEach(function (slug) {
-        var c = communes[slug];
-        var tr = document.createElement('tr');
-        var nameCell = document.createElement('td');
-        if (isPublic) {
-          nameCell.textContent = c.name;
+      var nameCell = document.createElement('td');
+      if (isPublic) {
+        nameCell.textContent = c.name;
+      } else {
+        var link = document.createElement('a');
+        link.href = communeUrl;
+        link.textContent = c.name;
+        nameCell.appendChild(link);
+      }
+
+      var cantonCell = document.createElement('td');
+      cantonCell.textContent = c.canton;
+
+      var surnameCell = document.createElement('td');
+      surnameCell.className = 'tclas-map-list__surnames';
+      if (c.surnames && c.surnames.length > 0) {
+        var shown = c.surnames.slice(0, MAX_SURNAMES).join(', ');
+        var remaining = c.surnames.length - MAX_SURNAMES;
+        if (remaining > 0) {
+          surnameCell.innerHTML = _esc(shown) + ', <a href="' + _esc(communeUrl) +
+            '" class="tclas-map-list__more">+' + remaining + ' more</a>';
         } else {
-          var link = document.createElement('a');
-          link.href = profileBase + slug + '/';
-          link.textContent = c.name;
-          nameCell.appendChild(link);
+          surnameCell.textContent = shown;
         }
-        var cantonCell = document.createElement('td');
-        cantonCell.textContent = c.canton;
-        var surnameCell = document.createElement('td');
-        surnameCell.textContent = (c.surnames && c.surnames.length > 0)
-          ? c.surnames.join(', ')
-          : '—';
-        surnameCell.style.fontSize = '.82rem';
-        surnameCell.style.color = '#777';
-        var countCell = document.createElement('td');
-        countCell.textContent = c.count;
-        tr.appendChild(nameCell);
-        tr.appendChild(cantonCell);
-        tr.appendChild(surnameCell);
-        tr.appendChild(countCell);
-        listBody.appendChild(tr);
-      });
+      } else {
+        surnameCell.textContent = '—';
+      }
 
-      toggleBtn.addEventListener('click', function () {
-        var showing = toggleBtn.getAttribute('aria-pressed') === 'true';
-        if (showing) {
-          // Switch back to map
-          el.hidden = false;
-          listEl.hidden = true;
-          toggleBtn.setAttribute('aria-pressed', 'false');
-          toggleBtn.querySelector('span').textContent = 'View as list';
-          map.invalidateSize();
-        } else {
-          // Switch to list
-          el.hidden = true;
-          listEl.hidden = false;
-          toggleBtn.setAttribute('aria-pressed', 'true');
-          toggleBtn.querySelector('span').textContent = 'View as map';
+      var countCell = document.createElement('td');
+      countCell.textContent = c.count;
+
+      tr.appendChild(nameCell);
+      tr.appendChild(cantonCell);
+      tr.appendChild(surnameCell);
+      tr.appendChild(countCell);
+
+      // Click row to fly map to the commune marker
+      if (!isPublic && markerMap[slug]) {
+        tr.className = 'tclas-map-list__row--clickable';
+        tr.addEventListener('click', function (e) {
+          if (e.target.tagName === 'A') return; // let links navigate normally
+          var m = markerMap[slug];
+          map.flyTo(m.latlng, 12, { duration: 0.6 });
+          m.marker.openPopup();
+        });
+      }
+
+      return tr;
+    }
+
+    // ── Split layout: live-filtered list ──────────────────────────────────
+    if (isSplit && listBody) {
+      var searchInput = document.getElementById('tclas-map-list-search');
+      var searchTerm  = '';
+
+      if (searchInput) {
+        searchInput.addEventListener('input', function () {
+          searchTerm = this.value.toLowerCase().trim();
+          updateList();
+        });
+      }
+
+      function updateList() {
+        var bounds = map.getBounds();
+        var visible = [];
+
+        keys.forEach(function (slug) {
+          var m = markerMap[slug];
+          if (!m || !bounds.contains(m.latlng)) return;
+
+          // Apply search filter: match commune name, canton, or any surname
+          if (searchTerm) {
+            var c = communes[slug];
+            var haystack = (c.name + ' ' + c.canton + ' ' +
+              (c.surnames || []).join(' ')).toLowerCase();
+            if (haystack.indexOf(searchTerm) === -1) return;
+          }
+
+          visible.push(slug);
+        });
+
+        // Sort by count descending
+        visible.sort(function (a, b) {
+          return communes[b].count - communes[a].count;
+        });
+
+        // Update count badge
+        if (countEl) {
+          var total = keys.length;
+          if (searchTerm) {
+            countEl.textContent = visible.length + ' result' +
+              (visible.length !== 1 ? 's' : '');
+          } else {
+            countEl.textContent = visible.length === total
+              ? total + ' communes'
+              : visible.length + ' of ' + total + ' in view';
+          }
         }
-      });
+
+        // Rebuild table body
+        listBody.innerHTML = '';
+        visible.forEach(function (slug) {
+          listBody.appendChild(buildRow(slug));
+        });
+      }
+
+      map.on('moveend', updateList);
+      // Initial render after map is ready
+      setTimeout(updateList, 250);
+
+    // ── Default layout: toggle between map and list ─────────────────────
+    } else if (listBody) {
+      var toggleBtn = document.getElementById('tclas-map-view-toggle');
+      var listEl    = document.getElementById('tclas-map-list');
+
+      if (toggleBtn && listEl) {
+        // Build full table once, sorted by count descending
+        var sorted = keys.slice().sort(function (a, b) {
+          return communes[b].count - communes[a].count;
+        });
+
+        sorted.forEach(function (slug) {
+          listBody.appendChild(buildRow(slug));
+        });
+
+        toggleBtn.addEventListener('click', function () {
+          var showing = toggleBtn.getAttribute('aria-pressed') === 'true';
+          if (showing) {
+            // Switch back to map
+            el.hidden = false;
+            listEl.hidden = true;
+            toggleBtn.setAttribute('aria-pressed', 'false');
+            toggleBtn.querySelector('span').textContent = 'View as list';
+            map.invalidateSize();
+          } else {
+            // Switch to list
+            el.hidden = true;
+            listEl.hidden = false;
+            toggleBtn.setAttribute('aria-pressed', 'true');
+            toggleBtn.querySelector('span').textContent = 'View as map';
+          }
+        });
+      }
     }
   });
 

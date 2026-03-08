@@ -51,7 +51,7 @@ get_header();
 				</p>
 			</div>
 
-			<?php echo do_shortcode( '[tclas_ancestor_map]' ); ?>
+			<?php echo do_shortcode( '[tclas_ancestor_map layout="split"]' ); ?>
 
 		<?php endif; ?>
 

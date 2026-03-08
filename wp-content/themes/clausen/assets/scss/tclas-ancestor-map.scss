@@ -166,7 +166,116 @@ a.tclas-map-popup-cta {
 	}
 }
 
+// ── List surname truncation ──────────────────────────────────────────────
+.tclas-map-list__surnames {
+	font-size: .82rem;
+	color: var(--c-muted, #777);
+}
+
+.tclas-map-list__more {
+	color: var(--c-aigue, #3ea9e0);
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+
+	&:hover { text-decoration: underline; }
+}
+
+// Clickable rows in split view
+.tclas-map-list__row--clickable {
+	cursor: pointer;
+	&:hover { background: rgba(43, 98, 130, .04); }
+}
+
+// ── Split layout (map + live-filtered list side by side) ─────────────────
+.tclas-map-split {
+	display: grid;
+	grid-template-columns: 3fr 2fr;
+	gap: 1.5rem;
+	align-items: start;
+
+	@media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.tclas-map-split__map {
+	.tclas-ancestor-map {
+		height: 600px;
+		border-radius: var(--radius, 8px);
+	}
+}
+
+.tclas-map-split__list {
+	border: 1px solid var(--c-border, #ddd);
+	border-radius: var(--radius, 8px);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+
+	// On desktop, match map height so the list scrolls within the panel
+	max-height: 600px;
+
+	@media (max-width: 900px) { max-height: 400px; }
+}
+
+.tclas-map-split__list-header {
+	padding: .5rem .75rem;
+	background: var(--c-or-pale, #FAF9F6);
+	border-bottom: 1px solid var(--c-border, #ddd);
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+}
+
+.tclas-map-split__search {
+	flex: 1;
+	border: 1px solid var(--c-border, #ddd);
+	border-radius: 4px;
+	padding: .35rem .5rem;
+	font-size: .8rem;
+	font-family: inherit;
+	color: var(--c-body-text, #333);
+	background: #fff;
+	outline: none;
+
+	&::placeholder { color: var(--c-muted, #999); }
+	&:focus { border-color: var(--c-ardoise, #2B6282); }
+}
+
+.tclas-map-split__count {
+	font-size: .78rem;
+	font-weight: 600;
+	color: var(--c-muted, #777);
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.tclas-map-split__list-scroll {
+	overflow-y: auto;
+	flex: 1;
+
+	// Subtle scrollbar
+	&::-webkit-scrollbar { width: 6px; }
+	&::-webkit-scrollbar-track { background: transparent; }
+	&::-webkit-scrollbar-thumb {
+		background: var(--c-border, #ddd);
+		border-radius: 3px;
+	}
+}
+
+// In split layout, the wrapper wraps the grid without its own border
+.tclas-map-wrapper--split {
+	.tclas-map-list__table {
+		// thead sticks at top of scroll area
+		thead th {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+		}
+	}
+}
+
 // ── Responsive ────────────────────────────────────────────────────────────
 @media (max-width: 640px) {
 	.tclas-ancestor-map { height: 340px; }
+	.tclas-map-split__map .tclas-ancestor-map { height: 340px; }
 }
