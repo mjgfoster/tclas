@@ -17,12 +17,12 @@ function tclas_enqueue_assets(): void {
 	// so we never need to manually bump TCLAS_VERSION for asset updates.
 	$dir = get_template_directory();
 
-	// ── Google Fonts — Source Sans 3 (sans) + Vollkorn (serif) ───────────
-	// CSS vars: --font-sans (Source Sans 3), --font-serif (Vollkorn).
+	// ── Google Fonts — Source Sans 3 (sans) + Ancizar Serif (serif) ─────
+	// CSS vars: --font-sans (Source Sans 3), --font-serif (Ancizar Serif).
 	// Weights: 400, 400i, 700, 700i for both fonts.
 	wp_enqueue_style(
 		'tclas-google-fonts',
-		'https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap',
 		[],
 		null
 	);
