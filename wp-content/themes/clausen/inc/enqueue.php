@@ -3,8 +3,7 @@
  * Enqueue scripts & styles
  *
  * Pre-compiled theme — no build step required.
- * Bootstrap loaded from CDN. Adobe Fonts optional (set kit ID in Theme Options).
- * Adobe Fonts kit ID: pck6hdf — https://use.typekit.net/pck6hdf.css
+ * Google Fonts (Source Sans 3 + Vollkorn) and Bootstrap loaded from CDN.
  *
  * @package TCLAS
  */
@@ -18,21 +17,12 @@ function tclas_enqueue_assets(): void {
 	// so we never need to manually bump TCLAS_VERSION for asset updates.
 	$dir = get_template_directory();
 
-	// ── Adobe Fonts — Source Sans Pro (sans) + Freight Text Pro (serif) ────
-	// Kit ID stored in ACF Theme Options field 'adobe_fonts_kit_id'.
-	// Kit includes: source-sans-pro (400, 400i, 700, 700i) + freight-text-pro (400, 400i, 700, 700i).
-	// CSS vars: --font-sans (Source Sans Pro), --font-serif (Freight Text Pro).
-	$kit_id = 'pck6hdf';
-	if ( function_exists( 'get_field' ) ) {
-		$acf_kit = sanitize_text_field( (string) get_field( 'adobe_fonts_kit_id', 'option' ) );
-		if ( $acf_kit ) {
-			$kit_id = $acf_kit;
-		}
-	}
-
+	// ── Google Fonts — Source Sans 3 (sans) + Vollkorn (serif) ───────────
+	// CSS vars: --font-sans (Source Sans 3), --font-serif (Vollkorn).
+	// Weights: 400, 400i, 700, 700i for both fonts.
 	wp_enqueue_style(
-		'tclas-adobe-fonts',
-		'https://use.typekit.net/' . $kit_id . '.css',
+		'tclas-google-fonts',
+		'https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap',
 		[],
 		null
 	);
@@ -41,7 +31,7 @@ function tclas_enqueue_assets(): void {
 	wp_enqueue_style(
 		'bootstrap',
 		'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-		[ 'tclas-adobe-fonts' ],
+		[ 'tclas-google-fonts' ],
 		null
 	);
 
@@ -163,9 +153,8 @@ add_action( 'enqueue_block_editor_assets', 'tclas_enqueue_editor_assets' );
  */
 function tclas_resource_hints( array $urls, string $relation_type ): array {
 	if ( 'preconnect' === $relation_type ) {
-		$urls[] = [ 'href' => 'https://cdn.jsdelivr.net', 'crossorigin' => '' ];
-		$urls[] = [ 'href' => 'https://use.typekit.net',  'crossorigin' => '' ];
-		$urls[] = [ 'href' => 'https://p.typekit.net',    'crossorigin' => '' ];
+		$urls[] = [ 'href' => 'https://cdn.jsdelivr.net',   'crossorigin' => '' ];
+		$urls[] = [ 'href' => 'https://fonts.googleapis.com', 'crossorigin' => '' ];
 	}
 	return $urls;
 }
@@ -176,7 +165,7 @@ add_filter( 'wp_resource_hints', 'tclas_resource_hints', 10, 2 );
  */
 function tclas_speed_optimizer_exclusions( array $excluded ): array {
 	$excluded[] = 'cdn.jsdelivr.net';
-	$excluded[] = 'use.typekit.net';
+	$excluded[] = 'fonts.googleapis.com';
 	return $excluded;
 }
 add_filter( 'sgo_js_minify_exclude',  'tclas_speed_optimizer_exclusions' );
