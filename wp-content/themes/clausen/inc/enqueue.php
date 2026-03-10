@@ -3,7 +3,7 @@
  * Enqueue scripts & styles
  *
  * Pre-compiled theme — no build step required.
- * Google Fonts (Source Sans 3 + Vollkorn) and Bootstrap loaded from CDN.
+ * Google Fonts (Source Sans 3 + Ancizar Serif) and Bootstrap loaded from CDN.
  *
  * @package TCLAS
  */
