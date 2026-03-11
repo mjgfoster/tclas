@@ -281,20 +281,12 @@ function tclas_render_header_actions( bool $mobile = false ): void {
 	$icon_user = '<svg aria-hidden="true" focusable="false" width="' . $icon_size . '" height="' . $icon_size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
 	if ( is_user_logged_in() ) {
-		$user       = wp_get_current_user();
-		$first_name = ! empty( $user->user_firstname ) ? $user->user_firstname : __( 'Member', 'tclas' );
-		$hub_url    = home_url( '/member-hub/' );
-
+		// Desktop: member nav bar handles greeting; mobile drawer still needs a hub link.
 		if ( $mobile ) {
+			$hub_url = home_url( '/member-hub/' );
 			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-nav-drawer__user-link">';
 			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
 			echo '<span>' . esc_html__( 'Dashboard', 'tclas' ) . '</span>';
-			echo '</a>';
-		} else {
-			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-user-menu">';
-			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
-			/* translators: %s: member's first name */
-			echo '<span>' . esc_html( sprintf( __( 'Moien, %s', 'tclas' ), $first_name ) ) . '</span>';
 			echo '</a>';
 		}
 	} else {
