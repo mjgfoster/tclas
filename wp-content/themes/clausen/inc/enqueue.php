@@ -129,6 +129,24 @@ function tclas_enqueue_assets(): void {
 		);
 	}
 
+	// ── Cookie consent banner ────────────────────────────────────────────
+	wp_enqueue_script(
+		'tclas-cookie-consent',
+		TCLAS_ASSETS . '/js/cookie-consent.js',
+		[],
+		filemtime( $dir . '/assets/js/cookie-consent.js' ),
+		true
+	);
+
+	// Pass analytics/marketing IDs so the consent script can load them on opt-in.
+	// Set these in ACF Theme Options (or leave empty to disable).
+	$ga_id     = function_exists( 'get_field' ) ? get_field( 'google_analytics_id', 'option' ) : '';
+	$brevo_key = function_exists( 'get_field' ) ? get_field( 'brevo_tracking_key', 'option' ) : '';
+	wp_localize_script( 'tclas-cookie-consent', 'tclasConsent', [
+		'gaId'     => $ga_id ?: '',
+		'brevoKey' => $brevo_key ?: '',
+	] );
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}

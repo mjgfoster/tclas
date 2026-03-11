@@ -132,6 +132,7 @@
 						<?php if ( get_privacy_policy_url() ) : ?>
 							<a href="<?php echo esc_url( get_privacy_policy_url() ); ?>"><?php esc_html_e( 'Privacy policy', 'tclas' ); ?></a>
 						<?php endif; ?>
+						<button type="button" class="tclas-footer__cookie-link tclas-consent-manage"><?php esc_html_e( 'Manage cookies', 'tclas' ); ?></button>
 						<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'tclas' ); ?></a>
 					</nav>
 
