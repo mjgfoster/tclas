@@ -585,6 +585,15 @@ function tclas_register_acf_fields(): void {
 				'min'           => 1,
 				'instructions'  => 'Lower numbers appear first in the table of contents. Main Story should be 1.',
 			],
+			[
+				'key'           => 'field_tclas_hide_byline',
+				'label'         => 'Hide author byline',
+				'name'          => 'tclas_hide_byline',
+				'type'          => 'true_false',
+				'default_value' => 0,
+				'ui'            => 1,
+				'instructions'  => 'Check to hide the author byline on newsletter topic pages (e.g., for articles bylined to "TCLAS" as an institution).',
+			],
 		],
 	] );
 

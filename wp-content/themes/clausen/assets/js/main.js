@@ -240,13 +240,11 @@
       // Initialize aria-expanded to false
       link.setAttribute('aria-expanded', 'false');
 
-      // Hover to show/hide dropdown
-      item.addEventListener('mouseenter', () => {
-        link.setAttribute('aria-expanded', 'true');
-      });
-
-      item.addEventListener('mouseleave', () => {
-        link.setAttribute('aria-expanded', 'false');
+      // Click to toggle dropdown
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isExpanded = link.getAttribute('aria-expanded') === 'true';
+        link.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
       });
 
       // Keyboard navigation

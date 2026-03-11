@@ -10,6 +10,7 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 	$minutes = tclas_reading_time();
+	$hide_byline = get_post_meta( get_the_ID(), 'tclas_hide_byline', true );
 
 	// ── Department (newsletter topic) ─────────────────────────────────────
 	// Exclude the structural 'main-story' term; take the first real topic.
@@ -62,6 +63,7 @@ while ( have_posts() ) :
 
 			<h1 class="tclas-hero__title"><?php the_title(); ?></h1>
 
+		<?php if ( ! $hide_byline ) : ?>
 			<p class="tclas-hero__subtitle">
 				<?php
 				printf(
@@ -73,6 +75,7 @@ while ( have_posts() ) :
 				);
 				?>
 			</p>
+		<?php endif; ?>
 
 		</div>
 	</div>
