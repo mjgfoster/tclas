@@ -6,6 +6,7 @@
 // ── Page header (shared) ──────────────────────────────────────────────────
 .tclas-page-header { padding: 2rem 0 0 0; }
 .tclas-page-header__title { font-size: clamp(1.75rem, 3.5vw, 2.5rem); color: var(--c-ardoise); margin: 0; }
+.tclas-page-header__subtitle { display: block; font-size: 1rem; color: var(--c-muted); font-weight: 400; margin-top: .5rem; }
 
 // ── Citizenship page ──────────────────────────────────────────────────────
 .tclas-citizenship-lede { font-size: 1.1rem; max-width: 62ch; }
