@@ -41,8 +41,14 @@
       drawer.classList.contains('is-open') ? closeMenu() : openMenu();
     });
 
-    // Close when a nav link is tapped
-    qsa('a', drawer).forEach(link => link.addEventListener('click', closeMenu));
+    // Close when a nav link is tapped (but not parent links with dropdowns)
+    qsa('a', drawer).forEach(link => {
+      // Don't close menu on parent links (those with dropdowns)
+      const hasDropdown = link.closest('.tclas-nav__item.has-dropdown');
+      if (!hasDropdown) {
+        link.addEventListener('click', closeMenu);
+      }
+    });
 
     // Close on outside click
     document.addEventListener('click', (e) => {

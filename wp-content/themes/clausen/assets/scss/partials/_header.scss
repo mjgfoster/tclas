@@ -79,6 +79,10 @@
 	gap: 2rem;
 }
 
+.tclas-nav__item {
+	position: relative;
+}
+
 .tclas-nav__link {
 	display: inline-block;
 	color: var(--c-body-text);
