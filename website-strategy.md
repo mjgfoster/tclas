@@ -1,13 +1,15 @@
 # TCLAS Website & Email Strategy
 
+_Updated 2026-03-08_
+
 ## Overview
 
-TCLAS (The Clausen Luxembourg-American Society) is a membership nonprofit launching in April 2026. The website serves as the primary digital hub — attracting visitors through content, converting them into email subscribers, and nurturing subscribers toward membership.
+TCLAS (Twin Cities Luxembourg American Society) is a membership nonprofit launching in April 2026. The website serves as the primary digital hub — attracting visitors through content, converting them into email subscribers, and nurturing subscribers toward membership.
 
 ## Website Architecture
 
-**Platform**: WordPress with custom theme ("Ciel Bleu")
-**Key plugins**: Paid Memberships Pro (membership tiers), ACF Pro (content management), The Events Calendar, Mailchimp for WP, WP Recipe Maker
+**Platform**: WordPress with custom theme "Clausen" v1.2 ("Ciel Bleu")
+**Key plugins**: Paid Memberships Pro (membership tiers), ACF Pro (content management), The Events Calendar, Brevo (email marketing), WP Recipe Maker, Luxembourg Citizenship Quiz (custom)
 
 ### Core pages and their roles
 
@@ -30,12 +32,13 @@ TCLAS (The Clausen Luxembourg-American Society) is a membership nonprofit launch
 
 ## Email List Strategy
 
-**Platform**: Mailchimp (integrated via MC4WP plugin)
+**Platform**: Brevo (integrated via Brevo WP plugin, slug: `mailin`)
+**Member sync**: FuseWP (premium plugin; handles PMPro ↔ Brevo sync — subscribe on checkout, remove on cancellation)
 
 ### Subscriber acquisition points
 
-1. **Footer signup form** — sitewide, persistent (MC4WP form, ID set in Theme Options)
-2. **Citizenship quiz results** — email capture after quiz completion (existing AJAX handler)
+1. **Footer signup form** — sitewide, persistent (Brevo form, ID set in Theme Options `footer_newsletter_form_id`)
+2. **Citizenship quiz results** — email capture after quiz completion; adds to Brevo list (`lcq_brevo_list_id` wp-option) and tags with `QUIZ_COMPLETER` attribute
 3. **Newsletter page** — CTA alongside issue archive
 4. **Events** — post-event follow-up potential
 
@@ -48,7 +51,7 @@ Engages with pillar content (Citizenship, Ancestry, MSP+LUX)
   ↓
 Subscribes to newsletter (footer form, quiz email capture)
   ↓
-Receives regular newsletter issues (Mailchimp campaigns)
+Receives regular newsletter issues (Brevo campaigns)
   ↓
 Attends an event or explores member benefits
   ↓
@@ -67,42 +70,44 @@ The site already has a newsletter/issue system with:
 - **Departments** (taxonomy-based topic categorization, bilingual English/Lëtzebuergesch)
 - **Article ordering** within issues
 
-This maps directly to Mailchimp campaigns — each issue becomes an email, and the website newsletter archive serves as the permanent, browsable home for all content.
+This maps directly to Brevo campaigns — each issue becomes an email, and the website newsletter archive serves as the permanent, browsable home for all content.
 
-### Recommended Mailchimp setup
+### Recommended Brevo setup
 
 - **One primary list** — all subscribers
-- **Tags or groups** for segmentation: quiz completers, event attendees, members (sync via PMPro)
+- **Tags or attributes** for segmentation: quiz completers (`QUIZ_COMPLETER`), event attendees, members (sync via FuseWP)
 - **Automation**: welcome sequence for new subscribers (introduce TCLAS, highlight key content, soft CTA to join)
 - **Campaign cadence**: monthly newsletter aligned with website issue schedule
 
 ## Integration Points
 
-### Website → Mailchimp
-- MC4WP form submissions add subscribers
-- Quiz email handler can add to list + tag as "quiz-completer"
+### Website → Brevo
+- Brevo form submissions add subscribers
+- Quiz email handler adds to Brevo list + sets `QUIZ_COMPLETER` attribute
 - Event RSVPs could feed subscriber list (if registration URL points to a form)
 
-### Mailchimp → Website
+### Brevo → Website
 - Newsletter emails link back to full articles on the site
 - Campaign CTAs drive to /join/, /events/, /citizenship/
 - Member-only content teasers drive upgrades
 
-### PMPro → Mailchimp
-- PMPro has Mailchimp integration add-ons — sync members to a tag/group automatically
+### PMPro → Brevo (via FuseWP)
+- FuseWP syncs PMPro membership status to Brevo lists/attributes automatically
 - Enables: "members-only" email segments, renewal reminders, lapsed member re-engagement
 
 ## Key dates
 
+- **March 12**: Copy + UI review with Rebecca
 - **March 22**: Board preview of website
 - **April 18**: Soft launch
 
 ## Open items
 
-- [ ] Create MC4WP form in WP Admin, set form ID in Theme Options
-- [ ] Set up Mailchimp list and welcome automation
-- [ ] Decide on PMPro ↔ Mailchimp sync (free add-on available)
+- [ ] Enter Brevo API key in WP Admin > Brevo > Settings
+- [ ] Create Brevo signup form, set form ID in Theme Options (`footer_newsletter_form_id`)
+- [ ] Install FuseWP for PMPro ↔ Brevo member sync
+- [ ] Set quiz Brevo list ID (`lcq_brevo_list_id` wp-option)
+- [ ] Create `QUIZ_COMPLETER` boolean attribute in Brevo account
 - [ ] Plan first newsletter issue content for launch
-- [ ] Configure quiz email handler to also subscribe to Mailchimp
 - [ ] Draft welcome email sequence (3–5 emails)
 - [ ] Define email-exclusive vs. website-published content balance

@@ -44,15 +44,19 @@
 
 | Plugin | Version | Role |
 |--------|---------|------|
-| Paid Memberships Pro | 3.6.4 | Membership levels, checkout, subscriptions |
-| Advanced Custom Fields Pro | — | Field groups, options pages |
-| Mailchimp for WP | — | Newsletter forms, list management |
-| The Events Calendar | 6.15.16 | Event management and calendar |
+| Paid Memberships Pro | 3.6.5 | Membership levels, checkout, subscriptions |
+| Advanced Custom Fields Pro | 6.7.1 | Field groups, options pages |
+| Brevo | 3.3.2 | Email marketing (slug: `mailin`) |
+| The Events Calendar | 6.15.17 | Event management and calendar |
 | bbPress | — | Forums (Luxembourg Connections) |
 | Akismet | — | Comment spam protection |
 | open-user-map | — | User location mapping |
 | pmpro-update-manager | — | PMPro update management |
-| **luxembourg-citizenship-quiz** | **1.4** | **Custom plugin — citizenship eligibility quiz** |
+| WP Recipe Maker | 10.4.0 | Recipe CPT with JSON-LD schema |
+| Modern Footnotes | 1.4.20 | Inline footnotes via `[mfn]...[/mfn]` |
+| The SEO Framework | — | OG/Twitter Card meta, meta descriptions |
+| Disable Comments | 2.6.2 | Disables comment system sitewide |
+| **luxembourg-citizenship-quiz** | **2.0** | **Custom plugin — citizenship eligibility quiz** |
 
 ### Custom plugin — luxembourg-citizenship-quiz
 
@@ -90,15 +94,26 @@
 
 | Taxonomy | Attached to | Hierarchical | Notes |
 |----------|-------------|:---:|-------|
-| `tclas_commune` | tclas_story, post | No | 534 Luxembourg villages from official place-name index |
+| `tclas_commune` | tclas_story, post | No | 583 Luxembourg places from official index (localities + municipalities) |
 | `tclas_surname` | tclas_story, post | No | Family surnames |
 | `tclas_generation` | tclas_story | Yes | Immigration generation (1st, 2nd, …) |
 | `tclas_department` | post | No | Newsletter sections (intro, main-story, community, recipe, news) |
 | `tclas_category` | post | Yes | Content categories (public-facing) |
 
-#### Commune term meta
-- `tclas_commune_wikipedia_url` (URL)
-- `tclas_commune_lux_website_url` (URL)
+#### Commune term meta (ACF)
+- `tclas_commune_wikipedia_url` (URL) — 484/583 populated
+- `tclas_commune_lux_website_url` (URL) — 481/583 populated
+
+#### Commune term meta (custom)
+- `tclas_municipality` (text) — parent municipality name (e.g., "Käerjeng" for Bascharage)
+- `tclas_commune_lux_name` (text) — Luxembourgish place name
+- `tclas_commune_lat` (float) — latitude
+- `tclas_commune_lng` (float) — longitude
+
+#### Commune data architecture
+Two data sources exist and must be kept in sync:
+1. **`inc/commune-data.php`** — hardcoded PHP array (583 entries) returned by `tclas_get_communes()`. Contains: name, lux (Luxembourgish name), municipality, canton, lat, lng. Used by templates for display.
+2. **WordPress term meta** — ACF fields (wikipedia_url, lux_website_url) + custom meta (municipality, lux_name, lat, lng). Used for enrichment data on commune profile pages.
 
 ---
 
@@ -111,9 +126,9 @@
 | Field key | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `adobe_fonts_kit_id` | text | pck6hdf | Typekit kit ID for Adobe Fonts |
-| `footer_mc4wp_form_id` | number | — | MC4WP form ID displayed in footer |
+| `footer_newsletter_form_id` | number | — | Brevo form ID displayed in footer |
 | `referral_base_url` | URL | — | Landing page for referral links |
-| `mailchimp_members_list_id` | text | — | List ID for auto-subscription on checkout |
+| `brevo_members_list_id` | text | — | Brevo list ID for member sync |
 | `facebook_group_url` | URL | https://www.facebook.com/groups/tclas | Facebook community group link |
 | `national_day_mode` | true/false | false | Manual override for National Day season |
 | `org_address` | textarea | — | Organization address (footer) |
@@ -124,16 +139,24 @@
 
 > Note: price fields are display-only. Actual billing prices are set in PMPro.
 
-### Theme Options — Illustrations
+### Theme Options — Hero Photos & Branding
 
-| Field key | Dimensions | Purpose |
-|-----------|-----------|---------|
-| `hero_illustration` | 1440×640 | Homepage hero (desktop) |
-| `hero_illustration_mobile` | 640×640 | Homepage hero (mobile) |
-| `welcome_illustration` | ~480×480 | Homepage welcome section |
-| `membership_illustration` | 1200×360 | Join page banner |
-| `member_gate_illustration` | 320×320 | Membership gate / upsell |
-| `referral_lion_illustration` | 160×160 | Referral card in member hub |
+| Field key | Type | Purpose |
+|-----------|------|---------|
+| `hero_photo_msp` | image | Homepage hero — Minneapolis photo |
+| `hero_photo_msp_credit` | text | Photo credit overlay |
+| `hero_photo_lux` | image | Homepage hero — Luxembourg photo |
+| `hero_photo_lux_credit` | text | Photo credit overlay |
+| `footer_logo` | image | Light logo variant for dark footer (currently unused — hardcoded SVG) |
+| `mapbox_access_token` | text | Mapbox API token for ancestral map |
+| `mapbox_style_url` | text | Mapbox style URL for ancestral map |
+
+### Theme Options — Content Repeaters
+
+| Field key | Type | Purpose |
+|-----------|------|---------|
+| `homepage_stats` | repeater | Stat values (rows of `stat_value` + `stat_label`) |
+| `testimonials` | repeater | Member testimonials (`name`, `member_since`, `location`, `photo`, `quote`) |
 
 ### Newsletter / Loon & Lion Post Fields
 
@@ -145,7 +168,7 @@ Applied to `post` post type (newsletter issues):
 
 ## 4. Paid Memberships Pro
 
-**Version**: 3.6.4
+**Version**: 3.6.5
 
 ### Membership levels
 
@@ -160,12 +183,11 @@ Levels are configured in PMPro admin. The theme references three tiers by their 
 ### Theme integration points
 
 #### `pmpro_after_checkout`
-- Auto-subscribes new member to Mailchimp members list (`mailchimp_members_list_id`)
-- Merges `FNAME` and `LNAME` fields
 - Credits referral source if `tclas_referral` cookie present (see [§10](#10-referral-system))
+- Member ↔ Brevo sync handled by FuseWP (when installed)
 
 #### `pmpro_after_change_membership_level`
-- On cancellation/expiry: sets Mailchimp status to 'unsubscribed'
+- Brevo list removal handled by FuseWP (when installed)
 
 #### `login_redirect`
 - Authenticated members are redirected to `/member-hub/` instead of `/wp-admin/`
@@ -188,24 +210,28 @@ Levels are configured in PMPro admin. The theme references three tiers by their 
 
 | Shortcode | Source | Page used | Function |
 |-----------|--------|-----------|----------|
-| `[luxembourg_eligibility_quiz]` | Custom plugin | /quiz/ | Citizenship eligibility quiz (see §6) |
-| `[tclas_ancestor_map]` | Theme — `inc/ancestor-map.php` | /map/ | Interactive Leaflet map of ancestral communes (see §7) |
-| `[mc4wp_form id="X"]` | Mailchimp for WP | Footer (via theme function) | Newsletter signup form |
+| `[luxembourg_eligibility_quiz]` | Custom plugin | /citizenship/ | Citizenship eligibility quiz v2.0 (see §6) |
+| `[tclas_ancestor_map]` | Theme — `inc/ancestor-map.php` | /member-hub/ancestral-map/ | Interactive Leaflet map (members, split layout) |
+| `[tclas_ancestor_map public="true"]` | Theme — `inc/ancestor-map.php` | /ancestry/ | Read-only public map embed |
+| `[ltz t="translation"]...[/ltz]` | Theme — `inc/template-functions.php` | Post content | Luxembourgish tooltip (wraps `tclas_ltz()`) |
+| `[wprm-recipe id=""]` | WP Recipe Maker | Post content | Recipe card with JSON-LD schema |
+| `[mfn]...[/mfn]` | Modern Footnotes | Post content | Inline footnotes |
 
 ---
 
 ## 6. Luxembourg Citizenship Quiz (Custom Plugin)
 
 **Plugin**: `wp-content/plugins/luxembourg-citizenship-quiz/`
-**Version**: 1.4
+**Version**: 2.0
 **Shortcode**: `[luxembourg_eligibility_quiz]`
 
 ### What it does
-A client-side JavaScript state machine that guides the user through a multi-generational eligibility assessment for Luxembourg citizenship. It evaluates applicant eligibility under Article 7 (direct descent) and Article 23 (post-1969 rules).
+A client-side JavaScript state machine that guides the user through a multi-generational eligibility assessment for Luxembourg citizenship. v2.0 features lineage tracing with a real-time family tree sidebar, smart 1969-skip logic, and visual lineage tracker.
 
 ### Design decisions
-- **No dates collected** — uses a single "Born before 1969?" checkbox for privacy
+- **No dates collected** — uses smart 1969-skip logic (if parent was born before 1969, grandparent must have been too)
 - Up to **5 ancestor generations** can be traced
+- **Lineage tracker sidebar** — real-time family tree visualization showing the path being traced
 - Pure client-side logic; no data persisted server-side except via the optional email result submission
 
 ### States
@@ -214,11 +240,11 @@ A client-side JavaScript state machine that guides the user through a multi-gene
 |-------|---------|
 | `start` | Initial prompt |
 | `adopted_check` | Handles adoption (unique legal pathway) |
-| `generation_loop` | Iterates through ancestor generations |
+| `generation_loop` | Iterates through ancestor generations with lineage tracking |
 | `living_check` | Determines if connecting ancestor is living (affects Article 23 pathway) |
 
 For each generation in the loop, the quiz collects:
-- Birth year category (before/after 1969)
+- Birth year category (before/after 1969) — auto-skipped when logically determined
 - Gender (affects pre-1969 transmission rules)
 - Birth country (was ancestor born in Luxembourg?)
 
@@ -244,21 +270,34 @@ For each generation in the loop, the quiz collects:
 ## 7. Ancestral Commune Map
 
 **Location**: `inc/ancestor-map.php`
-**Shortcode**: `[tclas_ancestor_map]`
-**Page**: /map/ (page ID 72)
+**Shortcode**: `[tclas_ancestor_map]` (accepts `public="true"` for unauthenticated embed)
+**Pages**: /member-hub/ancestral-map/ (page ID 72, full member map), /ancestry/ (public embed)
 
 ### What it does
-An interactive Leaflet.js map of Luxembourg showing circles at ancestral commune locations. Circle radius scales with the number of members who have that commune in their genealogy. Privacy-respecting: shows only aggregate data, never individual names.
+An interactive Leaflet.js map of Luxembourg showing circles at ancestral commune locations. Circle radius scales with the number of members who have that commune in their genealogy. Privacy-respecting: shows only aggregate data, never individual names. Split layout on member map: map + filtered member list sidebar.
 
 ### Data
-- Commune coordinates: 534 Luxembourg villages from official place-name index (`tclas_get_communes()`)
+- Commune coordinates: 583 Luxembourg places from official place-name index (`tclas_get_communes()` in `inc/commune-data.php`)
 - Member ancestry: drawn from `_tclas_communes_norm` user meta
 - Privacy filter: members with `_tclas_visibility = 'hidden'` are excluded from the map
+
+### Map tiles
+- **Primary**: Mapbox custom style via Static Tiles API (raster), style ID from ACF `mapbox_style_url`
+- **Fallback**: CartoDB Positron (if Mapbox token not set)
+- Markers: crimson `#8B3A3A` fill, white stroke
+- Canton fills: 12 pastel tints at 0.75 opacity
+- Fog mask: black at 0.1 opacity (dims neighboring countries)
 
 ### Libraries
 - Leaflet 1.9.4 (CDN: cdnjs.cloudflare.com)
 - Custom JS: `assets/js/tclas-ancestor-map.js`
 - Custom CSS: `assets/css/tclas-ancestor-map.css`
+
+### Commune profile pages
+- Template: `taxonomy-tclas_commune.php`
+- URL: `/member-hub/ancestral-map/commune/{slug}/`
+- Three-column layout: facts (municipality, canton, coordinates, external links), LOD.lu pronunciation audio, mini-map
+- Communes A-Z index: `page-templates/page-communes.php` at `/member-hub/ancestral-map/commune/`
 
 ---
 
@@ -386,25 +425,27 @@ Matches members by shared ancestral communes and surnames. Surfaces "connections
 
 ---
 
-## 12. Mailchimp for WP Integration
+## 12. Brevo Integration
 
-**Location**: `inc/mcawp-integration.php`
+**Location**: `inc/brevo-integration.php`
+**Plugin**: Brevo (slug: `mailin`, v3.3.2)
 
 ### Footer newsletter form
-- `tclas_footer_newsletter_form()` renders MC4WP form using ID from ACF `footer_mc4wp_form_id`
+- `tclas_footer_newsletter_form()` renders Brevo form using ID from ACF `footer_newsletter_form_id`
 - Falls back to instructional text if no form ID is configured
 
-### Auto subscription / unsubscription (via MC4WP v3 API)
+### Member sync
+- **FuseWP** (premium plugin, not yet installed) handles PMPro ↔ Brevo sync
+- Subscribe on checkout, remove on cancellation
 
-| Trigger | Action | Notes |
-|---------|--------|-------|
-| New membership checkout | Subscribe to `mailchimp_members_list_id` | Merges FNAME + LNAME |
-| Membership cancelled/expired | Unsubscribe (status → 'unsubscribed') | Uses MC4WP API |
+### Quiz email capture
+- Quiz AJAX handler adds contacts to Brevo list (ID from `lcq_brevo_list_id` wp-option)
+- Sets `QUIZ_COMPLETER` boolean attribute on the contact
 
-### Dependency
-- Requires MC4WP plugin active
-- Requires `mailchimp_members_list_id` set in ACF Theme Options
-- Requires `footer_mc4wp_form_id` set in ACF Theme Options for footer form
+### Dependencies
+- Requires Brevo plugin active with API key entered
+- Requires `footer_newsletter_form_id` set in ACF Theme Options for footer form
+- Requires FuseWP for PMPro member sync (not yet installed)
 
 ---
 
@@ -527,9 +568,24 @@ All registered via `wp_ajax_*` and `wp_ajax_nopriv_*` where indicated.
 - Directory pagination / infinite scroll
 
 ### `assets/js/tclas-ancestor-map.js`
-- Leaflet map init and tile layer
+- Leaflet map init with Mapbox custom style (raster tiles) or CartoDB fallback
 - Commune marker rendering (radius = f(member count))
-- Popup with commune name, LOD.lu audio, links
+- Popup with commune name, LOD.lu audio, links to commune profile
+- Split layout: map + filtered member list sidebar (member pages)
+
+### `assets/js/hero-greeting.js`
+- Accumulating greeting animation: "Bonjour." → "Hello." → "Moien."
+- Data-stage/data-active attribute selectors for per-word reveal
+- Reduced motion: all words shown immediately
+
+### `assets/js/hero-slideshow.js`
+- Dual-photo slideshow with slide-over transitions
+- Outgoing image holds stationary; incoming slides over
+- Reduced motion: crossfade fallback
+
+### `assets/js/msp-lux-counters.js`
+- Animated stat counters on MSP+LUX page
+- IntersectionObserver trigger
 
 ---
 
@@ -540,8 +596,12 @@ All registered via `wp_ajax_*` and `wp_ajax_nopriv_*` where indicated.
 ### CSS (in order)
 1. Adobe Fonts (Typekit) — kit ID from ACF `adobe_fonts_kit_id`
 2. Bootstrap 5.3.3 — CDN (cdn.jsdelivr.net)
-3. `assets/css/main.css`
+3. `assets/css/main.css` — compiled from SCSS (`assets/scss/main.scss`)
 4. `assets/css/tribe-events.css` — conditional, TEC pages only
+5. `assets/css/member-profiles.css` — conditional, profiles pages only
+6. `assets/css/tclas-ancestor-map.css` — conditional, map pages only
+
+All local assets use `filemtime()` for version strings (auto cache-busting on save).
 
 ### JS (in order)
 1. Bootstrap 5.3.3 bundle — CDN
@@ -600,16 +660,23 @@ All registered via `wp_ajax_*` and `wp_ajax_nopriv_*` where indicated.
 
 | Template file | Slug | Notes |
 |---------------|------|-------|
-| `front-page.php` | /home | Homepage |
-| `page-templates/page-join.php` | /join | Membership tiers + checkout |
+| `front-page.php` | / | Homepage (hero slideshow, greeting animation) |
+| `page-templates/page-about.php` | /about | About page with board sidebar |
+| `page-templates/page-ancestry.php` | /ancestry | Ancestry — two-column layout (steps + sticky map) |
+| `page-templates/page-citizenship.php` | /citizenship | Citizenship quiz + pathways |
+| `page-templates/page-communes.php` | /member-hub/ancestral-map/commune | Communes A-Z index |
+| `page-templates/page-donate.php` | /donate | Donate page (GiveWP integration) |
+| `page-templates/page-join.php` | /join | Membership + volunteer tracks, tier cards |
+| `page-templates/page-map.php` | /member-hub/ancestral-map | Full ancestral map (members) |
 | `page-templates/page-member-hub.php` | /member-hub | Gated dashboard |
 | `page-templates/page-member-profiles.php` | /member-hub/profiles | Directory + individual profiles |
-| `page-templates/page-my-story.php` | /member-hub/my-story | Genealogy story form |
-| `page-templates/page-newsletter.php` | /newsletter | Loon & Lion archive |
-| `page-templates/page-about.php` | /about | About page |
+| `page-templates/page-msp-lux.php` | /msp-lux | MSP+LUX connections |
+| `page-templates/page-my-story.php` | /my-story | Genealogy story form |
+| `page-templates/page-newsletter.php` | /newsletter | Loon & Lion archive + sticky subnav |
 | `page-templates/page-referral-welcome.php` | /welcome | Referral landing page |
 | `page-templates/page-documents.php` | /member-hub/documents | Gated documents |
 | `page-templates/page-resources.php` | /member-hub/resources | Gated resources |
+| `taxonomy-tclas_commune.php` | /member-hub/ancestral-map/commune/{slug} | Commune profile page |
 
 ---
 
@@ -668,4 +735,4 @@ All registered via `wp_ajax_*` and `wp_ajax_nopriv_*` where indicated.
 
 ---
 
-*Generated 2026-02-28. Source: theme `inc/` directory, custom plugin, and ACF configuration.*
+*Originally generated 2026-02-28. Updated 2026-03-08. Source: theme `inc/` directory, custom plugin, and ACF configuration.*

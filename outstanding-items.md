@@ -141,6 +141,10 @@ Stub pages and copy that only you can write.
 
 ## 8. Recently Completed
 
+- Commune data enrichment — imported 583 places with municipality, Luxembourgish name, canton, coordinates from official data; cascaded Wikipedia + official website URLs (484/583 and 481/583 coverage)
+- Municipality in commune subtitle — shows "Käerjeng, Capellen Canton" when municipality differs from place name
+- External links moved into Gemeng/Municipality fact row on commune profiles
+- "Luxembourg" renamed to "Luxembourg City" across all 31 municipality references
 - Commune profile pages (three-column layout, LOD.lu audio, custom breadcrumbs)
 - Communes A-Z index at `/member-hub/ancestral-map/commune/`
 - Split ancestral map layout (map + filtered member list)
