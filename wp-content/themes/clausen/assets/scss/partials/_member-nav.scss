@@ -1,0 +1,170 @@
+// =============================================================================
+//  _member-nav.scss — sticky member-area navigation bar
+// =============================================================================
+
+$_mn-bp: 640px; // breakpoint: below this, show mobile dropdown
+
+.tclas-member-nav {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	background: var(--c-ardoise-dk);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+	width: 100%;
+}
+
+.tclas-member-nav__inner {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1.5rem;
+	display: flex;
+	align-items: stretch; // full-height children
+	gap: 1.5rem;
+
+	@media (max-width: $_mn-bp) { padding: 0 1rem; }
+}
+
+// ── Greeting ──────────────────────────────────────────────────────────────────
+.tclas-member-nav__greeting {
+	font-family: var(--font-serif);
+	font-size: 1rem;
+	font-weight: 700;
+	color: rgba(255, 255, 255, .8);
+	white-space: nowrap;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	letter-spacing: .01em;
+
+	@media (max-width: $_mn-bp) { display: none; }
+}
+
+// ── Desktop links ─────────────────────────────────────────────────────────────
+.tclas-member-nav__links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: .125rem;
+	flex-shrink: 0;
+
+	li { margin: 0; }
+
+	@media (max-width: $_mn-bp) { display: none; }
+}
+
+.tclas-member-nav__link {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	padding: .75rem .85rem;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: rgba(255, 255, 255, .75);
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background .15s, color .15s;
+
+	.bi { font-size: .95rem; }
+
+	&:hover {
+		background: rgba(255, 255, 255, .1);
+		color: #fff;
+	}
+
+	&--active {
+		background: var(--c-gold);
+		color: var(--c-ardoise-dk);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: -2px; // inset so it doesn't escape the bar
+	}
+}
+
+// ── Mobile dropdown ───────────────────────────────────────────────────────────
+.tclas-member-nav__mobile {
+	display: none;
+	position: relative;
+	flex: 1;
+
+	@media (max-width: $_mn-bp) { display: block; }
+}
+
+.tclas-member-nav__toggle {
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	width: 100%;
+	padding: .75rem 0;
+	background: none;
+	border: none;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: rgba(255, 255, 255, .9);
+	cursor: pointer;
+
+	.bi { font-size: .95rem; }
+}
+
+.tclas-member-nav__chevron {
+	margin-left: auto;
+	font-size: .75rem !important;
+	transition: transform .2s;
+
+	[aria-expanded="true"] & {
+		transform: rotate(180deg);
+	}
+}
+
+.tclas-member-nav__dropdown {
+	position: absolute;
+	top: 100%;
+	left: -1rem;
+	right: -1rem;
+	list-style: none;
+	margin: 0;
+	padding: .5rem 0;
+	background: var(--c-ardoise-dk);
+	border-top: 1px solid rgba(255, 255, 255, .08);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+	z-index: 50;
+
+	&[hidden] { display: none; }
+}
+
+.tclas-member-nav__dropdown-link {
+	display: flex;
+	align-items: center;
+	gap: .5rem;
+	padding: .65rem 1.25rem;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 600;
+	color: rgba(255, 255, 255, .8);
+	text-decoration: none;
+	transition: background .12s;
+
+	.bi { font-size: 1rem; }
+
+	&:hover {
+		background: rgba(255, 255, 255, .1);
+		color: #fff;
+	}
+
+	&--active {
+		color: var(--c-gold);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: -2px;
+	}
+}
