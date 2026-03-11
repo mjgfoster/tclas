@@ -252,6 +252,13 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	text-overflow: ellipsis;
 }
 
+.tclas-dir-card__pronouns {
+	font-weight: 400;
+	font-size: .78rem;
+	color: var(--c-muted);
+	margin-left: .25rem;
+}
+
 .tclas-dir-card__city {
 	font-family: var(--font-sans);
 	font-size: .78rem;
@@ -317,6 +324,13 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	font-weight: 700;
 	color: var(--c-ardoise);
 	margin: 0 0 .6rem;
+}
+
+.tclas-profile-header__pronouns {
+	font-weight: 400;
+	font-size: 1rem;
+	color: var(--c-muted);
+	margin-left: .4rem;
 }
 
 .tclas-profile-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .9rem; }
