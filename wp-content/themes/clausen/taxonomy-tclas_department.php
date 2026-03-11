@@ -17,12 +17,20 @@ $term_description = $term->description ?? '';
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb( $term_name ); ?>
+		<?php
+		// Breadcrumbs: Home › Newsletter › Topics › Topic Name
+		echo '<nav class="tclas-breadcrumb" aria-label="' . esc_attr__( 'Breadcrumb', 'tclas' ) . '">';
+		echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'tclas' ) . '</a>';
+		echo ' › <a href="' . esc_url( home_url( '/newsletter/' ) ) . '">' . esc_html__( 'Newsletter', 'tclas' ) . '</a>';
+		echo ' › <a href="' . esc_url( home_url( '/newsletter/' ) ) . '#nl-topics">' . esc_html__( 'Topics', 'tclas' ) . '</a>';
+		echo ' › <span>' . esc_html( $term_name ) . '</span>';
+		echo '</nav>';
+		?>
 		<span class="tclas-eyebrow"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title">
 			<span lang="lb"><?php echo esc_html( $term_name ); ?></span>
 			<?php if ( $term_description ) : ?>
-				<span class="tclas-page-header__subtitle"><?php echo esc_html( $term_description ); ?></span>
+				<span class="tclas-page-header__title-en"><?php echo esc_html( $term_description ); ?></span>
 			<?php endif; ?>
 		</h1>
 	</div>
