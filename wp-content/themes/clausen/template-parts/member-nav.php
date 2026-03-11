@@ -13,13 +13,15 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 $user       = wp_get_current_user();
 $first_name = ! empty( $user->user_firstname ) ? $user->user_firstname : __( 'Member', 'tclas' );
+$profile_url = home_url( '/member-hub/profiles/' . rawurlencode( $user->user_nicename ) . '/' );
 
 // Navigation items — mirrors the hub sidebar
 $member_nav_links = [
 	[ 'label' => __( 'Dashboard', 'tclas' ), 'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
 	[ 'label' => __( 'Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
-	[ 'label' => __( 'My Story',  'tclas' ), 'url' => home_url( '/member-hub/my-story/' ),      'icon' => 'bi-tree-fill' ],
-	[ 'label' => __( 'Forum',     'tclas' ), 'url' => home_url( '/forums/' ),                   'icon' => 'bi-chat-left-text-fill' ],
+	[ 'label' => __( 'Documents', 'tclas' ), 'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
+	[ 'label' => __( 'My Profile', 'tclas' ), 'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
+	[ 'label' => __( 'Forum',     'tclas' ), 'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
 	[ 'label' => __( 'Map',       'tclas' ), 'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
 ];
 
@@ -76,6 +78,11 @@ foreach ( $member_nav_links as $link ) {
 			<?php endforeach; ?>
 		</ul>
 
+		<!-- Logout link -->
+		<a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>" class="tclas-member-nav__logout">
+			<?php esc_html_e( 'Log out', 'tclas' ); ?>
+		</a>
+
 		<!-- Mobile: dropdown toggle -->
 		<div class="tclas-member-nav__mobile">
 			<button
@@ -107,6 +114,15 @@ foreach ( $member_nav_links as $link ) {
 					</a>
 				</li>
 				<?php endforeach; ?>
+				<li>
+					<a
+						href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>"
+						class="tclas-member-nav__dropdown-link"
+					>
+						<i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+						<span><?php esc_html_e( 'Log out', 'tclas' ); ?></span>
+					</a>
+				</li>
 			</ul>
 		</div>
 

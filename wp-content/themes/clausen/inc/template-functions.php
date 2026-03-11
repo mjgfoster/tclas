@@ -266,6 +266,10 @@ function tclas_is_member_page(): bool {
 	if ( is_tax( 'tclas_commune' ) ) {
 		return true;
 	}
+	// Check for /member-hub/* URLs
+	if ( strpos( $_SERVER['REQUEST_URI'], '/member-hub/' ) !== false ) {
+		return true;
+	}
 	return false;
 }
 
@@ -286,13 +290,13 @@ function tclas_render_header_actions( bool $mobile = false ): void {
 		if ( $mobile ) {
 			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-nav-drawer__user-link">';
 			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
-			echo '<span>' . esc_html__( 'Dashboard', 'tclas' ) . '</span>';
+			echo '<span>' . esc_html__( 'Member hub', 'tclas' ) . '</span>';
 			echo '</a>';
 		} else {
 			// On member pages the member nav bar handles this; on other pages show a hub entry point.
 			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-user-menu">';
 			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
-			echo '<span>' . esc_html__( 'Dashboard', 'tclas' ) . '</span>';
+			echo '<span>' . esc_html__( 'Member hub', 'tclas' ) . '</span>';
 			echo '</a>';
 		}
 	} else {

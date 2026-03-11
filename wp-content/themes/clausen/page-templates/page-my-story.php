@@ -169,6 +169,7 @@ $profile_photo_url = $profile_photo_id
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
+		<?php tclas_breadcrumb( __( 'My Profile', 'tclas' ) ); ?>
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Your profile', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'My Luxembourg Story', 'tclas' ); ?></h1>
 	</div>
@@ -753,7 +754,7 @@ $profile_photo_url = $profile_photo_id
 								<?php esc_html_e( 'No connections found yet. As more members complete their profiles, we\'ll surface matches on your dashboard.', 'tclas' ); ?>
 							</p>
 							<p class="tclas-story-hint">
-								<a href="<?php echo esc_url( home_url( '/forums/luxembourg-connections/' ) ); ?>">
+								<a href="<?php echo esc_url( home_url( '/member-hub/forums/luxembourg-connections/' ) ); ?>">
 									<?php esc_html_e( 'Visit the Luxembourg Connections forum →', 'tclas' ); ?>
 								</a>
 							</p>

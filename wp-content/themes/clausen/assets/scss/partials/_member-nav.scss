@@ -168,3 +168,33 @@ $_mn-bp: 640px; // breakpoint: below this, show mobile dropdown
 		outline-offset: -2px;
 	}
 }
+
+// ── Logout link (desktop) ──────────────────────────────────────────────────
+.tclas-member-nav__logout {
+	display: flex;
+	align-items: center;
+	padding: .75rem .85rem;
+	margin-left: auto;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .06em;
+	color: rgba(255, 255, 255, .75);
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background .15s, color .15s;
+	flex-shrink: 0;
+
+	&:hover {
+		background: rgba(255, 255, 255, .1);
+		color: #fff;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: -2px;
+	}
+
+	@media (max-width: $_mn-bp) { display: none; }
+}

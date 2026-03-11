@@ -6,80 +6,19 @@
  */
 
 get_header();
-$user = wp_get_current_user();
 ?>
 
-<div class="tclas-hub">
+<div class="tclas-page-header">
+	<div class="container-tclas">
+		<?php tclas_breadcrumb(); ?>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
+		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
+	</div>
+</div>
 
-	<!-- Sidebar backdrop (mobile) -->
-	<div class="tclas-hub-sidebar-backdrop" aria-hidden="true"></div>
-
-	<!-- Sidebar -->
-	<aside class="tclas-hub-sidebar" aria-label="<?php esc_attr_e( 'Member hub navigation', 'tclas' ); ?>">
-		<div class="tclas-hub-sidebar__user">
-			<?php echo get_avatar( $user->ID, 42, '', esc_attr( $user->display_name ), [ 'class' => 'tclas-hub-sidebar__avatar' ] ); ?>
-			<div>
-				<p class="tclas-hub-sidebar__name"><?php echo esc_html( $user->display_name ); ?></p>
-				<?php if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) :
-					$level = pmpro_getMembershipLevelForUser( $user->ID );
-					if ( $level ) :
-				?>
-					<span class="tclas-hub-sidebar__level"><?php echo esc_html( $level->name ); ?></span>
-				<?php endif; endif; ?>
-			</div>
-		</div>
-
-		<nav class="tclas-hub-sidebar__nav">
-			<?php
-			wp_nav_menu( [
-				'theme_location' => 'hub',
-				'container'      => false,
-				'fallback_cb'    => function() {
-					$links = [
-						[ 'label' => __( 'Dashboard',  'tclas' ), 'url' => home_url( '/member-hub/' ),            'icon' => 'bi-house-door-fill' ],
-						[ 'label' => __( 'Directory',  'tclas' ), 'url' => home_url( '/member-hub/directory/' ),   'icon' => 'bi-people-fill' ],
-						[ 'label' => __( 'Documents',  'tclas' ), 'url' => home_url( '/member-hub/documents/' ),   'icon' => 'bi-file-earmark-text' ],
-						[ 'label' => __( 'My story',   'tclas' ), 'url' => home_url( '/member-hub/my-story/' ),   'icon' => 'bi-tree-fill' ],
-						[ 'label' => __( 'Forum',      'tclas' ), 'url' => home_url( '/forums/' ),                 'icon' => 'bi-chat-left-text-fill' ],
-						[ 'label' => __( 'Map',        'tclas' ), 'url' => home_url( '/member-hub/commune-map/' ), 'icon' => 'bi-map-fill' ],
-					];
-					echo '<ul>';
-					foreach ( $links as $link ) {
-						$active = rtrim( $_SERVER['REQUEST_URI'], '/' ) === rtrim( parse_url( $link['url'], PHP_URL_PATH ), '/' );
-						echo '<li><a href="' . esc_url( $link['url'] ) . '" class="' . ( $active ? 'active' : '' ) . '"><i class="bi ' . esc_attr( $link['icon'] ) . '" aria-hidden="true"></i> ' . esc_html( $link['label'] ) . '</a></li>';
-					}
-					echo '</ul>';
-				},
-			] );
-			?>
-		</nav>
-
-		<div class="tclas-hub-sidebar__footer">
-			<a href="<?php echo esc_url( wp_logout_url( home_url() ) ); ?>" class="tclas-hub-sidebar__logout">
-				<?php esc_html_e( 'Log out', 'tclas' ); ?>
-			</a>
-		</div>
-	</aside>
-
-	<!-- Main content -->
-	<div class="tclas-hub-content">
-		<div class="tclas-hub-content__header">
-			<button class="btn btn-outline-light btn-sm tclas-hub-mobile-toggle" aria-label="<?php esc_attr_e( 'Open sidebar', 'tclas' ); ?>">
-				<i class="bi bi-list" aria-hidden="true"></i> <?php esc_html_e( 'Menu', 'tclas' ); ?>
-			</button>
-			<h1 class="tclas-hub-content__title"><?php esc_html_e( 'Member hub', 'tclas' ); ?></h1>
-			<p class="tclas-hub-content__sub">
-				<?php
-				printf(
-					/* translators: %s: member first name */
-					esc_html__( 'Welcome back, %s.', 'tclas' ),
-					esc_html( $user->first_name ?: $user->display_name )
-				);
-				?>
-			</p>
-		</div>
-
-		<div class="tclas-hub-content__body">
+<section class="tclas-section">
+	<div class="container-tclas">
+		<div style="max-width: 1000px; margin: 0 auto;">
 
 			<?php
 			// Renew / expiry notice
@@ -136,9 +75,8 @@ $user = wp_get_current_user();
 			<!-- Referral card -->
 			<?php tclas_render_referral_card(); ?>
 
-		</div><!-- .tclas-hub-content__body -->
-	</div><!-- .tclas-hub-content -->
-
-</div><!-- .tclas-hub -->
+		</div>
+	</div>
+</section>
 
 <?php get_footer(); ?>

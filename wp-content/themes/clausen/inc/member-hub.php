@@ -58,7 +58,7 @@ function tclas_hub_dashboard_cards(): array {
 			'icon'  => '🌳',
 			'color' => 'crimson',
 			'content' => __( 'The members-only genealogy and family search forum.', 'tclas' ),
-			'link'  => home_url( '/forums/luxembourg-connections/' ),
+			'link'  => home_url( '/member-hub/forums/luxembourg-connections/' ),
 			'link_label' => __( 'Join the conversation →', 'tclas' ),
 		],
 	];
@@ -140,7 +140,7 @@ function tclas_render_connections_panel(): void {
 					<a href="<?php echo esc_url( $story_url ); ?>" class="btn btn-outline-ardoise btn-sm">
 						<?php esc_html_e( 'Update my story', 'tclas' ); ?>
 					</a>
-					<a href="<?php echo esc_url( home_url( '/forums/luxembourg-connections/' ) ); ?>" class="btn btn-outline-ardoise btn-sm">
+					<a href="<?php echo esc_url( home_url( '/member-hub/forums/luxembourg-connections/' ) ); ?>" class="btn btn-outline-ardoise btn-sm">
 						<?php esc_html_e( 'Luxembourg Connections forum →', 'tclas' ); ?>
 					</a>
 				</div>

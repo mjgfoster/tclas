@@ -794,8 +794,8 @@
 }
 
 .tclas-nl-topic-name {
-	font-family: var(--font-serif);
-	font-size: 1rem;
+	font-family: var(--font-sans);
+	font-size: 1.375rem;
 	font-weight: 700;
 	color: var(--c-ardoise);
 	line-height: 1.2;
@@ -803,7 +803,8 @@
 }
 
 .tclas-nl-topic-name-en {
-	font-size: .8125rem;
+	font-family: var(--font-sans);
+	font-size: 1.125rem;
 	color: var(--c-muted);
 	margin-top: .2rem;
 }

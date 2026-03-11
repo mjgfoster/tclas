@@ -242,7 +242,7 @@ get_header();
 				<?php esc_html_e( 'Join TCLAS', 'tclas' ); ?>
 			</a>
 			<?php if ( tclas_is_member() ) : ?>
-				<a href="<?php echo esc_url( home_url( '/forums/' ) ); ?>" class="btn btn-outline-light">
+				<a href="<?php echo esc_url( home_url( '/member-hub/forums/' ) ); ?>" class="btn btn-outline-light">
 					<?php esc_html_e( 'Visit the forums →', 'tclas' ); ?>
 				</a>
 			<?php else : ?>

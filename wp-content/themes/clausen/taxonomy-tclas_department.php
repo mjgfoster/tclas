@@ -42,7 +42,7 @@ $term_description = $term->description ?? '';
 
 			<div class="tclas-grid-3">
 				<?php while ( have_posts() ) : the_post(); ?>
-					<?php get_template_part( 'template-parts/content/card', 'post' ); ?>
+					<?php get_template_part( 'template-parts/content/card', 'article-nl' ); ?>
 				<?php endwhile; ?>
 			</div>
 

@@ -59,10 +59,15 @@ function tclas_breadcrumb( string $title = '', bool $light = false ): void {
 		$title = get_the_title();
 	}
 	$class = 'tclas-breadcrumb' . ( $light ? ' tclas-breadcrumb--light' : '' );
+	$is_member_page = tclas_is_member_page();
 	?>
 	<nav class="<?php echo esc_attr( $class ); ?>" aria-label="<?php esc_attr_e( 'Breadcrumb', 'tclas' ); ?>">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'tclas' ); ?></a>
 		<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
+		<?php if ( $is_member_page ) : ?>
+			<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>"><?php esc_html_e( 'Member hub', 'tclas' ); ?></a>
+			<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
+		<?php endif; ?>
 		<span class="tclas-breadcrumb__current" aria-current="page"><?php echo esc_html( $title ); ?></span>
 	</nav>
 	<?php

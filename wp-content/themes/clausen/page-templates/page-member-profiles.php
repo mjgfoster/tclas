@@ -122,10 +122,15 @@ if ( $profile_username ) :
 <!-- ── Page header ─────────────────────────────────────────────────────── -->
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
-			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
-		</a>
+		<?php tclas_breadcrumb( __( 'Member Profiles', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php echo esc_html( $p['display_name'] ); ?></h1>
+
+		<?php // Edit button (own profile) ?>
+		<?php if ( $is_own_profile ) : ?>
+			<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-primary btn-sm" style="margin-bottom: 1.5rem;">
+				<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
+			</a>
+		<?php endif; ?>
 
 		<?php // Membership meta line. ?>
 		<p class="tclas-page-header__membership">
@@ -208,13 +213,6 @@ if ( $profile_username ) :
 							</a>
 						<?php endif; ?>
 					</div>
-				<?php endif; ?>
-
-				<!-- Edit button (own profile) -->
-				<?php if ( $is_own_profile ) : ?>
-					<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise tclas-profile-sidebar__edit">
-						<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
-					</a>
 				<?php endif; ?>
 
 			</aside>
@@ -396,9 +394,7 @@ else :
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>" class="tclas-back-link">
-			← <?php esc_html_e( 'Member Hub', 'tclas' ); ?>
-		</a>
+		<?php tclas_breadcrumb( __( 'Member Profiles', 'tclas' ) ); ?>
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
 	</div>
