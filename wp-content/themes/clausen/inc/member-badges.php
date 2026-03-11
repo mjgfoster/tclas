@@ -22,12 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  *
  * Each entry:
  *   label       — translated display name
- *   icon        — character/SVG shown before the label (swap later)
+ *   icon        — Bootstrap Icons class (e.g. 'bi-star-fill') or empty for custom sprite
  *   meta_key    — user meta key that stores the value
  *   admin_only  — true  → only admins can set/unset this via the WP Users screen
  *                 false → member can self-report via My Story
  *   self_report — true  → member controls this on their own profile form
  *   auto        — true  → value is derived programmatically (see tclas_get_user_badges)
+ *   public      — true  → rendered on public profile pages (default true)
+ *                 false → meta-only, used for role-gating but not displayed
  *
  * @return array<string, array<string, mixed>>
  */
@@ -35,27 +37,30 @@ function tclas_badge_registry(): array {
 	return [
 		'founding' => [
 			'label'       => __( 'Founding Member', 'tclas' ),
-			'icon'        => '★',
+			'icon'        => 'bi-star-fill',
 			'meta_key'    => '_tclas_founding_member', // existing key — backward compat
 			'admin_only'  => true,
 			'self_report' => false,
 			'auto'        => true,  // evaluated via tclas_is_founding_member()
+			'public'      => true,
 		],
 		'board' => [
 			'label'       => __( 'Board Member', 'tclas' ),
-			'icon'        => '★',
+			'icon'        => 'bi-shield-fill',
 			'meta_key'    => '_tclas_badge_board',
 			'admin_only'  => true,
 			'self_report' => false,
 			'auto'        => false,
+			'public'      => false, // role-gating only, not shown on profiles
 		],
 		'bierger' => [
-			'label'       => __( 'Bierger', 'tclas' ),
-			'icon'        => '★',
+			'label'       => __( 'Bierger·in / Citizen', 'tclas' ),
+			'icon'        => 'bi-passport-fill',
 			'meta_key'    => '_tclas_badge_bierger',
 			'admin_only'  => false,
 			'self_report' => true,
 			'auto'        => false,
+			'public'      => true,
 		],
 	];
 }

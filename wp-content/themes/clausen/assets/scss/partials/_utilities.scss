@@ -24,6 +24,21 @@
 	&--or-pale  { background: var(--c-or-pale);   color: var(--c-ardoise); }
 }
 
+// ── Custom SVG sprite icon ────────────────────────────────────────────────
+// Usage: <svg class="tclas-icon tclas-icon--sm"><use href="...icons.svg#icon-name"></use></svg>
+.tclas-icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.125em;
+	fill: currentColor;
+
+	&--sm { width: .75em; height: .75em; }
+	&--lg { width: 1.25em; height: 1.25em; }
+	// Flags should not inherit text color
+	&--flag { fill: none; }
+}
+
 // ── Breadcrumb ────────────────────────────────────────────────────────────
 .tclas-breadcrumb {
 	font-size: .875rem;

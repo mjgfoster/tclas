@@ -156,6 +156,28 @@ function tclas_illustration( string $acf_field, string $alt = '', string $class 
 	}
 }
 
+// ── Custom SVG sprite helper ──────────────────────────────────────────────
+
+/**
+ * Output an SVG icon from the custom sprite.
+ *
+ * @param string $name  Symbol ID without the "icon-" prefix (e.g. 'flag-lux', 'roude-leiw', 'flag-mn').
+ * @param string $class Extra CSS classes (e.g. 'tclas-icon--lg tclas-icon--flag').
+ * @param string $label Accessible label. If empty, icon is aria-hidden.
+ */
+function tclas_icon( string $name, string $class = '', string $label = '' ): void {
+	$href  = get_theme_file_uri( 'assets/images/icons.svg' ) . '#icon-' . $name;
+	$attrs = $label
+		? 'role="img" aria-label="' . esc_attr( $label ) . '"'
+		: 'aria-hidden="true"';
+	printf(
+		'<svg class="tclas-icon %s" %s><use href="%s"></use></svg>',
+		esc_attr( $class ),
+		$attrs,
+		esc_url( $href )
+	);
+}
+
 // ── Membership / auth state ────────────────────────────────────────────────
 
 /**

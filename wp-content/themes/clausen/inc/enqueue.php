@@ -35,11 +35,19 @@ function tclas_enqueue_assets(): void {
 		null
 	);
 
+	// ── Bootstrap Icons 1.13 — CDN ───────────────────────────────────────
+	wp_enqueue_style(
+		'bootstrap-icons',
+		'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+		[ 'bootstrap' ],
+		null
+	);
+
 	// ── Compiled theme stylesheet ─────────────────────────────────────────
 	wp_enqueue_style(
 		'tclas-main',
 		TCLAS_ASSETS . '/css/main.css',
-		[ 'bootstrap' ],
+		[ 'bootstrap', 'bootstrap-icons' ],
 		filemtime( $dir . '/assets/css/main.css' )
 	);
 

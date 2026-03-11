@@ -36,17 +36,17 @@ $user = wp_get_current_user();
 				'container'      => false,
 				'fallback_cb'    => function() {
 					$links = [
-						[ 'label' => __( 'Dashboard',  'tclas' ), 'url' => home_url( '/member-hub/' ),            'icon' => '🏠' ],
-						[ 'label' => __( 'Directory',  'tclas' ), 'url' => home_url( '/member-hub/directory/' ),   'icon' => '👥' ],
-						[ 'label' => __( 'Documents',  'tclas' ), 'url' => home_url( '/member-hub/documents/' ),   'icon' => '📄' ],
-						[ 'label' => __( 'My story',   'tclas' ), 'url' => home_url( '/member-hub/my-story/' ),   'icon' => '🌳' ],
-						[ 'label' => __( 'Forum',      'tclas' ), 'url' => home_url( '/forums/' ),                 'icon' => '💬' ],
-						[ 'label' => __( 'Map',        'tclas' ), 'url' => home_url( '/member-hub/commune-map/' ), 'icon' => '🗺️' ],
+						[ 'label' => __( 'Dashboard',  'tclas' ), 'url' => home_url( '/member-hub/' ),            'icon' => 'bi-house-door-fill' ],
+						[ 'label' => __( 'Directory',  'tclas' ), 'url' => home_url( '/member-hub/directory/' ),   'icon' => 'bi-people-fill' ],
+						[ 'label' => __( 'Documents',  'tclas' ), 'url' => home_url( '/member-hub/documents/' ),   'icon' => 'bi-file-earmark-text' ],
+						[ 'label' => __( 'My story',   'tclas' ), 'url' => home_url( '/member-hub/my-story/' ),   'icon' => 'bi-tree-fill' ],
+						[ 'label' => __( 'Forum',      'tclas' ), 'url' => home_url( '/forums/' ),                 'icon' => 'bi-chat-left-text-fill' ],
+						[ 'label' => __( 'Map',        'tclas' ), 'url' => home_url( '/member-hub/commune-map/' ), 'icon' => 'bi-map-fill' ],
 					];
 					echo '<ul>';
 					foreach ( $links as $link ) {
 						$active = rtrim( $_SERVER['REQUEST_URI'], '/' ) === rtrim( parse_url( $link['url'], PHP_URL_PATH ), '/' );
-						echo '<li><a href="' . esc_url( $link['url'] ) . '" class="' . ( $active ? 'active' : '' ) . '">' . esc_html( $link['icon'] ) . ' ' . esc_html( $link['label'] ) . '</a></li>';
+						echo '<li><a href="' . esc_url( $link['url'] ) . '" class="' . ( $active ? 'active' : '' ) . '"><i class="bi ' . esc_attr( $link['icon'] ) . '" aria-hidden="true"></i> ' . esc_html( $link['label'] ) . '</a></li>';
 					}
 					echo '</ul>';
 				},
@@ -65,7 +65,7 @@ $user = wp_get_current_user();
 	<div class="tclas-hub-content">
 		<div class="tclas-hub-content__header">
 			<button class="btn btn-outline-light btn-sm tclas-hub-mobile-toggle" aria-label="<?php esc_attr_e( 'Open sidebar', 'tclas' ); ?>">
-				☰ <?php esc_html_e( 'Menu', 'tclas' ); ?>
+				<i class="bi bi-list" aria-hidden="true"></i> <?php esc_html_e( 'Menu', 'tclas' ); ?>
 			</button>
 			<h1 class="tclas-hub-content__title"><?php esc_html_e( 'Member hub', 'tclas' ); ?></h1>
 			<p class="tclas-hub-content__sub">

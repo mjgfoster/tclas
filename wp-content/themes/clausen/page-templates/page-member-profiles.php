@@ -151,16 +151,17 @@ if ( $profile_username ) :
 						<?php foreach ( $active_slugs as $slug ) :
 							if ( ! isset( $badge_reg[ $slug ] ) ) continue;
 							$_def = $badge_reg[ $slug ];
+							if ( ! ( $_def['public'] ?? true ) ) continue;
 						?>
 							<span class="tclas-badge tclas-badge--member-badge">
-								<?php echo esc_html( $_def['icon'] ); ?> <?php echo esc_html( $_def['label'] ); ?>
+								<i class="bi <?php echo esc_attr( $_def['icon'] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $_def['label'] ); ?>
 							</span>
 						<?php endforeach; ?>
 						<?php if ( $p['has_ancestors'] ) : ?>
-							<span class="tclas-badge tclas-badge--ancestors">🗺 <?php esc_html_e( 'Ancestors on map', 'tclas' ); ?></span>
+							<span class="tclas-badge tclas-badge--ancestors"><i class="bi bi-map-fill" aria-hidden="true"></i> <?php esc_html_e( 'Ancestors on map', 'tclas' ); ?></span>
 						<?php endif; ?>
 						<?php if ( $p['has_children'] ) : ?>
-							<span class="tclas-badge tclas-badge--family"><?php esc_html_e( 'Includes young members', 'tclas' ); ?></span>
+							<span class="tclas-badge tclas-badge--family"><i class="bi bi-people-fill" aria-hidden="true"></i> <?php esc_html_e( 'Includes young members', 'tclas' ); ?></span>
 						<?php endif; ?>
 					</div>
 
@@ -394,17 +395,20 @@ else :
 						<div class="tclas-dir-card__indicators">
 							<?php
 							$_card_badge_reg = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
-							foreach ( $m['badges'] ?? [] as $_card_slug ) :
-								if ( ! isset( $_card_badge_reg[ $_card_slug ] ) ) continue;
+							foreach ( $m['badges'] ?? [] as $_card_badge ) :
+								// Directory builder stores ['key'=>...,'label'=>...]; normalize to slug string.
+								$_card_slug = is_array( $_card_badge ) ? ( $_card_badge['key'] ?? '' ) : $_card_badge;
+								if ( ! $_card_slug || ! isset( $_card_badge_reg[ $_card_slug ] ) ) continue;
 								$_card_def = $_card_badge_reg[ $_card_slug ];
+								if ( ! ( $_card_def['public'] ?? true ) ) continue;
 							?>
-								<span class="tclas-badge tclas-badge--member-badge tclas-badge--sm" title="<?php echo esc_attr( $_card_def['label'] ); ?>"><?php echo esc_html( $_card_def['icon'] ); ?></span>
+								<span class="tclas-badge tclas-badge--member-badge tclas-badge--sm" title="<?php echo esc_attr( $_card_def['label'] ); ?>"><i class="bi <?php echo esc_attr( $_card_def['icon'] ); ?>" aria-hidden="true"></i></span>
 							<?php endforeach; ?>
 							<?php if ( $m['has_ancestors'] ) : ?>
-								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--ancestors" title="<?php esc_attr_e( 'Has ancestors on the map', 'tclas' ); ?>">🗺</span>
+								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--ancestors" title="<?php esc_attr_e( 'Has ancestors on the map', 'tclas' ); ?>"><i class="bi bi-map-fill" aria-hidden="true"></i></span>
 							<?php endif; ?>
 							<?php if ( $m['has_bio'] ) : ?>
-								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--bio" title="<?php esc_attr_e( 'Has filled out a bio', 'tclas' ); ?>">📝</span>
+								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--bio" title="<?php esc_attr_e( 'Has filled out a bio', 'tclas' ); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
 							<?php endif; ?>
 						</div>
 					</div>
