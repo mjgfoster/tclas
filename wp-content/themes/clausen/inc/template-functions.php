@@ -242,6 +242,33 @@ function tclas_is_member(): bool {
 	return (bool) pmpro_hasMembershipLevel();
 }
 
+/**
+ * Is the current page part of the members-only area?
+ *
+ * Used to conditionally display the member navigation bar.
+ */
+function tclas_is_member_page(): bool {
+	if ( is_page_template( 'page-templates/page-member-hub.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-member-profiles.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-my-story.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-map.php' ) ) {
+		return true;
+	}
+	if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
+		return true;
+	}
+	if ( is_tax( 'tclas_commune' ) ) {
+		return true;
+	}
+	return false;
+}
+
 // ── Navigation CTA ────────────────────────────────────────────────────────
 
 /**

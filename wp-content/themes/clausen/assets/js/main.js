@@ -274,6 +274,36 @@
     });
   }
 
+  // ── Member nav — mobile dropdown toggle ────────────────────────────────────
+  function initMemberNav() {
+    const btn = qs('.tclas-member-nav__toggle');
+    if (!btn) return;
+
+    const menu = qs('#member-nav-dropdown');
+
+    function open() {
+      menu.removeAttribute('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+
+    function close() {
+      menu.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', () => {
+      btn.getAttribute('aria-expanded') === 'true' ? close() : open();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!btn.closest('.tclas-member-nav__mobile').contains(e.target)) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+
   // ── Newsletter sticky sub-nav scroll tracker ──────────────────────────────
   function initNlSubnav() {
     const nav = qs('.tclas-nl-subnav');
@@ -687,6 +717,7 @@
   ready(() => {
     initMobileNav();
     initNewsletterNav();
+    initMemberNav();
     initNlSubnav();
     initHubSidebar();
     initRenewBanner();

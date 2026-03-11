@@ -155,37 +155,6 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 }
 ?>
 
-<!-- ── Newsletter sticky sub-nav ─────────────────────────────────────────── -->
-<nav class="tclas-nl-subnav" aria-label="<?php esc_attr_e( 'Newsletter sections', 'tclas' ); ?>" id="nl-subnav">
-	<div class="container-tclas">
-		<div class="tclas-nl-subnav__inner">
-			<span class="tclas-nl-subnav__brand" aria-hidden="true">
-				<?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?>
-			</span>
-			<ul class="tclas-nl-subnav__links" role="list">
-				<li>
-					<a href="#nl-current" class="tclas-nl-subnav__link" data-nl-section="nl-current">
-						<?php esc_html_e( 'Current Issue', 'tclas' ); ?>
-					</a>
-				</li>
-				<?php if ( ! empty( $dept_terms ) ) : ?>
-				<li>
-					<a href="#nl-topics" class="tclas-nl-subnav__link" data-nl-section="nl-topics">
-						<?php esc_html_e( 'By Topic', 'tclas' ); ?>
-					</a>
-				</li>
-				<?php endif; ?>
-				<?php if ( ! empty( $prev_dates ) ) : ?>
-				<li>
-					<a href="#nl-prev" class="tclas-nl-subnav__link" data-nl-section="nl-prev">
-						<?php esc_html_e( 'Previous Issues', 'tclas' ); ?>
-					</a>
-				</li>
-				<?php endif; ?>
-			</ul>
-		</div>
-	</div>
-</nav>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
      SECTION 1 — Current Issue
