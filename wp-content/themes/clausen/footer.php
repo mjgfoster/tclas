@@ -69,7 +69,7 @@
 								echo '<ul class="tclas-footer__nav">';
 								$links = [
 									__( 'Board of directors', 'tclas' ) => home_url( '/about/board/' ),
-									__( 'Contact',            'tclas' ) => home_url( '/contact/' ),
+									__( 'Contact',            'tclas' ) => home_url( '/about/contact/' ),
 									__( 'Privacy policy',    'tclas' ) => get_privacy_policy_url(),
 								];
 								foreach ( $links as $label => $url ) {
@@ -132,6 +132,7 @@
 						<?php if ( get_privacy_policy_url() ) : ?>
 							<a href="<?php echo esc_url( get_privacy_policy_url() ); ?>"><?php esc_html_e( 'Privacy policy', 'tclas' ); ?></a>
 						<?php endif; ?>
+						<a href="<?php echo esc_url( home_url( '/about/terms/' ) ); ?>"><?php esc_html_e( 'Terms of use', 'tclas' ); ?></a>
 						<button type="button" class="tclas-footer__cookie-link tclas-consent-manage"><?php esc_html_e( 'Manage cookies', 'tclas' ); ?></button>
 						<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Contact', 'tclas' ); ?></a>
 					</nav>
