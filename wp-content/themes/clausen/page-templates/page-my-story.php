@@ -29,6 +29,9 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		// ── City ──────────────────────────────────────────────────────────────
 		update_user_meta( $uid, '_tclas_city', sanitize_text_field( $_POST['tclas_city'] ?? '' ) );
 
+		// ── Pronouns ──────────────────────────────────────────────────────────
+		update_user_meta( $uid, '_tclas_pronouns', sanitize_text_field( $_POST['tclas_pronouns'] ?? '' ) );
+
 		// ── Family names ──────────────────────────────────────────────────────
 		$family_names = array_values( array_filter(
 			array_map( 'sanitize_text_field', (array) ( $_POST['tclas_family_names'] ?? [] ) ),
@@ -142,6 +145,7 @@ if ( empty( $trips ) ) {
 
 $bio           = (string) ( get_user_meta( $user_id, '_tclas_bio',           true ) ?: '' );
 $city          = (string) ( get_user_meta( $user_id, '_tclas_city',          true ) ?: '' );
+$pronouns      = (string) ( get_user_meta( $user_id, '_tclas_pronouns',      true ) ?: '' );
 $facebook_url  = (string) ( get_user_meta( $user_id, '_tclas_facebook_url',  true ) ?: '' );
 $linkedin_url  = (string) ( get_user_meta( $user_id, '_tclas_linkedin_url',  true ) ?: '' );
 $instagram_url = (string) ( get_user_meta( $user_id, '_tclas_instagram_url', true ) ?: '' );
@@ -289,6 +293,20 @@ $profile_photo_url = $profile_photo_id
 								class="tclas-story-input"
 								placeholder="<?php esc_attr_e( 'e.g. Minneapolis, MN', 'tclas' ); ?>"
 								autocomplete="address-level2"
+							>
+
+							<!-- Pronouns -->
+							<label class="tclas-story-social-label tclas-story-social-label--mt" for="tclas-pronouns-field">
+								<?php esc_html_e( 'Pronouns (optional)', 'tclas' ); ?>
+							</label>
+							<input
+								type="text"
+								id="tclas-pronouns-field"
+								name="tclas_pronouns"
+								value="<?php echo esc_attr( $pronouns ); ?>"
+								class="tclas-story-input"
+								placeholder="<?php esc_attr_e( 'e.g. she/her, he/him, they/them', 'tclas' ); ?>"
+								maxlength="50"
 							>
 
 							<!-- Privacy toggle -->

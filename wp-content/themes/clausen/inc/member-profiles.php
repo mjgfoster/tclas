@@ -183,6 +183,10 @@ function tclas_get_profile_data( int $user_id ): array {
 		? (string) ( get_user_meta( $user_id, '_tclas_city', true ) ?: '' )
 		: '';
 
+	$data['pronouns'] = tclas_profile_field_visible( $user_id, 'bio' )
+		? (string) ( get_user_meta( $user_id, '_tclas_pronouns', true ) ?: '' )
+		: '';
+
 	$data['social'] = tclas_profile_field_visible( $user_id, 'social' )
 		? [
 			'facebook'  => (string) ( get_user_meta( $user_id, '_tclas_facebook_url',  true ) ?: '' ),
@@ -258,7 +262,7 @@ function tclas_get_directory_members(): array {
 	$meta_keys = [
 		'_tclas_visibility', '_tclas_profile_photo', '_tclas_city',
 		'_tclas_bio', '_tclas_communes_norm', '_tclas_founding_member',
-		'_tclas_field_privacy', '_tclas_badge_board', '_tclas_badge_bierger',
+		'_tclas_field_privacy', '_tclas_badge_board', '_tclas_badge_bierger', '_tclas_pronouns',
 	];
 	$id_placeholders  = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 	$key_placeholders = implode( ',', array_fill( 0, count( $meta_keys ), '%s' ) );
@@ -352,6 +356,9 @@ function tclas_get_directory_members(): array {
 				fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )
 			) ),
 			'has_bio'      => ! empty( $meta['_tclas_bio'] ?? '' ),
+			'pronouns'     => ( ( $privacy['bio'] ?? 'members' ) !== 'hidden' )
+			                  ? (string) ( $meta['_tclas_pronouns'] ?? '' )
+			                  : '',
 		];
 	}
 

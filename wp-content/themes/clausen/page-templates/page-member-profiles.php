@@ -135,7 +135,12 @@ if ( $profile_username ) :
 					<?php echo tclas_get_profile_photo_img( $profile_user->ID, 'medium', 'tclas-profile-header__img' ); ?>
 				</div>
 				<div class="tclas-profile-header__meta">
-					<h2 class="tclas-profile-header__name"><?php echo esc_html( $p['display_name'] ); ?></h2>
+					<h2 class="tclas-profile-header__name">
+						<?php echo esc_html( $p['display_name'] ); ?>
+						<?php if ( ! empty( $p['pronouns'] ) ) : ?>
+							<span class="tclas-profile-header__pronouns"><?php echo esc_html( $p['pronouns'] ); ?></span>
+						<?php endif; ?>
+					</h2>
 
 					<!-- Badges -->
 					<?php
@@ -377,7 +382,12 @@ else :
 						>
 					</div>
 					<div class="tclas-dir-card__body">
-						<p class="tclas-dir-card__name"><?php echo esc_html( $m['display_name'] ); ?></p>
+						<p class="tclas-dir-card__name">
+							<?php echo esc_html( $m['display_name'] ); ?>
+							<?php if ( ! empty( $m['pronouns'] ) ) : ?>
+								<span class="tclas-dir-card__pronouns"><?php echo esc_html( $m['pronouns'] ); ?></span>
+							<?php endif; ?>
+						</p>
 						<?php if ( $m['city'] ) : ?>
 							<p class="tclas-dir-card__city"><?php echo esc_html( $m['city'] ); ?></p>
 						<?php endif; ?>
