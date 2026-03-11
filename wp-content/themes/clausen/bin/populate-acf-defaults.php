@@ -155,6 +155,10 @@ tclas_seed( 'anc_resources_lux', [
 		'res_url'   => 'https://anlux.public.lu/fr/rechercher/genealogie.html',
 	],
 	[
+		'res_label' => 'eLuxemburgensia — digitized Luxembourg newspapers and periodicals',
+		'res_url'   => 'https://eluxemburgensia.lu/',
+	],
+	[
 		'res_label' => 'Matricula — parish records online',
 		'res_url'   => 'https://data.matricula-online.eu/en/LU/luxemburg/',
 	],

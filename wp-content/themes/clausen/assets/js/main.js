@@ -219,23 +219,82 @@
     });
   }
 
-  // ── Bootstrap dropdown accessibility fix ──────────────────────────────────
+  // ── Primary navigation dropdown menu ──────────────────────────────────────
   function initDropdowns() {
-    // For non-Bootstrap environments — keyboard nav for dropdowns
-    qsa('.tclas-nav__item').forEach(item => {
+    // Only initialize on desktop (992px+)
+    if (window.innerWidth < 992) return;
+
+    const parentItems = qsa('.tclas-nav__item.has-dropdown');
+
+    parentItems.forEach(item => {
       const link = qs('.tclas-nav__link', item);
-      if (!link) return;
+      const dropdown = qs('.tclas-nav__dropdown', item);
+      if (!link || !dropdown) return;
+
+      // Initialize aria-expanded to false
+      link.setAttribute('aria-expanded', 'false');
+
+      // Hover to show/hide dropdown
+      item.addEventListener('mouseenter', () => {
+        link.setAttribute('aria-expanded', 'true');
+      });
+
+      item.addEventListener('mouseleave', () => {
+        link.setAttribute('aria-expanded', 'false');
+      });
+
+      // Keyboard navigation
       link.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          const dropdown = qs('.tclas-nav__dropdown', item);
-          if (dropdown && window.innerWidth >= 992) {
-            e.preventDefault();
-            const visible = getComputedStyle(dropdown).opacity !== '0';
-            dropdown.style.opacity  = visible ? '0' : '1';
-            dropdown.style.visibility = visible ? 'hidden' : 'visible';
-            dropdown.style.pointerEvents = visible ? 'none' : 'auto';
-          }
+          e.preventDefault();
+          const isExpanded = link.getAttribute('aria-expanded') === 'true';
+          link.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
         }
+        // Arrow down to focus first dropdown item
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          link.setAttribute('aria-expanded', 'true');
+          const firstLink = qs('a', dropdown);
+          if (firstLink) firstLink.focus();
+        }
+      });
+
+      // Handle links inside dropdown
+      const dropdownLinks = qsa('a', dropdown);
+      dropdownLinks.forEach((dropLink, idx) => {
+        dropLink.addEventListener('keydown', (e) => {
+          // Arrow down to next item
+          if (e.key === 'ArrowDown' && idx < dropdownLinks.length - 1) {
+            e.preventDefault();
+            dropdownLinks[idx + 1].focus();
+          }
+          // Arrow up to previous item or parent link
+          if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (idx > 0) {
+              dropdownLinks[idx - 1].focus();
+            } else {
+              link.focus();
+            }
+          }
+          // Escape to close and refocus parent
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            link.setAttribute('aria-expanded', 'false');
+            link.focus();
+          }
+        });
+      });
+    });
+
+    // Close dropdowns on click outside
+    document.addEventListener('click', (e) => {
+      const nav = qs('.tclas-header__desktop-nav');
+      if (!nav || nav.contains(e.target)) return;
+
+      parentItems.forEach(item => {
+        const link = qs('.tclas-nav__link', item);
+        if (link) link.setAttribute('aria-expanded', 'false');
       });
     });
   }

@@ -328,6 +328,54 @@ get_header();
 	</div>
 </section>
 
+<!-- ── 3b. Dig Deeper subsections ────────────────────────────────────────── -->
+<section class="tclas-section" aria-labelledby="msp-digdeeper-heading">
+	<div class="container-tclas">
+
+		<h2 id="msp-digdeeper-heading"><?php esc_html_e( 'Dig deeper into the connection', 'tclas' ); ?></h2>
+		<p class="tclas-story-hint"><?php esc_html_e( '(Content coming soon)', 'tclas' ); ?></p>
+
+		<div class="tclas-grid-3">
+			<!-- Our History -->
+			<article class="tclas-card tclas-card--accented">
+				<div class="tclas-card__body">
+					<h3 class="tclas-card__title">
+						<a href="<?php echo esc_url( home_url( '/msp-lux/history/' ) ); ?>"><?php esc_html_e( 'Our History', 'tclas' ); ?></a>
+					</h3>
+					<p class="tclas-card__excerpt">
+						<?php esc_html_e( 'How Luxembourgers came to Minnesota, and what they built.', 'tclas' ); ?>
+					</p>
+				</div>
+			</article>
+
+			<!-- The Language -->
+			<article class="tclas-card tclas-card--accented">
+				<div class="tclas-card__body">
+					<h3 class="tclas-card__title">
+						<a href="<?php echo esc_url( home_url( '/msp-lux/language/' ) ); ?>"><?php esc_html_e( 'The Language', 'tclas' ); ?></a>
+					</h3>
+					<p class="tclas-card__excerpt">
+						<?php esc_html_e( 'Lëtzebuergesch: the world\'s only Grand Ducal language.', 'tclas' ); ?>
+					</p>
+				</div>
+			</article>
+
+			<!-- Culture & Life -->
+			<article class="tclas-card tclas-card--accented">
+				<div class="tclas-card__body">
+					<h3 class="tclas-card__title">
+						<a href="<?php echo esc_url( home_url( '/msp-lux/culture/' ) ); ?>"><?php esc_html_e( 'Culture & Life', 'tclas' ); ?></a>
+					</h3>
+					<p class="tclas-card__excerpt">
+						<?php esc_html_e( 'Food, film, music, and modern Luxembourg.', 'tclas' ); ?>
+					</p>
+				</div>
+			</article>
+		</div>
+
+	</div>
+</section>
+
 <!-- ── 4. Resources ──────────────────────────────────────────────────────── -->
 <section class="tclas-msp-resources" aria-labelledby="msp-resources-heading">
 	<div class="container-tclas">

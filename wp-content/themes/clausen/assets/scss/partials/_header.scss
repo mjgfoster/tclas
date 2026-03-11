@@ -90,6 +90,7 @@
 	padding-bottom: 4px;
 	border-bottom: 2px solid transparent;
 	transition: color .2s, border-color .2s;
+	position: relative;
 
 	&:hover {
 		color: var(--c-ardoise);
@@ -109,6 +110,90 @@
 		outline: 2px solid var(--c-gold);
 		outline-offset: 4px;
 		border-radius: 2px;
+	}
+}
+
+// ── Dropdown menu (parent items with children) ────────────────────────────────
+.tclas-nav__item.has-dropdown > a::after {
+	content: '▼';
+	display: inline-block;
+	font-size: .5rem;
+	margin-left: 0.5em;
+	transition: transform .2s;
+	transform-origin: 50% 40%;
+}
+
+.tclas-nav__item.has-dropdown > a[aria-expanded="true"]::after {
+	transform: rotate(-180deg);
+}
+
+.tclas-nav__dropdown {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 4px 12px rgba(0,0,0,.1);
+	min-width: 200px;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-8px);
+	transition: opacity .2s, visibility .2s, transform .2s;
+	pointer-events: none;
+	margin-top: 0.5rem;
+	z-index: 1040;
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: opacity .15s, visibility .15s;
+		transform: none;
+	}
+}
+
+.tclas-nav__item.has-dropdown:hover > .tclas-nav__dropdown,
+.tclas-nav__item.has-dropdown > a[aria-expanded="true"] ~ .tclas-nav__dropdown {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+.tclas-nav__dropdown > li {
+	display: block;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid rgba(69,79,85,.1);
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	a {
+		display: block;
+		padding: 0.75rem 1.25rem;
+		color: var(--c-body-text);
+		text-decoration: none;
+		font-size: .875rem;
+		white-space: normal;
+		transition: background-color .2s, color .2s;
+
+		&:hover {
+			background-color: rgba(43,98,130,.05);
+			color: var(--c-ardoise);
+		}
+
+		&[aria-current="page"] {
+			color: var(--c-ardoise);
+			font-weight: 700;
+			background-color: rgba(43,98,130,.05);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--c-gold);
+			outline-offset: -2px;
+		}
 	}
 }
 
