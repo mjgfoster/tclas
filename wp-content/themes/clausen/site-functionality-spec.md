@@ -671,12 +671,41 @@ All local assets use `filemtime()` for version strings (auto cache-busting on sa
 | `page-templates/page-member-hub.php` | /member-hub | Gated dashboard |
 | `page-templates/page-member-profiles.php` | /member-hub/profiles | Directory + individual profiles |
 | `page-templates/page-msp-lux.php` | /msp-lux | MSP+LUX connections |
-| `page-templates/page-my-story.php` | /my-story | Genealogy story form |
-| `page-templates/page-newsletter.php` | /newsletter | Loon & Lion archive + sticky subnav |
+| `page-templates/page-my-story.php` | /member-hub/my-profile | Genealogy story form (member page) |
+| `page-templates/page-newsletter.php` | /newsletter | Loon & Lion archive, issue TOC grid |
 | `page-templates/page-referral-welcome.php` | /welcome | Referral landing page |
-| `page-templates/page-documents.php` | /member-hub/documents | Gated documents |
-| `page-templates/page-resources.php` | /member-hub/resources | Gated resources |
+| `page-templates/page-documents.php` | /member-hub/documents | Gated documents (member page) |
+| `page-templates/page-resources.php` | /member-hub/resources | Gated resources (member page) |
+| `taxonomy-tclas_department.php` | /newsletter/topic/{slug} | Newsletter topic archive (breadcrumbs, article cards) |
 | `taxonomy-tclas_commune.php` | /member-hub/ancestral-map/commune/{slug} | Commune profile page |
+
+---
+
+## 22b. Member Pages & Newsletter Topic Pages (Updated 2026-03-11)
+
+### Member page structure
+All member area pages (`/member-hub/*`) use a consistent structure:
+- **Breadcrumbs**: `Home › Member hub › [page]` (via `tclas_breadcrumb()` in `inc/accessibility.php`)
+- **Page header**: Eyebrow + H1 title + optional subtitle (English description)
+- **Content section**: `.tclas-section` + `.container-tclas` (1200px) or `.container--narrow` (780px)
+- **Access control**: `tclas_is_member_page()` function gates display of sticky member nav bar
+
+### Newsletter topic archive (`taxonomy-tclas_department.php`)
+- **URL**: `/newsletter/topic/{department-slug}/`
+- **Breadcrumbs**: `Home › Newsletter › Topics › [Topic Name]` (via manual echo in template)
+- **Header**: Topic name (Luxembourgish) + English description inline
+  - `.tclas-page-header__title`: bilingual layout
+  - `.tclas-page-header__title-en`: English description, deemphasized (muted color, regular weight)
+- **Typography** (updated in `_newsletter.scss`):
+  - `.tclas-nl-topic-name`: 1.375rem, sans serif
+  - `.tclas-nl-topic-name-en`: 1.125rem, sans serif
+- **Article cards** (`template-parts/content/card-article-nl.php`):
+  - Vertical card layout (image on top, content below)
+  - Uses `.tclas-card tclas-card--accented` for consistency with post cards
+  - Displays: issue date (formatted from `tclas_issue_date` meta), byline with author link, title, excerpt
+  - Image link: `tabindex="-1" aria-hidden="true"` pattern
+  - Meta layout: `[issue date] · By [author]`
+  - Fallback placeholder: 📰 emoji for missing featured images
 
 ---
 

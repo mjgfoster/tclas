@@ -1,6 +1,6 @@
 # Build Program — TCLAS Site Reconciliation
 
-_Updated 2026-03-08_
+_Updated 2026-03-11_
 
 **Copy + UI review with Rebecca**: March 12, 2026
 **Board preview deadline**: March 22, 2026
@@ -86,13 +86,20 @@ All 8 decisions resolved. See `figma-gap-analysis.md §14` for the full log.
 
 ---
 
-## Phase 4 — Events + Newsletter ✅ COMPLETE (Mar 8)
+## Phase 4 — Events + Newsletter ✅ COMPLETE (Mar 8, enhanced Mar 11)
 
 - Custom TEC archive: `default-template.php` overhaul with featured event hero, upcoming grid, past events
 - `tclas_get_past_events()` helper
 - Members-only badge injection in list view
 - Newsletter sticky subnav (`tclas-nl-subnav`, `initNlSubnav()` IntersectionObserver)
 - Browse by topic section (pending department icons — user task)
+
+### Membership section UX enhancements (Mar 11)
+- **Member pages**: Simplified hub dashboard, added breadcrumbs to all member pages (Home › Member hub › page)
+- **Member nav**: Added logout link, Documents page, "My Profile" instead of "My Story", renamed "Dashboard" → "Member hub" in main nav
+- **Forum URLs**: Changed from `/forums/` → `/member-hub/forums/` for URL structure consistency
+- **Newsletter topic pages**: Created `taxonomy-tclas_department.php` archive with hierarchical breadcrumbs, inline English descriptions
+- **Article cards**: Restructured `card-article-nl.php` from horizontal to vertical layout (image on top); displays issue date + byline; matches post card component structure
 
 ---
 
