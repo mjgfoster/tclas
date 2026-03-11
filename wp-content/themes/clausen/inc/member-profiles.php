@@ -229,6 +229,123 @@ function tclas_get_profile_data( int $user_id ): array {
 }
 
 /**
+ * Build a deduplicated array of commune map data for a single member's profile.
+ *
+ * Resolves lineage commune slugs to coordinates via tclas_get_communes().
+ * Returns an empty array when the member has no resolved communes.
+ *
+ * @param  int   $user_id
+ * @return array Array of { name, canton, lat, lng, surnames[] }
+ */
+function tclas_get_profile_map_data( int $user_id ): array {
+	$lineages = (array) ( get_user_meta( $user_id, '_tclas_lineages', true ) ?: [] );
+	if ( empty( $lineages ) ) {
+		return [];
+	}
+
+	$all_communes = function_exists( 'tclas_get_communes' ) ? tclas_get_communes() : [];
+	$result       = []; // keyed by slug for dedup
+
+	foreach ( $lineages as $lineage ) {
+		$norm = $lineage['commune_norm'] ?? '';
+		if ( '' === $norm || str_starts_with( $norm, 'unresolved:' ) ) {
+			continue;
+		}
+		if ( ! isset( $all_communes[ $norm ] ) ) {
+			continue;
+		}
+
+		$c = $all_communes[ $norm ];
+		if ( isset( $result[ $norm ] ) ) {
+			// Merge surnames from multiple lineages for the same commune.
+			$result[ $norm ]['surnames'] = array_values( array_unique(
+				array_merge( $result[ $norm ]['surnames'], (array) ( $lineage['surnames_raw'] ?? [] ) )
+			) );
+		} else {
+			$result[ $norm ] = [
+				'name'     => $c['name'],
+				'canton'   => $c['canton'],
+				'lat'      => (float) $c['lat'],
+				'lng'      => (float) $c['lng'],
+				'surnames' => array_values( array_filter( (array) ( $lineage['surnames_raw'] ?? [] ), 'strlen' ) ),
+			];
+		}
+	}
+
+	return array_values( $result );
+}
+
+// =============================================================================
+// Profile mini-map — conditional Leaflet enqueue
+// =============================================================================
+
+/**
+ * Enqueue Leaflet + profile mini-map JS when viewing an individual profile
+ * that has resolved ancestral communes (and ancestry is not privacy-hidden).
+ *
+ * Leaflet CSS/JS are already registered by ancestor-map.php; we just enqueue them.
+ * The mini-map script + data are localized here.
+ */
+add_action( 'wp_enqueue_scripts', 'tclas_maybe_enqueue_profile_map', 20 );
+function tclas_maybe_enqueue_profile_map(): void {
+	// Only run on the profiles page template.
+	if ( ! is_page_template( 'page-templates/page-member-profiles.php' ) ) {
+		return;
+	}
+
+	// Only for individual profile view (not directory).
+	$username = get_query_var( 'tclas_profile_username' );
+	if ( ! $username ) {
+		return;
+	}
+
+	$profile_user = get_user_by( 'slug', sanitize_title( $username ) );
+	if ( ! $profile_user ) {
+		return;
+	}
+
+	// Respect ancestry privacy.
+	if ( ! tclas_profile_field_visible( $profile_user->ID, 'ancestry' ) ) {
+		return;
+	}
+
+	$map_data = tclas_get_profile_map_data( $profile_user->ID );
+	if ( empty( $map_data ) ) {
+		return;
+	}
+
+	// Leaflet (already registered by ancestor-map.php).
+	wp_enqueue_style( 'leaflet' );
+	wp_enqueue_script( 'leaflet' );
+
+	// Profile mini-map script.
+	$dir = get_template_directory();
+	wp_enqueue_script(
+		'tclas-profile-mini-map',
+		get_template_directory_uri() . '/assets/js/profile-mini-map.js',
+		[ 'leaflet' ],
+		filemtime( $dir . '/assets/js/profile-mini-map.js' ),
+		true
+	);
+
+	// Build Mapbox tile URL (same logic as ancestor-map.php).
+	$mapbox_token = function_exists( 'get_field' ) ? get_field( 'mapbox_access_token', 'option' ) : '';
+	$mapbox_style = function_exists( 'get_field' )
+		? ( get_field( 'mapbox_style_url', 'option' ) ?: 'mapbox://styles/tclas/cmmhutark001u01s98p0uakek' )
+		: '';
+
+	$tile_url = '';
+	if ( $mapbox_token && preg_match( '#^mapbox://styles/(.+)$#', $mapbox_style, $m ) ) {
+		$tile_url = 'https://api.mapbox.com/styles/v1/' . $m[1] . '/tiles/256/{z}/{x}/{y}@2x?access_token=' . $mapbox_token;
+	}
+
+	wp_localize_script( 'tclas-profile-mini-map', 'tclasProfileMap', [
+		'communes' => $map_data,
+		'tileUrl'  => $tile_url,
+	] );
+}
+
+/**
  * Return a lean array of all visible members for the directory, sorted by last name.
  * Only the fields needed for directory cards are fetched — full profile data is
  * loaded on-demand for individual profile views.

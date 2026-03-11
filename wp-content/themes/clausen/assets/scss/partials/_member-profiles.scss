@@ -276,81 +276,71 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	padding: 2rem;
 }
 
-// ── Individual profile view ───────────────────────────────────────────────
-.tclas-profile-view {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-	max-width: 780px;
+// ── Page header — membership meta line ────────────────────────────────────
+.tclas-page-header__membership {
+	font-family: var(--font-sans);
+	font-size: .92rem;
+	color: var(--c-muted);
+	margin: .25rem 0 .6rem;
 }
 
-.tclas-profile-header {
+// Badges (used in page header and directory cards)
+.tclas-profile-badges {
 	display: flex;
-	gap: 1.75rem;
-	align-items: flex-start;
-	background: var(--c-white);
-	border: 1px solid var(--c-border);
-	border-radius: var(--radius);
-	padding: 1.75rem;
-	box-shadow: var(--shadow-sm);
+	flex-wrap: wrap;
+	gap: .4rem;
+	margin-top: .35rem;
+}
 
-	@include bp($bp-sm) {
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
+// ── Individual profile — two-column grid ──────────────────────────────────
+.tclas-profile-view {
+	display: grid;
+	grid-template-columns: 320px 1fr;
+	gap: 2.5rem;
+	align-items: start;
 
-		.tclas-profile-badges { justify-content: center; }
-		.tclas-profile-meta-list { justify-items: center; }
-		.tclas-profile-social { justify-content: center; }
+	@include bp($bp-md) {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
 	}
 }
 
-.tclas-profile-header__photo { flex-shrink: 0; }
+// ── Sidebar ───────────────────────────────────────────────────────────────
+.tclas-profile-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: .9rem;
+	align-items: center;
+	text-align: center;
 
-.tclas-profile-header__img {
-	width: 120px;
-	height: 120px;
-	border-radius: 50%;
+	@include bp($bp-md) {
+		max-width: 320px;
+		margin: 0 auto;
+	}
+}
+
+.tclas-profile-sidebar__photo-wrap {
+	width: 100%;
+	flex-shrink: 0;
+
+	@include bp($bp-md) { max-width: 320px; }
+}
+
+.tclas-profile-sidebar__photo {
+	width: 100%;
+	aspect-ratio: 1;
 	object-fit: cover;
-	border: 4px solid var(--c-border);
+	border-radius: var(--radius);
 	display: block;
 }
 
-.tclas-profile-header__meta { flex: 1; min-width: 0; }
-
-.tclas-profile-header__name {
-	font-family: var(--font-sans);
-	font-size: 1.4rem;
-	font-weight: 700;
-	color: var(--c-ardoise);
-	margin: 0 0 .6rem;
+.tclas-profile-sidebar__edit {
+	width: 100%;
+	margin-top: .25rem;
 }
 
-.tclas-profile-header__pronouns {
-	font-weight: 400;
-	font-size: 1rem;
-	color: var(--c-muted);
-	margin-left: .4rem;
-}
-
-.tclas-profile-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .9rem; }
-
-// Meta list
-.tclas-profile-meta-list {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	column-gap: .75rem;
-	row-gap: .2rem;
-	font-family: var(--font-sans);
-	font-size: .88rem;
-	margin: 0 0 .9rem;
-
-	dt { color: var(--c-muted); font-weight: 700; }
-	dd { color: var(--c-body-text); margin: 0; }
-}
-
-// Social links
-.tclas-profile-social { display: flex; gap: .6rem; flex-wrap: wrap; }
+// Social links (shared between old header and sidebar)
+.tclas-profile-social { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
 
 .tclas-profile-social__link {
 	display: flex;
@@ -364,19 +354,28 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	text-decoration: none;
 	border: 1px solid var(--c-border);
 	transition: background .15s, color .15s;
+	font-size: 1.05rem;
 
 	&:hover { background: var(--c-aigue); color: #fff; border-color: var(--c-aigue); }
 }
 
-// Profile sections
-.tclas-profile-section {
-	background: var(--c-white);
-	border: 1px solid var(--c-border);
-	border-radius: var(--radius);
-	padding: 1.5rem;
-	box-shadow: var(--shadow-sm);
+// ── Main column ───────────────────────────────────────────────────────────
+.tclas-profile-main {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	min-width: 0;
 }
 
+.tclas-profile-bio {
+	font-family: var(--font-sans);
+	font-size: 1.125rem;
+	line-height: 1.7;
+	color: var(--c-body-text);
+	margin: 0;
+}
+
+// Section headings (roots, family)
 .tclas-profile-section__title {
 	font-family: var(--font-sans);
 	font-size: .75rem;
@@ -387,13 +386,98 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	margin: 0 0 .85rem;
 }
 
-.tclas-profile-bio {
-	font-family: var(--font-serif);
+// ── Mini-map ──────────────────────────────────────────────────────────────
+.tclas-profile-map {
+	height: 220px;
+	border-radius: var(--radius);
+	border: 1px solid var(--c-border);
+	margin-bottom: 1rem;
+	background: #f0f0f0;
+}
+
+// ── Commune table ─────────────────────────────────────────────────────────
+.tclas-profile-commune-table {
+	width: 100%;
+	font-family: var(--font-sans);
 	font-size: 1rem;
-	line-height: 1.65;
 	color: var(--c-body-text);
-	max-width: 65ch;
+	border-collapse: collapse;
+	margin-bottom: 1rem;
+
+	thead th {
+		text-align: left;
+		font-weight: 700;
+		color: var(--c-muted);
+		font-size: .75rem;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		padding: .5rem .6rem;
+		border-bottom: 2px solid var(--c-border);
+	}
+
+	td {
+		padding: .55rem .6rem;
+		border-bottom: 1px solid var(--c-border);
+		vertical-align: top;
+	}
+
+	&__canton {
+		font-family: var(--font-sans);
+		font-size: 1rem;
+		font-weight: 700;
+		color: var(--c-ardoise);
+		vertical-align: top;
+		padding: .55rem .6rem;
+		border-bottom: 1px solid var(--c-border);
+		border-right: 2px solid var(--c-or-pale);
+	}
+}
+
+// Unstyled surname list inside commune table
+.tclas-profile-surname-list {
+	list-style: none;
 	margin: 0;
+	padding: 0;
+
+	li { line-height: 1.5; }
+}
+
+// Surname pills (used in lineage display for unresolved communes)
+.tclas-profile-surname-pill {
+	display: inline-block;
+	font-family: var(--font-sans);
+	font-size: .88rem;
+	background: var(--c-or-pale);
+	color: var(--c-ardoise);
+	padding: .15rem .55rem;
+	border-radius: 1rem;
+	margin: .1rem .15rem;
+}
+
+// Roots section
+.tclas-profile-roots { /* structural wrapper */ }
+
+.tclas-profile-roots__heading {
+	font-family: var(--font-serif);
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	margin: 0 0 1rem;
+}
+
+.tclas-profile-roots-cta {
+	margin-top: 1.25rem;
+	padding: 1rem 1.25rem;
+	background: var(--c-or-pale);
+	border-radius: var(--radius);
+	text-align: center;
+
+	p {
+		font-family: var(--font-sans);
+		font-size: .95rem;
+		color: var(--c-body-text);
+		margin: 0 0 .6rem;
+	}
 }
 
 .tclas-profile-roots__label {
@@ -405,9 +489,10 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 }
 
 .tclas-profile-pills       { display: flex; flex-wrap: wrap; gap: .4rem; }
-.tclas-profile-family-names{ font-family: var(--font-sans); font-size: .92rem; color: var(--c-body-text); margin: 0; }
+.tclas-profile-family-names { font-family: var(--font-sans); font-size: .92rem; color: var(--c-body-text); margin: 0; }
+.tclas-profile-family       { /* structural wrapper */ }
 
-// ── Grouped lineage display ──────────────────────────────────────────────
+// ── Grouped lineage display (unresolved communes) ─────────────────────────
 .tclas-profile-lineage     { margin-bottom: 1rem; &:last-child { margin-bottom: 0; } }
 
 .tclas-profile-lineage__commune {
@@ -416,6 +501,8 @@ details[open] .tclas-field-privacy__toggle::before { transform: rotate(90deg); }
 	font-weight: 700;
 	color: var(--c-ardoise);
 	margin: 0 0 .35rem;
+
+	.bi { color: var(--c-muted); margin-right: .2rem; }
 }
 
 .tclas-profile-lineage__surnames {

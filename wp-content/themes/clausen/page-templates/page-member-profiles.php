@@ -113,165 +113,264 @@ if ( $profile_username ) :
 
 	$p = tclas_get_profile_data( $profile_user->ID );
 	$is_own_profile = ( get_current_user_id() === $profile_user->ID );
+
+	// Map data for profile mini-map (empty if no resolved communes or privacy-hidden).
+	$map_communes = tclas_get_profile_map_data( $profile_user->ID );
+	$has_roots    = ! empty( $p['lineages'] ) || ! empty( $p['unassigned_surnames_raw'] );
 ?>
 
+<!-- ── Page header ─────────────────────────────────────────────────────── -->
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
 			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
 		</a>
 		<h1 class="tclas-page-header__title"><?php echo esc_html( $p['display_name'] ); ?></h1>
+
+		<?php // Membership meta line. ?>
+		<p class="tclas-page-header__membership">
+			<?php
+			$meta_parts = [];
+			if ( $p['membership_level'] && $p['member_since'] ) {
+				/* translators: %1$s = level name, %2$s = year */
+				$meta_parts[] = sprintf( __( '%1$s member since %2$s', 'tclas' ), esc_html( $p['membership_level'] ), esc_html( $p['member_since'] ) );
+			} elseif ( $p['membership_level'] ) {
+				$meta_parts[] = esc_html( $p['membership_level'] ) . ' ' . __( 'member', 'tclas' );
+			}
+			if ( $p['city'] ) {
+				$meta_parts[] = esc_html( $p['city'] );
+			}
+			if ( ! empty( $p['pronouns'] ) ) {
+				$meta_parts[] = esc_html( $p['pronouns'] );
+			}
+			echo implode( ' · ', $meta_parts );
+			?>
+		</p>
+
+		<?php // Badges. ?>
+		<?php
+		$badge_reg    = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
+		$active_slugs = $p['badges'] ?? [];
+		$has_public_badges = false;
+		foreach ( $active_slugs as $_s ) {
+			if ( isset( $badge_reg[ $_s ] ) && ( $badge_reg[ $_s ]['public'] ?? true ) ) {
+				$has_public_badges = true;
+				break;
+			}
+		}
+		?>
+		<?php if ( $has_public_badges ) : ?>
+			<div class="tclas-profile-badges">
+				<?php foreach ( $active_slugs as $slug ) :
+					if ( ! isset( $badge_reg[ $slug ] ) ) continue;
+					$_def = $badge_reg[ $slug ];
+					if ( ! ( $_def['public'] ?? true ) ) continue;
+				?>
+					<span class="tclas-badge tclas-badge--member-badge">
+						<i class="bi <?php echo esc_attr( $_def['icon'] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $_def['label'] ); ?>
+					</span>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
 
+<!-- ── Two-column profile layout ───────────────────────────────────────── -->
 <section class="tclas-section tclas-section--sm">
 	<div class="container-tclas">
 
 		<div class="tclas-profile-view">
 
-			<!-- ── Profile header card ─────────────────────────────────── -->
-			<div class="tclas-profile-header">
-				<div class="tclas-profile-header__photo">
-					<?php echo tclas_get_profile_photo_img( $profile_user->ID, 'medium', 'tclas-profile-header__img' ); ?>
-				</div>
-				<div class="tclas-profile-header__meta">
-					<h2 class="tclas-profile-header__name">
-						<?php echo esc_html( $p['display_name'] ); ?>
-						<?php if ( ! empty( $p['pronouns'] ) ) : ?>
-							<span class="tclas-profile-header__pronouns"><?php echo esc_html( $p['pronouns'] ); ?></span>
-						<?php endif; ?>
-					</h2>
+			<!-- ── Sidebar ─────────────────────────────────────────── -->
+			<aside class="tclas-profile-sidebar">
 
-					<!-- Badges -->
-					<?php
-					$badge_reg    = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
-					$active_slugs = $p['badges'] ?? [];
-					?>
-					<div class="tclas-profile-badges">
-						<?php foreach ( $active_slugs as $slug ) :
-							if ( ! isset( $badge_reg[ $slug ] ) ) continue;
-							$_def = $badge_reg[ $slug ];
-							if ( ! ( $_def['public'] ?? true ) ) continue;
-						?>
-							<span class="tclas-badge tclas-badge--member-badge">
-								<i class="bi <?php echo esc_attr( $_def['icon'] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $_def['label'] ); ?>
-							</span>
-						<?php endforeach; ?>
-						<?php if ( $p['has_ancestors'] ) : ?>
-							<span class="tclas-badge tclas-badge--ancestors"><i class="bi bi-map-fill" aria-hidden="true"></i> <?php esc_html_e( 'Ancestors on map', 'tclas' ); ?></span>
+				<!-- Photo (square) -->
+				<div class="tclas-profile-sidebar__photo-wrap">
+					<?php echo tclas_get_profile_photo_img( $profile_user->ID, 'medium_large', 'tclas-profile-sidebar__photo' ); ?>
+				</div>
+
+				<!-- Social links -->
+				<?php if ( ! empty( $p['social'] ) && array_filter( $p['social'] ) ) : ?>
+					<div class="tclas-profile-social">
+						<?php if ( $p['social']['facebook'] ) : ?>
+							<a href="<?php echo esc_url( $p['social']['facebook'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+								<i class="bi bi-facebook" aria-hidden="true"></i>
+							</a>
 						<?php endif; ?>
-						<?php if ( $p['has_children'] ) : ?>
-							<span class="tclas-badge tclas-badge--family"><i class="bi bi-people-fill" aria-hidden="true"></i> <?php esc_html_e( 'Includes young members', 'tclas' ); ?></span>
+						<?php if ( $p['social']['linkedin'] ) : ?>
+							<a href="<?php echo esc_url( $p['social']['linkedin'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+								<i class="bi bi-linkedin" aria-hidden="true"></i>
+							</a>
+						<?php endif; ?>
+						<?php if ( $p['social']['instagram'] ) : ?>
+							<a href="<?php echo esc_url( $p['social']['instagram'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+								<i class="bi bi-instagram" aria-hidden="true"></i>
+							</a>
 						<?php endif; ?>
 					</div>
+				<?php endif; ?>
 
-					<!-- Membership info -->
-					<dl class="tclas-profile-meta-list">
-						<?php if ( $p['membership_level'] ) : ?>
-							<dt><?php esc_html_e( 'Membership', 'tclas' ); ?></dt>
-							<dd><?php echo esc_html( $p['membership_level'] ); ?></dd>
+				<!-- Edit button (own profile) -->
+				<?php if ( $is_own_profile ) : ?>
+					<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise tclas-profile-sidebar__edit">
+						<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
+					</a>
+				<?php endif; ?>
+
+			</aside>
+
+			<!-- ── Main column ─────────────────────────────────────── -->
+			<div class="tclas-profile-main">
+
+				<!-- Bio (no heading — just prose) -->
+				<?php if ( $p['bio'] ) : ?>
+					<div class="tclas-profile-bio">
+						<?php echo nl2br( esc_html( $p['bio'] ) ); ?>
+					</div>
+				<?php endif; ?>
+
+				<!-- Luxembourg roots -->
+				<?php if ( $has_roots ) : ?>
+					<div class="tclas-profile-roots">
+						<h3 class="tclas-profile-roots__heading">
+							<?php
+							/* translators: %s = member's first name */
+							printf( esc_html__( '%s\'s Luxembourg roots', 'tclas' ), esc_html( $p['first_name'] ?: $p['display_name'] ) );
+							?>
+						</h3>
+
+						<?php // Mini-map (only if communes with coordinates exist). ?>
+						<?php if ( ! empty( $map_communes ) ) : ?>
+							<div id="tclas-profile-map" class="tclas-profile-map" aria-label="<?php esc_attr_e( 'Map of ancestral communes in Luxembourg', 'tclas' ); ?>"></div>
 						<?php endif; ?>
-						<?php if ( $p['member_since'] ) : ?>
-							<dt><?php esc_html_e( 'Member since', 'tclas' ); ?></dt>
-							<dd><?php echo esc_html( $p['member_since'] ); ?></dd>
+
+						<?php // Commune / canton table — grouped by canton with rowspan. ?>
+						<?php if ( ! empty( $map_communes ) ) :
+							// Sort communes by canton, then by name within each canton.
+							$sorted = $map_communes;
+							usort( $sorted, function ( $a, $b ) {
+								$c = strcmp( $a['canton'], $b['canton'] );
+								return $c !== 0 ? $c : strcmp( $a['name'], $b['name'] );
+							} );
+
+							// Group by canton for rowspan counts.
+							$canton_groups = [];
+							foreach ( $sorted as $mc ) {
+								$canton_groups[ $mc['canton'] ][] = $mc;
+							}
+						?>
+							<table class="tclas-profile-commune-table">
+								<thead>
+									<tr>
+										<th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ( $canton_groups as $canton => $communes ) :
+										$count = count( $communes );
+										foreach ( $communes as $i => $mc ) : ?>
+											<tr>
+												<?php if ( 0 === $i ) : ?>
+													<th scope="rowgroup" rowspan="<?php echo esc_attr( $count ); ?>" class="tclas-profile-commune-table__canton">
+														<?php echo esc_html( $canton ); ?>
+													</th>
+												<?php endif; ?>
+												<td><?php echo esc_html( $mc['name'] ); ?></td>
+												<td>
+													<?php if ( ! empty( $mc['surnames'] ) ) : ?>
+														<ul class="tclas-profile-surname-list">
+															<?php foreach ( $mc['surnames'] as $sn ) : ?>
+																<li><?php echo esc_html( $sn ); ?></li>
+															<?php endforeach; ?>
+														</ul>
+													<?php else : ?>
+														<span class="text-muted">—</span>
+													<?php endif; ?>
+												</td>
+											</tr>
+										<?php endforeach;
+									endforeach; ?>
+								</tbody>
+							</table>
 						<?php endif; ?>
-						<?php if ( $p['city'] ) : ?>
-							<dt><?php esc_html_e( 'Based in', 'tclas' ); ?></dt>
-							<dd><?php echo esc_html( $p['city'] ); ?></dd>
-						<?php endif; ?>
-					</dl>
 
-					<!-- Social links -->
-					<?php if ( ! empty( $p['social'] ) && array_filter( $p['social'] ) ) : ?>
-						<div class="tclas-profile-social">
-							<?php if ( $p['social']['facebook'] ) : ?>
-								<a href="<?php echo esc_url( $p['social']['facebook'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer">
-									<span class="sr-only">Facebook</span>
-									<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-								</a>
-							<?php endif; ?>
-							<?php if ( $p['social']['linkedin'] ) : ?>
-								<a href="<?php echo esc_url( $p['social']['linkedin'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer">
-									<span class="sr-only">LinkedIn</span>
-									<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-								</a>
-							<?php endif; ?>
-							<?php if ( $p['social']['instagram'] ) : ?>
-								<a href="<?php echo esc_url( $p['social']['instagram'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer">
-									<span class="sr-only">Instagram</span>
-									<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-								</a>
-							<?php endif; ?>
-						</div>
-					<?php endif; ?>
+						<?php // Lineages without coordinates (commune_raw only). ?>
+						<?php foreach ( $p['lineages'] as $lineage ) :
+							$commune_label = $lineage['commune_raw'] ?? '';
+							$norm          = $lineage['commune_norm'] ?? '';
+							$paired_names  = array_filter( (array) ( $lineage['surnames_raw'] ?? [] ), 'strlen' );
+							if ( '' === $commune_label ) continue;
+							// Skip if already shown in table.
+							if ( '' !== $norm && ! str_starts_with( $norm, 'unresolved:' ) ) continue;
+						?>
+							<div class="tclas-profile-lineage">
+								<h4 class="tclas-profile-lineage__commune">
+									<i class="bi bi-geo" aria-hidden="true"></i> <?php echo esc_html( $commune_label ); ?>
+								</h4>
+								<?php if ( ! empty( $paired_names ) ) : ?>
+									<div class="tclas-profile-lineage__surnames">
+										<?php foreach ( $paired_names as $sname ) : ?>
+											<span class="tclas-profile-surname-pill"><?php echo esc_html( $sname ); ?></span>
+										<?php endforeach; ?>
+									</div>
+								<?php endif; ?>
+							</div>
+						<?php endforeach; ?>
 
-					<?php if ( $is_own_profile ) : ?>
-						<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise tclas-profile-own-link">
-							<?php esc_html_e( 'Edit my profile →', 'tclas' ); ?>
-						</a>
-					<?php endif; ?>
-				</div>
-			</div><!-- .tclas-profile-header -->
-
-			<!-- ── Bio ─────────────────────────────────────────────────── -->
-			<?php if ( $p['bio'] ) : ?>
-				<div class="tclas-profile-section">
-					<h3 class="tclas-profile-section__title"><?php esc_html_e( 'About', 'tclas' ); ?></h3>
-					<p class="tclas-profile-bio"><?php echo nl2br( esc_html( $p['bio'] ) ); ?></p>
-				</div>
-			<?php endif; ?>
-
-			<!-- ── Ancestral lineages ──────────────────────────────────── -->
-			<?php if ( ! empty( $p['lineages'] ) || ! empty( $p['unassigned_surnames_raw'] ) ) : ?>
-				<div class="tclas-profile-section">
-					<h3 class="tclas-profile-section__title"><?php esc_html_e( 'Luxembourg roots', 'tclas' ); ?></h3>
-
-					<?php foreach ( $p['lineages'] as $lineage ) :
-						$commune_label = $lineage['commune_raw'] ?? '';
-						$paired_names  = array_filter( (array) ( $lineage['surnames_raw'] ?? [] ), 'strlen' );
-						if ( '' === $commune_label ) continue;
-					?>
-						<div class="tclas-profile-lineage">
-							<h4 class="tclas-profile-lineage__commune">
-								<span class="tclas-conn-pill tclas-conn-pill--commune">🏛 <?php echo esc_html( $commune_label ); ?></span>
-							</h4>
-							<?php if ( ! empty( $paired_names ) ) : ?>
-								<div class="tclas-profile-lineage__surnames">
-									<?php foreach ( $paired_names as $sname ) : ?>
-										<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $sname ); ?></span>
+						<?php // Unassigned surnames. ?>
+						<?php
+						$ua_names = array_filter( (array) ( $p['unassigned_surnames_raw'] ?? [] ), 'strlen' );
+						if ( ! empty( $ua_names ) ) : ?>
+							<div class="tclas-profile-unassigned">
+								<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Other family surnames', 'tclas' ); ?></h4>
+								<div class="tclas-profile-pills">
+									<?php foreach ( $ua_names as $sname ) : ?>
+										<span class="tclas-profile-surname-pill"><?php echo esc_html( $sname ); ?></span>
 									<?php endforeach; ?>
 								</div>
-							<?php endif; ?>
-						</div>
-					<?php endforeach; ?>
-
-					<?php
-					$ua_names = array_filter( (array) ( $p['unassigned_surnames_raw'] ?? [] ), 'strlen' );
-					if ( ! empty( $ua_names ) ) : ?>
-						<div class="tclas-profile-unassigned">
-							<h4 class="tclas-profile-roots__label"><?php esc_html_e( 'Other family surnames', 'tclas' ); ?></h4>
-							<div class="tclas-profile-pills">
-								<?php foreach ( $ua_names as $sname ) : ?>
-									<span class="tclas-conn-pill tclas-conn-pill--surname">👤 <?php echo esc_html( $sname ); ?></span>
-								<?php endforeach; ?>
 							</div>
-						</div>
-					<?php endif; ?>
-				</div>
-			<?php endif; ?>
+						<?php endif; ?>
 
-			<!-- ── Family members ──────────────────────────────────────── -->
-			<?php if ( ! empty( $p['family_names'] ) ) : ?>
-				<div class="tclas-profile-section">
-					<h3 class="tclas-profile-section__title"><?php esc_html_e( 'Family membership', 'tclas' ); ?></h3>
-					<p class="tclas-profile-family-names">
 						<?php
-						$names = array_map( 'esc_html', $p['family_names'] );
-						echo implode( ', ', $names );
+						// CTA for logged-in members who haven't added their own ancestry yet.
+						$viewer_id = get_current_user_id();
+						if ( $viewer_id && ! $is_own_profile ) :
+							$viewer_communes = (array) ( get_user_meta( $viewer_id, '_tclas_communes_norm', true ) ?: [] );
+							$viewer_has_map  = ! empty( array_filter(
+								$viewer_communes,
+								fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )
+							) );
+							if ( ! $viewer_has_map ) : ?>
+								<div class="tclas-profile-roots-cta">
+									<p>
+										<?php esc_html_e( 'Think this map is cool? Add your Luxembourg ancestors and get one of your own.', 'tclas' ); ?>
+									</p>
+									<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise">
+										<?php esc_html_e( 'Add my ancestors', 'tclas' ); ?>
+									</a>
+								</div>
+							<?php endif;
+						endif;
 						?>
-					</p>
-				</div>
-			<?php endif; ?>
+					</div>
+				<?php endif; ?>
+
+				<!-- Family members -->
+				<?php if ( ! empty( $p['family_names'] ) ) : ?>
+					<div class="tclas-profile-family">
+						<h3 class="tclas-profile-section__title"><?php esc_html_e( 'Family membership', 'tclas' ); ?></h3>
+						<p class="tclas-profile-family-names">
+							<?php
+							$names = array_map( 'esc_html', $p['family_names'] );
+							echo implode( ', ', $names );
+							?>
+						</p>
+					</div>
+				<?php endif; ?>
+
+			</div><!-- .tclas-profile-main -->
 
 		</div><!-- .tclas-profile-view -->
 
