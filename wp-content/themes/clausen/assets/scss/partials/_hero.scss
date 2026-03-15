@@ -82,32 +82,91 @@
 
 .tclas-hero__actions { display: flex; gap: .85rem; flex-wrap: wrap; align-items: center; }
 
-// ── Animated three-language greeting ─────────────────────────────────────
+// ── Animated three-language greeting (rectangle slide-in) ─────────────────
+//
+// Three stacked colored rectangles fly in from the left one at a time.
+// Each rectangle's text fades in after the rectangle lands.
+// JS (hero-greeting.js) adds data-active to each stage 900ms apart.
 
-// Words appear side-by-side, centered, accumulating one at a time.
 .tclas-hero__greeting {
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: baseline;
-	gap: 0 1.5rem;
-	margin: 0 0 2.5rem;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: .5rem;
+	margin: 0 0 1.5rem;
+	text-align: left; // override the --center parent's text-align
 }
 
+// Stage is just a transparent container; the rect inside does all the work.
 .tclas-hero__greeting-stage {
-	font-family: var(--font-sans);
-	font-size: clamp(3rem, 8vw, 5.5rem);
-	font-weight: 700;
-	line-height: 1.05;
-	color: #fff;
-	opacity: 0;
-	transform: translateY(.75rem);
-	transition: opacity .5s ease, transform .5s ease;
+	display: block;
+}
 
-	// Each word fades in to its own target opacity and lifts into place.
-	&[data-stage="0"][data-active] { opacity: .70; transform: none; } // Bonjour.
-	&[data-stage="1"][data-active] { opacity: .85; transform: none; } // Hello.
-	&[data-stage="2"][data-active] { opacity: 1;   transform: none; } // Moien.
+// The colored rectangle — slides in and reveals its text.
+.tclas-hero__greeting-rect {
+	display: inline-block;
+	position: relative; // anchor for ::before left-bleed
+	font-family: var(--font-sans);
+	font-size: clamp(2rem, 4.5vw, 3.25rem);
+	font-weight: 700;
+	line-height: 1.15;
+	padding: .2em .7em;
+
+	// Text is transparent until after the rect lands.
+	color: rgba(255, 255, 255, 0);
+
+	// Start fully off-screen left; slide in on active.
+	transform: translateX(-100vw);
+
+	// Rect slides in, then text fades in.
+	transition:
+		transform .55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+		color      .3s  ease .4s;
+
+	// Extends the background color to the left viewport edge.
+	// Hero's overflow:hidden clips it; animates with the rect during slide-in.
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 100%;
+		width: 100vw;
+		background: inherit;
+	}
+}
+
+// Color per language + staggered min-widths for visual texture
+.tclas-hero__greeting-stage[data-stage="0"] .tclas-hero__greeting-rect {
+	background: rgba(43, 98, 130,  0.85); // ardoise
+	min-width: 36vw;
+}
+.tclas-hero__greeting-stage[data-stage="1"] .tclas-hero__greeting-rect {
+	background: rgba(139, 58, 58, 0.85); // crimson
+	min-width: 26vw;
+}
+.tclas-hero__greeting-stage[data-stage="2"] .tclas-hero__greeting-rect {
+	background: rgba(17, 49, 68,  0.90); // deep navy
+	min-width: 31vw;
+}
+
+// Activate: slide rect to position and show text.
+.tclas-hero__greeting-stage[data-active] .tclas-hero__greeting-rect {
+	transform: none;
+	color: rgba(255, 255, 255, 1);
+}
+
+// Subtitle: centered below the rectangles.
+.tclas-hero__greeting-subtitle {
+	font-family: var(--font-sans);
+	font-size: clamp(1rem, 2.5vw, 1.375rem);
+	font-weight: 500;
+	color: #fff;
+	line-height: 1.4;
+	margin: 0 auto 2.5rem;
+	max-width: 32ch;
+	text-align: center;
+	text-shadow: 0 1px 10px rgba(0,0,0,.6), 0 0 30px rgba(0,0,0,.4);
 }
 
 // CTAs are always visible — just center them.
@@ -115,13 +174,13 @@
 	justify-content: center;
 }
 
-// Reduced motion: skip straight to final stage, no transitions
+// Reduced motion: show all rects immediately, no slide or fade.
 @media (prefers-reduced-motion: reduce) {
-	.tclas-hero__greeting-stage {
+	.tclas-hero__greeting-rect {
 		transition: none;
 		transform: none;
+		color: rgba(255, 255, 255, 1);
 	}
-	.tclas-hero__greeting-ctas { transition: none; }
 }
 
 // ── Split photo hero (Figma: diagonal clip-path + vertical slide) ────────

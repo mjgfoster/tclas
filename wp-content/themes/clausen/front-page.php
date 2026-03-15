@@ -26,10 +26,14 @@ get_header();
 		<div class="tclas-hero__content tclas-hero__content--center">
 
 			<h1 class="tclas-hero__greeting" aria-label="Bonjour. Hello. Moien.">
-				<span class="tclas-hero__greeting-stage" data-stage="0" lang="fr">Bonjour.</span>
-				<span class="tclas-hero__greeting-stage" data-stage="1">Hello.</span>
-				<span class="tclas-hero__greeting-stage" data-stage="2" lang="lb">Moien.</span>
+				<span class="tclas-hero__greeting-stage" data-stage="0" lang="fr"><span class="tclas-hero__greeting-rect">Bonjour.</span></span>
+				<span class="tclas-hero__greeting-stage" data-stage="1"><span class="tclas-hero__greeting-rect">Hello.</span></span>
+				<span class="tclas-hero__greeting-stage" data-stage="2" lang="lb"><span class="tclas-hero__greeting-rect">Moien.</span></span>
 			</h1>
+
+			<p class="tclas-hero__greeting-subtitle">
+				<?php esc_html_e( 'Welcome to the Twin Cities Luxembourg American Society', 'tclas' ); ?>
+			</p>
 
 			<div class="tclas-hero__greeting-ctas tclas-hero__actions">
 				<?php if ( ! tclas_is_member() ) : ?>
