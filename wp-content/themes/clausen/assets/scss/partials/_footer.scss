@@ -2,7 +2,7 @@
 //  _footer.scss — Site footer
 // =============================================================================
 
-.tclas-footer { background: var(--c-ardoise); }
+.tclas-footer { background: var(--c-ardoise-dk); }
 
 .tclas-footer__upper {
 	padding: 3.5rem 0 2.5rem;
@@ -13,19 +13,7 @@
 }
 
 .tclas-footer__motto-bg {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%,-50%);
-	white-space: nowrap;
-	pointer-events: none;
-	z-index: 0;
-	font-size: clamp(48px, 8vw, 96px);
-	font-weight: 700;
-	color: var(--c-or-pale);
-	opacity: .045;
-	letter-spacing: -.01em;
-	user-select: none;
+	display: none;
 }
 
 .tclas-footer__grid {
@@ -37,7 +25,7 @@
 	@media (max-width: 575px) { grid-template-columns: 1fr; }
 }
 
-.tclas-footer__brand-logo { margin-bottom: .75rem; img { max-width: 260px; height: auto; display: block; } }
+.tclas-footer__brand-logo { margin-bottom: .75rem; img { max-width: 340px; height: auto; display: block; } }
 .tclas-footer__brand-tagline { display: block; font-size: .8rem; font-style: italic; color: rgba(235,245,252,.75); margin-top: .25rem; }
 .tclas-footer__brand-desc { font-size: .82rem; color: rgba(235,245,252,.75); max-width: 30ch; line-height: 1.55; margin-top: .5rem; }
 .tclas-footer__motto { font-size: .75rem; font-style: italic; color: rgba(235,245,252,.5); margin-top: .5rem; }
@@ -46,7 +34,7 @@
 	font-family: var(--font-sans);
 	font-size: 1.125rem;
 	font-weight: 700;
-	color: var(--c-or-pale);
+	color: rgba(235,245,252,.8);
 	margin-bottom: 1rem;
 	padding-bottom: .4rem;
 	border-bottom: 1px solid rgba(235,245,252,.1);
@@ -60,12 +48,12 @@
 	li { margin-bottom: .4rem; }
 
 	a {
-		font-size: .82rem;
-		color: rgba(235,245,252,.78);
+		font-size: 1rem;
+		color: var(--c-or-pale);
 		text-decoration: none;
-		transition: color .15s;
+		transition: text-decoration .15s;
 
-		&:hover { color: var(--c-or-pale); text-decoration: underline; }
+		&:hover { text-decoration: underline; }
 	}
 }
 
@@ -174,6 +162,11 @@
 			color: #fff;
 			opacity: 1;
 		}
+	}
+
+	&--newsletter {
+		justify-content: flex-end;
+		margin-top: 1rem;
 	}
 }
 
