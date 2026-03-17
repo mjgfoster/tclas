@@ -24,7 +24,7 @@ $lux-blue: #00A3E0;
 .tclas-msp-header__tagline {
 	margin-top: 1.25rem;
 	font-size: 1.1rem;
-	color: rgba(255, 255, 255, 0.75);
+	color: var(--c-muted);
 	max-width: 52ch;
 }
 

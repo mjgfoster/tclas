@@ -27,7 +27,7 @@ while ( have_posts() ) :
 </div>
 
 <section class="tclas-section bg-white">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<?php
 		// Breadcrumb via AIOSEO or manual
 		if ( function_exists( 'aioseo_breadcrumbs' ) ) {

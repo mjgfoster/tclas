@@ -1,12 +1,14 @@
 <?php
 /**
- * Single Newsletter Issue
+ * Single Newsletter Issue — Editorial Layout
  *
- * Magazine-style table of contents for one issue of the Loon & Lion.
+ * Presents one issue of The Loon & Lion as an editorial email-style page.
+ * Three-tier layout within a left sidebar:
+ *  1. Hero    — the main-story article, full-width, large image, 45-word teaser
+ *  2. Feature — the next two articles, two-column, image, 30-word teaser
+ *  3. Grid    — remaining articles, two-column text-only compact cards
+ *
  * Loaded via template_redirect when /newsletter/issue/{YYYY-MM}/ is requested.
- *
- * Layout: two-column grid — left: masthead + ordered article list;
- *         right: sticky portrait cover image.
  *
  * @package TCLAS
  */
@@ -33,7 +35,7 @@ $issue_posts = get_posts( [
 	'order'          => 'ASC',
 ] );
 
-// Serve 404 if the issue date exists but has no published posts
+// Serve 404 if the issue has no published posts
 if ( empty( $issue_posts ) ) {
 	global $wp_query;
 	$wp_query->set_404();
@@ -44,18 +46,7 @@ if ( empty( $issue_posts ) ) {
 	exit;
 }
 
-// ── Find the cover post: Main Story term + featured image ─────────────────────
-$cover_post_id = 0;
-foreach ( $issue_posts as $_p ) {
-	$_terms = wp_get_post_terms( $_p->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
-	if ( in_array( 'main-story', (array) $_terms, true ) && has_post_thumbnail( $_p->ID ) ) {
-		$cover_post_id = $_p->ID;
-		break;
-	}
-}
-$has_cover = (bool) $cover_post_id;
-
-// ── Find the "Previous Issues" archive page URL ───────────────────────────────
+// ── Find "Previous Issues" archive page URL ───────────────────────────────────
 $_archive_ids = get_posts( [
 	'post_type'      => 'page',
 	'meta_key'       => '_wp_page_template',
@@ -65,6 +56,84 @@ $_archive_ids = get_posts( [
 	'no_found_rows'  => true,
 ] );
 $archive_url = $_archive_ids ? get_permalink( $_archive_ids[0] ) : home_url( '/newsletter/' );
+
+// ── Bucket posts into three editorial tiers ───────────────────────────────────
+// Tier 1 — Hero: the post tagged main-story (exactly one expected per issue)
+// Tier 2 — Feature: up to 2 remaining posts (two-column, image teasers)
+// Tier 3 — Grid: all remaining posts (two-column, text-only compact cards)
+
+$lead_post     = null;
+$feature_posts = [];
+$grid_posts    = [];
+$remaining     = []; // posts that aren't the lead
+
+foreach ( $issue_posts as $_p ) {
+	$_dept_slugs = wp_get_post_terms( $_p->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
+	if ( null === $lead_post && in_array( 'main-story', (array) $_dept_slugs, true ) ) {
+		$lead_post = $_p;
+	} else {
+		$remaining[] = $_p;
+	}
+}
+
+// If no post is tagged main-story, promote the first post
+if ( null === $lead_post && ! empty( $remaining ) ) {
+	$lead_post = array_shift( $remaining );
+}
+
+// Split remaining into feature (up to 2) and grid (rest)
+foreach ( $remaining as $_p ) {
+	if ( count( $feature_posts ) < 2 ) {
+		$feature_posts[] = $_p;
+	} else {
+		$grid_posts[] = $_p;
+	}
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/**
+ * Returns a trimmed excerpt: manual excerpt first, then content fallback.
+ */
+$_excerpt = function( WP_Post $p, int $words ): string {
+	return has_excerpt( $p->ID )
+		? wp_trim_words( get_the_excerpt( $p ), $words, '&hellip;' )
+		: wp_trim_words( $p->post_content, $words, '&hellip;' );
+};
+
+/**
+ * Returns estimated read time in minutes.
+ */
+$_read_time = function( WP_Post $p ): int {
+	return max( 1, round( str_word_count( wp_strip_all_tags( $p->post_content ) ) / 200 ) );
+};
+
+/**
+ * Returns department label terms (skipping structural 'main-story' term).
+ * Returns array ['lux' => string, 'en' => string, 'slug' => string].
+ */
+$_dept = function( WP_Post $p ): array {
+	$terms = wp_get_post_terms( $p->ID, 'tclas_department' );
+	if ( is_wp_error( $terms ) ) { return [ 'lux' => '', 'en' => '', 'slug' => '' ]; }
+	foreach ( $terms as $t ) {
+		if ( $t->slug !== 'main-story' ) {
+			return [ 'lux' => $t->name, 'en' => $t->description, 'slug' => $t->slug ];
+		}
+	}
+	return [ 'lux' => '', 'en' => '', 'slug' => '' ];
+};
+
+/**
+ * Returns CSS placeholder class for articles without a featured image.
+ */
+$_bg_class = function( string $slug ): string {
+	$known = [
+		'main-story', 'wellkomm', 'communauteit', 'an-der-kichen',
+		'geschicht', 'zu-letzebuerg', 'traditiounen', 'eist-sprooch',
+		'evenementer', 'spezialbericht',
+	];
+	return 'tclas-ie-dept-bg--' . ( in_array( $slug, $known, true ) ? $slug : 'default' );
+};
 
 get_header();
 ?>
@@ -87,130 +156,155 @@ get_header();
 			</ol>
 		</nav>
 
-		<!-- ── Two-column layout ───────────────────────────────────────── -->
-		<div class="tclas-issue-layout<?php echo $has_cover ? '' : ' tclas-issue-layout--no-cover'; ?>">
+		<!-- ── Two-column layout: sidebar (left) + editorial (right) ───── -->
+		<div class="tclas-nl-with-sidebar">
 
-			<!-- LEFT: Magazine masthead + article TOC -->
-			<div class="tclas-issue-toc-col">
+			<!-- Sidebar -->
+			<?php get_template_part( 'template-parts/newsletter-sidebar' ); ?>
 
-				<h2
-					class="tclas-issue-masthead"
-					aria-label="<?php esc_attr_e( 'The Loon & The Lion', 'tclas' ); ?>"
-				>
-					<span class="tclas-issue-masthead__loon"><?php esc_html_e( 'The Loon', 'tclas' ); ?></span>
-					<span class="tclas-issue-masthead__amp"> &amp; </span>
-					<span class="tclas-issue-masthead__lion"><?php esc_html_e( 'The Lion', 'tclas' ); ?></span>
-				</h2>
+			<!-- Editorial content column -->
+			<div class="tclas-issue-editorial">
 
-				<p class="tclas-issue-date"><?php echo esc_html( $issue_label ); ?></p>
+				<!-- Issue header -->
+				<header class="tclas-issue-editorial__header">
+					<p class="tclas-nl-current-eyebrow"><?php esc_html_e( 'TCLAS Newsletter', 'tclas' ); ?></p>
+					<h2 class="tclas-issue-editorial__date"><?php echo esc_html( $issue_label ); ?></h2>
+				</header>
 
-				<!-- Article list -->
-				<ol class="tclas-issue-toc">
-					<?php foreach ( $issue_posts as $_p ) :
 
-						// Department label: skip 'main-story' (structural), use topical term
-						$_dept_terms = wp_get_post_terms( $_p->ID, 'tclas_department' );
-						$_dept_lux   = '';
-						$_dept_en    = '';
-						if ( ! is_wp_error( $_dept_terms ) ) {
-							foreach ( $_dept_terms as $_t ) {
-								if ( $_t->slug !== 'main-story' ) {
-									$_dept_lux = $_t->name;
-									$_dept_en  = $_t->description;
-									break;
-								}
-							}
-						}
+				<?php
+				// ════════════════════════════════════════════════════════
+				// TIER 1 — HERO
+				// ════════════════════════════════════════════════════════
+				if ( $lead_post ) :
+					$_d = $_dept( $lead_post );
+				?>
+				<article class="tclas-ie-hero" aria-labelledby="tclas-ie-hero-title">
+					<a href="<?php echo esc_url( get_permalink( $lead_post->ID ) ); ?>" class="tclas-ie-hero__link">
 
-						$_is_lead   = ( $_p->ID === $cover_post_id );
-						$_excerpt   = has_excerpt( $_p->ID )
-							? wp_trim_words( get_the_excerpt( $_p ), 25, '&hellip;' )
-							: wp_trim_words( $_p->post_content, 25, '&hellip;' );
-						$_words     = str_word_count( wp_strip_all_tags( $_p->post_content ) );
-						$_read_mins = max( 1, round( $_words / 200 ) );
-					?>
-					<li class="tclas-issue-article<?php echo $_is_lead ? ' tclas-issue-article--lead' : ''; ?>">
-						<a
-							href="<?php echo esc_url( get_permalink( $_p->ID ) ); ?>"
-							class="tclas-issue-article-link"
-							aria-label="<?php echo esc_attr( sprintf(
-								/* translators: %s: article title */
-								__( 'Read article: %s', 'tclas' ),
-								get_the_title( $_p )
-							) ); ?>"
-						>
-							<?php if ( $_dept_lux ) : ?>
-							<span class="tclas-issue-dept">
-								<span lang="lb"><?php echo esc_html( $_dept_lux ); ?></span><?php if ( $_dept_en ) : ?><span class="tclas-issue-dept__en"><?php echo esc_html( $_dept_en ); ?></span><?php endif; ?>
+						<!-- Image -->
+						<div class="tclas-ie-hero__image-wrap">
+							<?php if ( has_post_thumbnail( $lead_post->ID ) ) : ?>
+								<?php echo get_the_post_thumbnail(
+									$lead_post->ID,
+									'large',
+									[ 'class' => 'tclas-ie-hero__img', 'alt' => '' ]
+								); ?>
+							<?php else : ?>
+								<div class="tclas-ie-hero__placeholder <?php echo esc_attr( $_bg_class( $_d['slug'] ) ); ?>"></div>
+							<?php endif; ?>
+						</div>
+
+						<!-- Body -->
+						<div class="tclas-ie-hero__body">
+							<?php if ( $_d['lux'] ) : ?>
+							<span class="tclas-ie-dept-label">
+								<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
 							</span>
 							<?php endif; ?>
 
-							<h3 class="tclas-issue-title">
+							<h3 class="tclas-ie-hero__title" id="tclas-ie-hero-title">
+								<?php echo esc_html( get_the_title( $lead_post ) ); ?>
+							</h3>
+
+							<?php $_ex = $_excerpt( $lead_post, 45 ); if ( $_ex ) : ?>
+							<p class="tclas-ie-hero__excerpt"><?php echo esc_html( $_ex ); ?></p>
+							<?php endif; ?>
+						</div>
+
+					</a>
+				</article>
+				<?php endif; ?>
+
+
+				<?php
+				// ════════════════════════════════════════════════════════
+				// TIER 2 — FEATURE ROW
+				// ════════════════════════════════════════════════════════
+				if ( ! empty( $feature_posts ) ) :
+					$_count = count( $feature_posts );
+				?>
+				<div class="tclas-ie-feature-row tclas-ie-feature-row--count-<?php echo (int) $_count; ?>">
+					<?php foreach ( $feature_posts as $_p ) :
+						$_d = $_dept( $_p );
+					?>
+					<article class="tclas-ie-feature-card">
+						<a href="<?php echo esc_url( get_permalink( $_p->ID ) ); ?>" class="tclas-ie-feature-card__link">
+
+							<!-- Image -->
+							<div class="tclas-ie-feature-card__image-wrap">
+								<?php if ( has_post_thumbnail( $_p->ID ) ) : ?>
+									<?php echo get_the_post_thumbnail(
+										$_p->ID,
+										'medium_large',
+										[ 'class' => 'tclas-ie-feature-card__img', 'alt' => '' ]
+									); ?>
+								<?php else : ?>
+									<div class="tclas-ie-feature-card__placeholder <?php echo esc_attr( $_bg_class( $_d['slug'] ) ); ?>"></div>
+								<?php endif; ?>
+							</div>
+
+							<!-- Body -->
+							<div class="tclas-ie-feature-card__body">
+								<?php if ( $_d['lux'] ) : ?>
+								<span class="tclas-ie-dept-label">
+									<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
+								</span>
+								<?php endif; ?>
+
+								<h3 class="tclas-ie-feature-card__title">
+									<?php echo esc_html( get_the_title( $_p ) ); ?>
+								</h3>
+
+								<?php $_ex = $_excerpt( $_p, 30 ); if ( $_ex ) : ?>
+								<p class="tclas-ie-feature-card__excerpt"><?php echo esc_html( $_ex ); ?></p>
+								<?php endif; ?>
+							</div>
+
+						</a>
+					</article>
+					<?php endforeach; ?>
+				</div>
+				<?php endif; ?>
+
+
+				<?php
+				// ════════════════════════════════════════════════════════
+				// TIER 3 — DEPARTMENT GRID (text-only compact cards)
+				// ════════════════════════════════════════════════════════
+				if ( ! empty( $grid_posts ) ) :
+				?>
+				<div class="tclas-ie-dept-grid">
+					<?php foreach ( $grid_posts as $_p ) :
+						$_d = $_dept( $_p );
+					?>
+					<article class="tclas-ie-dept-card">
+						<a href="<?php echo esc_url( get_permalink( $_p->ID ) ); ?>" class="tclas-ie-dept-card__link">
+
+							<?php if ( $_d['lux'] ) : ?>
+							<span class="tclas-ie-dept-label">
+								<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
+							</span>
+							<?php endif; ?>
+
+							<h3 class="tclas-ie-dept-card__title">
 								<?php echo esc_html( get_the_title( $_p ) ); ?>
 							</h3>
 
-							<?php if ( $_excerpt ) : ?>
-							<p class="tclas-issue-excerpt"><?php echo esc_html( $_excerpt ); ?></p>
+							<?php $_ex = $_excerpt( $_p, 20 ); if ( $_ex ) : ?>
+							<p class="tclas-ie-dept-card__excerpt"><?php echo esc_html( $_ex ); ?></p>
 							<?php endif; ?>
 
-							<span class="tclas-issue-meta">
-								<?php printf(
-									/* translators: %d: estimated read time in minutes */
-									esc_html__( '%d min read', 'tclas' ),
-									(int) $_read_mins
-								); ?>
-							</span>
 						</a>
-					</li>
+					</article>
 					<?php endforeach; ?>
-				</ol>
-
-				<!-- Back bar -->
-				<div class="tclas-issue-back-bar">
-					<a href="<?php echo esc_url( $archive_url ); ?>" class="tclas-issue-back-link">
-						&larr; <?php esc_html_e( 'All Issues', 'tclas' ); ?>
-					</a>
-					<span class="tclas-issue-count">
-						<?php printf(
-							/* translators: %d: number of articles */
-							esc_html( _n( '%d article', '%d articles', count( $issue_posts ), 'tclas' ) ),
-							count( $issue_posts )
-						); ?>
-					</span>
 				</div>
+				<?php endif; ?>
 
-			</div><!-- .tclas-issue-toc-col -->
 
-			<?php if ( $has_cover ) : ?>
-			<!-- RIGHT: Sticky cover image (Main Story featured image) -->
-			<div class="tclas-issue-cover-col">
-				<div class="tclas-issue-cover-wrap">
-					<a
-						href="<?php echo esc_url( get_permalink( $cover_post_id ) ); ?>"
-						class="tclas-issue-cover-link"
-						aria-hidden="true"
-						tabindex="-1"
-					>
-						<div class="tclas-issue-cover-frame">
-							<?php echo get_the_post_thumbnail(
-								$cover_post_id,
-								'large',
-								[
-									'class' => 'tclas-issue-cover-img',
-									'alt'   => sprintf(
-										/* translators: %s: issue title, e.g. "March 2025" */
-										__( 'Cover of %s', 'tclas' ),
-										$issue_label
-									),
-								]
-							); ?>
-						</div>
-					</a>
-				</div>
-			</div><!-- .tclas-issue-cover-col -->
-			<?php endif; ?>
+				</div><!-- .tclas-issue-editorial -->
 
-		</div><!-- .tclas-issue-layout -->
+		</div><!-- .tclas-nl-with-sidebar -->
 
 	</div><!-- .container-tclas -->
 </section>

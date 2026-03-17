@@ -27,7 +27,7 @@ get_header();
 
 <!-- ── Introduction ─────────────────────────────────────────────────────── -->
 <section class="tclas-section bg-white">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<?php
 		$cit_lede   = function_exists( 'get_field' ) ? get_field( 'cit_lede' ) : '';
 		$cit_lede_2 = function_exists( 'get_field' ) ? get_field( 'cit_lede_2' ) : '';
@@ -223,7 +223,7 @@ get_header();
 
 <!-- ── Community CTA ─────────────────────────────────────────────────────── -->
 <section class="tclas-section bg-ardoise">
-	<div class="container-tclas container--narrow tclas-citizenship-cta">
+	<div class="container-tclas container--medium tclas-citizenship-cta">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'You\'re not alone in this', 'tclas' ); ?></span>
 		<?php
 		$cit_comm_heading = function_exists( 'get_field' ) ? get_field( 'cit_community_heading' ) : '';

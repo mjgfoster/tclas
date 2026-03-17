@@ -29,7 +29,7 @@ $price_student    = $price_student    ?: 15;
 
 	<!-- Intro -->
 	<div class="tclas-referral-landing__intro">
-		<div class="container-tclas container--narrow">
+		<div class="container-tclas container--medium">
 
 			<?php if ( $referrer_name ) : ?>
 				<div class="tclas-referral-landing__referred-by">
@@ -72,7 +72,7 @@ $price_student    = $price_student    ?: 15;
 
 	<!-- What we are -->
 	<div class="tclas-section bg-white">
-		<div class="container-tclas container--narrow">
+		<div class="container-tclas container--medium">
 			<span class="tclas-eyebrow"><?php esc_html_e( 'About TCLAS', 'tclas' ); ?></span>
 			<h2 class="tclas-ruled"><?php esc_html_e( 'A community in two places at once.', 'tclas' ); ?></h2>
 			<p><?php esc_html_e( 'The Twin Cities Luxembourg American Society connects Minnesotans with Luxembourg — through ancestry, citizenship, travel, language, food, and the occasional glass of Moselle Riesling.', 'tclas' ); ?></p>
@@ -83,7 +83,7 @@ $price_student    = $price_student    ?: 15;
 
 	<!-- Mini membership tiers -->
 	<div class="tclas-section bg-ardoise">
-		<div class="container-tclas container--narrow">
+		<div class="container-tclas container--medium">
 			<span class="tclas-eyebrow"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 			<h2><?php esc_html_e( 'Simple, affordable, and worth every penny.', 'tclas' ); ?></h2>
 			<div class="tclas-tiers-mini">

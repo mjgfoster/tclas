@@ -22,7 +22,7 @@ while ( have_posts() ) :
 </div>
 
 <section class="tclas-section">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<div class="entry-content">
 			<?php the_content(); ?>
 		</div>

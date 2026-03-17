@@ -55,6 +55,9 @@ unset( $articles );
 <section class="tclas-section">
 	<div class="container-tclas">
 
+		<!-- Two-column layout: sidebar + main content -->
+		<div class="tclas-nl-with-sidebar">
+
 		<?php if ( empty( $issues ) ) : ?>
 
 			<p class="tclas-story-hint">
@@ -155,6 +158,11 @@ unset( $articles );
 			<?php endforeach; ?>
 
 		<?php endif; ?>
+
+		<!-- Sidebar (part of grid) -->
+		<?php get_template_part( 'template-parts/newsletter-sidebar' ); ?>
+
+		</div><!-- .tclas-nl-with-sidebar -->
 
 	</div><!-- .container-tclas -->
 </section>

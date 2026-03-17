@@ -40,14 +40,14 @@ get_header();
 					<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary btn-lg">
 						<?php esc_html_e( 'Join us', 'tclas' ); ?>
 					</a>
-					<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-light">
+					<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-light btn-lg">
 						<?php esc_html_e( 'Learn more about TCLAS', 'tclas' ); ?>
 					</a>
 				<?php else : ?>
 					<a href="<?php echo esc_url( home_url( '/events/' ) ); ?>" class="btn btn-primary btn-lg">
 						<?php esc_html_e( 'Upcoming events', 'tclas' ); ?>
 					</a>
-					<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>" class="btn btn-outline-light">
+					<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>" class="btn btn-outline-light btn-lg">
 						<?php esc_html_e( 'Member hub', 'tclas' ); ?>
 					</a>
 				<?php endif; ?>
@@ -60,9 +60,9 @@ get_header();
 
 <!-- ── 2. MISSION ───────────────────────────────────────────────────────── -->
 <section class="tclas-mission" id="about" aria-labelledby="about-heading">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'About TCLAS', 'tclas' ); ?></span>
-		<h2 id="about-heading"><?php esc_html_e( 'Who we are', 'tclas' ); ?></h2>
+		<h2 id="about-heading">Not just heritage,<br>a link to modern Europe</h2>
 		<?php
 		$hp_mission = function_exists( 'get_field' ) ? get_field( 'hp_mission_body' ) : '';
 		if ( $hp_mission ) {
@@ -221,7 +221,7 @@ foreach ( $_nl_posts as $_nlp ) {
 
 <!-- ── 4. CITIZENSHIP CTA ────────────────────────────────────────────────── -->
 <section class="tclas-quiz-cta" aria-labelledby="quiz-cta-heading">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
 		<?php
 		$hp_cta_heading = function_exists( 'get_field' ) ? get_field( 'hp_cta_heading' ) : '';

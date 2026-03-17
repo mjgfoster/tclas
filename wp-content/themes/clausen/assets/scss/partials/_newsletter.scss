@@ -466,6 +466,293 @@
 .tclas-issue-masthead__amp  { color: var(--c-muted); }
 .tclas-issue-masthead__lion { color: var(--c-crimson); }
 
+// Gray date variant — shows issue date instead of publication name
+.tclas-issue-masthead--date {
+	color: var(--c-heading);
+	font-weight: 300; // light weight reads as a date, not a title
+}
+
+
+// =============================================================================
+//  Editorial Issue Layout (.tclas-issue-editorial)
+//  Three-tier layout: Hero → Feature Row → Dept Grid
+//  Used by page-newsletter-issue.php
+// =============================================================================
+
+// ── Wrapper ───────────────────────────────────────────────────────────────────
+
+.tclas-issue-editorial {
+	display: flex;
+	flex-direction: column;
+	gap: 3.5rem;
+
+	// Tighter gap between the gold-bordered header and the hero image below it
+	> header { margin-bottom: -2rem; }
+}
+
+// ── Issue header ──────────────────────────────────────────────────────────────
+
+.tclas-issue-editorial__header {
+	padding-bottom: .5rem;
+	border-bottom: 2px solid var(--c-gold);
+}
+
+.tclas-issue-editorial__date {
+	font-family: var(--font-serif);
+	font-size: clamp(1.75rem, 4vw, 2.75rem);
+	font-weight: 300;
+	color: var(--c-heading);
+	margin: .25rem 0 0;
+	line-height: 1.1;
+}
+
+// ── Shared: department label ──────────────────────────────────────────────────
+
+.tclas-ie-dept-label {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .375rem;
+	align-items: baseline;
+	font-family: var(--font-sans);
+	font-size: .75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: var(--c-body-text);
+	margin-bottom: .375rem;
+}
+
+.tclas-ie-dept-label__en {
+	font-weight: 400;
+	color: var(--c-muted);
+}
+
+// ── Shared: read-time meta ────────────────────────────────────────────────────
+
+.tclas-ie-hero__meta,
+.tclas-ie-feature-card__meta,
+.tclas-ie-dept-card__meta {
+	font-family: var(--font-sans);
+	font-size: .8125rem;
+	color: var(--c-muted);
+}
+
+// ── Tier 1: Hero ─────────────────────────────────────────────────────────────
+
+.tclas-ie-hero__link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+}
+
+.tclas-ie-hero__image-wrap {
+	position: relative;
+	aspect-ratio: 21 / 9;
+	overflow: hidden;
+	margin-bottom: 1.5rem;
+	background: var(--c-or-pale);
+
+	@media (max-width: 768px) { aspect-ratio: 16 / 9; }
+}
+
+.tclas-ie-hero__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .5s ease;
+
+	.tclas-ie-hero__link:hover & { transform: scale(1.03); }
+}
+
+.tclas-ie-hero__placeholder {
+	position: absolute;
+	inset: 0;
+}
+
+.tclas-ie-hero__title {
+	font-family: var(--font-serif);
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+	font-weight: 700;
+	color: var(--c-ardoise);
+	line-height: 1.15;
+	margin: 0 0 .75rem;
+	transition: color .2s;
+
+	.tclas-ie-hero__link:hover & { color: var(--c-crimson); }
+}
+
+.tclas-ie-hero__excerpt {
+	font-size: 1.0625rem;
+	color: var(--c-body-text);
+	line-height: 1.7;
+	margin: 0 0 .75rem;
+	max-width: 68ch;
+}
+
+// ── Tier 2: Feature row ───────────────────────────────────────────────────────
+
+.tclas-ie-feature-row {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 2rem;
+	padding-top: 3.5rem;
+	border-top: 1px solid var(--c-border);
+	margin-top: -3.5rem; // cancel gap; let the border provide visual separation
+
+	&--count-1 { grid-template-columns: 1fr; }
+
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+		gap: 2.5rem;
+	}
+}
+
+.tclas-ie-feature-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.tclas-ie-feature-card__link {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	text-decoration: none;
+	color: inherit;
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+}
+
+.tclas-ie-feature-card__image-wrap {
+	position: relative;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+	margin-bottom: 1rem;
+	background: var(--c-or-pale);
+}
+
+.tclas-ie-feature-card__img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .45s ease;
+
+	.tclas-ie-feature-card__link:hover & { transform: scale(1.04); }
+}
+
+.tclas-ie-feature-card__placeholder {
+	position: absolute;
+	inset: 0;
+}
+
+.tclas-ie-feature-card__body { flex: 1; }
+
+.tclas-ie-feature-card__title {
+	font-family: var(--font-serif);
+	font-size: clamp(1.1rem, 2vw, 1.5rem);
+	font-weight: 700;
+	color: var(--c-ardoise);
+	line-height: 1.25;
+	margin: 0 0 .5rem;
+	transition: color .2s;
+
+	.tclas-ie-feature-card__link:hover & { color: var(--c-crimson); }
+}
+
+.tclas-ie-feature-card__excerpt {
+	font-size: .9375rem;
+	color: var(--c-muted);
+	line-height: 1.65;
+	margin: 0 0 .5rem;
+}
+
+// ── Tier 3: Department grid (text-only compact cards) ─────────────────────────
+
+.tclas-ie-dept-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	border-top: 1px solid var(--c-border);
+	border-left: 1px solid var(--c-border);
+
+	@media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.tclas-ie-dept-card {
+	border-right: 1px solid var(--c-border);
+	border-bottom: 1px solid var(--c-border);
+}
+
+.tclas-ie-dept-card__link {
+	display: block;
+	padding: 1.25rem 1.25rem 1.25rem 1.375rem;
+	border-left: 3px solid var(--c-gold);
+	text-decoration: none;
+	color: inherit;
+	height: 100%;
+	transition: background .15s;
+
+	&:hover { background: rgba(244, 164, 96, .05); }
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: -2px;
+	}
+}
+
+.tclas-ie-dept-card__title {
+	font-family: var(--font-serif);
+	font-size: 1.125rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	line-height: 1.3;
+	margin: 0 0 .4rem;
+	transition: color .2s;
+
+	.tclas-ie-dept-card__link:hover & { color: var(--c-crimson); }
+}
+
+.tclas-ie-dept-card__excerpt {
+	font-size: .875rem;
+	color: var(--c-muted);
+	line-height: 1.55;
+	margin: 0 0 .5rem;
+}
+
+// ── Placeholder colour blocks (articles without a featured image) ─────────────
+
+%tclas-ie-placeholder {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.tclas-ie-dept-bg--main-story    { @extend %tclas-ie-placeholder; background: var(--c-ardoise); }
+.tclas-ie-dept-bg--wellkomm      { @extend %tclas-ie-placeholder; background: #c4814a; }
+.tclas-ie-dept-bg--communauteit  { @extend %tclas-ie-placeholder; background: #4a7b5f; }
+.tclas-ie-dept-bg--an-der-kichen { @extend %tclas-ie-placeholder; background: var(--c-crimson); }
+.tclas-ie-dept-bg--geschicht     { @extend %tclas-ie-placeholder; background: #6b4f2a; }
+.tclas-ie-dept-bg--zu-letzebuerg { @extend %tclas-ie-placeholder; background: #1e4a66; }
+.tclas-ie-dept-bg--traditiounen  { @extend %tclas-ie-placeholder; background: #7a5c3a; }
+.tclas-ie-dept-bg--eist-sprooch  { @extend %tclas-ie-placeholder; background: #3d6b4f; }
+.tclas-ie-dept-bg--evenementer   { @extend %tclas-ie-placeholder; background: #5a3b6e; }
+.tclas-ie-dept-bg--spezialbericht{ @extend %tclas-ie-placeholder; background: #1e4a66; }
+.tclas-ie-dept-bg--default       { @extend %tclas-ie-placeholder; background: var(--c-or-pale); }
+
+
+// =============================================================================
+
 .tclas-issue-date {
 	font-family: var(--font-serif);
 	font-size: 1.5rem;
@@ -1157,4 +1444,211 @@
 
 @media (max-width: 480px) {
 	.tclas-nl-subnav__brand { display: none; }
+}
+
+
+// =============================================================================
+//  Newsletter Sidebar (.tclas-newsletter-sidebar)
+//  Left sidebar for newsletter pages: masthead, search, nav
+// =============================================================================
+
+// ── Layout with sidebar ───────────────────────────────────────────────────────
+
+.tclas-nl-with-sidebar {
+	display: grid;
+	grid-template-columns: 250px 1fr; // sidebar left, content right
+	gap: 4rem;
+	align-items: start;
+
+	@media (max-width: 1023px) {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+}
+
+// ── Sidebar container ─────────────────────────────────────────────────────────
+
+.tclas-newsletter-sidebar {
+	position: sticky;
+	top: 6rem; // clears fixed header
+	display: flex;
+	flex-direction: column;
+
+	@media (max-width: 1023px) {
+		position: static;
+	}
+}
+
+// ── Mobile toggle button (hidden on desktop) ──────────────────────────────────
+
+.tclas-newsletter-sidebar__toggle {
+	display: none;
+	align-items: center;
+	gap: .5rem;
+	width: 100%;
+	padding: .75rem 1rem;
+	background: var(--c-or-pale);
+	border: 1px solid var(--c-border);
+	border-radius: 4px;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	font-weight: 700;
+	color: var(--c-body-text);
+	cursor: pointer;
+	transition: background .2s;
+
+	&:hover { background: rgba(244, 164, 96, .12); }
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 2px;
+	}
+
+	@media (max-width: 1023px) { display: flex; }
+}
+
+.toggle-label { flex: 1; text-align: left; }
+.toggle-icon  { width: 20px; height: 20px; flex-shrink: 0; }
+
+// ── Sidebar content ───────────────────────────────────────────────────────────
+
+.tclas-newsletter-sidebar__content {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+
+	@media (max-width: 1023px) {
+		display: none;
+		margin-top: 1rem;
+
+		&.is-open { display: flex; }
+	}
+}
+
+// ── Masthead (The Loon & The Lion) ────────────────────────────────────────────
+
+.tclas-sidebar-masthead {
+	display: block;
+	font-family: var(--font-serif);
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+	text-decoration: none;
+
+	.tclas-sidebar-masthead__loon { color: var(--c-ardoise); }
+	.tclas-sidebar-masthead__amp  { color: var(--c-gold);    font-weight: 400; }
+	.tclas-sidebar-masthead__lion { color: var(--c-crimson); }
+
+	&:hover .tclas-sidebar-masthead__loon { text-decoration: underline; }
+	&:hover .tclas-sidebar-masthead__lion { text-decoration: underline; }
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 3px;
+		border-radius: 2px;
+	}
+}
+
+// ── Search form ───────────────────────────────────────────────────────────────
+
+.tclas-sidebar-search {
+	// <form> element — no extra wrapper needed
+}
+
+.tclas-sidebar-search__wrap {
+	display: flex;
+	align-items: center;
+	border: 1px solid var(--c-border);
+	border-radius: 4px;
+	overflow: hidden;
+	transition: border-color .2s;
+
+	&:focus-within {
+		border-color: var(--c-ardoise);
+	}
+}
+
+.tclas-sidebar-search__input {
+	flex: 1;
+	min-width: 0;
+	padding: .625rem .75rem;
+	font-family: var(--font-sans);
+	font-size: .875rem;
+	border: none;
+	background: transparent;
+	color: var(--c-body-text);
+	appearance: none;
+
+	&:focus { outline: none; }
+
+	&::placeholder { color: var(--c-muted); }
+}
+
+.tclas-sidebar-search__btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: .625rem .75rem;
+	border: none;
+	border-left: 1px solid var(--c-border);
+	background: transparent;
+	color: var(--c-muted);
+	cursor: pointer;
+	transition: color .2s, background .2s;
+
+	&:hover {
+		color: var(--c-ardoise);
+		background: rgba(43, 98, 130, .05);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: -2px;
+	}
+}
+
+// ── Navigation links ──────────────────────────────────────────────────────────
+
+.tclas-sidebar-nav {
+	display: flex;
+	flex-direction: column;
+}
+
+.tclas-sidebar-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.tclas-sidebar-link {
+	display: block;
+	padding: .625rem .75rem;
+	font-family: var(--font-sans);
+	font-size: .9375rem;
+	font-weight: 400;
+	color: var(--c-body-text);
+	text-decoration: none;
+	border-left: 3px solid transparent;
+	transition: background .2s, border-color .2s, color .2s;
+
+	&:hover {
+		background: rgba(43, 98, 130, .05);
+		border-left-color: var(--c-ardoise);
+		color: var(--c-ardoise);
+	}
+
+	&.is-active {
+		background: rgba(139, 58, 58, .05);
+		border-left-color: var(--c-crimson);
+		color: var(--c-crimson);
+		font-weight: 600;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--c-gold);
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
 }

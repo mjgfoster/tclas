@@ -162,35 +162,32 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 <section class="tclas-section tclas-nl-current-section" id="nl-current">
 	<div class="container-tclas">
 
-		<?php if ( empty( $issue_posts ) ) : ?>
+		<!-- Two-column layout: sidebar (left) + main content (right) -->
+		<div class="tclas-nl-with-sidebar">
 
-		<!-- Empty state -->
-		<div class="tclas-nl-empty">
-			<p><?php esc_html_e( 'The first issue of the Loon & Lion is on its way. Subscribe below so you don\'t miss it!', 'tclas' ); ?></p>
-		</div>
+			<!-- Sidebar -->
+			<?php get_template_part( 'template-parts/newsletter-sidebar' ); ?>
 
-		<?php else : ?>
+			<?php if ( empty( $issue_posts ) ) : ?>
 
-		<div class="tclas-issue-layout<?php echo $has_cover ? '' : ' tclas-issue-layout--no-cover'; ?>">
+			<!-- Empty state -->
+			<div class="tclas-nl-empty">
+				<p><?php esc_html_e( 'The first issue of the Loon & Lion is on its way. Subscribe below so you don\'t miss it!', 'tclas' ); ?></p>
+			</div>
+
+			<?php else : ?>
+
+			<div class="tclas-issue-layout<?php echo $has_cover ? '' : ' tclas-issue-layout--no-cover'; ?>">
 
 			<!-- LEFT: Masthead + article TOC -->
 			<div class="tclas-issue-toc-col">
 
 				<p class="tclas-nl-current-eyebrow">
-					<?php printf(
-						/* translators: %s: uppercase formatted issue date, e.g. "MARCH 2025" */
-						esc_html__( 'TCLAS Newsletter &bull; %s', 'tclas' ),
-						esc_html( strtoupper( $issue_label ) )
-					); ?>
+					<?php esc_html_e( 'TCLAS Newsletter', 'tclas' ); ?>
 				</p>
 
-				<h1
-					class="tclas-issue-masthead"
-					aria-label="<?php esc_attr_e( 'The Loon & The Lion', 'tclas' ); ?>"
-				>
-					<span class="tclas-issue-masthead__loon"><?php esc_html_e( 'The Loon', 'tclas' ); ?></span>
-					<span class="tclas-issue-masthead__amp"> &amp; </span>
-					<span class="tclas-issue-masthead__lion"><?php esc_html_e( 'The Lion', 'tclas' ); ?></span>
+				<h1 class="tclas-issue-masthead tclas-issue-masthead--date">
+					<?php echo esc_html( $issue_label ); ?>
 				</h1>
 
 				<ol class="tclas-issue-toc">
@@ -237,9 +234,11 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 			</div>
 			<?php endif; ?>
 
-		</div><!-- .tclas-issue-layout -->
+			</div><!-- .tclas-issue-layout -->
 
-		<?php endif; ?>
+			<?php endif; ?>
+
+		</div><!-- .tclas-nl-with-sidebar -->
 
 	</div><!-- .container-tclas -->
 </section>

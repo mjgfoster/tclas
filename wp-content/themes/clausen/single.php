@@ -91,7 +91,7 @@ while ( have_posts() ) :
 <?php endif; ?>
 
 <section class="tclas-section bg-white">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<div class="entry-content">
 			<?php the_content(); ?>
 		</div>

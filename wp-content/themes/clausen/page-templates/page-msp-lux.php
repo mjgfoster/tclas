@@ -17,10 +17,10 @@ get_header();
 ?>
 
 <!-- ── Page header ──────────────────────────────────────────────────────── -->
-<div class="tclas-page-header tclas-page-header--ardoise tclas-msp-header">
+<div class="tclas-page-header tclas-msp-header">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb( '', true ); ?>
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Minnesota · Luxembourg', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb(); ?>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Minnesota · Luxembourg', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title tclas-msp-header__title"><?php the_title(); ?></h1>
 		<?php $msp_tagline = function_exists( 'get_field' ) ? get_field( 'msp_tagline' ) : ''; ?>
 		<p class="tclas-msp-header__tagline"><?php echo esc_html( $msp_tagline ?: 'Two (relatively) small places that somehow end up leading the pack.' ); ?></p>

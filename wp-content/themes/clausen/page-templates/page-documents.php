@@ -20,7 +20,7 @@ get_header();
 </div>
 
 <section class="tclas-section">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<?php
 		if ( have_posts() ) {
 			while ( have_posts() ) {

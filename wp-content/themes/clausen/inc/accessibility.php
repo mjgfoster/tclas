@@ -60,6 +60,42 @@ function tclas_breadcrumb( string $title = '', bool $light = false ): void {
 	}
 	$class = 'tclas-breadcrumb' . ( $light ? ' tclas-breadcrumb--light' : '' );
 	$is_member_page = tclas_is_member_page();
+
+	// Build breadcrumb schema data
+	$breadcrumb_items = [
+		[
+			'@type'    => 'ListItem',
+			'position' => 1,
+			'name'     => 'Home',
+			'item'     => home_url( '/' ),
+		],
+	];
+
+	$position = 2;
+	if ( $is_member_page ) {
+		$breadcrumb_items[] = [
+			'@type'    => 'ListItem',
+			'position' => $position,
+			'name'     => 'Member hub',
+			'item'     => home_url( '/member-hub/' ),
+		];
+		$position++;
+	}
+
+	$breadcrumb_items[] = [
+		'@type'    => 'ListItem',
+		'position' => $position,
+		'name'     => $title,
+		'item'     => get_permalink(),
+	];
+
+	// Output BreadcrumbList schema
+	$breadcrumb_schema = [
+		'@context'      => 'https://schema.org',
+		'@type'         => 'BreadcrumbList',
+		'itemListElement' => $breadcrumb_items,
+	];
+	echo '<script type="application/ld+json">' . wp_json_encode( $breadcrumb_schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
 	?>
 	<nav class="<?php echo esc_attr( $class ); ?>" aria-label="<?php esc_attr_e( 'Breadcrumb', 'tclas' ); ?>">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'tclas' ); ?></a>

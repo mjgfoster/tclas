@@ -31,17 +31,17 @@ $is_member    = tclas_is_member();
 ?>
 
 <!-- ── Page header ──────────────────────────────────────────────────────── -->
-<div class="tclas-page-header tclas-page-header--ardoise">
+<div class="tclas-page-header">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb( '', true ); ?>
-		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb(); ?>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 	</div>
 </div>
 
 <!-- ── Intro ─────────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-join-intro">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<?php
 		$join_lede = function_exists( 'get_field' ) ? get_field( 'join_lede' ) : '';
 		if ( $join_lede ) {
@@ -227,7 +227,7 @@ $is_member    = tclas_is_member();
 
 <!-- ── Volunteer placeholder ─────────────────────────────────────────────── -->
 <section class="tclas-section tclas-join-volunteer">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<span class="tclas-eyebrow"><?php esc_html_e( 'Get involved', 'tclas' ); ?></span>
 		<h2><?php esc_html_e( 'Volunteer with TCLAS', 'tclas' ); ?></h2>
 		<?php

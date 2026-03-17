@@ -71,7 +71,7 @@ if ( $profile_username ) :
 	</div>
 </div>
 <section class="tclas-section">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<p><?php esc_html_e( 'That member profile could not be found.', 'tclas' ); ?></p>
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="btn btn-outline-ardoise">
 			← <?php esc_html_e( 'Back to directory', 'tclas' ); ?>
@@ -99,7 +99,7 @@ if ( $profile_username ) :
 	</div>
 </div>
 <section class="tclas-section">
-	<div class="container-tclas container--narrow">
+	<div class="container-tclas container--medium">
 		<p><?php esc_html_e( 'This member has chosen to keep their profile private.', 'tclas' ); ?></p>
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="btn btn-outline-ardoise">
 			← <?php esc_html_e( 'Back to directory', 'tclas' ); ?>

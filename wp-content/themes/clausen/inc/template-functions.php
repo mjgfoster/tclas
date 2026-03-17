@@ -25,6 +25,32 @@ function tclas_hero_url( string $size = 'desktop' ): string {
 }
 
 /**
+ * Convert image URL to modern format equivalent if it exists.
+ * Replaces the file extension (e.g., image.jpg → image.avif or image.webp).
+ *
+ * @param string $url    The original image URL.
+ * @param string $format The target format: 'avif' or 'webp'.
+ * @return string The converted URL, or empty string if conversion not applicable.
+ */
+function tclas_get_modern_image_url( string $url, string $format = 'avif' ): string {
+	// Don't convert SVG or data URLs
+	if ( strpos( $url, '.svg' ) !== false || strpos( $url, 'data:' ) === 0 ) {
+		return '';
+	}
+	// Replace common image extensions with the target format
+	$converted = preg_replace( '/\.(jpg|jpeg|png|webp|avif)$/i', '.' . $format, $url );
+	return $converted !== $url ? $converted : '';
+}
+
+/**
+ * Backward compatibility wrapper for AVIF conversion.
+ * @deprecated Use tclas_get_modern_image_url() instead.
+ */
+function tclas_get_avif_url( string $url ): string {
+	return tclas_get_modern_image_url( $url, 'avif' );
+}
+
+/**
  * Render hero section background.
  *
  * When hero_pairs ACF data is present, renders the Figma split-screen hero:
@@ -119,11 +145,34 @@ function tclas_render_hero_bg(): void {
 		}
 	}
 
-	// Fallback: illustration / SVG placeholder.
+	// Fallback: illustration / SVG placeholder with modern format support (AVIF, WebP).
 	$desktop_url = tclas_hero_url( 'desktop' );
 	$mobile_url  = tclas_hero_url( 'mobile' );
+	$desktop_avif = tclas_get_modern_image_url( $desktop_url, 'avif' );
+	$mobile_avif  = tclas_get_modern_image_url( $mobile_url, 'avif' );
+	$desktop_webp = tclas_get_modern_image_url( $desktop_url, 'webp' );
+	$mobile_webp  = tclas_get_modern_image_url( $mobile_url, 'webp' );
+
 	echo '<picture class="tclas-hero__bg">';
+
+	// Mobile sources (in preference order: AVIF → WebP → original)
+	if ( $mobile_avif ) {
+		echo '<source media="(max-width: 600px)" type="image/avif" srcset="' . esc_url( $mobile_avif ) . '">';
+	}
+	if ( $mobile_webp ) {
+		echo '<source media="(max-width: 600px)" type="image/webp" srcset="' . esc_url( $mobile_webp ) . '">';
+	}
 	echo '<source media="(max-width: 600px)" srcset="' . esc_url( $mobile_url ) . '">';
+
+	// Desktop sources (in preference order: AVIF → WebP → original)
+	if ( $desktop_avif ) {
+		echo '<source type="image/avif" srcset="' . esc_url( $desktop_avif ) . '">';
+	}
+	if ( $desktop_webp ) {
+		echo '<source type="image/webp" srcset="' . esc_url( $desktop_webp ) . '">';
+	}
+
+	// Fallback for older browsers
 	echo '<img src="' . esc_url( $desktop_url ) . '" alt="" aria-hidden="true" loading="eager">';
 	echo '</picture>';
 }
@@ -425,19 +474,52 @@ function tclas_reading_time( int $post_id = 0 ): int {
 
 /**
  * Output organisation JSON-LD.
+ *
+ * TODO: Consult with board/stakeholders about:
+ * - telephone: Organization phone number
+ * - email: Organization email address
+ * - address: Full postal address (street, city, postal code, country)
+ * - founder: Names of founders (if applicable)
+ * - member: Board members and their roles (using Person schema)
+ * - areaServed: Geographic regions served (US and Luxembourg)
+ * See: https://schema.org/Organization
  */
 function tclas_json_ld(): void {
+	$logo_url = '';
+	if ( get_custom_logo() ) {
+		$logo_url = wp_get_attachment_url( get_theme_mod( 'custom_logo' ) );
+	}
+
 	$data = [
-		'@context'  => 'https://schema.org',
-		'@type'     => 'Organization',
-		'name'      => 'Twin Cities Luxembourg American Society',
-		'alternateName' => 'TCLAS',
-		'url'       => home_url(),
-		'logo'      => get_custom_logo() ? wp_get_attachment_url( get_theme_mod( 'custom_logo' ) ) : '',
-		'sameAs'    => [
+		'@context'       => 'https://schema.org',
+		'@type'          => 'Organization',
+		'name'           => 'Twin Cities Luxembourg American Society',
+		'alternateName'  => 'TCLAS',
+		'url'            => home_url(),
+		'logo'           => $logo_url ?: null,
+		'sameAs'         => [
 			'https://www.facebook.com/groups/tclas',
 		],
+		// TODO: Uncomment and fill in after consulting with stakeholders
+		// 'telephone'      => '+1-XXX-XXX-XXXX',
+		// 'email'          => 'contact@example.com',
+		// 'address'        => [
+		// 	'@type'        => 'PostalAddress',
+		// 	'streetAddress' => '',
+		// 	'addressLocality' => '',
+		// 	'addressRegion'  => '',
+		// 	'postalCode'     => '',
+		// 	'addressCountry' => 'US',
+		// ],
+		// 'areaServed'     => ['US', 'LU'],
+		// 'member'         => [ /* array of Person objects for board members */ ],
 	];
+
+	// Remove null values for cleaner output
+	$data = array_filter( $data, function( $value ) {
+		return $value !== null && $value !== '';
+	} );
+
 	echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
 }
 add_action( 'wp_head', 'tclas_json_ld' );

@@ -110,11 +110,17 @@
 
 // Light outline — for use on dark/ardoise backgrounds
 .btn-outline-light {
-	background: transparent;
+	background: rgba(0, 0, 0, 0.1);
 	border-color: var(--c-or-pale);
 	color: var(--c-or-pale);
+	backdrop-filter: blur(4px);
 
-	&:hover { background: var(--c-or-pale); color: var(--c-ardoise); text-decoration: none; }
+	&:hover {
+		background: var(--c-or-pale);
+		color: var(--c-ardoise);
+		text-decoration: none;
+		backdrop-filter: none;
+	}
 }
 
 // Ghost — text-only; subtle in-content action
