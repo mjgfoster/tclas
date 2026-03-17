@@ -308,6 +308,107 @@
 .tclas-single__divider        { border: none; border-top: 2px solid var(--c-border); margin: 2.5rem 0 2rem; }
 .tclas-single__related-heading{ font-size: 1.25rem; }
 
+// ── Newsletter article prose column ───────────────────────────────────────
+// Lives inside .tclas-nl-with-sidebar; the 250px sidebar already narrows
+// the column, so we just cap prose at a comfortable line length.
+.tclas-article-body {
+	min-width: 0; // prevent grid blowout
+
+	.entry-content {
+		max-width: 70ch;
+	}
+}
+
+// Featured image at top of article content column
+.tclas-article-body__image {
+	margin: 0 0 2rem;
+
+	img {
+		width: 100%;
+		height: auto;
+		display: block;
+		border-radius: 2px;
+	}
+}
+
+.tclas-article-body__caption {
+	padding: .5rem 0 0;
+	font-family: var(--font-sans);
+	font-size: .78rem;
+	color: var(--c-muted);
+	font-style: italic;
+	line-height: 1.5;
+}
+
+// ── Article header (eyebrow + title, inside content column) ──────────────
+.tclas-article-body__header {
+	padding-bottom: 1.5rem;
+	margin-bottom: 1.75rem;
+	border-bottom: 2px solid var(--c-gold);
+}
+
+.tclas-article-body__eyebrow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: .3rem .5rem;
+	font-family: var(--font-sans);
+	font-size: .75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	margin-bottom: .75rem;
+}
+
+.tclas-article-body__dept {
+	text-decoration: none;
+	color: var(--c-body-text);
+
+	&:hover { color: var(--c-ardoise); }
+}
+
+.tclas-article-body__dept-en {
+	font-weight: 400;
+	color: var(--c-muted);
+	margin-left: .25rem;
+}
+
+.tclas-article-body__sep { color: var(--c-muted); font-weight: 400; }
+
+.tclas-article-body__issue {
+	font-weight: 400;
+	color: var(--c-muted);
+	text-decoration: none;
+
+	&:hover { color: var(--c-ardoise); }
+}
+
+.tclas-article-body__title {
+	font-family: var(--font-serif);
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+	font-weight: 700;
+	color: var(--c-ardoise);
+	line-height: 1.15;
+	margin: 0;
+}
+
+// ── "More from this issue" (newsletter article page) ──────────────────────
+.tclas-article-related {
+	margin-top: 3.5rem;
+	padding-top: 2rem;
+	border-top: 2px solid var(--c-border);
+}
+
+.tclas-article-related__heading {
+	font-family: var(--font-sans);
+	font-size: .75rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .12em;
+	color: var(--c-muted);
+	margin: 0 0 1.25rem;
+}
+
 // ── Article eyebrow (department + issue, on ardoise hero) ──────────────────
 .tclas-article-eyebrow {
 	display: flex;
