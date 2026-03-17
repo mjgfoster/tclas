@@ -170,4 +170,18 @@
 	}
 }
 
-.tclas-footer__legal { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+.tclas-footer__legal {
+	display: flex;
+	gap: 1.25rem;
+	flex-wrap: wrap;
+
+	a,
+	button {
+		font-size: .75rem;
+		color: rgba(235,245,252,.6);
+		text-decoration: none;
+		transition: text-decoration .15s;
+
+		&:hover { color: var(--c-or-pale); text-decoration: underline; }
+	}
+}
