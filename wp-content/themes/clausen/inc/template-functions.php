@@ -322,10 +322,64 @@ function tclas_is_member_page(): bool {
 	return false;
 }
 
+// ── Newsletter page detection ─────────────────────────────────────────────
+
+/**
+ * Is the current page part of the newsletter section?
+ *
+ * Used to conditionally display the newsletter sub-navigation bar.
+ */
+function tclas_is_newsletter_page(): bool {
+	if ( is_page_template( 'page-templates/page-newsletter.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-newsletter-archive.php' ) ) {
+		return true;
+	}
+	if ( get_query_var( 'tclas_newsletter_issue' ) ) {
+		return true;
+	}
+	if ( is_tax( 'tclas_department' ) ) {
+		return true;
+	}
+	// Individual newsletter articles (posts with an issue date).
+	if ( is_singular( 'post' ) && get_post_meta( get_the_ID(), 'tclas_issue_date', true ) ) {
+		return true;
+	}
+	return false;
+}
+
+// ── Member navigation links ──────────────────────────────────────────────
+
+/**
+ * Return the member hub navigation links array.
+ *
+ * Shared between the desktop header dropdown and the mobile nav drawer.
+ *
+ * @return array<int, array{label: string, url: string, icon: string}>
+ */
+function tclas_get_member_nav_links(): array {
+	$user        = wp_get_current_user();
+	$profile_url = home_url( '/member-hub/profiles/' . rawurlencode( $user->user_nicename ) . '/' );
+
+	return [
+		[ 'label' => __( 'Dashboard', 'tclas' ), 'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
+		[ 'label' => __( 'Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
+		[ 'label' => __( 'Documents', 'tclas' ), 'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
+		[ 'label' => __( 'My Profile', 'tclas' ), 'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
+		[ 'label' => __( 'Forum',     'tclas' ), 'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
+		[ 'label' => __( 'Map',       'tclas' ), 'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
+	];
+}
+
 // ── Navigation CTA ────────────────────────────────────────────────────────
 
 /**
- * Render the header utility action (user menu or login link).
+ * Render the header utility action.
+ *
+ * - Anonymous users: login link.
+ * - Members (desktop): "Moien, Name ▾" dropdown with hub links.
+ * - Members (mobile): hub links inline in the nav drawer.
  *
  * @param bool $mobile  True when rendering inside the mobile drawer.
  */
@@ -338,6 +392,61 @@ function tclas_render_header_actions( bool $mobile = false ): void {
 		} else {
 			echo '<a href="' . esc_url( $login_url ) . '" class="tclas-header__login">' . esc_html__( 'Member Log In', 'tclas' ) . '</a>';
 		}
+		return;
+	}
+
+	// ── Logged-in member ─────────────────────────────────────────────────
+	$user       = wp_get_current_user();
+	$first_name = ! empty( $user->user_firstname ) ? $user->user_firstname : __( 'Member', 'tclas' );
+	$links      = tclas_get_member_nav_links();
+	$logout_url = wp_logout_url( home_url() );
+	$chevron    = '<svg class="tclas-member-dropdown__chevron" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+	if ( $mobile ) {
+		// ── Mobile: links in nav drawer ──────────────────────────────────
+		echo '<div class="tclas-nav-drawer__member">';
+		echo '<span class="tclas-nav-drawer__greeting">' . esc_html( sprintf( __( 'Moien, %s', 'tclas' ), $first_name ) ) . '</span>';
+
+		foreach ( $links as $link ) {
+			echo '<a href="' . esc_url( $link['url'] ) . '" class="tclas-nav-drawer__member-link">';
+			echo '<i class="bi ' . esc_attr( $link['icon'] ) . '" aria-hidden="true"></i>';
+			echo '<span>' . esc_html( $link['label'] ) . '</span>';
+			echo '</a>';
+		}
+
+		echo '<a href="' . esc_url( $logout_url ) . '" class="tclas-nav-drawer__member-link tclas-nav-drawer__member-logout">';
+		echo '<i class="bi bi-box-arrow-right" aria-hidden="true"></i>';
+		echo '<span>' . esc_html__( 'Log out', 'tclas' ) . '</span>';
+		echo '</a>';
+		echo '</div>';
+	} else {
+		// ── Desktop: dropdown in header utility area ─────────────────────
+		echo '<div class="tclas-member-dropdown">';
+
+		echo '<button class="tclas-member-dropdown__trigger" aria-expanded="false" aria-controls="tclas-member-dropdown-menu" aria-haspopup="true">';
+		echo '<span>' . esc_html( sprintf( __( 'Moien, %s', 'tclas' ), $first_name ) ) . '</span>';
+		echo $chevron; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</button>';
+
+		echo '<ul class="tclas-member-dropdown__menu" id="tclas-member-dropdown-menu" role="menu">';
+		foreach ( $links as $link ) {
+			echo '<li role="none">';
+			echo '<a role="menuitem" href="' . esc_url( $link['url'] ) . '" class="tclas-member-dropdown__link">';
+			echo '<i class="bi ' . esc_attr( $link['icon'] ) . '" aria-hidden="true"></i>';
+			echo '<span>' . esc_html( $link['label'] ) . '</span>';
+			echo '</a>';
+			echo '</li>';
+		}
+		echo '<li role="none" class="tclas-member-dropdown__separator"></li>';
+		echo '<li role="none">';
+		echo '<a role="menuitem" href="' . esc_url( $logout_url ) . '" class="tclas-member-dropdown__link tclas-member-dropdown__logout">';
+		echo '<i class="bi bi-box-arrow-right" aria-hidden="true"></i>';
+		echo '<span>' . esc_html__( 'Log out', 'tclas' ) . '</span>';
+		echo '</a>';
+		echo '</li>';
+		echo '</ul>';
+
+		echo '</div>';
 	}
 }
 

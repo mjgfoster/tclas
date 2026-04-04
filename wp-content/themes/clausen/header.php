@@ -101,9 +101,9 @@
 	</header>
 
 	<?php
-	// Member navigation bar — shown sitewide for active members
-	if ( tclas_is_member() ) {
-		get_template_part( 'template-parts/member', 'nav' );
+	// Newsletter sub-navigation — shown on newsletter-related pages
+	if ( tclas_is_newsletter_page() ) {
+		get_template_part( 'template-parts/newsletter', 'nav' );
 	}
 	?>
 
