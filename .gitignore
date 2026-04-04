@@ -11,6 +11,9 @@
 # wp-config-sample.php is safe to track; wp-config.php is not (holds DB creds)
 wp-config.php
 
+# ── Local by Flywheel ────────────────────────────────────────────────────────
+local-xdebuginfo.php
+
 # ── Generated / runtime content ───────────────────────────────────────────────
 wp-content/uploads/
 wp-content/upgrade/
