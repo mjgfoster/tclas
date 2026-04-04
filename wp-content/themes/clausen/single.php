@@ -115,64 +115,76 @@ while ( have_posts() ) :
 				</aside>
 				<?php endif; ?>
 
-				<!-- More from this issue ──────────────────────────────── -->
-				<?php
-				$cache_key = 'tclas_related_' . get_the_ID();
-				$related   = get_transient( $cache_key );
-				if ( false === $related ) {
-					$related = [];
-					if ( $issue_date ) {
-						$related = get_posts( [
-							'posts_per_page'      => 4,
-							'post__not_in'        => [ get_the_ID() ],
-							'orderby'             => 'meta_value_num',
-							'meta_key'            => 'tclas_issue_order',
-							'order'               => 'ASC',
-							'ignore_sticky_posts' => true,
-							'meta_query'          => [ [
-								'key'   => 'tclas_issue_date',
-								'value' => $issue_date,
-							] ],
-						] );
+				<!-- Previous / Next article in this issue ─────────────── -->
+				<?php if ( $issue_date ) :
+					$_all_issue = get_posts( [
+						'posts_per_page'      => -1,
+						'post_type'           => 'post',
+						'post_status'         => 'publish',
+						'orderby'             => 'meta_value_num',
+						'meta_key'            => 'tclas_issue_order',
+						'order'               => 'ASC',
+						'ignore_sticky_posts' => true,
+						'meta_query'          => [ [ 'key' => 'tclas_issue_date', 'value' => $issue_date ] ],
+					] );
+
+					$_current_idx = null;
+					foreach ( $_all_issue as $_i => $_ip ) {
+						if ( $_ip->ID === get_the_ID() ) { $_current_idx = $_i; break; }
 					}
-					set_transient( $cache_key, $related, 6 * HOUR_IN_SECONDS );
-				}
-				if ( $related ) :
-				?>
-				<div class="tclas-article-related">
-					<h2 class="tclas-article-related__heading">
-						<?php esc_html_e( 'More from this issue', 'tclas' ); ?>
-					</h2>
-					<div class="tclas-ie-dept-grid">
-						<?php foreach ( $related as $_rp ) :
-							$_r_terms = get_the_terms( $_rp->ID, 'tclas_department' );
-							$_r_dept  = null;
-							if ( $_r_terms && ! is_wp_error( $_r_terms ) ) {
-								foreach ( $_r_terms as $_rt ) {
-									if ( 'main-story' !== $_rt->slug ) { $_r_dept = $_rt; break; }
+
+					$_prev = ( $_current_idx !== null && $_current_idx > 0 ) ? $_all_issue[ $_current_idx - 1 ] : null;
+					$_next = ( $_current_idx !== null && $_current_idx < count( $_all_issue ) - 1 ) ? $_all_issue[ $_current_idx + 1 ] : null;
+
+					if ( $_prev || $_next ) :
+						// Helper to get department label
+						$_nav_dept = function( WP_Post $p ): array {
+							$terms = wp_get_post_terms( $p->ID, 'tclas_department' );
+							if ( is_wp_error( $terms ) ) { return [ 'lux' => '', 'en' => '' ]; }
+							foreach ( $terms as $t ) {
+								if ( $t->slug !== 'main-story' ) {
+									return [ 'lux' => $t->name, 'en' => $t->description ];
 								}
 							}
-							$_r_ex = has_excerpt( $_rp->ID )
-								? wp_trim_words( get_the_excerpt( $_rp ), 20, '&hellip;' )
-								: wp_trim_words( $_rp->post_content, 20, '&hellip;' );
-						?>
-						<article class="tclas-ie-dept-card">
-							<a href="<?php echo esc_url( get_permalink( $_rp->ID ) ); ?>" class="tclas-ie-dept-card__link">
-								<?php if ( $_r_dept ) : ?>
-								<span class="tclas-ie-dept-label">
-									<span lang="lb"><?php echo esc_html( $_r_dept->name ); ?></span><?php if ( $_r_dept->description ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_r_dept->description ); ?></span><?php endif; ?>
-								</span>
-								<?php endif; ?>
-								<h3 class="tclas-ie-dept-card__title"><?php echo esc_html( get_the_title( $_rp ) ); ?></h3>
-								<?php if ( $_r_ex ) : ?>
-								<p class="tclas-ie-dept-card__excerpt"><?php echo esc_html( $_r_ex ); ?></p>
-								<?php endif; ?>
-							</a>
-						</article>
-						<?php endforeach; ?>
-					</div>
-				</div>
-				<?php endif; ?>
+							return [ 'lux' => '', 'en' => '' ];
+						};
+				?>
+				<nav class="tclas-article-nav" aria-label="<?php esc_attr_e( 'Issue navigation', 'tclas' ); ?>">
+
+					<?php if ( $_prev ) :
+						$_pd = $_nav_dept( $_prev );
+					?>
+					<a href="<?php echo esc_url( get_permalink( $_prev->ID ) ); ?>" class="tclas-article-nav__link tclas-article-nav__link--prev">
+						<span class="tclas-article-nav__direction"><?php esc_html_e( '← Previous', 'tclas' ); ?></span>
+						<?php if ( $_pd['lux'] ) : ?>
+						<span class="tclas-article-nav__dept">
+							<span lang="lb"><?php echo esc_html( $_pd['lux'] ); ?></span><?php if ( $_pd['en'] ) : ?> <span class="tclas-article-nav__dept-en"><?php echo esc_html( $_pd['en'] ); ?></span><?php endif; ?>
+						</span>
+						<?php endif; ?>
+						<span class="tclas-article-nav__title"><?php echo esc_html( get_the_title( $_prev ) ); ?></span>
+					</a>
+					<?php else : ?>
+					<span></span>
+					<?php endif; ?>
+
+					<?php if ( $_next ) :
+						$_nd = $_nav_dept( $_next );
+					?>
+					<a href="<?php echo esc_url( get_permalink( $_next->ID ) ); ?>" class="tclas-article-nav__link tclas-article-nav__link--next">
+						<span class="tclas-article-nav__direction"><?php esc_html_e( 'Next →', 'tclas' ); ?></span>
+						<?php if ( $_nd['lux'] ) : ?>
+						<span class="tclas-article-nav__dept">
+							<span lang="lb"><?php echo esc_html( $_nd['lux'] ); ?></span><?php if ( $_nd['en'] ) : ?> <span class="tclas-article-nav__dept-en"><?php echo esc_html( $_nd['en'] ); ?></span><?php endif; ?>
+						</span>
+						<?php endif; ?>
+						<span class="tclas-article-nav__title"><?php echo esc_html( get_the_title( $_next ) ); ?></span>
+					</a>
+					<?php else : ?>
+					<span></span>
+					<?php endif; ?>
+
+				</nav>
+				<?php endif; endif; ?>
 
 			</article><!-- .tclas-article-body -->
 

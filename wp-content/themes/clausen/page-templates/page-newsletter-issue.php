@@ -125,8 +125,12 @@ get_header();
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<?php tclas_breadcrumb( $issue_label ); ?>
-		<h1 class="tclas-page-header__title"><?php echo esc_html( $issue_label ); ?></h1>
-		<p class="tclas-issue-header__sub"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></p>
+		<h1 class="tclas-page-header__title tclas-issue-masthead">
+			<span class="tclas-issue-masthead__loon"><?php esc_html_e( 'The Loon', 'tclas' ); ?></span>
+			<span class="tclas-issue-masthead__amp"> &amp; </span>
+			<span class="tclas-issue-masthead__lion"><?php esc_html_e( 'The Lion', 'tclas' ); ?></span>
+			<span class="tclas-issue-masthead__date"><?php echo esc_html( $issue_label ); ?></span>
+		</h1>
 	</div>
 </div>
 
@@ -136,10 +140,18 @@ get_header();
 // ════════════════════════════════════════════════════════════════════════════
 if ( $welcome_post ) :
 	$_w_byline = $_byline( $welcome_post );
+	$_w_cover_id = get_post_thumbnail_id( $welcome_post->ID );
 ?>
-<section class="tclas-section bg-white">
-	<div class="container-tclas container--medium">
-		<article class="tclas-issue-welcome">
+<div class="container-tclas tclas-issue-welcome-wrap">
+	<div class="tclas-issue-welcome<?php echo $_w_cover_id ? ' tclas-issue-welcome--has-cover' : ''; ?>">
+
+		<?php if ( $_w_cover_id ) : ?>
+		<div class="tclas-issue-welcome__cover">
+			<?php echo get_the_post_thumbnail( $welcome_post->ID, 'large', [ 'alt' => esc_attr( $issue_label ) ] ); ?>
+		</div>
+		<?php endif; ?>
+
+		<article class="tclas-issue-welcome__content">
 			<h2 class="tclas-issue-welcome__title"><?php echo esc_html( get_the_title( $welcome_post ) ); ?></h2>
 			<div class="tclas-issue-welcome__body entry-content">
 				<?php echo apply_filters( 'the_content', $welcome_post->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -148,8 +160,9 @@ if ( $welcome_post ) :
 			<p class="tclas-issue-welcome__byline">— <?php echo esc_html( $_w_byline ); ?></p>
 			<?php endif; ?>
 		</article>
+
 	</div>
-</section>
+</div>
 <?php endif; ?>
 
 <?php
@@ -158,7 +171,7 @@ if ( $welcome_post ) :
 // ════════════════════════════════════════════════════════════════════════════
 if ( ! empty( $toc_posts ) ) :
 ?>
-<section class="tclas-section" aria-label="<?php esc_attr_e( 'Articles in this issue', 'tclas' ); ?>">
+<section class="tclas-section bg-white" aria-label="<?php esc_attr_e( 'Articles in this issue', 'tclas' ); ?>">
 	<div class="container-tclas">
 		<h2 class="tclas-issue-toc__heading"><?php esc_html_e( 'In this issue', 'tclas' ); ?></h2>
 
@@ -167,7 +180,6 @@ if ( ! empty( $toc_posts ) ) :
 				$_d       = $_dept( $_p );
 				$_ex      = $_excerpt( $_p, 30 );
 				$_by      = $_byline( $_p );
-				$_minutes = $_read_time( $_p );
 				$_has_img = has_post_thumbnail( $_p->ID );
 			?>
 			<article class="tclas-issue-toc__card<?php echo $_has_img ? '' : ' tclas-issue-toc__card--no-img'; ?>">
@@ -175,7 +187,7 @@ if ( ! empty( $toc_posts ) ) :
 
 					<?php if ( $_has_img ) : ?>
 					<div class="tclas-issue-toc__image">
-						<?php echo get_the_post_thumbnail( $_p->ID, 'medium', [ 'alt' => '' ] ); ?>
+						<?php echo get_the_post_thumbnail( $_p->ID, 'medium_large', [ 'alt' => '' ] ); ?>
 					</div>
 					<?php endif; ?>
 
@@ -194,12 +206,8 @@ if ( ! empty( $toc_posts ) ) :
 
 						<div class="tclas-issue-toc__meta">
 							<?php if ( $_by ) : ?>
-							<span class="tclas-issue-toc__byline"><?php echo esc_html( $_by ); ?></span>
+							<span class="tclas-issue-toc__byline"><?php printf( esc_html__( 'By %s', 'tclas' ), esc_html( $_by ) ); ?></span>
 							<?php endif; ?>
-							<span class="tclas-issue-toc__read-time"><?php printf(
-								esc_html__( '%d min read', 'tclas' ),
-								(int) $_minutes
-							); ?></span>
 							<?php tclas_members_only_badge( $_p->ID ); ?>
 						</div>
 					</div>
