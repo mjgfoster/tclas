@@ -10,7 +10,7 @@ get_header();
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Search', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'Search results', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title">
 			<?php
 			if ( get_search_query() ) {

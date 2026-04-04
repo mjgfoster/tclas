@@ -123,7 +123,6 @@ wp_enqueue_script( 'leaflet' );
 			<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
 			<span class="tclas-breadcrumb__current" aria-current="page"><?php echo esc_html( $name ); ?></span>
 		</nav>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Commune', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php echo esc_html( $name ); ?></h1>
 		<?php if ( $canton ) : ?>
 		<p class="tclas-commune-subtitle"><?php

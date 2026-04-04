@@ -20,7 +20,6 @@ get_header();
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<?php tclas_breadcrumb(); ?>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 	</div>
 </div>
@@ -57,17 +56,193 @@ get_header();
 	</div>
 </section>
 
-<!-- ── Eligibility quiz ──────────────────────────────────────────────────── -->
-<section class="tclas-section tclas-bg-warm" id="quiz">
+<!-- ── How it works (Accordion FAQs) + Quiz ────────────────────────────────── -->
+<section class="tclas-section bg-white">
 	<div class="container-tclas">
-		<div class="tclas-quiz-intro">
-			<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
-			<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
-			<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
-		</div>
-		<div class="tclas-quiz-wrapper">
-			<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
-		</div>
+		<div class="tclas-citizenship-faq-quiz-grid">
+			<!-- Left: FAQ Section -->
+			<div class="tclas-citizenship-faq-col">
+				<span class="tclas-eyebrow"><?php esc_html_e( 'Before you start', 'tclas' ); ?></span>
+				<h2 class="tclas-ruled"><?php esc_html_e( 'Common questions about the rules.', 'tclas' ); ?></h2>
+
+				<div class="tclas-faq-accordion">
+
+			<!-- FAQ Item 1: The 1969 Rule -->
+			<div class="tclas-faq-item">
+				<button class="tclas-faq-header" aria-expanded="false">
+					<span class="tclas-faq-icon">📅</span>
+					<span class="tclas-faq-question">What's the 1969 rule?</span>
+					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
+				</button>
+				<div class="tclas-faq-content">
+					<div class="tclas-faq-body">
+						<p><strong>In 1969, Luxembourg law changed.</strong> Before that year, mothers could not pass citizenship to their children. After 1969, they could.</p>
+
+						<div class="tclas-faq-demo">
+							<div class="tclas-faq-demo-row">
+								<div class="tclas-faq-demo-col">
+									<h4>✓ Male Line</h4>
+									<div class="tclas-faq-demo-box">
+										<div class="tclas-faq-demo-gen">👨 Grandfather <span class="tclas-faq-demo-year">b. 1920</span></div>
+										<div class="tclas-faq-demo-arrow">→</div>
+										<div class="tclas-faq-demo-gen">👨 Father <span class="tclas-faq-demo-year">b. 1950</span></div>
+										<div class="tclas-faq-demo-arrow">→</div>
+										<div class="tclas-faq-demo-gen">You</div>
+										<div class="tclas-faq-demo-result">✓ Direct path</div>
+									</div>
+								</div>
+								<div class="tclas-faq-demo-col">
+									<h4>⚠ Female Line (Pre-1969)</h4>
+									<div class="tclas-faq-demo-box">
+										<div class="tclas-faq-demo-gen">👩 Grandmother <span class="tclas-faq-demo-year">b. 1920</span></div>
+										<div class="tclas-faq-demo-arrow-broken">✗ Can't pass</div>
+										<div class="tclas-faq-demo-gen tclas-faq-demo-gen--broken">👩 Mother <span class="tclas-faq-demo-year">b. 1955</span></div>
+										<div class="tclas-faq-demo-arrow">→</div>
+										<div class="tclas-faq-demo-gen">You</div>
+										<div class="tclas-faq-demo-result tclas-faq-demo-result--alt">⚠ Extra step needed</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<p class="tclas-faq-note"><strong>TL;DR:</strong> Same person, two different routes. One is straightforward (Article 7). One requires an extra step (Article 23). The quiz will figure out which one applies to you.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- FAQ Item 2: Language -->
+			<div class="tclas-faq-item">
+				<button class="tclas-faq-header" aria-expanded="false">
+					<span class="tclas-faq-icon">🗣️</span>
+					<span class="tclas-faq-question">Do I need to speak French? German? Lëtzebuergesch?</span>
+					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
+				</button>
+				<div class="tclas-faq-content">
+					<div class="tclas-faq-body">
+						<div class="tclas-faq-checklist">
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text"><strong>French?</strong> No language test</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text"><strong>German?</strong> No language test</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text"><strong>Lëtzebuergesch?</strong> No language test</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--yes">
+								<span class="tclas-faq-check-icon">✓</span>
+								<span class="tclas-faq-check-text"><strong>English</strong> works fine with consulates</span>
+							</div>
+						</div>
+						<p class="tclas-faq-note"><strong>Why?</strong> Luxembourg citizenship by descent is about proving your ancestry, not integration. No civics exam, no residency requirement, no language barrier.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- FAQ Item 3: Civics Exam -->
+			<div class="tclas-faq-item">
+				<button class="tclas-faq-header" aria-expanded="false">
+					<span class="tclas-faq-icon">📝</span>
+					<span class="tclas-faq-question">Do I have to take a civics exam?</span>
+					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
+				</button>
+				<div class="tclas-faq-content">
+					<div class="tclas-faq-body">
+						<div class="tclas-faq-checklist">
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text">No civics exam</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text">No integration test</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--no">
+								<span class="tclas-faq-check-icon">✕</span>
+								<span class="tclas-faq-check-text">No residency requirement</span>
+							</div>
+							<div class="tclas-faq-check tclas-faq-check--yes">
+								<span class="tclas-faq-check-icon">✓</span>
+								<span class="tclas-faq-check-text">Just documentation of your lineage</span>
+							</div>
+						</div>
+						<p class="tclas-faq-note"><strong>Why?</strong> You're claiming citizenship through ancestry, not applying for naturalization. Luxembourg recognizes your right to it through descent alone—no assimilation required.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- FAQ Item 4: Two Pathways -->
+			<div class="tclas-faq-item">
+				<button class="tclas-faq-header" aria-expanded="false">
+					<span class="tclas-faq-icon">🛤️</span>
+					<span class="tclas-faq-question">Article 7 or Article 23—what's the difference?</span>
+					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
+				</button>
+				<div class="tclas-faq-content">
+					<div class="tclas-faq-body">
+						<div class="tclas-faq-pathway">
+							<div class="tclas-faq-pathway-col">
+								<h4>Article 7 (Direct Descent)</h4>
+								<div class="tclas-faq-pathway-box tclas-faq-pathway-box--primary">
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">1</span>
+										<span>Unbroken male line from ancestor</span>
+									</div>
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">2</span>
+										<span>Apply to consulate by mail</span>
+									</div>
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">3</span>
+										<span>Citizenship granted (no travel needed)</span>
+									</div>
+								</div>
+								<p class="tclas-faq-pathway-note">⏱️ ~12–24 months</p>
+							</div>
+							<div class="tclas-faq-pathway-col">
+								<h4>Article 23 (Female Ancestor)</h4>
+								<div class="tclas-faq-pathway-box tclas-faq-pathway-box--secondary">
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">1</span>
+										<span>Female ancestor born before 1969</span>
+									</div>
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">2</span>
+										<span>In-person appointment in Luxembourg</span>
+									</div>
+									<div class="tclas-faq-pathway-step">
+										<span class="tclas-faq-pathway-num">3</span>
+										<span>Citizenship granted after interview</span>
+									</div>
+								</div>
+								<p class="tclas-faq-pathway-note">⏱️ ~4–6 months (if eligible)</p>
+							</div>
+						</div>
+						<p class="tclas-faq-note"><strong>The quiz will tell you which one applies.</strong></p>
+					</div>
+				</div>
+			</div>
+
+			</div><!-- .tclas-faq-accordion -->
+			</div><!-- .tclas-citizenship-faq-col -->
+
+			<!-- Right: Quiz Section -->
+			<div class="tclas-citizenship-quiz-col">
+				<div class="tclas-citizenship-quiz-sticky">
+					<div class="tclas-quiz-intro">
+						<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
+						<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
+						<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
+					</div>
+					<div class="tclas-quiz-wrapper" id="quiz">
+						<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
+					</div>
+				</div>
+			</div><!-- .tclas-citizenship-quiz-col -->
+		</div><!-- .tclas-citizenship-faq-quiz-grid -->
 	</div>
 </section>
 

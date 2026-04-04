@@ -10,7 +10,7 @@ get_header();
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'From the community', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'News & stories', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'News & stories', 'tclas' ); ?></h1>
 	</div>
 </div>

@@ -22,7 +22,6 @@ if ( ! tclas_is_member() ) :
 ?>
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
 	</div>
 </div>
@@ -395,7 +394,6 @@ else :
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<?php tclas_breadcrumb( __( 'Member Profiles', 'tclas' ) ); ?>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Member hub', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
 	</div>
 </div>

@@ -170,7 +170,6 @@ $profile_photo_url = $profile_photo_id
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<?php tclas_breadcrumb( __( 'My Profile', 'tclas' ) ); ?>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Your profile', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'My Luxembourg Story', 'tclas' ); ?></h1>
 	</div>
 </div>

@@ -144,7 +144,7 @@ if ( is_singular( 'tribe_events' ) ) :
 				<?php if ( $reg_url ) : ?>
 					<a
 						href="<?php echo esc_url( $reg_url ); ?>"
-						class="tclas-event-register-link"
+						class="btn btn-primary tclas-event-register-link"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -236,7 +236,7 @@ else :
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Community', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'Events', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Events', 'tclas' ); ?></h1>
 	</div>
 </div>

@@ -24,16 +24,7 @@ ksort( $grouped );
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<nav class="tclas-breadcrumb" aria-label="<?php esc_attr_e( 'Breadcrumb', 'tclas' ); ?>">
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'tclas' ); ?></a>
-			<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
-			<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>"><?php esc_html_e( 'Member Hub', 'tclas' ); ?></a>
-			<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
-			<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>"><?php esc_html_e( 'Ancestral Map', 'tclas' ); ?></a>
-			<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
-			<span class="tclas-breadcrumb__current" aria-current="page"><?php esc_html_e( 'Communes', 'tclas' ); ?></span>
-		</nav>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Directory', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'Communes of Luxembourg', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Communes of Luxembourg', 'tclas' ); ?></h1>
 		<p class="tclas-commune-subtitle"><?php echo count( $communes ); ?> <?php esc_html_e( 'localities', 'tclas' ); ?></p>
 	</div>

@@ -10,7 +10,7 @@ get_header();
 
 <div class="tclas-page-header tclas-page-header--orpale">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Community voices', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'Luxembourg stories', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Luxembourg stories', 'tclas' ); ?></h1>
 		<p class="tclas-page-header__desc" style="max-width:52ch;">
 			<?php esc_html_e( 'Members share the stories that brought them here — through ancestry, citizenship, travel, and sometimes, an unexpected bottle of Crémant.', 'tclas' ); ?>

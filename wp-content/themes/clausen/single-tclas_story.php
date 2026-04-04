@@ -23,10 +23,10 @@ get_header();
 	<!-- Page header -->
 	<div class="tclas-page-header tclas-page-header--orpale">
 		<div class="container-tclas">
+			<?php tclas_breadcrumb(); ?>
 			<a href="<?php echo esc_url( home_url( '/stories/' ) ); ?>" class="tclas-back-link">
 				&larr; <?php esc_html_e( 'Luxembourg stories', 'tclas' ); ?>
 			</a>
-			<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg story', 'tclas' ); ?></span>
 			<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 
 			<?php if ( $member_name || $arrival_year ) : ?>

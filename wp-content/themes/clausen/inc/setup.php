@@ -67,3 +67,10 @@ function tclas_content_width(): void {
 	$GLOBALS['content_width'] = 1200;
 }
 add_action( 'after_setup_theme', 'tclas_content_width', 0 );
+
+/**
+ * Hide the WordPress admin bar for users below author role.
+ */
+add_filter( 'show_admin_bar', function (): bool {
+	return current_user_can( 'publish_posts' );
+} );

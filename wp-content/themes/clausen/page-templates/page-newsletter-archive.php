@@ -47,7 +47,7 @@ unset( $articles );
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></span>
+		<?php tclas_breadcrumb( __( 'Newsletter Archive', 'tclas' ) ); ?>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Newsletter Archive', 'tclas' ); ?></h1>
 	</div>
 </div>

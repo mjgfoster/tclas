@@ -10,21 +10,7 @@ get_header();
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow">
-			<?php
-			if ( is_category() ) {
-				esc_html_e( 'Category', 'tclas' );
-			} elseif ( is_tag() ) {
-				esc_html_e( 'Tag', 'tclas' );
-			} elseif ( is_date() ) {
-				esc_html_e( 'Archive', 'tclas' );
-			} elseif ( is_author() ) {
-				esc_html_e( 'Author', 'tclas' );
-			} else {
-				esc_html_e( 'Archives', 'tclas' );
-			}
-			?>
-		</span>
+		<?php tclas_breadcrumb( get_the_archive_title() ); ?>
 		<h1 class="tclas-page-header__title">
 			<?php the_archive_title(); ?>
 		</h1>

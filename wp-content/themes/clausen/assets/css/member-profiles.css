@@ -32,7 +32,7 @@
   display: inline-block;
   color: rgba(235, 245, 252, 0.7);
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.04em;
@@ -47,7 +47,7 @@
   align-items: center;
   gap: 0.25rem;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -74,7 +74,7 @@
   border: 1px solid var(--c-border);
 }
 .tclas-badge--sm {
-  font-size: 0.72rem;
+  font-size: var(--text-xs);
   padding: 0.15rem 0.4rem;
 }
 
@@ -122,7 +122,7 @@
 .tclas-photo-remove-btn {
   align-self: flex-start;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   color: var(--c-crimson);
   background: none;
   border: none;
@@ -136,7 +136,7 @@
 
 .tclas-photo-status {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   color: var(--c-muted);
   margin: 0;
 }
@@ -158,7 +158,7 @@
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--c-muted);
   cursor: pointer;
@@ -204,7 +204,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-dir-filter-input {
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: var(--text-md);
   padding: 0.45rem 0.75rem;
   border: 1px solid var(--c-input-border);
   border-radius: var(--radius);
@@ -230,14 +230,14 @@ details[open] .tclas-field-privacy__toggle::before {
   align-items: center;
   gap: 0.4rem;
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: var(--text-md);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .tclas-dir-count {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   color: var(--c-muted);
   margin: 0;
   white-space: nowrap;
@@ -301,7 +301,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-dir-card__name {
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: var(--text-md);
   font-weight: 700;
   color: var(--c-ardoise);
   margin: 0 0 0.2rem;
@@ -313,14 +313,14 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-dir-card__pronouns {
   font-weight: 400;
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   color: var(--c-muted);
   margin-left: 0.25rem;
 }
 
 .tclas-dir-card__city {
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   color: var(--c-muted);
   margin: 0 0 0.5rem;
 }
@@ -334,7 +334,7 @@ details[open] .tclas-field-privacy__toggle::before {
 }
 
 .tclas-dir-card__indicator {
-  font-size: 1rem;
+  font-size: var(--text-lg);
   line-height: 1;
 }
 
@@ -347,7 +347,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-page-header__membership {
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: var(--text-md);
   color: var(--c-muted);
   margin: 0.25rem 0 0.6rem;
 }
@@ -420,15 +420,15 @@ details[open] .tclas-field-privacy__toggle::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--c-or-pale);
   color: var(--c-ardoise);
   text-decoration: none;
   border: 1px solid var(--c-border);
   transition: background 0.15s, color 0.15s;
-  font-size: 1.05rem;
+  font-size: var(--text-lg);
 }
 .tclas-profile-social__link:hover {
   background: var(--c-aigue);
@@ -445,7 +445,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-profile-bio {
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   line-height: 1.7;
   color: var(--c-body-text);
   margin: 0;
@@ -453,7 +453,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-profile-section__title {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -472,7 +472,7 @@ details[open] .tclas-field-privacy__toggle::before {
 .tclas-profile-commune-table {
   width: 100%;
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   color: var(--c-body-text);
   border-collapse: collapse;
   margin-bottom: 1rem;
@@ -481,7 +481,7 @@ details[open] .tclas-field-privacy__toggle::before {
   text-align: left;
   font-weight: 700;
   color: var(--c-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.5rem 0.6rem;
@@ -494,7 +494,7 @@ details[open] .tclas-field-privacy__toggle::before {
 }
 .tclas-profile-commune-table__canton {
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--c-ardoise);
   vertical-align: top;
@@ -515,7 +515,7 @@ details[open] .tclas-field-privacy__toggle::before {
 .tclas-profile-surname-pill {
   display: inline-block;
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: var(--text-md);
   background: var(--c-or-pale);
   color: var(--c-ardoise);
   padding: 0.15rem 0.55rem;
@@ -542,14 +542,14 @@ details[open] .tclas-field-privacy__toggle::before {
 }
 .tclas-profile-roots-cta p {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: var(--text-md);
   color: var(--c-body-text);
   margin: 0 0 0.6rem;
 }
 
 .tclas-profile-roots__label {
   font-family: var(--font-sans);
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--c-muted);
   margin: 0 0 0.45rem;
@@ -563,7 +563,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-profile-family-names {
   font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-size: var(--text-md);
   color: var(--c-body-text);
   margin: 0;
 }
@@ -579,7 +579,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-profile-lineage__commune {
   font-family: var(--font-sans);
-  font-size: 0.88rem;
+  font-size: var(--text-md);
   font-weight: 700;
   color: var(--c-ardoise);
   margin: 0 0 0.35rem;

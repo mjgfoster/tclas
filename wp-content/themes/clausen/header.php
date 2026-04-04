@@ -101,8 +101,8 @@
 	</header>
 
 	<?php
-	// Member navigation bar — only on member-area pages for active members
-	if ( tclas_is_member() && tclas_is_member_page() ) {
+	// Member navigation bar — shown sitewide for active members
+	if ( tclas_is_member() ) {
 		get_template_part( 'template-parts/member', 'nav' );
 	}
 	?>

@@ -26,7 +26,6 @@ $term_description = $term->description ?? '';
 		echo ' › <span>' . esc_html( $term_name ) . '</span>';
 		echo '</nav>';
 		?>
-		<span class="tclas-eyebrow"><?php esc_html_e( 'The Loon & The Lion', 'tclas' ); ?></span>
 		<h1 class="tclas-page-header__title">
 			<span lang="lb"><?php echo esc_html( $term_name ); ?></span>
 			<?php if ( $term_description ) : ?>

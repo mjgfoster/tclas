@@ -330,25 +330,7 @@ function tclas_is_member_page(): bool {
  * @param bool $mobile  True when rendering inside the mobile drawer.
  */
 function tclas_render_header_actions( bool $mobile = false ): void {
-	$icon_size = $mobile ? '20' : '18';
-	$icon_user = '<svg aria-hidden="true" focusable="false" width="' . $icon_size . '" height="' . $icon_size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-
-	if ( is_user_logged_in() ) {
-		$hub_url = home_url( '/member-hub/' );
-
-		if ( $mobile ) {
-			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-nav-drawer__user-link">';
-			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
-			echo '<span>' . esc_html__( 'Member hub', 'tclas' ) . '</span>';
-			echo '</a>';
-		} else {
-			// On member pages the member nav bar handles this; on other pages show a hub entry point.
-			echo '<a href="' . esc_url( $hub_url ) . '" class="tclas-user-menu">';
-			echo $icon_user; // phpcs:ignore WordPress.Security.EscapeOutput
-			echo '<span>' . esc_html__( 'Member hub', 'tclas' ) . '</span>';
-			echo '</a>';
-		}
-	} else {
+	if ( ! is_user_logged_in() ) {
 		$login_url = wp_login_url( get_permalink() );
 
 		if ( $mobile ) {
