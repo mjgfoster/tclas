@@ -795,6 +795,7 @@
     initMyStoryForm();
     initTripRepeater();
     initBioCounter();
+    initFaqAccordion();
   });
 
   // ── Bio character counter ─────────────────────────────────────────────────
@@ -804,6 +805,19 @@
     if ( !textarea || !counter ) return;
     textarea.addEventListener('input', function () {
       counter.textContent = textarea.value.length;
+    });
+  }
+
+  // ── FAQ Accordion ──────────────────────────────────────────────────────────
+  function initFaqAccordion() {
+    const headers = qsa('.tclas-faq-header');
+    if ( !headers.length ) return;
+
+    headers.forEach(function (header) {
+      header.addEventListener('click', function () {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+      });
     });
   }
 

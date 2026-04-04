@@ -384,9 +384,133 @@
 				btn.textContent = 'Continue';
 				btn.addEventListener('click', () => {
 					pushHistory('intro');
-					renderStep('user_born');
+					renderStep('explain_1969');
 				});
 				buttonsEl.appendChild(btn);
+
+				addBackButton();
+			}
+		},
+
+		explain_1969: {
+			progress: 22,
+			render: () => {
+				questionEl.textContent =
+					'Why is 1969 so important?';
+				buttonsEl.innerHTML = '';
+
+				// Create demo container
+				const demoWrapper = document.createElement('div');
+				demoWrapper.className = 'cq_demo_wrapper';
+
+				// Left side — male line (works)
+				const leftCol = document.createElement('div');
+				leftCol.className = 'cq_demo_column cq_demo_column--valid';
+
+				const leftTitle = document.createElement('h4');
+				leftTitle.className = 'cq_demo_title';
+				leftTitle.innerHTML = '✓ Male Line';
+				leftCol.appendChild(leftTitle);
+
+				const leftDemoEl = document.createElement('div');
+				leftDemoEl.className = 'cq_demo_tree';
+				leftDemoEl.innerHTML = `
+					<div class="cq_demo_gen">
+						<div class="cq_demo_person cq_demo_person--ancestor">
+							<span class="cq_demo_icon">👨</span>
+							<span>Grandfather</span>
+							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
+						</div>
+					</div>
+					<div class="cq_demo_arrow cq_demo_arrow--valid">
+						<span class="cq_demo_arrow__label">✓ passes</span>
+					</div>
+					<div class="cq_demo_gen">
+						<div class="cq_demo_person">
+							<span class="cq_demo_icon">👨</span>
+							<span>Father</span>
+							<span class="cq_demo_year">b. 1950</span>
+						</div>
+					</div>
+					<div class="cq_demo_arrow cq_demo_arrow--valid">
+						<span class="cq_demo_arrow__label">✓ passes</span>
+					</div>
+					<div class="cq_demo_gen">
+						<div class="cq_demo_person cq_demo_person--you">
+							<span class="cq_demo_icon">🧑</span>
+							<span>You</span>
+							<span class="cq_demo_year">b. 1980</span>
+						</div>
+					</div>
+					<div class="cq_demo_outcome">✓ Eligible</div>
+				`;
+				leftCol.appendChild(leftDemoEl);
+				demoWrapper.appendChild(leftCol);
+
+				// Right side — female line (breaks)
+				const rightCol = document.createElement('div');
+				rightCol.className = 'cq_demo_column cq_demo_column--broken';
+
+				const rightTitle = document.createElement('h4');
+				rightTitle.className = 'cq_demo_title';
+				rightTitle.innerHTML = '✗ Female Line (Pre-1969)';
+				rightCol.appendChild(rightTitle);
+
+				const rightDemoEl = document.createElement('div');
+				rightDemoEl.className = 'cq_demo_tree';
+				rightDemoEl.innerHTML = `
+					<div class="cq_demo_gen">
+						<div class="cq_demo_person cq_demo_person--ancestor">
+							<span class="cq_demo_icon">👩</span>
+							<span>Grandmother</span>
+							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
+						</div>
+					</div>
+					<div class="cq_demo_arrow cq_demo_arrow--broken">
+						<span class="cq_demo_arrow__label">✗ Can't pass<br>to child born<br>before 1969</span>
+					</div>
+					<div class="cq_demo_gen cq_demo_gen--broken">
+						<div class="cq_demo_person cq_demo_person--broken">
+							<span class="cq_demo_icon">👩</span>
+							<span>Mother</span>
+							<span class="cq_demo_year">b. 1955</span>
+						</div>
+					</div>
+					<div class="cq_demo_arrow cq_demo_arrow--broken">
+						<span class="cq_demo_arrow__label">Line broken</span>
+					</div>
+					<div class="cq_demo_gen">
+						<div class="cq_demo_person cq_demo_person--you">
+							<span class="cq_demo_icon">🧑</span>
+							<span>You</span>
+							<span class="cq_demo_year">b. 1980</span>
+						</div>
+					</div>
+					<div class="cq_demo_outcome cq_demo_outcome--article23">≈ Article 23</div>
+				`;
+				rightCol.appendChild(rightDemoEl);
+				demoWrapper.appendChild(rightCol);
+
+				buttonsEl.appendChild(demoWrapper);
+
+				// Explanation text
+				const explainer = document.createElement('p');
+				explainer.className = 'cq_demo_explainer';
+				explainer.innerHTML =
+					'<strong>In 1969,</strong> Luxembourg law changed to allow women to pass nationality equally. ' +
+					'Before then, a female ancestor could only pass citizenship to children born <em>after</em> 1969. ' +
+					'Same person, two different routes—one works, one doesn\'t. We\'ll help you trace the one that does.';
+				buttonsEl.appendChild(explainer);
+
+				// Continue button
+				const continueBtn = document.createElement('button');
+				continueBtn.className = 'cq_option_btn cq_submit_btn mt-4';
+				continueBtn.textContent = 'I understand — let\'s trace my line';
+				continueBtn.addEventListener('click', () => {
+					pushHistory('explain_1969');
+					renderStep('user_born');
+				});
+				buttonsEl.appendChild(continueBtn);
 
 				addBackButton();
 			}
@@ -445,6 +569,11 @@
 					'What <strong>side of your family</strong> is Luxembourgish?';
 				buttonsEl.innerHTML = '';
 
+				addHint(
+					'Think about which side is most likely to have an <strong>unbroken male line</strong> or a <strong>female ancestor with children born after 1969</strong>. ' +
+					'If unsure, pick the side you think is closest in generations to Luxembourg.'
+				);
+
 				addOptionBtn('My mom\u2019s side', () => {
 					pushHistory('choose_side');
 					setSide('mom');
@@ -472,8 +601,8 @@
 				buttonsEl.innerHTML = '';
 
 				addHint(
-					'Focus on whichever line is shortest \u2014 the one with the fewest ' +
-					'generations between you and Luxembourg. You can retake the quiz for the other side.'
+					'Start with the <strong>shortest</strong> line \u2014 the one with the fewest ' +
+					'generations back. A viable route has an unbroken male line, or a female ancestor with children born after 1969. You can retake for the other side later.'
 				);
 
 				addOptionBtn('My mom\u2019s side', () => {
