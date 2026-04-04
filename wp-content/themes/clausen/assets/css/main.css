@@ -7838,6 +7838,92 @@ input[type=radio] {
   color: var(--c-ardoise);
   border-bottom-color: var(--c-ardoise);
 }
+.tclas-tab-panel[hidden] {
+  display: none;
+}
+
+/* ── Newsletter archive ──────────────────────────────────────────────── */
+.tclas-archive-issue,
+.tclas-archive-topic {
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--c-border);
+}
+.tclas-archive-issue:last-child,
+.tclas-archive-topic:last-child {
+  border-bottom: none;
+}
+.tclas-archive-issue__header,
+.tclas-archive-topic__header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.tclas-archive-issue__title,
+.tclas-archive-topic__title {
+  font-family: var(--font-serif);
+  margin: 0;
+}
+.tclas-archive-issue__title a {
+  color: var(--c-ardoise);
+  text-decoration: none;
+}
+.tclas-archive-issue__title a:hover {
+  color: var(--c-crimson);
+}
+.tclas-archive-topic__en {
+  font-weight: 400;
+  color: var(--c-muted);
+  margin-left: 0.4em;
+}
+.tclas-archive-issue__count,
+.tclas-archive-topic__count {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--c-muted);
+}
+.tclas-archive-issue__list,
+.tclas-archive-topic__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tclas-archive-article {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.75rem;
+  padding: 0.6rem 0;
+  text-decoration: none;
+  transition: background 0.1s;
+  border-radius: 4px;
+}
+.tclas-archive-article:hover .tclas-archive-article__title {
+  color: var(--c-crimson);
+}
+.tclas-archive-article__title {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--c-ardoise);
+  transition: color 0.15s;
+}
+.tclas-archive-article__meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.tclas-archive-article__byline {
+  font-size: var(--text-md);
+  color: var(--c-body-text);
+}
+.tclas-archive-article__issue {
+  font-size: var(--text-sm);
+  color: var(--c-muted);
+}
 
 .tclas-directory-filters {
   display: flex;

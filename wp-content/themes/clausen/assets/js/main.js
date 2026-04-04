@@ -829,6 +829,7 @@
     initTripRepeater();
     initBioCounter();
     initFaqAccordion();
+    initArchiveTabs();
   });
 
   // ── Bio character counter ─────────────────────────────────────────────────
@@ -850,6 +851,45 @@
       header.addEventListener('click', function () {
         const isExpanded = this.getAttribute('aria-expanded') === 'true';
         this.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+  }
+
+  // ── Archive tabs ───────────────────────────────────────────────────────────
+  function initArchiveTabs() {
+    var tabs = qsa('[role="tablist"] [role="tab"]');
+    if (!tabs.length) return;
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        // Deactivate all
+        tabs.forEach(function (t) {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+          var panel = qs('#' + t.getAttribute('aria-controls'));
+          if (panel) panel.setAttribute('hidden', '');
+        });
+
+        // Activate clicked
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        var panel = qs('#' + tab.getAttribute('aria-controls'));
+        if (panel) panel.removeAttribute('hidden');
+      });
+
+      // Keyboard: arrow left/right between tabs
+      tab.addEventListener('keydown', function (e) {
+        var idx = Array.prototype.indexOf.call(tabs, tab);
+        if (e.key === 'ArrowRight' && idx < tabs.length - 1) {
+          e.preventDefault();
+          tabs[idx + 1].focus();
+          tabs[idx + 1].click();
+        }
+        if (e.key === 'ArrowLeft' && idx > 0) {
+          e.preventDefault();
+          tabs[idx - 1].focus();
+          tabs[idx - 1].click();
+        }
       });
     });
   }

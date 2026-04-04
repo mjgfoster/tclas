@@ -2,10 +2,7 @@
 /**
  * Template Name: Newsletter Archive (Loon & Lion)
  *
- * Magazine-style table of contents for the Loon & Lion newsletter.
- * Articles are grouped by `tclas_issue_date` (YYYY-MM), displayed newest
- * first. Within each issue group, articles are sorted by `tclas_issue_order`.
- * The "Main Story" department post provides the cover hero image for each issue.
+ * Two-tab archive: "By Issue" (chronological) and "By Topic" (by department).
  *
  * @package TCLAS
  */
@@ -36,13 +33,56 @@ foreach ( $all_posts as $post ) {
 	];
 }
 
-// Sort within each issue by tclas_issue_order (ascending)
+// Sort within each issue by order (ascending)
 foreach ( $issues as $date => &$articles ) {
 	usort( $articles, fn( $a, $b ) => $a['order'] <=> $b['order'] );
 }
 unset( $articles );
 
-// Issues are already newest-first (meta_value DESC in query)
+// ── Group posts by department ────────────────────────────────────────────────
+$by_topic = [];
+foreach ( $all_posts as $post ) {
+	$dept_terms = wp_get_post_terms( $post->ID, 'tclas_department' );
+	if ( is_wp_error( $dept_terms ) ) { continue; }
+	foreach ( $dept_terms as $t ) {
+		if ( $t->slug === 'main-story' ) { continue; }
+		if ( ! isset( $by_topic[ $t->slug ] ) ) {
+			$by_topic[ $t->slug ] = [
+				'term'  => $t,
+				'posts' => [],
+			];
+		}
+		$by_topic[ $t->slug ]['posts'][] = $post;
+		break; // one department per article
+	}
+}
+
+// Sort topics alphabetically by English description
+uasort( $by_topic, fn( $a, $b ) => strcmp( $a['term']->description, $b['term']->description ) );
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+$_excerpt = function( WP_Post $p, int $words = 20 ): string {
+	return has_excerpt( $p->ID )
+		? wp_trim_words( get_the_excerpt( $p ), $words, '&hellip;' )
+		: wp_trim_words( $p->post_content, $words, '&hellip;' );
+};
+
+$_dept_label = function( WP_Post $p ): array {
+	$terms = wp_get_post_terms( $p->ID, 'tclas_department' );
+	if ( is_wp_error( $terms ) ) { return [ 'lux' => '', 'en' => '' ]; }
+	foreach ( $terms as $t ) {
+		if ( $t->slug !== 'main-story' ) {
+			return [ 'lux' => $t->name, 'en' => $t->description ];
+		}
+	}
+	return [ 'lux' => '', 'en' => '' ];
+};
+
+$_byline = function( WP_Post $p ): string {
+	if ( get_post_meta( $p->ID, 'tclas_hide_byline', true ) ) { return ''; }
+	$custom = get_post_meta( $p->ID, 'tclas_byline', true );
+	return $custom ? $custom : get_the_author_meta( 'display_name', $p->post_author );
+};
 ?>
 
 <div class="tclas-page-header">
@@ -52,7 +92,7 @@ unset( $articles );
 	</div>
 </div>
 
-<section class="tclas-section">
+<section class="tclas-section bg-white">
 	<div class="container-tclas">
 
 		<?php if ( empty( $issues ) ) : ?>
@@ -63,99 +103,130 @@ unset( $articles );
 
 		<?php else : ?>
 
-			<?php foreach ( $issues as $issue_date => $articles ) :
+		<!-- ── Tabs ───────────────────────────────────────────────────────── -->
+		<div class="tclas-tabs" role="tablist">
+			<button
+				class="tclas-tab is-active"
+				role="tab"
+				aria-selected="true"
+				aria-controls="archive-by-issue"
+				id="tab-by-issue"
+			><?php esc_html_e( 'By Issue', 'tclas' ); ?></button>
+			<button
+				class="tclas-tab"
+				role="tab"
+				aria-selected="false"
+				aria-controls="archive-by-topic"
+				id="tab-by-topic"
+			><?php esc_html_e( 'By Topic', 'tclas' ); ?></button>
+		</div>
 
-				// ── Format issue date header ─────────────────────────────
-				$dt          = DateTime::createFromFormat( 'Y-m', $issue_date );
-				$label       = $dt ? $dt->format( 'F Y' ) : esc_html( $issue_date );
+		<!-- ══════════════════════════════════════════════════════════════════
+		     TAB 1: BY ISSUE (chronological)
+		     ══════════════════════════════════════════════════════════════════ -->
+		<div class="tclas-tab-panel" id="archive-by-issue" role="tabpanel" aria-labelledby="tab-by-issue">
 
-				// ── Find the Main Story for the cover image ──────────────
-				$cover_post  = null;
-				$main_story  = get_term_by( 'slug', 'main-story', 'tclas_department' );
-				foreach ( $articles as $a ) {
-					if ( $main_story ) {
-						$terms = wp_get_post_terms( $a['post']->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
-						if ( in_array( 'main-story', $terms, true ) ) {
-							$cover_post = $a['post'];
-							break;
-						}
-					}
+			<?php foreach ( $issues as $issue_date => $issue_articles ) :
+				$dt    = DateTime::createFromFormat( 'Y-m', $issue_date );
+				$label = $dt ? $dt->format( 'F Y' ) : esc_html( $issue_date );
+
+				// Check for custom issue title
+				foreach ( $issue_articles as $a ) {
+					$_ct = get_post_meta( $a['post']->ID, 'tclas_issue_title', true );
+					if ( $_ct ) { $label = $_ct; break; }
 				}
+
+				$issue_url = home_url( '/newsletter/issue/' . $issue_date . '/' );
 			?>
-
-			<div class="tclas-issue-group">
-
-				<!-- ── Issue masthead ──────────────────────────────────── -->
-				<header class="tclas-issue-masthead">
-					<span class="tclas-eyebrow"><?php esc_html_e( 'Issue', 'tclas' ); ?></span>
-					<h2 class="tclas-issue-masthead__date"><?php echo esc_html( $label ); ?></h2>
+			<div class="tclas-archive-issue">
+				<header class="tclas-archive-issue__header">
+					<h2 class="tclas-archive-issue__title">
+						<a href="<?php echo esc_url( $issue_url ); ?>"><?php echo esc_html( $label ); ?></a>
+					</h2>
+					<span class="tclas-archive-issue__count"><?php printf(
+						esc_html( _n( '%d article', '%d articles', count( $issue_articles ), 'tclas' ) ),
+						count( $issue_articles )
+					); ?></span>
 				</header>
 
-				<div class="tclas-issue-body">
-
-					<?php if ( $cover_post && has_post_thumbnail( $cover_post->ID ) ) : ?>
-					<!-- ── Cover image (Main Story featured image) ─────── -->
-					<div class="tclas-issue-cover-wrap">
-						<a href="<?php echo esc_url( get_permalink( $cover_post->ID ) ); ?>" class="tclas-issue-cover-link" aria-hidden="true" tabindex="-1">
-							<?php echo get_the_post_thumbnail( $cover_post->ID, 'large', [ 'class' => 'tclas-issue-cover', 'alt' => '' ] ); ?>
-						</a>
-					</div>
-					<?php endif; ?>
-
-					<!-- ── Table of contents ───────────────────────────── -->
-					<ol class="tclas-toc-list">
-						<?php foreach ( $articles as $a ) :
-							$p           = $a['post'];
-							$dept_terms  = wp_get_post_terms( $p->ID, 'tclas_department' );
-							// Skip 'main-story' (structural term) when showing the visible label.
-							$dept_label  = '';
-							if ( ! is_wp_error( $dept_terms ) ) {
-								foreach ( $dept_terms as $t ) {
-									if ( $t->slug !== 'main-story' ) {
-										$dept_label = $t->name;
-										break;
-									}
-								}
-							}
-							$excerpt     = has_excerpt( $p->ID )
-								? wp_trim_words( get_the_excerpt( $p ), 20, '&hellip;' )
-								: wp_trim_words( $p->post_content, 20, '&hellip;' );
-
-							// Read-time estimate (~200 wpm)
-							$word_count = str_word_count( wp_strip_all_tags( $p->post_content ) );
-							$read_mins  = max( 1, round( $word_count / 200 ) );
-						?>
-						<li class="tclas-toc-item">
-							<?php if ( $dept_label ) : ?>
-							<span class="tclas-toc-department tclas-eyebrow"><?php echo esc_html( $dept_label ); ?></span>
-							<?php endif; ?>
-							<h3 class="tclas-toc-title">
-								<a href="<?php echo esc_url( get_permalink( $p->ID ) ); ?>">
-									<?php echo esc_html( get_the_title( $p ) ); ?>
-								</a>
-							</h3>
-							<?php if ( $excerpt ) : ?>
-							<p class="tclas-toc-excerpt"><?php echo esc_html( $excerpt ); ?></p>
-							<?php endif; ?>
-							<span class="tclas-toc-meta">
-								<?php printf(
-									/* translators: %d: read time in minutes */
-									esc_html__( '%d min read', 'tclas' ),
-									(int) $read_mins
-								); ?>
+				<ul class="tclas-archive-issue__list">
+					<?php foreach ( $issue_articles as $a ) :
+						$p   = $a['post'];
+						$_d  = $_dept_label( $p );
+						$_by = $_byline( $p );
+					?>
+					<li>
+						<a href="<?php echo esc_url( get_permalink( $p->ID ) ); ?>" class="tclas-archive-article">
+							<?php if ( $_d['lux'] ) : ?>
+							<span class="tclas-ie-dept-label">
+								<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
 							</span>
-						</li>
-						<?php endforeach; ?>
-					</ol>
-
-				</div><!-- .tclas-issue-body -->
-
-			</div><!-- .tclas-issue-group -->
-
+							<?php endif; ?>
+							<span class="tclas-archive-article__title"><?php echo esc_html( get_the_title( $p ) ); ?></span>
+							<?php if ( $_by ) : ?>
+							<span class="tclas-archive-article__byline"><?php printf( esc_html__( 'By %s', 'tclas' ), esc_html( $_by ) ); ?></span>
+							<?php endif; ?>
+							<?php tclas_members_only_badge( $p->ID ); ?>
+						</a>
+					</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
 			<?php endforeach; ?>
 
-		<?php endif; ?>
+		</div><!-- #archive-by-issue -->
 
+		<!-- ══════════════════════════════════════════════════════════════════
+		     TAB 2: BY TOPIC (grouped by department)
+		     ══════════════════════════════════════════════════════════════════ -->
+		<div class="tclas-tab-panel" id="archive-by-topic" role="tabpanel" aria-labelledby="tab-by-topic" hidden>
+
+			<?php foreach ( $by_topic as $slug => $group ) :
+				$term = $group['term'];
+			?>
+			<div class="tclas-archive-topic">
+				<header class="tclas-archive-topic__header">
+					<h2 class="tclas-archive-topic__title">
+						<span lang="lb"><?php echo esc_html( $term->name ); ?></span>
+						<?php if ( $term->description ) : ?>
+						<span class="tclas-archive-topic__en"><?php echo esc_html( $term->description ); ?></span>
+						<?php endif; ?>
+					</h2>
+					<span class="tclas-archive-topic__count"><?php printf(
+						esc_html( _n( '%d article', '%d articles', count( $group['posts'] ), 'tclas' ) ),
+						count( $group['posts'] )
+					); ?></span>
+				</header>
+
+				<ul class="tclas-archive-topic__list">
+					<?php foreach ( $group['posts'] as $p ) :
+						$_issue = get_post_meta( $p->ID, 'tclas_issue_date', true );
+						$_dt    = $_issue ? DateTime::createFromFormat( 'Y-m', $_issue ) : null;
+						$_issue_label = $_dt ? $_dt->format( 'M Y' ) : '';
+						$_by    = $_byline( $p );
+					?>
+					<li>
+						<a href="<?php echo esc_url( get_permalink( $p->ID ) ); ?>" class="tclas-archive-article">
+							<span class="tclas-archive-article__title"><?php echo esc_html( get_the_title( $p ) ); ?></span>
+							<span class="tclas-archive-article__meta">
+								<?php if ( $_by ) : ?>
+								<span class="tclas-archive-article__byline"><?php printf( esc_html__( 'By %s', 'tclas' ), esc_html( $_by ) ); ?></span>
+								<?php endif; ?>
+								<?php if ( $_issue_label ) : ?>
+								<span class="tclas-archive-article__issue"><?php echo esc_html( $_issue_label ); ?></span>
+								<?php endif; ?>
+							</span>
+							<?php tclas_members_only_badge( $p->ID ); ?>
+						</a>
+					</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<?php endforeach; ?>
+
+		</div><!-- #archive-by-topic -->
+
+		<?php endif; ?>
 
 	</div><!-- .container-tclas -->
 </section>
