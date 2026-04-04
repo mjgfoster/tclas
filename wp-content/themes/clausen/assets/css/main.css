@@ -3854,7 +3854,6 @@ input[type=radio] {
 }
 .tclas-nl-hero__amp {
   color: var(--c-body-text);
-  font-weight: 400;
 }
 .tclas-nl-hero__lion {
   color: var(--c-crimson);
@@ -3862,7 +3861,7 @@ input[type=radio] {
 .tclas-nl-hero__sub {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: var(--text-lg);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
   color: var(--c-muted);
   margin: 0.75rem 0 0;
 }
