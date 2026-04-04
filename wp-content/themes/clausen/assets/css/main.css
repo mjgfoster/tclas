@@ -3837,6 +3837,36 @@ input[type=radio] {
   border-radius: 2px;
 }
 
+/* ── Newsletter homepage hero masthead ────────────────────────────────── */
+.tclas-nl-hero {
+  text-align: center;
+  padding: var(--pad-y) 0 var(--pad-y-sm);
+}
+.tclas-nl-hero__masthead {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.tclas-nl-hero__loon {
+  color: var(--c-ardoise);
+}
+.tclas-nl-hero__amp {
+  color: var(--c-body-text);
+  font-weight: 400;
+}
+.tclas-nl-hero__lion {
+  color: var(--c-crimson);
+}
+.tclas-nl-hero__sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-lg);
+  color: var(--c-muted);
+  margin: 0.75rem 0 0;
+}
+
 .tclas-nl-section-heading {
   font-family: var(--font-serif);
   font-size: clamp(1.5rem, 3vw, 2rem);

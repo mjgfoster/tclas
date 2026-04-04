@@ -92,7 +92,7 @@ $_byline = function( WP_Post $p ): string {
 	</div>
 </div>
 
-<section class="tclas-section bg-white">
+<section class="tclas-section">
 	<div class="container-tclas">
 
 		<?php if ( empty( $issues ) ) : ?>

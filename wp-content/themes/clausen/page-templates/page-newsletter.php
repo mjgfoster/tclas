@@ -2,11 +2,11 @@
 /**
  * Template Name: Newsletter — Current Issue
  *
- * Loon & Lion newsletter homepage. Four sections:
- *  1. Current issue masthead + article TOC (two-column, sticky cover)
+ * Loon & Lion newsletter homepage. Sections:
+ *  1. Display masthead + welcome letter + current issue TOC
  *  2. Browse by Topic (nine topic cards)
  *  3. Email signup CTA (gradient)
- *  4. Previous issues (up to 3, compact) + archive link
+ *  4. Previous issues (compact) + archive link
  *
  * @package TCLAS
  */
@@ -27,7 +27,7 @@ $_all_dates = $wpdb->get_col( $wpdb->prepare(
 // phpcs:enable
 
 $issue_date  = ! empty( $_all_dates ) ? $_all_dates[0] : '';
-$prev_dates  = array_slice( $_all_dates, 1, 3 ); // up to 3 previous issues
+$prev_dates  = array_slice( $_all_dates, 1, 3 );
 
 $issue_label = '';
 $issue_posts = [];
@@ -45,18 +45,33 @@ if ( $issue_date ) {
 		'orderby'        => 'meta_value_num',
 		'order'          => 'ASC',
 	] );
-}
 
-// Cover post for current issue: first Main Story term + featured image
-$cover_post_id = 0;
-foreach ( $issue_posts as $_p ) {
-	$_terms = wp_get_post_terms( $_p->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
-	if ( in_array( 'main-story', (array) $_terms, true ) && has_post_thumbnail( $_p->ID ) ) {
-		$cover_post_id = $_p->ID;
-		break;
+	// Custom issue title
+	foreach ( $issue_posts as $_tp ) {
+		$_ct = get_post_meta( $_tp->ID, 'tclas_issue_title', true );
+		if ( $_ct ) { $issue_label = $_ct; break; }
 	}
 }
-$has_cover = (bool) $cover_post_id;
+
+// Separate welcome letter from TOC articles
+$welcome_post = null;
+$toc_posts    = [];
+foreach ( $issue_posts as $_p ) {
+	$_dept_slugs = wp_get_post_terms( $_p->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
+	if ( null === $welcome_post && in_array( 'wellkomm', (array) $_dept_slugs, true ) ) {
+		$welcome_post = $_p;
+	} else {
+		$toc_posts[] = $_p;
+	}
+}
+
+// Welcome cover image
+$welcome_cover_id = $welcome_post ? get_post_thumbnail_id( $welcome_post->ID ) : 0;
+
+// Issue page URL
+$issue_page_url = $issue_date
+	? home_url( '/newsletter/issue/' . rawurlencode( $issue_date ) . '/' )
+	: '';
 
 // Archive page URL
 $_archive_ids = get_posts( [
@@ -69,10 +84,29 @@ $_archive_ids = get_posts( [
 ] );
 $archive_url = $_archive_ids ? get_permalink( $_archive_ids[0] ) : '';
 
-// Single-issue page URL for current issue
-$issue_page_url = $issue_date
-	? home_url( '/newsletter/issue/' . rawurlencode( $issue_date ) . '/' )
-	: '';
+// ── Helpers ──────────────────────────────────────────────────────────────────
+$_excerpt = function( WP_Post $p, int $words = 30 ): string {
+	return has_excerpt( $p->ID )
+		? wp_trim_words( get_the_excerpt( $p ), $words, '&hellip;' )
+		: wp_trim_words( $p->post_content, $words, '&hellip;' );
+};
+
+$_dept = function( WP_Post $p ): array {
+	$terms = wp_get_post_terms( $p->ID, 'tclas_department' );
+	if ( is_wp_error( $terms ) ) { return [ 'lux' => '', 'en' => '' ]; }
+	foreach ( $terms as $t ) {
+		if ( $t->slug !== 'main-story' ) {
+			return [ 'lux' => $t->name, 'en' => $t->description ];
+		}
+	}
+	return [ 'lux' => '', 'en' => '' ];
+};
+
+$_byline = function( WP_Post $p ): string {
+	if ( get_post_meta( $p->ID, 'tclas_hide_byline', true ) ) { return ''; }
+	$custom = get_post_meta( $p->ID, 'tclas_byline', true );
+	return $custom ? $custom : get_the_author_meta( 'display_name', $p->post_author );
+};
 
 // ── Department terms for Browse by Topic ────────────────────────────────────
 $_dept_terms = get_terms( [
@@ -85,7 +119,6 @@ $dept_terms = is_wp_error( $_dept_terms )
 	? []
 	: array_values( array_filter( (array) $_dept_terms, fn( $t ) => $t->slug !== 'main-story' ) );
 
-// Fallback inline SVG icons by term slug (used when no image uploaded via ACF)
 $_s = 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"';
 $dept_icon_svgs = [
 	'wellkomm'       => "<svg {$_s}><path d='M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2'/><circle cx='9' cy='7' r='4'/><path d='M23 21v-2a4 4 0 00-3-3.87'/><path d='M16 3.13a4 4 0 010 7.75'/></svg>",
@@ -98,147 +131,122 @@ $dept_icon_svgs = [
 	'evenementer'    => "<svg {$_s}><rect x='3' y='4' width='18' height='18' rx='2' ry='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>",
 	'spezialbericht' => "<svg {$_s}><path d='M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'/></svg>",
 ];
-
-// ── Shared: render one article TOC row ───────────────────────────────────────
-if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
-	/**
-	 * Renders a single <li> TOC item. Called for both current and previous issues.
-	 */
-	function tclas_nl_toc_row( WP_Post $p, int $cover_id ): void {
-		$dept_terms = wp_get_post_terms( $p->ID, 'tclas_department' );
-		$dept_lux   = '';
-		$dept_en    = '';
-		if ( ! is_wp_error( $dept_terms ) ) {
-			foreach ( $dept_terms as $t ) {
-				if ( $t->slug !== 'main-story' ) {
-					$dept_lux = $t->name;
-					$dept_en  = $t->description;
-					break;
-				}
-			}
-		}
-		$is_lead   = ( $p->ID === $cover_id );
-		$excerpt   = has_excerpt( $p->ID )
-			? wp_trim_words( get_the_excerpt( $p ), 25, '&hellip;' )
-			: wp_trim_words( $p->post_content, 25, '&hellip;' );
-		$words     = str_word_count( wp_strip_all_tags( $p->post_content ) );
-		$read_mins = max( 1, round( $words / 200 ) );
-		?>
-		<li class="tclas-issue-article<?php echo $is_lead ? ' tclas-issue-article--lead' : ''; ?>">
-			<a
-				href="<?php echo esc_url( get_permalink( $p->ID ) ); ?>"
-				class="tclas-issue-article-link"
-				aria-label="<?php echo esc_attr( sprintf(
-					/* translators: %s: article title */
-					__( 'Read article: %s', 'tclas' ),
-					get_the_title( $p )
-				) ); ?>"
-			>
-				<?php if ( $dept_lux ) : ?>
-				<span class="tclas-issue-dept">
-					<span lang="lb"><?php echo esc_html( $dept_lux ); ?></span><?php if ( $dept_en ) : ?><span class="tclas-issue-dept__en"><?php echo esc_html( $dept_en ); ?></span><?php endif; ?>
-				</span>
-				<?php endif; ?>
-				<h3 class="tclas-issue-title"><?php echo esc_html( get_the_title( $p ) ); ?></h3>
-				<?php if ( $excerpt ) : ?>
-				<p class="tclas-issue-excerpt"><?php echo esc_html( $excerpt ); ?></p>
-				<?php endif; ?>
-				<?php tclas_members_only_badge( $p->ID ); ?>
-				<span class="tclas-issue-meta"><?php printf(
-					/* translators: %d: estimated read time in minutes */
-					esc_html__( '%d min read', 'tclas' ),
-					(int) $read_mins
-				); ?></span>
-			</a>
-		</li>
-		<?php
-	}
-}
 ?>
 
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SECTION 1 — Current Issue
+     SECTION 1 — Display Masthead
      ════════════════════════════════════════════════════════════════════════ -->
-<section class="tclas-section tclas-nl-current-section" id="nl-current">
+<div class="tclas-nl-hero">
 	<div class="container-tclas">
+		<div class="tclas-nl-hero__masthead">
+			<span class="tclas-nl-hero__loon"><?php esc_html_e( 'The Loon', 'tclas' ); ?></span>
+			<span class="tclas-nl-hero__amp"> &amp; </span>
+			<span class="tclas-nl-hero__lion"><?php esc_html_e( 'The Lion', 'tclas' ); ?></span>
+		</div>
+		<p class="tclas-nl-hero__sub"><?php esc_html_e( 'The newsletter of the Twin Cities Luxembourg American Society', 'tclas' ); ?></p>
+	</div>
+</div>
 
-		<?php if ( empty( $issue_posts ) ) : ?>
 
-			<!-- Empty state -->
-			<div class="tclas-nl-empty">
-				<p><?php esc_html_e( 'The first issue of the Loon & Lion is on its way. Subscribe below so you don\'t miss it!', 'tclas' ); ?></p>
+<?php if ( ! empty( $issue_posts ) ) : ?>
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 2 — Welcome Letter
+     ════════════════════════════════════════════════════════════════════════ -->
+<?php if ( $welcome_post ) :
+	$_w_byline = $_byline( $welcome_post );
+?>
+<div class="container-tclas tclas-issue-welcome-wrap">
+	<div class="tclas-issue-welcome<?php echo $welcome_cover_id ? ' tclas-issue-welcome--has-cover' : ''; ?>">
+
+		<?php if ( $welcome_cover_id ) : ?>
+		<div class="tclas-issue-welcome__cover">
+			<?php echo get_the_post_thumbnail( $welcome_post->ID, 'large', [ 'alt' => esc_attr( $issue_label ) ] ); ?>
+		</div>
+		<?php endif; ?>
+
+		<article class="tclas-issue-welcome__content">
+			<span class="tclas-eyebrow"><?php echo esc_html( $issue_label ); ?></span>
+			<h2 class="tclas-issue-welcome__title"><?php echo esc_html( get_the_title( $welcome_post ) ); ?></h2>
+			<div class="tclas-issue-welcome__body entry-content">
+				<?php echo apply_filters( 'the_content', $welcome_post->post_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
-
-			<?php else : ?>
-
-			<div class="tclas-issue-layout<?php echo $has_cover ? '' : ' tclas-issue-layout--no-cover'; ?>">
-
-			<!-- LEFT: Masthead + article TOC -->
-			<div class="tclas-issue-toc-col">
-
-				<p class="tclas-nl-current-eyebrow">
-					<?php esc_html_e( 'TCLAS Newsletter', 'tclas' ); ?>
-				</p>
-
-				<h1 class="tclas-issue-masthead tclas-issue-masthead--date">
-					<?php echo esc_html( $issue_label ); ?>
-				</h1>
-
-				<ol class="tclas-issue-toc">
-					<?php foreach ( $issue_posts as $_p ) : tclas_nl_toc_row( $_p, $cover_post_id ); endforeach; ?>
-				</ol>
-
-				<?php if ( $issue_page_url ) : ?>
-				<div class="tclas-nl-view-issue-wrap">
-					<a href="<?php echo esc_url( $issue_page_url ); ?>" class="tclas-nl-view-issue-link">
-						<?php esc_html_e( 'View full issue', 'tclas' ); ?>
-						<svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-					</a>
-				</div>
-				<?php endif; ?>
-
-			</div><!-- .tclas-issue-toc-col -->
-
-			<?php if ( $has_cover ) : ?>
-			<!-- RIGHT: Sticky cover image -->
-			<div class="tclas-issue-cover-col">
-				<div class="tclas-issue-cover-wrap">
-					<a
-						href="<?php echo esc_url( get_permalink( $cover_post_id ) ); ?>"
-						class="tclas-issue-cover-link"
-						aria-hidden="true"
-						tabindex="-1"
-					>
-						<div class="tclas-issue-cover-frame">
-							<?php echo get_the_post_thumbnail(
-								$cover_post_id,
-								'large',
-								[
-									'class' => 'tclas-issue-cover-img',
-									'alt'   => sprintf(
-										/* translators: %s: issue title */
-										__( 'Cover of %s', 'tclas' ),
-										$issue_label
-									),
-								]
-							); ?>
-						</div>
-					</a>
-				</div>
-			</div>
+			<?php if ( $_w_byline ) : ?>
+			<p class="tclas-issue-welcome__byline">— <?php echo esc_html( $_w_byline ); ?></p>
 			<?php endif; ?>
+		</article>
 
-			</div><!-- .tclas-issue-layout -->
-
-			<?php endif; ?>
-
-	</div><!-- .container-tclas -->
-</section>
+	</div>
+</div>
+<?php endif; ?>
 
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SECTION 2 — Browse by Topic
+     SECTION 3 — Current Issue TOC
+     ════════════════════════════════════════════════════════════════════════ -->
+<?php if ( ! empty( $toc_posts ) ) : ?>
+<section class="tclas-section bg-white" aria-label="<?php esc_attr_e( 'Current issue articles', 'tclas' ); ?>">
+	<div class="container-tclas">
+		<h2 class="tclas-issue-toc__heading"><?php esc_html_e( 'In the current issue', 'tclas' ); ?></h2>
+
+		<div class="tclas-issue-toc">
+			<?php foreach ( $toc_posts as $_p ) :
+				$_d       = $_dept( $_p );
+				$_ex      = $_excerpt( $_p, 30 );
+				$_by      = $_byline( $_p );
+				$_has_img = has_post_thumbnail( $_p->ID );
+			?>
+			<article class="tclas-issue-toc__card<?php echo $_has_img ? '' : ' tclas-issue-toc__card--no-img'; ?>">
+				<a href="<?php echo esc_url( get_permalink( $_p->ID ) ); ?>" class="tclas-issue-toc__link">
+
+					<?php if ( $_has_img ) : ?>
+					<div class="tclas-issue-toc__image">
+						<?php echo get_the_post_thumbnail( $_p->ID, 'medium_large', [ 'alt' => '' ] ); ?>
+					</div>
+					<?php endif; ?>
+
+					<div class="tclas-issue-toc__body">
+						<?php if ( $_d['lux'] ) : ?>
+						<span class="tclas-ie-dept-label">
+							<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
+						</span>
+						<?php endif; ?>
+
+						<h3 class="tclas-issue-toc__title"><?php echo esc_html( get_the_title( $_p ) ); ?></h3>
+
+						<?php if ( $_ex ) : ?>
+						<p class="tclas-issue-toc__excerpt"><?php echo esc_html( $_ex ); ?></p>
+						<?php endif; ?>
+
+						<div class="tclas-issue-toc__meta">
+							<?php if ( $_by ) : ?>
+							<span class="tclas-issue-toc__byline"><?php printf( esc_html__( 'By %s', 'tclas' ), esc_html( $_by ) ); ?></span>
+							<?php endif; ?>
+							<?php tclas_members_only_badge( $_p->ID ); ?>
+						</div>
+					</div>
+
+				</a>
+			</article>
+			<?php endforeach; ?>
+		</div>
+
+		<?php if ( $issue_page_url ) : ?>
+		<div class="tclas-nl-view-issue-wrap" style="margin-top: 1.5rem;">
+			<a href="<?php echo esc_url( $issue_page_url ); ?>" class="btn btn-solid-ardoise">
+				<?php esc_html_e( 'Read full issue', 'tclas' ); ?> →
+			</a>
+		</div>
+		<?php endif; ?>
+
+	</div>
+</section>
+<?php endif; ?>
+<?php endif; ?>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SECTION 4 — Browse by Topic
      ════════════════════════════════════════════════════════════════════════ -->
 <?php if ( ! empty( $dept_terms ) ) : ?>
 <section class="tclas-section tclas-nl-topics-section" id="nl-topics" aria-labelledby="tclas-nl-topics-heading">
@@ -261,7 +269,6 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 				href="<?php echo esc_url( $_topic_url ); ?>"
 				class="tclas-nl-topic-card"
 				aria-label="<?php echo esc_attr( sprintf(
-					/* translators: %s: English topic name, e.g. "Community" */
 					__( 'Browse %s articles', 'tclas' ),
 					$_t->description ?: $_t->name
 				) ); ?>"
@@ -270,7 +277,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 					<?php if ( ! empty( $_icon_img['url'] ) ) : ?>
 						<img src="<?php echo esc_url( $_icon_img['url'] ); ?>" alt="" class="tclas-nl-topic-icon-img">
 					<?php else : ?>
-						<?php echo $_svg; // phpcs:ignore WordPress.Security.EscapeOutput — SVG is from code, not user input ?>
+						<?php echo $_svg; // phpcs:ignore WordPress.Security.EscapeOutput ?>
 					<?php endif; ?>
 				</div>
 
@@ -286,15 +293,15 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 				</div>
 			</a>
 			<?php endforeach; ?>
-		</div><!-- .tclas-nl-topics-grid -->
+		</div>
 
-	</div><!-- .container-tclas -->
+	</div>
 </section>
 <?php endif; ?>
 
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SECTION 3 — Email Signup CTA
+     SECTION 5 — Email Signup CTA
      ════════════════════════════════════════════════════════════════════════ -->
 <section class="tclas-section tclas-nl-signup-section" aria-labelledby="tclas-nl-signup-heading">
 	<div class="container-tclas">
@@ -320,13 +327,13 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 				</a>
 			</div>
 
-		</div><!-- .tclas-nl-signup -->
-	</div><!-- .container-tclas -->
+		</div>
+	</div>
 </section>
 
 
 <!-- ══════════════════════════════════════════════════════════════════════════
-     SECTION 4 — Previous Issues + Archive link
+     SECTION 6 — Previous Issues + Archive link
      ════════════════════════════════════════════════════════════════════════ -->
 <?php if ( ! empty( $prev_dates ) ) : ?>
 <section class="tclas-section" id="nl-prev" aria-labelledby="tclas-nl-prev-heading">
@@ -336,96 +343,73 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 			<?php esc_html_e( 'Previous Issues', 'tclas' ); ?>
 		</h2>
 
-		<div class="tclas-nl-prev-list">
-			<?php foreach ( $prev_dates as $_prev_date ) :
+		<?php foreach ( $prev_dates as $_prev_date ) :
+			$_prev_dt    = DateTime::createFromFormat( 'Y-m', $_prev_date );
+			$_prev_label = $_prev_dt ? $_prev_dt->format( 'F Y' ) : $_prev_date;
+			$_prev_posts = get_posts( [
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'meta_query'     => [ [ 'key' => 'tclas_issue_date', 'value' => $_prev_date ] ],
+				'meta_key'       => 'tclas_issue_order',
+				'orderby'        => 'meta_value_num',
+				'order'          => 'ASC',
+			] );
 
-				$_prev_dt    = DateTime::createFromFormat( 'Y-m', $_prev_date );
-				$_prev_label = $_prev_dt ? $_prev_dt->format( 'F Y' ) : $_prev_date;
-				$_prev_posts = get_posts( [
-					'post_type'      => 'post',
-					'post_status'    => 'publish',
-					'posts_per_page' => -1,
-					'meta_query'     => [ [ 'key' => 'tclas_issue_date', 'value' => $_prev_date ] ],
-					'meta_key'       => 'tclas_issue_order',
-					'orderby'        => 'meta_value_num',
-					'order'          => 'ASC',
-				] );
+			if ( empty( $_prev_posts ) ) { continue; }
 
-				if ( empty( $_prev_posts ) ) { continue; }
+			// Custom issue title
+			foreach ( $_prev_posts as $_pp ) {
+				$_ct = get_post_meta( $_pp->ID, 'tclas_issue_title', true );
+				if ( $_ct ) { $_prev_label = $_ct; break; }
+			}
 
-				$_prev_cover = 0;
-				foreach ( $_prev_posts as $_pp ) {
-					$_pp_terms = wp_get_post_terms( $_pp->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
-					if ( in_array( 'main-story', (array) $_pp_terms, true ) && has_post_thumbnail( $_pp->ID ) ) {
-						$_prev_cover = $_pp->ID;
-						break;
-					}
-				}
+			$_prev_url = home_url( '/newsletter/issue/' . rawurlencode( $_prev_date ) . '/' );
+		?>
+		<div class="tclas-archive-issue">
+			<header class="tclas-archive-issue__header">
+				<h3 class="tclas-archive-issue__title">
+					<a href="<?php echo esc_url( $_prev_url ); ?>"><?php echo esc_html( $_prev_label ); ?></a>
+				</h3>
+				<span class="tclas-archive-issue__count"><?php printf(
+					esc_html( _n( '%d article', '%d articles', count( $_prev_posts ), 'tclas' ) ),
+					count( $_prev_posts )
+				); ?></span>
+			</header>
 
-				$_prev_url = home_url( '/newsletter/issue/' . rawurlencode( $_prev_date ) . '/' );
-			?>
-			<div class="tclas-nl-prev-issue">
-				<div class="tclas-nl-prev-issue-grid<?php echo $_prev_cover ? '' : ' tclas-nl-prev-issue-grid--no-cover'; ?>">
-
-					<!-- Articles: 2/3 width -->
-					<div class="tclas-nl-prev-issue-toc">
-						<h3 class="tclas-nl-prev-issue-date"><?php echo esc_html( $_prev_label ); ?></h3>
-
-						<ol class="tclas-issue-toc">
-							<?php foreach ( $_prev_posts as $_pp ) : tclas_nl_toc_row( $_pp, $_prev_cover ); endforeach; ?>
-						</ol>
-
-						<div class="tclas-nl-view-issue-wrap">
-							<a href="<?php echo esc_url( $_prev_url ); ?>" class="tclas-nl-view-issue-link">
-								<?php esc_html_e( 'View full issue', 'tclas' ); ?>
-								<svg aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-							</a>
-						</div>
-					</div>
-
-					<?php if ( $_prev_cover ) : ?>
-					<!-- Cover image: 1/3 width, sticky -->
-					<div class="tclas-nl-prev-issue-cover">
-						<div class="tclas-nl-prev-cover-wrap">
-							<a
-								href="<?php echo esc_url( get_permalink( $_prev_cover ) ); ?>"
-								class="tclas-issue-cover-link"
-								aria-hidden="true"
-								tabindex="-1"
-							>
-								<div class="tclas-issue-cover-frame">
-									<?php echo get_the_post_thumbnail(
-										$_prev_cover,
-										'medium_large',
-										[
-											'class' => 'tclas-issue-cover-img',
-											'alt'   => sprintf(
-												/* translators: %s: issue title */
-												__( 'Cover of %s', 'tclas' ),
-												$_prev_label
-											),
-										]
-									); ?>
-								</div>
-							</a>
-						</div>
-					</div>
-					<?php endif; ?>
-
-				</div><!-- .tclas-nl-prev-issue-grid -->
-			</div><!-- .tclas-nl-prev-issue -->
-			<?php endforeach; ?>
-		</div><!-- .tclas-nl-prev-list -->
+			<ul class="tclas-archive-issue__list">
+				<?php foreach ( $_prev_posts as $_pp ) :
+					$_d  = $_dept( $_pp );
+					$_by = $_byline( $_pp );
+				?>
+				<li>
+					<a href="<?php echo esc_url( get_permalink( $_pp->ID ) ); ?>" class="tclas-archive-article">
+						<?php if ( $_d['lux'] ) : ?>
+						<span class="tclas-ie-dept-label">
+							<span lang="lb"><?php echo esc_html( $_d['lux'] ); ?></span><?php if ( $_d['en'] ) : ?><span class="tclas-ie-dept-label__en"><?php echo esc_html( $_d['en'] ); ?></span><?php endif; ?>
+						</span>
+						<?php endif; ?>
+						<span class="tclas-archive-article__title"><?php echo esc_html( get_the_title( $_pp ) ); ?></span>
+						<?php if ( $_by ) : ?>
+						<span class="tclas-archive-article__byline"><?php printf( esc_html__( 'By %s', 'tclas' ), esc_html( $_by ) ); ?></span>
+						<?php endif; ?>
+						<?php tclas_members_only_badge( $_pp->ID ); ?>
+					</a>
+				</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php endforeach; ?>
 
 		<?php if ( $archive_url ) : ?>
-		<div class="tclas-nl-archive-cta">
-			<a href="<?php echo esc_url( $archive_url ); ?>" class="tclas-nl-archive-link-lg">
-				<?php esc_html_e( 'Explore the full archive', 'tclas' ); ?> &rarr;
+		<div style="margin-top: 1.5rem;">
+			<a href="<?php echo esc_url( $archive_url ); ?>" class="btn btn-outline-ardoise">
+				<?php esc_html_e( 'Explore the full archive', 'tclas' ); ?> →
 			</a>
 		</div>
 		<?php endif; ?>
 
-	</div><!-- .container-tclas -->
+	</div>
 </section>
 <?php endif; ?>
 
