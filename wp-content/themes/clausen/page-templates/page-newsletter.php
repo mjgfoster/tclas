@@ -143,6 +143,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 				<?php if ( $excerpt ) : ?>
 				<p class="tclas-issue-excerpt"><?php echo esc_html( $excerpt ); ?></p>
 				<?php endif; ?>
+				<?php tclas_members_only_badge( $p->ID ); ?>
 				<span class="tclas-issue-meta"><?php printf(
 					/* translators: %d: estimated read time in minutes */
 					esc_html__( '%d min read', 'tclas' ),
@@ -162,13 +163,7 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 <section class="tclas-section tclas-nl-current-section" id="nl-current">
 	<div class="container-tclas">
 
-		<!-- Two-column layout: sidebar (left) + main content (right) -->
-		<div class="tclas-nl-with-sidebar">
-
-			<!-- Sidebar -->
-			<?php get_template_part( 'template-parts/newsletter-sidebar' ); ?>
-
-			<?php if ( empty( $issue_posts ) ) : ?>
+		<?php if ( empty( $issue_posts ) ) : ?>
 
 			<!-- Empty state -->
 			<div class="tclas-nl-empty">
@@ -237,8 +232,6 @@ if ( ! function_exists( 'tclas_nl_toc_row' ) ) {
 			</div><!-- .tclas-issue-layout -->
 
 			<?php endif; ?>
-
-		</div><!-- .tclas-nl-with-sidebar -->
 
 	</div><!-- .container-tclas -->
 </section>

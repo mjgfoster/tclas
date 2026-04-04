@@ -81,3 +81,17 @@ add_filter( 'pmpro_levels_page_content', 'tclas_pmpro_levels_shortcode' );
 
 // Member subscribe/unsubscribe sync is handled by FuseWP → Brevo.
 // No custom Mailchimp hooks needed.
+
+/**
+ * Disable PMPro's per-post content restriction for posts.
+ *
+ * The theme handles article-level gating via the _tclas_members_only
+ * meta field, which shows a branded teaser + gate instead of PMPro's
+ * generic paywall. This prevents the two systems from conflicting.
+ */
+add_filter( 'pmpro_has_membership_access_filter', function ( $hasaccess, $mypost, $myuser, $post_membership_levels ) {
+	if ( $mypost && 'post' === get_post_type( $mypost->ID ) ) {
+		return true; // Always grant access at the PMPro level; our template handles gating.
+	}
+	return $hasaccess;
+}, 10, 4 );

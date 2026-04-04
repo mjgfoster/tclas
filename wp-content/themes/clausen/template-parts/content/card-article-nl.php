@@ -15,10 +15,11 @@ if ( $issue_date ) {
 	$issue_label = $dt ? $dt->format( 'F Y' ) : esc_html( $issue_date );
 }
 
-// Get author (unless hidden via ACF checkbox)
-$hide_byline = get_post_meta( get_the_ID(), 'tclas_hide_byline', true );
-$author = $hide_byline ? '' : get_the_author();
-$author_url = $hide_byline ? '' : get_author_posts_url( get_the_author_meta( 'ID' ) );
+// Get author (custom byline field takes priority, then WP author, hidden if flagged)
+$hide_byline   = get_post_meta( get_the_ID(), 'tclas_hide_byline', true );
+$custom_byline = get_post_meta( get_the_ID(), 'tclas_byline', true );
+$author     = $hide_byline ? '' : ( $custom_byline ? $custom_byline : get_the_author() );
+$author_url = ( $hide_byline || $custom_byline ) ? '' : get_author_posts_url( get_the_author_meta( 'ID' ) );
 ?>
 <article class="tclas-card tclas-card--accented">
 	<div class="tclas-card__image">

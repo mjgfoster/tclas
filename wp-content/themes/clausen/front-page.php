@@ -198,6 +198,7 @@ foreach ( $_nl_posts as $_nlp ) {
 						</span>
 						<?php endif; ?>
 						<span class="tclas-nl-preview__article-title"><?php echo esc_html( get_the_title( $_nlp ) ); ?></span>
+						<?php tclas_members_only_badge( $_nlp->ID ); ?>
 					</a>
 				</li>
 				<?php endforeach; ?>

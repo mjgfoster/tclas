@@ -292,6 +292,24 @@ function tclas_is_member(): bool {
 }
 
 /**
+ * Output a "Members only" badge (lock icon + label).
+ *
+ * Call with a post ID; outputs nothing if the post isn't members-only.
+ *
+ * @param int $post_id  Post ID to check.
+ */
+function tclas_members_only_badge( int $post_id ): void {
+	if ( ! get_post_meta( $post_id, '_tclas_members_only', true ) ) {
+		return;
+	}
+	$icon = '<svg aria-hidden="true" focusable="false" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+	echo '<span class="tclas-members-badge">';
+	echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo '<span>' . esc_html__( 'Members', 'tclas' ) . '</span>';
+	echo '</span>';
+}
+
+/**
  * Is the current page part of the members-only area?
  *
  * Used to conditionally display the member navigation bar.

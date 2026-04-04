@@ -38,8 +38,12 @@ while ( have_posts() ) :
 		$issue_title = $ts ? date_i18n( 'F Y', $ts ) : $issue_date;
 	}
 
-	$is_newsletter = ! empty( $issue_date );
-	$hide_byline   = get_post_meta( get_the_ID(), 'tclas_hide_byline', true );
+	$is_newsletter  = ! empty( $issue_date );
+	$hide_byline    = get_post_meta( get_the_ID(), 'tclas_hide_byline', true );
+	$custom_byline  = get_post_meta( get_the_ID(), 'tclas_byline', true );
+	$author_name    = $custom_byline ? $custom_byline : get_the_author();
+	$is_members_only = (bool) get_post_meta( get_the_ID(), '_tclas_members_only', true );
+	$can_read        = ! $is_members_only || tclas_is_member();
 
 	// ── Featured image caption ──────────────────────────────────────────────
 	$thumb_id = get_post_thumbnail_id();
@@ -51,16 +55,10 @@ while ( have_posts() ) :
 	// ════════════════════════════════════════════════════════════════════════
 ?>
 
-<!-- ── Body: sidebar + article ───────────────────────────────────────────── -->
+<!-- ── Article body ────────────────────────────────────────────────────────── -->
 <section class="tclas-section bg-white">
-	<div class="container-tclas">
-		<div class="tclas-nl-with-sidebar">
-
-			<!-- Left sidebar (newsletter navigation) -->
-			<?php get_template_part( 'template-parts/newsletter-sidebar' ); ?>
-
-			<!-- Article content column -->
-			<article class="tclas-article-body">
+	<div class="container-tclas container--medium">
+		<article class="tclas-article-body">
 
 				<!-- Article header -->
 				<header class="tclas-article-body__header">
@@ -81,6 +79,7 @@ while ( have_posts() ) :
 						<?php endif; ?>
 					</div>
 					<?php endif; ?>
+					<?php tclas_members_only_badge( get_the_ID() ); ?>
 
 					<h1 class="tclas-article-body__title"><?php the_title(); ?></h1>
 				</header>
@@ -95,9 +94,26 @@ while ( have_posts() ) :
 				</figure>
 				<?php endif; ?>
 
+				<?php if ( $can_read ) : ?>
 				<div class="entry-content">
 					<?php the_content(); ?>
 				</div>
+				<?php else : ?>
+				<div class="entry-content">
+					<p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 50, '&hellip;' ) ); ?></p>
+				</div>
+				<aside class="tclas-member-gate" aria-label="<?php esc_attr_e( 'Members-only content', 'tclas' ); ?>">
+					<div class="tclas-member-gate__icon" aria-hidden="true">
+						<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+					</div>
+					<h2 class="tclas-member-gate__title"><?php esc_html_e( 'This article is for TCLAS members', 'tclas' ); ?></h2>
+					<p class="tclas-member-gate__desc"><?php esc_html_e( 'Join the Twin Cities Luxembourg American Society to read this and other members-only content, access the member directory, and connect with your Luxembourg heritage.', 'tclas' ); ?></p>
+					<div class="tclas-member-gate__actions">
+						<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary"><?php esc_html_e( 'Join TCLAS', 'tclas' ); ?></a>
+						<a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>" class="btn btn-secondary"><?php esc_html_e( 'Member log in', 'tclas' ); ?></a>
+					</div>
+				</aside>
+				<?php endif; ?>
 
 				<!-- More from this issue ──────────────────────────────── -->
 				<?php
@@ -160,7 +176,6 @@ while ( have_posts() ) :
 
 			</article><!-- .tclas-article-body -->
 
-		</div><!-- .tclas-nl-with-sidebar -->
 	</div><!-- .container-tclas -->
 </section>
 
@@ -201,7 +216,7 @@ while ( have_posts() ) :
 				<?php printf(
 					/* translators: 1: author name, 2: published date, 3: reading time in minutes */
 					esc_html__( 'By %1$s · Posted %2$s · %3$s minute read', 'tclas' ),
-					esc_html( get_the_author() ),
+					esc_html( $author_name ),
 					esc_html( get_the_date() ),
 					(int) $minutes
 				); ?>
