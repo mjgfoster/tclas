@@ -43,7 +43,7 @@ function tclas_hub_dashboard_cards(): array {
 			'color' => 'aigue',
 			'content' => __( 'Search and connect with fellow TCLAS members.', 'tclas' ),
 			'link'  => home_url( '/member-hub/profiles/' ),
-			'link_label' => __( 'Browse profiles →', 'tclas' ),
+			'link_label' => __( 'Browse directory →', 'tclas' ),
 		],
 		[
 			'title' => __( 'Documents & resources', 'tclas' ),

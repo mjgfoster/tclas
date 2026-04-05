@@ -5793,6 +5793,28 @@ input[type=radio] {
   margin: 0;
 }
 
+/* Member hub pages — dark header */
+.is-member-page .tclas-page-header {
+  background: var(--c-ardoise-dk);
+  padding: 2.5rem 0 2rem;
+}
+.is-member-page .tclas-page-header__title {
+  color: #fff;
+}
+.is-member-page .tclas-page-header__title-en {
+  color: rgba(255, 255, 255, 0.6);
+}
+.is-member-page .tclas-page-header .tclas-breadcrumb,
+.is-member-page .tclas-page-header .tclas-breadcrumb a {
+  color: rgba(255, 255, 255, 0.6);
+}
+.is-member-page .tclas-page-header .tclas-breadcrumb a:hover {
+  color: #fff;
+}
+.is-member-page .tclas-page-header .tclas-breadcrumb__current {
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .tclas-page-header__title-en {
   display: inline;
   margin-left: 0.5em;

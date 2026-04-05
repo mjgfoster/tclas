@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Member Profiles
+ * Template Name: Member Directory
  *
  * Handles both the member directory (/member-hub/profiles/) and individual
  * profile pages (/member-hub/profiles/{username}/).
@@ -22,7 +22,7 @@ if ( ! tclas_is_member() ) :
 ?>
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
+		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Directory', 'tclas' ); ?></h1>
 	</div>
 </div>
 <section class="tclas-section">
@@ -64,7 +64,7 @@ if ( $profile_username ) :
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
-			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
+			← <?php esc_html_e( 'Member Directory', 'tclas' ); ?>
 		</a>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Profile not found', 'tclas' ); ?></h1>
 	</div>
@@ -92,7 +92,7 @@ if ( $profile_username ) :
 <div class="tclas-page-header">
 	<div class="container-tclas">
 		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
-			← <?php esc_html_e( 'Member Profiles', 'tclas' ); ?>
+			← <?php esc_html_e( 'Member Directory', 'tclas' ); ?>
 		</a>
 		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Profile not available', 'tclas' ); ?></h1>
 	</div>
@@ -119,24 +119,33 @@ if ( $profile_username ) :
 ?>
 
 <!-- ── Page header ─────────────────────────────────────────────────────── -->
-<div class="tclas-page-header">
+<?php
+// Breadcrumb: Home > Member hub > Directory > name or "My Member Profile"
+$_bc_title = $is_own_profile ? __( 'My Member Profile', 'tclas' ) : $p['display_name'];
+echo '<div class="tclas-page-header"><div class="container-tclas">';
+echo '<nav class="tclas-breadcrumb" aria-label="' . esc_attr__( 'Breadcrumb', 'tclas' ) . '">';
+echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'tclas' ) . '</a>';
+echo '<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>';
+echo '<a href="' . esc_url( home_url( '/member-hub/' ) ) . '">' . esc_html__( 'Member hub', 'tclas' ) . '</a>';
+echo '<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>';
+echo '<a href="' . esc_url( home_url( '/member-hub/profiles/' ) ) . '">' . esc_html__( 'Directory', 'tclas' ) . '</a>';
+echo '<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>';
+echo '<span class="tclas-breadcrumb__current" aria-current="page">' . esc_html( $_bc_title ) . '</span>';
+echo '</nav>';
+?>
+	<h1 class="tclas-page-header__title"><?php echo esc_html( $is_own_profile ? __( 'My Member Profile', 'tclas' ) : __( 'Member Profile', 'tclas' ) ); ?></h1>
+</div></div>
+
+<!-- ── Profile intro (below header, light background) ─────────────────── -->
+<section class="tclas-section tclas-section--sm">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb( __( 'Member Profiles', 'tclas' ) ); ?>
-		<h1 class="tclas-page-header__title"><?php echo esc_html( $p['display_name'] ); ?></h1>
+		<div class="tclas-profile-intro">
+			<h2 class="tclas-profile-intro__name"><?php echo esc_html( $p['display_name'] ); ?></h2>
 
-		<?php // Edit button (own profile) ?>
-		<?php if ( $is_own_profile ) : ?>
-			<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-primary btn-sm" style="margin-bottom: 1.5rem;">
-				<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
-			</a>
-		<?php endif; ?>
-
-		<?php // Membership meta line. ?>
-		<p class="tclas-page-header__membership">
+			<?php // Membership meta line. ?>
 			<?php
 			$meta_parts = [];
 			if ( $p['membership_level'] && $p['member_since'] ) {
-				/* translators: %1$s = level name, %2$s = year */
 				$meta_parts[] = sprintf( __( '%1$s member since %2$s', 'tclas' ), esc_html( $p['membership_level'] ), esc_html( $p['member_since'] ) );
 			} elseif ( $p['membership_level'] ) {
 				$meta_parts[] = esc_html( $p['membership_level'] ) . ' ' . __( 'member', 'tclas' );
@@ -147,40 +156,48 @@ if ( $profile_username ) :
 			if ( ! empty( $p['pronouns'] ) ) {
 				$meta_parts[] = esc_html( $p['pronouns'] );
 			}
-			echo implode( ' · ', $meta_parts );
+			if ( ! empty( $meta_parts ) ) :
 			?>
-		</p>
+			<p class="tclas-profile-intro__meta"><?php echo implode( ' · ', $meta_parts ); ?></p>
+			<?php endif; ?>
 
-		<?php // Badges. ?>
-		<?php
-		$badge_reg    = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
-		$active_slugs = $p['badges'] ?? [];
-		$has_public_badges = false;
-		foreach ( $active_slugs as $_s ) {
-			if ( isset( $badge_reg[ $_s ] ) && ( $badge_reg[ $_s ]['public'] ?? true ) ) {
-				$has_public_badges = true;
-				break;
+			<?php // Badges. ?>
+			<?php
+			$badge_reg    = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
+			$active_slugs = $p['badges'] ?? [];
+			$has_public_badges = false;
+			foreach ( $active_slugs as $_s ) {
+				if ( isset( $badge_reg[ $_s ] ) && ( $badge_reg[ $_s ]['public'] ?? true ) ) {
+					$has_public_badges = true;
+					break;
+				}
 			}
-		}
-		?>
-		<?php if ( $has_public_badges ) : ?>
-			<div class="tclas-profile-badges">
-				<?php foreach ( $active_slugs as $slug ) :
-					if ( ! isset( $badge_reg[ $slug ] ) ) continue;
-					$_def = $badge_reg[ $slug ];
-					if ( ! ( $_def['public'] ?? true ) ) continue;
-				?>
-					<span class="tclas-badge tclas-badge--member-badge">
-						<i class="bi <?php echo esc_attr( $_def['icon'] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $_def['label'] ); ?>
-					</span>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
+			?>
+			<?php if ( $has_public_badges ) : ?>
+				<div class="tclas-profile-badges">
+					<?php foreach ( $active_slugs as $slug ) :
+						if ( ! isset( $badge_reg[ $slug ] ) ) continue;
+						$_def = $badge_reg[ $slug ];
+						if ( ! ( $_def['public'] ?? true ) ) continue;
+					?>
+						<span class="tclas-badge tclas-badge--member-badge">
+							<i class="bi <?php echo esc_attr( $_def['icon'] ); ?>" aria-hidden="true"></i> <?php echo esc_html( $_def['label'] ); ?>
+						</span>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $is_own_profile ) : ?>
+				<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-primary btn-sm" style="margin-top: 0.75rem;">
+					<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
+				</a>
+			<?php endif; ?>
+		</div>
 	</div>
-</div>
+</section>
 
 <!-- ── Two-column profile layout ───────────────────────────────────────── -->
-<section class="tclas-section tclas-section--sm">
+<section class="tclas-section tclas-section--sm" style="padding-top: 0;">
 	<div class="container-tclas">
 
 		<div class="tclas-profile-view">
@@ -393,8 +410,8 @@ else :
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb( __( 'Member Profiles', 'tclas' ) ); ?>
-		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Profiles', 'tclas' ); ?></h1>
+		<?php tclas_breadcrumb( __( 'Member Directory', 'tclas' ) ); ?>
+		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Member Directory', 'tclas' ); ?></h1>
 	</div>
 </div>
 
@@ -471,39 +488,15 @@ else :
 							alt="<?php echo esc_attr( $m['display_name'] ); ?>"
 							class="tclas-dir-card__img"
 							loading="lazy"
-							width="80"
-							height="80"
+							width="180"
+							height="180"
 						>
 					</div>
 					<div class="tclas-dir-card__body">
-						<p class="tclas-dir-card__name">
-							<?php echo esc_html( $m['display_name'] ); ?>
-							<?php if ( ! empty( $m['pronouns'] ) ) : ?>
-								<span class="tclas-dir-card__pronouns"><?php echo esc_html( $m['pronouns'] ); ?></span>
-							<?php endif; ?>
-						</p>
+						<p class="tclas-dir-card__name"><?php echo esc_html( $m['display_name'] ); ?></p>
 						<?php if ( $m['city'] ) : ?>
 							<p class="tclas-dir-card__city"><?php echo esc_html( $m['city'] ); ?></p>
 						<?php endif; ?>
-						<div class="tclas-dir-card__indicators">
-							<?php
-							$_card_badge_reg = function_exists( 'tclas_badge_registry' ) ? tclas_badge_registry() : [];
-							foreach ( $m['badges'] ?? [] as $_card_badge ) :
-								// Directory builder stores ['key'=>...,'label'=>...]; normalize to slug string.
-								$_card_slug = is_array( $_card_badge ) ? ( $_card_badge['key'] ?? '' ) : $_card_badge;
-								if ( ! $_card_slug || ! isset( $_card_badge_reg[ $_card_slug ] ) ) continue;
-								$_card_def = $_card_badge_reg[ $_card_slug ];
-								if ( ! ( $_card_def['public'] ?? true ) ) continue;
-							?>
-								<span class="tclas-badge tclas-badge--member-badge tclas-badge--sm" title="<?php echo esc_attr( $_card_def['label'] ); ?>"><i class="bi <?php echo esc_attr( $_card_def['icon'] ); ?>" aria-hidden="true"></i></span>
-							<?php endforeach; ?>
-							<?php if ( $m['has_ancestors'] ) : ?>
-								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--ancestors" title="<?php esc_attr_e( 'Has ancestors on the map', 'tclas' ); ?>"><i class="bi bi-map-fill" aria-hidden="true"></i></span>
-							<?php endif; ?>
-							<?php if ( $m['has_bio'] ) : ?>
-								<span class="tclas-dir-card__indicator tclas-dir-card__indicator--bio" title="<?php esc_attr_e( 'Has filled out a bio', 'tclas' ); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
-							<?php endif; ?>
-						</div>
 					</div>
 				</a>
 				<?php endforeach; ?>

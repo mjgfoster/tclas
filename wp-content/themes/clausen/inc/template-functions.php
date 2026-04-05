@@ -340,6 +340,15 @@ function tclas_is_member_page(): bool {
 	return false;
 }
 
+// ── Body class for member pages ───────────────────────────────────────────
+
+add_filter( 'body_class', function ( array $classes ): array {
+	if ( tclas_is_member_page() ) {
+		$classes[] = 'is-member-page';
+	}
+	return $classes;
+} );
+
 // ── Newsletter page detection ─────────────────────────────────────────────
 
 /**

@@ -196,10 +196,6 @@ details[open] .tclas-field-privacy__toggle::before {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 2rem;
-  padding: 1rem 1.25rem;
-  background: var(--c-white);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius);
 }
 
 .tclas-dir-filter-input {
@@ -285,8 +281,8 @@ details[open] .tclas-field-privacy__toggle::before {
 }
 
 .tclas-dir-card__img {
-  width: 80px;
-  height: 80px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--c-border);
@@ -301,10 +297,11 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-dir-card__name {
   font-family: var(--font-sans);
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--c-ardoise);
   margin: 0 0 0.2rem;
+  white-space: nowrap;
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -320,7 +317,7 @@ details[open] .tclas-field-privacy__toggle::before {
 
 .tclas-dir-card__city {
   font-family: var(--font-sans);
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   color: var(--c-muted);
   margin: 0 0 0.5rem;
 }
@@ -350,6 +347,15 @@ details[open] .tclas-field-privacy__toggle::before {
   font-size: var(--text-md);
   color: var(--c-muted);
   margin: 0.25rem 0 0.6rem;
+}
+
+.tclas-profile-intro__name {
+  color: var(--c-ardoise);
+  margin: 0 0 0.25rem;
+}
+.tclas-profile-intro__meta {
+  color: var(--c-muted);
+  margin: 0 0 0.5rem;
 }
 
 .tclas-profile-badges {
