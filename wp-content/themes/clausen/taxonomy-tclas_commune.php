@@ -256,12 +256,8 @@ wp_enqueue_script( 'leaflet' );
 							$seen[ $u->ID ] = true;
 						?>
 						<li class="tclas-surname-group__member">
-							<?php echo get_avatar( $u->ID, 36, '', '', [ 'class' => 'tclas-surname-group__avatar' ] ); ?>
-							<span class="tclas-surname-group__name"><?php echo esc_html( $u->display_name ); ?></span>
 							<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' . rawurlencode( $u->user_login ) . '/' ) ); ?>"
-							   class="tclas-surname-group__link">
-								<?php esc_html_e( 'View profile', 'tclas' ); ?> &rarr;
-							</a>
+							   class="tclas-surname-group__link"><?php echo esc_html( $u->display_name ); ?></a>
 						</li>
 						<?php endforeach; ?>
 					</ul>
@@ -274,12 +270,8 @@ wp_enqueue_script( 'leaflet' );
 					<ul class="tclas-surname-group__list">
 						<?php foreach ( $ungrouped as $u ) : ?>
 						<li class="tclas-surname-group__member">
-							<?php echo get_avatar( $u->ID, 36, '', '', [ 'class' => 'tclas-surname-group__avatar' ] ); ?>
-							<span class="tclas-surname-group__name"><?php echo esc_html( $u->display_name ); ?></span>
 							<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' . rawurlencode( $u->user_login ) . '/' ) ); ?>"
-							   class="tclas-surname-group__link">
-								<?php esc_html_e( 'View profile', 'tclas' ); ?> &rarr;
-							</a>
+							   class="tclas-surname-group__link"><?php echo esc_html( $u->display_name ); ?></a>
 						</li>
 						<?php endforeach; ?>
 					</ul>

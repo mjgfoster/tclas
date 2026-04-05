@@ -390,11 +390,12 @@ function tclas_get_member_nav_links(): array {
 	$profile_url = home_url( '/member-hub/profiles/' . rawurlencode( $user->user_nicename ) . '/' );
 
 	return [
-		[ 'label' => __( 'Dashboard', 'tclas' ), 'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
-		[ 'label' => __( 'Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
-		[ 'label' => __( 'Documents', 'tclas' ), 'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
-		[ 'label' => __( 'My Profile', 'tclas' ), 'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
-		[ 'label' => __( 'Forum',     'tclas' ), 'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
+		[ 'label' => __( 'Member Hub', 'tclas' ),       'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
+		[ 'label' => __( 'My Member Profile', 'tclas' ),'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
+		[ 'label' => __( 'Member Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
+		[ 'label' => __( 'Ancestral Map', 'tclas' ),    'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
+		[ 'label' => __( 'Documents', 'tclas' ),        'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
+		[ 'label' => __( 'Forum',     'tclas' ),        'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
 		[ 'label' => __( 'Map',       'tclas' ), 'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
 	];
 }
