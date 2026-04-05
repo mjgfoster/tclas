@@ -48,20 +48,13 @@ get_header();
 						$email = function_exists( 'get_field' ) ? get_field( 'board_email' ) : '';
 						?>
 						<div class="tclas-board-card">
-							<?php if ( has_post_thumbnail() ) : ?>
-								<div class="tclas-board-card__photo">
-									<?php the_post_thumbnail( 'tclas-square', [ 'class' => 'tclas-board-card__img', 'alt' => get_the_title() ] ); ?>
-								</div>
-							<?php else : ?>
-								<div class="tclas-board-card__photo tclas-illustration-placeholder" aria-hidden="true"></div>
-							<?php endif; ?>
 							<div class="tclas-board-card__info">
 								<strong class="tclas-board-card__name"><?php the_title(); ?></strong>
 								<?php if ( $role ) : ?>
 									<span class="tclas-board-card__role"><?php echo esc_html( $role ); ?></span>
 								<?php endif; ?>
 								<?php if ( $email ) : ?>
-									<a href="mailto:<?php echo esc_attr( $email ); ?>" class="tclas-board-card__email">
+									<a href="mailto:<?php echo esc_attr( $email ); ?>">
 										<?php echo esc_html( $email ); ?>
 									</a>
 								<?php endif; ?>

@@ -5892,7 +5892,7 @@ input[type=radio] {
 }
 
 .tclas-step__title {
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   font-weight: 700;
   color: var(--c-ardoise);
   margin-bottom: 0.25rem;
@@ -5998,14 +5998,12 @@ input[type=radio] {
   color: var(--c-body-text);
 }
 
-.tclas-join-intro .container-tclas {
-  text-align: center;
+.tclas-join-intro {
+  padding-top: 0;
 }
 
 .tclas-join-lede {
   font-size: var(--text-lg);
-  max-width: 48ch;
-  margin: 0 auto;
 }
 
 .tclas-join-cta .container-tclas {
@@ -6049,11 +6047,9 @@ input[type=radio] {
 }
 .tclas-join-referral__text h2 {
   margin: 0 0 0.5rem;
-  font-size: 1.35rem;
 }
 .tclas-join-referral__text p {
   margin: 0;
-  font-size: var(--text-md);
 }
 .tclas-join-referral__action {
   flex-shrink: 0;
@@ -6101,11 +6097,9 @@ input[type=radio] {
   margin-top: 2rem;
 }
 .tclas-join-perks h3 {
-  font-size: var(--text-md);
   margin-bottom: 0.4rem;
 }
 .tclas-join-perks p {
-  font-size: var(--text-md);
   color: var(--c-muted);
   margin: 0;
   line-height: 1.6;
@@ -6141,11 +6135,10 @@ input[type=radio] {
   margin-top: 1.5rem;
 }
 .tclas-join-features h3 {
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   margin-bottom: 0.35rem;
 }
 .tclas-join-features p {
-  font-size: var(--text-md);
   color: var(--c-muted);
   margin: 0;
 }
@@ -6475,8 +6468,6 @@ input[type=radio] {
 }
 
 .tclas-about-layout__sidebar-title {
-  font-size: 1.25rem;
-  color: var(--c-ardoise);
   margin: 0 0 1rem;
 }
 
@@ -6488,23 +6479,7 @@ input[type=radio] {
 
 .tclas-board-card {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.tclas-board-card__photo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: var(--c-or-pale);
-}
-
-.tclas-board-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  flex-direction: column;
 }
 
 .tclas-board-card__info {
@@ -6513,22 +6488,12 @@ input[type=radio] {
 }
 
 .tclas-board-card__name {
-  font-size: var(--text-md);
-  color: var(--c-ardoise);
+  font-size: var(--text-lg);
 }
 
 .tclas-board-card__role {
-  font-size: var(--text-sm);
+  font-style: italic;
   color: var(--c-muted);
-}
-
-.tclas-board-card__email {
-  font-size: var(--text-sm);
-  color: var(--c-crimson);
-  text-decoration: none;
-}
-.tclas-board-card__email:hover {
-  text-decoration: underline;
 }
 
 .tclas-issue-group {
@@ -8082,12 +8047,12 @@ input[type=radio] {
 
 .tclas-doc-item__name {
   font-weight: 700;
-  font-size: var(--text-md);
+  font-size: var(--text-lg);
   display: block;
 }
 
 .tclas-doc-item__meta {
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   color: var(--c-muted);
   margin-top: 0.1rem;
   display: flex;

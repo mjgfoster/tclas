@@ -11,6 +11,12 @@
  * @package TCLAS
  */
 
+// Members go straight to the full map (skip the marketing page).
+if ( function_exists( 'tclas_is_member' ) && tclas_is_member() && empty( $_GET['preview'] ) ) {
+	wp_safe_redirect( home_url( '/member-hub/ancestral-map/' ), 302 );
+	exit;
+}
+
 get_header();
 ?>
 

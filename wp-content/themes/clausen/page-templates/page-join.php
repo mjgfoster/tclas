@@ -40,16 +40,16 @@ $is_member    = tclas_is_member();
 
 <!-- ── Intro ─────────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-join-intro">
-	<div class="container-tclas container--medium">
+	<div class="container-tclas">
 		<?php
 		$join_lede = function_exists( 'get_field' ) ? get_field( 'join_lede' ) : '';
 		if ( $join_lede ) {
 			echo '<div class="tclas-join-lede">' . wp_kses_post( $join_lede ) . '</div>';
 		} else {
 		?>
-		<p class="tclas-join-lede">
-			<?php esc_html_e( 'Whether your Luxembourg story goes back five generations or five months &mdash; or you simply married into one &mdash; you belong here. Membership connects you to a warm, curious community that spans the Atlantic.', 'tclas' ); ?>
-		</p>
+		<div class="tclas-join-lede">
+			<p><?php esc_html_e( 'Whether your Luxembourg story goes back five generations or five months — or you simply married into one — you belong here. Membership connects you to a warm, curious community that spans the Atlantic.', 'tclas' ); ?></p>
+		</div>
 		<?php } ?>
 	</div>
 </section>
