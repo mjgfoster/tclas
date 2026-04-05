@@ -9045,89 +9045,136 @@ input:disabled + .tclas-toggle__slider::before {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   WP Recipe Maker — theme integration
-   Override plugin defaults to match Clausen typography and colors.
+   Recipe card (clean markup from inc/wprm-template.php)
    ═══════════════════════════════════════════════════════════════════════════ */
-.wprm-recipe {
-  font-family: var(--font-serif) !important;
-  font-size: 1.25rem !important;
-  line-height: 1.8 !important;
-  color: #2D3436 !important;
-  background-color: var(--c-or-pale) !important;
-  border: 1px solid var(--c-border) !important;
-  border-radius: var(--radius) !important;
-  max-width: none !important;
-  padding: 2rem !important;
+.tclas-recipe {
+  margin: 2rem 0;
 }
-.wprm-recipe p,
-.wprm-recipe li {
-  font-family: var(--font-serif) !important;
-  font-size: 1em !important;
-  line-height: 1.8 !important;
-  color: #2D3436 !important;
+.tclas-recipe__title {
+  font-family: var(--font-sans);
+  color: var(--c-ardoise);
+  margin: 0 0 0.75rem;
 }
-.wprm-recipe a {
-  color: var(--c-crimson) !important;
+.tclas-recipe__summary {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: #2D3436;
+  margin-bottom: 1.25rem;
 }
-.wprm-recipe a:hover {
-  color: var(--c-crimson-dk) !important;
+.tclas-recipe__image {
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
-.wprm-recipe .wprm-recipe-name,
-.wprm-recipe .wprm-recipe-header,
-.wprm-recipe h1,
-.wprm-recipe h2,
-.wprm-recipe h3,
-.wprm-recipe h4,
-.wprm-recipe h5,
-.wprm-recipe h6 {
-  font-family: var(--font-sans) !important;
-  color: var(--c-ardoise) !important;
-  line-height: 1.3 !important;
+.tclas-recipe__image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
-.wprm-recipe .wprm-recipe-header * {
-  font-family: var(--font-sans) !important;
+.tclas-recipe__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--c-border);
+  border-bottom: 1px solid var(--c-border);
 }
-.wprm-recipe .wprm-recipe-block-header {
-  color: var(--c-ardoise) !important;
+.tclas-recipe__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
-.wprm-recipe .wprm-recipe-meta-container {
-  font-family: var(--font-sans) !important;
-  font-size: var(--text-md) !important;
-  color: var(--c-muted) !important;
+.tclas-recipe__meta-item dt {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
 }
-.wprm-recipe .wprm-recipe-meta-container .wprm-recipe-time {
-  color: var(--c-body-text) !important;
+.tclas-recipe__meta-item dd {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  color: var(--c-body-text);
+  margin: 0;
 }
-.wprm-recipe .wprm-recipe-summary {
+.tclas-recipe__section {
+  margin-bottom: 1.75rem;
+}
+.tclas-recipe__section:last-child {
+  margin-bottom: 0;
+}
+.tclas-recipe__section-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  color: var(--c-ardoise);
+  margin: 0 0 0.75rem;
+}
+.tclas-recipe__group-title {
+  font-family: var(--font-sans);
+  color: var(--c-body-text);
+  margin: 1rem 0 0.5rem;
+}
+.tclas-recipe__ingredients {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  color: #2D3436;
+  line-height: 1.8;
+}
+.tclas-recipe__ingredients li {
+  margin-bottom: 0.25rem;
+}
+.tclas-recipe__ing-note {
+  color: var(--c-muted);
   font-style: italic;
 }
-.wprm-recipe .wprm-toggle-switch,
-.wprm-recipe .wprm-recipe-servings-changer {
-  font-family: var(--font-sans) !important;
+.tclas-recipe__instructions {
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: #2D3436;
+  line-height: 1.8;
 }
-.wprm-recipe .wprm-recipe-instruction-tip {
-  background: rgba(43, 98, 130, 0.06) !important;
-  border-left: 3px solid var(--c-ardoise) !important;
-  border-radius: 0 var(--radius) var(--radius) 0 !important;
-  padding: 0.75rem 1rem !important;
-  margin: 0.75rem 0 !important;
+.tclas-recipe__instructions li {
+  margin-bottom: 0.75rem;
+}
+.tclas-recipe__instructions li::marker {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--c-ardoise);
+}
+.tclas-recipe__tip {
+  list-style: none;
+  background: rgba(43, 98, 130, 0.06);
+  border-left: 3px solid var(--c-ardoise);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0 0.75rem -1.5rem;
   font-style: italic;
 }
-.wprm-recipe .wprm-recipe-print,
-.wprm-recipe .wprm-recipe-pin {
-  font-family: var(--font-sans) !important;
-  background: var(--c-ardoise) !important;
-  color: #fff !important;
-  border-radius: var(--radius) !important;
-  border: none !important;
-  padding: 0.5rem 1.2rem !important;
-  font-weight: 700 !important;
-  font-size: var(--text-md) !important;
-  transition: background 0.15s, transform 0.15s, box-shadow 0.15s !important;
+.tclas-recipe__step-image {
+  margin-top: 0.75rem;
+  border-radius: calc(var(--radius) / 2);
+  overflow: hidden;
 }
-.wprm-recipe .wprm-recipe-print:hover,
-.wprm-recipe .wprm-recipe-pin:hover {
-  background: var(--c-ardoise-dk) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.tclas-recipe__step-image img {
+  max-width: 100%;
+  height: auto;
+}
+.tclas-recipe__notes {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: #2D3436;
+  line-height: 1.8;
+}
+.tclas-recipe__notes a {
+  color: var(--c-crimson);
+}
+.tclas-recipe__notes a:hover {
+  color: var(--c-crimson-dk);
 }

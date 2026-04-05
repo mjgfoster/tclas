@@ -409,7 +409,7 @@
 
 				const leftTitle = document.createElement('h4');
 				leftTitle.className = 'cq_demo_title';
-				leftTitle.innerHTML = '✓ Male Line';
+				leftTitle.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i> Male Line';
 				leftCol.appendChild(leftTitle);
 
 				const leftDemoEl = document.createElement('div');
@@ -417,32 +417,32 @@
 				leftDemoEl.innerHTML = `
 					<div class="cq_demo_gen">
 						<div class="cq_demo_person cq_demo_person--ancestor">
-							<span class="cq_demo_icon">👨</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>Grandfather</span>
 							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
 						</div>
 					</div>
 					<div class="cq_demo_arrow cq_demo_arrow--valid">
-						<span class="cq_demo_arrow__label">✓ passes</span>
+						<span class="cq_demo_arrow__label"><i class="bi bi-check-lg"></i> passes</span>
 					</div>
 					<div class="cq_demo_gen">
 						<div class="cq_demo_person">
-							<span class="cq_demo_icon">👨</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>Father</span>
 							<span class="cq_demo_year">b. 1950</span>
 						</div>
 					</div>
 					<div class="cq_demo_arrow cq_demo_arrow--valid">
-						<span class="cq_demo_arrow__label">✓ passes</span>
+						<span class="cq_demo_arrow__label"><i class="bi bi-check-lg"></i> passes</span>
 					</div>
 					<div class="cq_demo_gen">
 						<div class="cq_demo_person cq_demo_person--you">
-							<span class="cq_demo_icon">🧑</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>You</span>
 							<span class="cq_demo_year">b. 1980</span>
 						</div>
 					</div>
-					<div class="cq_demo_outcome">✓ Eligible</div>
+					<div class="cq_demo_outcome"><i class="bi bi-check-lg"></i> Eligible</div>
 				`;
 				leftCol.appendChild(leftDemoEl);
 				demoWrapper.appendChild(leftCol);
@@ -453,7 +453,7 @@
 
 				const rightTitle = document.createElement('h4');
 				rightTitle.className = 'cq_demo_title';
-				rightTitle.innerHTML = '✗ Female Line (Pre-1969)';
+				rightTitle.innerHTML = '<i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Female Line (Pre-1969)';
 				rightCol.appendChild(rightTitle);
 
 				const rightDemoEl = document.createElement('div');
@@ -461,17 +461,17 @@
 				rightDemoEl.innerHTML = `
 					<div class="cq_demo_gen">
 						<div class="cq_demo_person cq_demo_person--ancestor">
-							<span class="cq_demo_icon">👩</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>Grandmother</span>
 							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
 						</div>
 					</div>
 					<div class="cq_demo_arrow cq_demo_arrow--broken">
-						<span class="cq_demo_arrow__label">✗ Can't pass<br>to child born<br>before 1969</span>
+						<span class="cq_demo_arrow__label"><i class="bi bi-x-lg"></i> Can't pass<br>to child born<br>before 1969</span>
 					</div>
 					<div class="cq_demo_gen cq_demo_gen--broken">
 						<div class="cq_demo_person cq_demo_person--broken">
-							<span class="cq_demo_icon">👩</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>Mother</span>
 							<span class="cq_demo_year">b. 1955</span>
 						</div>
@@ -481,12 +481,12 @@
 					</div>
 					<div class="cq_demo_gen">
 						<div class="cq_demo_person cq_demo_person--you">
-							<span class="cq_demo_icon">🧑</span>
+							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
 							<span>You</span>
 							<span class="cq_demo_year">b. 1980</span>
 						</div>
 					</div>
-					<div class="cq_demo_outcome cq_demo_outcome--article23">≈ Article 23</div>
+					<div class="cq_demo_outcome cq_demo_outcome--article23"><i class="bi bi-exclamation-triangle"></i> Article 23</div>
 				`;
 				rightCol.appendChild(rightDemoEl);
 				demoWrapper.appendChild(rightCol);

@@ -70,7 +70,7 @@ get_header();
 			<!-- FAQ Item 1: The 1969 Rule -->
 			<div class="tclas-faq-item">
 				<button class="tclas-faq-header" aria-expanded="false">
-					<span class="tclas-faq-icon">📅</span>
+					<i class="bi bi-calendar-event tclas-faq-icon" aria-hidden="true"></i>
 					<span class="tclas-faq-question">What's the 1969 rule?</span>
 					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
 				</button>
@@ -81,25 +81,25 @@ get_header();
 						<div class="tclas-faq-demo">
 							<div class="tclas-faq-demo-row">
 								<div class="tclas-faq-demo-col">
-									<h4>✓ Male Line</h4>
+									<h4><i class="bi bi-check-lg" aria-hidden="true"></i> Male Line</h4>
 									<div class="tclas-faq-demo-box">
-										<div class="tclas-faq-demo-gen">👨 Grandfather <span class="tclas-faq-demo-year">b. 1920</span></div>
-										<div class="tclas-faq-demo-arrow">→</div>
-										<div class="tclas-faq-demo-gen">👨 Father <span class="tclas-faq-demo-year">b. 1950</span></div>
-										<div class="tclas-faq-demo-arrow">→</div>
-										<div class="tclas-faq-demo-gen">You</div>
-										<div class="tclas-faq-demo-result">✓ Direct path</div>
+										<div class="tclas-faq-demo-gen"><i class="bi bi-person-fill" aria-hidden="true"></i> Grandfather <span class="tclas-faq-demo-year">b. 1920</span></div>
+										<div class="tclas-faq-demo-arrow"><i class="bi bi-arrow-down" aria-hidden="true"></i></div>
+										<div class="tclas-faq-demo-gen"><i class="bi bi-person-fill" aria-hidden="true"></i> Father <span class="tclas-faq-demo-year">b. 1950</span></div>
+										<div class="tclas-faq-demo-arrow"><i class="bi bi-arrow-down" aria-hidden="true"></i></div>
+										<div class="tclas-faq-demo-gen"><i class="bi bi-person-fill" aria-hidden="true"></i> You</div>
+										<div class="tclas-faq-demo-result"><i class="bi bi-check-lg" aria-hidden="true"></i> Direct path</div>
 									</div>
 								</div>
 								<div class="tclas-faq-demo-col">
-									<h4>⚠ Female Line (Pre-1969)</h4>
+									<h4><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Female Line (Pre-1969)</h4>
 									<div class="tclas-faq-demo-box">
-										<div class="tclas-faq-demo-gen">👩 Grandmother <span class="tclas-faq-demo-year">b. 1920</span></div>
-										<div class="tclas-faq-demo-arrow-broken">✗ Can't pass</div>
-										<div class="tclas-faq-demo-gen tclas-faq-demo-gen--broken">👩 Mother <span class="tclas-faq-demo-year">b. 1955</span></div>
-										<div class="tclas-faq-demo-arrow">→</div>
-										<div class="tclas-faq-demo-gen">You</div>
-										<div class="tclas-faq-demo-result tclas-faq-demo-result--alt">⚠ Extra step needed</div>
+										<div class="tclas-faq-demo-gen"><i class="bi bi-person-fill" aria-hidden="true"></i> Grandmother <span class="tclas-faq-demo-year">b. 1920</span></div>
+										<div class="tclas-faq-demo-arrow-broken"><i class="bi bi-x-lg" aria-hidden="true"></i> Can't pass</div>
+										<div class="tclas-faq-demo-gen tclas-faq-demo-gen--broken"><i class="bi bi-person-fill" aria-hidden="true"></i> Mother <span class="tclas-faq-demo-year">b. 1955</span></div>
+										<div class="tclas-faq-demo-arrow"><i class="bi bi-arrow-down" aria-hidden="true"></i></div>
+										<div class="tclas-faq-demo-gen"><i class="bi bi-person-fill" aria-hidden="true"></i> You</div>
+										<div class="tclas-faq-demo-result tclas-faq-demo-result--alt"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Extra step needed</div>
 									</div>
 								</div>
 							</div>
@@ -113,7 +113,7 @@ get_header();
 			<!-- FAQ Item 2: Language -->
 			<div class="tclas-faq-item">
 				<button class="tclas-faq-header" aria-expanded="false">
-					<span class="tclas-faq-icon">🗣️</span>
+					<i class="bi bi-chat-dots tclas-faq-icon" aria-hidden="true"></i>
 					<span class="tclas-faq-question">Do I need to speak French? German? Lëtzebuergesch?</span>
 					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
 				</button>
@@ -121,19 +121,19 @@ get_header();
 					<div class="tclas-faq-body">
 						<div class="tclas-faq-checklist">
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text"><strong>French?</strong> No language test</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text"><strong>German?</strong> No language test</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text"><strong>Lëtzebuergesch?</strong> No language test</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--yes">
-								<span class="tclas-faq-check-icon">✓</span>
+								<i class="bi bi-check-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text"><strong>English</strong> works fine with consulates</span>
 							</div>
 						</div>
@@ -145,7 +145,7 @@ get_header();
 			<!-- FAQ Item 3: Civics Exam -->
 			<div class="tclas-faq-item">
 				<button class="tclas-faq-header" aria-expanded="false">
-					<span class="tclas-faq-icon">📝</span>
+					<i class="bi bi-file-text tclas-faq-icon" aria-hidden="true"></i>
 					<span class="tclas-faq-question">Do I have to take a civics exam?</span>
 					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
 				</button>
@@ -153,19 +153,19 @@ get_header();
 					<div class="tclas-faq-body">
 						<div class="tclas-faq-checklist">
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text">No civics exam</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text">No integration test</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--no">
-								<span class="tclas-faq-check-icon">✕</span>
+								<i class="bi bi-x-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text">No residency requirement</span>
 							</div>
 							<div class="tclas-faq-check tclas-faq-check--yes">
-								<span class="tclas-faq-check-icon">✓</span>
+								<i class="bi bi-check-lg tclas-faq-check-icon" aria-hidden="true"></i>
 								<span class="tclas-faq-check-text">Just documentation of your lineage</span>
 							</div>
 						</div>
@@ -177,7 +177,7 @@ get_header();
 			<!-- FAQ Item 4: Two Pathways -->
 			<div class="tclas-faq-item">
 				<button class="tclas-faq-header" aria-expanded="false">
-					<span class="tclas-faq-icon">🛤️</span>
+					<i class="bi bi-signpost-split tclas-faq-icon" aria-hidden="true"></i>
 					<span class="tclas-faq-question">Article 7 or Article 23—what's the difference?</span>
 					<span class="tclas-faq-toggle" aria-hidden="true">+</span>
 				</button>
@@ -200,7 +200,7 @@ get_header();
 										<span>Citizenship granted (no travel needed)</span>
 									</div>
 								</div>
-								<p class="tclas-faq-pathway-note">⏱️ ~12–24 months</p>
+								<p class="tclas-faq-pathway-note"><i class="bi bi-clock" aria-hidden="true"></i> ~12–24 months</p>
 							</div>
 							<div class="tclas-faq-pathway-col">
 								<h4>Article 23 (Female Ancestor)</h4>
@@ -218,7 +218,7 @@ get_header();
 										<span>Citizenship granted after interview</span>
 									</div>
 								</div>
-								<p class="tclas-faq-pathway-note">⏱️ ~4–6 months (if eligible)</p>
+								<p class="tclas-faq-pathway-note"><i class="bi bi-clock" aria-hidden="true"></i> ~4–6 months (if eligible)</p>
 							</div>
 						</div>
 						<p class="tclas-faq-note"><strong>The quiz will tell you which one applies.</strong></p>
@@ -330,12 +330,12 @@ get_header();
 						   class="tclas-doc-item"
 						   target="_blank"
 						   rel="noopener noreferrer">
-							<div class="tclas-doc-item__icon" aria-hidden="true"><?php echo esc_html( get_sub_field( 'res_icon' ) ); ?></div>
+							<div class="tclas-doc-item__icon" aria-hidden="true"><i class="bi bi-<?php echo esc_attr( get_sub_field( 'res_icon' ) ); ?>"></i></div>
 							<div>
 								<span class="tclas-doc-item__name"><?php echo esc_html( get_sub_field( 'res_name' ) ); ?></span>
 								<span class="tclas-doc-item__meta"><?php echo esc_html( get_sub_field( 'res_desc' ) ); ?></span>
 							</div>
-							<span class="tclas-doc-item__download" aria-hidden="true">↗</span>
+							<i class="bi bi-box-arrow-up-right tclas-doc-item__download" aria-hidden="true"></i>
 						</a>
 						<?php endwhile; ?>
 					<?php else : ?>
@@ -349,43 +349,43 @@ get_header();
 								<span class="tclas-doc-item__name"><?php esc_html_e( 'Guichet.lu — Nationality', 'tclas' ); ?></span>
 								<span class="tclas-doc-item__meta"><?php esc_html_e( 'Luxembourg\'s official e-government portal — citizenship eligibility, required documents, and application process.', 'tclas' ); ?></span>
 							</div>
-							<span class="tclas-doc-item__download" aria-hidden="true">↗</span>
+							<i class="bi bi-box-arrow-up-right tclas-doc-item__download" aria-hidden="true"></i>
 						</a>
 
 						<a href="https://anlux.public.lu/en.html"
 						   class="tclas-doc-item"
 						   target="_blank"
 						   rel="noopener noreferrer">
-							<div class="tclas-doc-item__icon" aria-hidden="true">📚</div>
+							<div class="tclas-doc-item__icon" aria-hidden="true"><i class="bi bi-journal-text"></i></div>
 							<div>
 								<span class="tclas-doc-item__name"><?php esc_html_e( 'ANLux — National Archives', 'tclas' ); ?></span>
 								<span class="tclas-doc-item__meta"><?php esc_html_e( 'Luxembourg\'s National Archives hold vital records, civil registration documents, and genealogical research databases.', 'tclas' ); ?></span>
 							</div>
-							<span class="tclas-doc-item__download" aria-hidden="true">↗</span>
+							<i class="bi bi-box-arrow-up-right tclas-doc-item__download" aria-hidden="true"></i>
 						</a>
 
 						<a href="https://chicago.mae.lu/en.html"
 						   class="tclas-doc-item"
 						   target="_blank"
 						   rel="noopener noreferrer">
-							<div class="tclas-doc-item__icon" aria-hidden="true">🏛️</div>
+							<div class="tclas-doc-item__icon" aria-hidden="true"><i class="bi bi-building-columns"></i></div>
 							<div>
 								<span class="tclas-doc-item__name"><?php esc_html_e( 'Consulate General — Chicago', 'tclas' ); ?></span>
 								<span class="tclas-doc-item__meta"><?php esc_html_e( 'The consulate serving Minnesota and the Midwest. Contact them to begin the application process and confirm document requirements.', 'tclas' ); ?></span>
 							</div>
-							<span class="tclas-doc-item__download" aria-hidden="true">↗</span>
+							<i class="bi bi-box-arrow-up-right tclas-doc-item__download" aria-hidden="true"></i>
 						</a>
 
 						<a href="https://maee.gouvernement.lu/en/directions/consulaires/nationalite.html"
 						   class="tclas-doc-item"
 						   target="_blank"
 						   rel="noopener noreferrer">
-							<div class="tclas-doc-item__icon" aria-hidden="true">📋</div>
+							<div class="tclas-doc-item__icon" aria-hidden="true"><i class="bi bi-clipboard-check"></i></div>
 							<div>
 								<span class="tclas-doc-item__name"><?php esc_html_e( 'Ministry of Foreign Affairs', 'tclas' ); ?></span>
 								<span class="tclas-doc-item__meta"><?php esc_html_e( 'Official guidance on the recovery of nationality, including the 2021 amendments to the Law of June 8, 2017.', 'tclas' ); ?></span>
 							</div>
-							<span class="tclas-doc-item__download" aria-hidden="true">↗</span>
+							<i class="bi bi-box-arrow-up-right tclas-doc-item__download" aria-hidden="true"></i>
 						</a>
 
 					<?php endif; ?>

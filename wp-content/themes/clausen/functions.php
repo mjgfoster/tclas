@@ -49,6 +49,8 @@ $tclas_modules = [
 	// ── Newsletter admin + routing ────────────────────────────────────────
 	'inc/newsletter-admin.php',   // Issues dashboard, Posts list column/filter, ACF helpers
 	'inc/newsletter-rewrite.php', // /newsletter/issue/{YYYY-MM}/ virtual URL
+	// ── Plugin template overrides ─────────────────────────────────────────
+	'inc/wprm-template.php',     // Clean recipe markup, dequeue plugin CSS
 ];
 
 foreach ( $tclas_modules as $module ) {
