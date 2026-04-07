@@ -1,0 +1,219 @@
+// =============================================================================
+//  messaging.scss — Member-to-member messaging inbox & conversation styles
+// =============================================================================
+
+@use 'partials/config' as *;
+
+// ── Inbox ───────────────────────────────────────────────────────────────────
+
+.tclas-inbox {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	border: 1px solid var(--c-border);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.tclas-inbox-row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem 1.25rem;
+	text-decoration: none;
+	color: inherit;
+	border-bottom: 1px solid var(--c-border);
+	transition: background .15s;
+
+	&:last-child { border-bottom: none; }
+	&:hover { background: rgba(0,0,0,.02); text-decoration: none; color: inherit; }
+
+	&--unread {
+		background: rgba(227,30,38,.03);
+
+		.tclas-inbox-row__name { color: var(--c-ardoise); }
+		.tclas-inbox-row__preview { color: var(--c-ardoise); font-weight: 600; }
+	}
+}
+
+.tclas-inbox-row__photo {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+
+.tclas-inbox-row__body {
+	flex: 1;
+	min-width: 0;
+}
+
+.tclas-inbox-row__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: .5rem;
+	margin-bottom: .15rem;
+}
+
+.tclas-inbox-row__name {
+	font-size: .9rem;
+	font-weight: 700;
+	color: var(--c-ardoise);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tclas-inbox-row__time {
+	font-size: .75rem;
+	color: var(--c-muted);
+	flex-shrink: 0;
+}
+
+.tclas-inbox-row__preview {
+	font-size: .82rem;
+	color: var(--c-muted);
+	margin: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tclas-inbox-row__badge {
+	flex-shrink: 0;
+	background: var(--c-crimson);
+	color: #fff;
+	font-size: .7rem;
+	font-weight: 700;
+	min-width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 .4em;
+}
+
+.tclas-conv-empty-inbox {
+	text-align: center;
+	padding: 3rem 1rem;
+	color: var(--c-muted);
+}
+
+// ── Conversation ────────────────────────────────────────────────────────────
+
+.tclas-conv-partner {
+	display: flex;
+	align-items: center;
+	gap: .75rem;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--c-border);
+}
+
+.tclas-conv-partner__photo {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.tclas-conv-partner__link {
+	display: block;
+	font-size: .8rem;
+	margin-top: .15rem;
+}
+
+.tclas-conv-thread {
+	max-height: 500px;
+	overflow-y: auto;
+	padding: 1rem 0;
+	display: flex;
+	flex-direction: column;
+	gap: .75rem;
+}
+
+.tclas-conv-empty {
+	text-align: center;
+	color: var(--c-muted);
+	padding: 2rem;
+}
+
+// ── Message bubbles ─────────────────────────────────────────────────────────
+
+.tclas-msg {
+	display: flex;
+	flex-direction: column;
+	max-width: 75%;
+}
+
+.tclas-msg--mine {
+	align-self: flex-end;
+
+	.tclas-msg__bubble {
+		background: var(--c-ardoise);
+		color: #fff;
+		border-radius: 12px 12px 2px 12px;
+	}
+
+	.tclas-msg__time { text-align: right; }
+}
+
+.tclas-msg--theirs {
+	align-self: flex-start;
+
+	.tclas-msg__bubble {
+		background: #f0f0f0;
+		color: var(--c-ardoise);
+		border-radius: 12px 12px 12px 2px;
+	}
+}
+
+.tclas-msg__bubble {
+	padding: .65rem 1rem;
+	font-size: .88rem;
+	line-height: 1.45;
+	word-wrap: break-word;
+}
+
+.tclas-msg__time {
+	font-size: .7rem;
+	color: var(--c-muted);
+	margin-top: .2rem;
+	padding: 0 .25rem;
+}
+
+// ── Reply form ──────────────────────────────────────────────────────────────
+
+.tclas-conv-reply {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--c-border);
+}
+
+.tclas-conv-reply__input {
+	margin-bottom: .75rem;
+	resize: vertical;
+}
+
+.tclas-conv-reply__send {
+	margin-bottom: .5rem;
+}
+
+.tclas-conv-reply__status {
+	font-size: .82rem;
+	color: var(--c-muted);
+	margin: 0;
+}
+
+.tclas-conv-no-reply {
+	margin-top: 1rem;
+	padding: 1rem;
+	background: #f9f9f9;
+	border: 1px solid var(--c-border);
+	color: var(--c-muted);
+	font-size: .85rem;
+	text-align: center;
+}
