@@ -27,6 +27,13 @@ function tclas_register_acf_fields(): void {
 		'parent_slug' => 'tclas-theme-options',
 	] );
 
+	acf_add_options_sub_page( [
+		'page_title'  => 'Member Hub Settings',
+		'menu_title'  => 'Member Hub',
+		'menu_slug'   => 'tclas-hub-settings',
+		'parent_slug' => 'tclas-theme-options',
+	] );
+
 	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 		return;
 	}
@@ -1335,6 +1342,110 @@ function tclas_register_acf_fields(): void {
 				'type'         => 'textarea',
 				'rows'         => 2,
 				'instructions' => 'Displayed below the donation form. E.g. "TCLAS is a 501(c)(3) nonprofit. Your gift is tax-deductible..."',
+			],
+		],
+	] );
+	// ── Member Hub settings field group ──────────────────────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_hub_settings',
+		'title'    => 'Member Hub Settings',
+		'location' => [ [ [ 'param' => 'options_page', 'operator' => '==', 'value' => 'tclas-hub-settings' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_tclas_hub_featured_tab',
+				'label'        => 'Featured Content',
+				'type'         => 'tab',
+			],
+			[
+				'key'          => 'field_tclas_featured_content',
+				'label'        => 'Featured content items',
+				'name'         => 'tclas_featured_content',
+				'type'         => 'repeater',
+				'instructions' => 'Manually curate the content shown in the "What\'s New" section of the member hub. Drag to reorder. If empty, events and newsletter issues are shown automatically.',
+				'layout'       => 'table',
+				'button_label' => 'Add Featured Item',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_tclas_fc_content_type',
+						'label'   => 'Type',
+						'name'    => 'content_type',
+						'type'    => 'select',
+						'choices' => [
+							'event'      => 'Event',
+							'newsletter' => 'Newsletter Issue',
+						],
+						'default_value' => 'newsletter',
+						'wrapper' => [ 'width' => '25' ],
+					],
+					[
+						'key'           => 'field_tclas_fc_content_id',
+						'label'         => 'Content',
+						'name'          => 'content_id',
+						'type'          => 'post_object',
+						'post_type'     => [ 'post', 'tribe_events' ],
+						'return_format' => 'id',
+						'ui'            => 1,
+						'wrapper'       => [ 'width' => '75' ],
+					],
+				],
+			],
+			[
+				'key'           => 'field_tclas_hub_featured_count',
+				'label'         => 'Items to display',
+				'name'          => 'tclas_hub_featured_count',
+				'type'          => 'number',
+				'default_value' => 5,
+				'min'           => 3,
+				'max'           => 10,
+				'instructions'  => 'Number of items shown in the "What\'s New" section (3–10).',
+			],
+			[
+				'key'           => 'field_tclas_hub_show_fallback',
+				'label'         => 'Show fallback items',
+				'name'          => 'tclas_hub_show_fallback',
+				'type'          => 'true_false',
+				'default_value' => 1,
+				'ui'            => 1,
+				'instructions'  => 'If featured items are fewer than the display count, fill remaining slots with upcoming events and recent newsletters.',
+			],
+			[
+				'key'          => 'field_tclas_hub_digest_tab',
+				'label'        => 'Weekly Digest',
+				'type'         => 'tab',
+			],
+			[
+				'key'           => 'field_tclas_digest_enabled',
+				'label'         => 'Enable weekly digest emails',
+				'name'          => 'tclas_digest_enabled',
+				'type'          => 'true_false',
+				'default_value' => 1,
+				'ui'            => 1,
+				'instructions'  => 'Send a weekly summary email to members with unread activity.',
+			],
+			[
+				'key'           => 'field_tclas_digest_day',
+				'label'         => 'Send day',
+				'name'          => 'tclas_digest_day',
+				'type'          => 'select',
+				'choices'       => [
+					'monday'    => 'Monday',
+					'tuesday'   => 'Tuesday',
+					'wednesday' => 'Wednesday',
+					'thursday'  => 'Thursday',
+					'friday'    => 'Friday',
+					'saturday'  => 'Saturday',
+					'sunday'    => 'Sunday',
+				],
+				'default_value' => 'monday',
+				'instructions'  => 'Day of the week to send the digest.',
+			],
+			[
+				'key'           => 'field_tclas_digest_time',
+				'label'         => 'Send time',
+				'name'          => 'tclas_digest_time',
+				'type'          => 'text',
+				'default_value' => '10:00',
+				'instructions'  => 'Time to send (24-hour format, Central time). E.g. "10:00" for 10 AM.',
 			],
 		],
 	] );

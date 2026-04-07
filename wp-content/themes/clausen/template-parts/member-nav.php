@@ -21,6 +21,7 @@ $member_nav_links = [
 	[ 'label' => __( 'Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
 	[ 'label' => __( 'Documents', 'tclas' ), 'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
 	[ 'label' => __( 'My Profile', 'tclas' ), 'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
+	[ 'label' => __( 'Messages',  'tclas' ), 'url' => home_url( '/member-hub/messages/' ),      'icon' => 'bi-envelope-fill' ],
 	[ 'label' => __( 'Forum',     'tclas' ), 'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
 	[ 'label' => __( 'Map',       'tclas' ), 'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
 ];

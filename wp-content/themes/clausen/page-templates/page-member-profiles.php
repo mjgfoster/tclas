@@ -156,6 +156,9 @@ echo '</nav>';
 			if ( ! empty( $p['pronouns'] ) ) {
 				$meta_parts[] = esc_html( $p['pronouns'] );
 			}
+			if ( ! empty( $p['citizenship_tag'] ) ) {
+				$meta_parts[] = esc_html( $p['citizenship_tag'] );
+			}
 			if ( ! empty( $meta_parts ) ) :
 			?>
 			<p class="tclas-profile-intro__meta"><?php echo implode( ' · ', $meta_parts ); ?></p>
@@ -188,9 +191,24 @@ echo '</nav>';
 			<?php endif; ?>
 
 			<?php if ( $is_own_profile ) : ?>
-				<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-primary btn-sm" style="margin-top: 0.75rem;">
+				<a href="<?php echo esc_url( home_url( '/member-hub/edit-profile/' ) ); ?>" class="btn btn-primary btn-sm" style="margin-top: 0.75rem;">
 					<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
 				</a>
+			<?php else :
+				// "Send Message" button — respects contact privacy.
+				$allow_contact = true;
+				$contact_val   = get_user_meta( $profile_user->ID, '_tclas_privacy_allow_contact', true );
+				if ( '' !== $contact_val && ! (bool) $contact_val ) {
+					$legacy = get_user_meta( $profile_user->ID, '_tclas_open_to_contact', true );
+					$allow_contact = ( '' === $legacy || (bool) $legacy );
+				}
+				if ( $allow_contact ) :
+					$msg_url = home_url( '/member-hub/messages/' . rawurlencode( $profile_user->user_nicename ) . '/' );
+				?>
+				<a href="<?php echo esc_url( $msg_url ); ?>" class="btn btn-outline-ardoise btn-sm" style="margin-top: 0.75rem;">
+					<i class="bi bi-envelope" aria-hidden="true"></i> <?php esc_html_e( 'Send Message', 'tclas' ); ?>
+				</a>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -211,23 +229,25 @@ echo '</nav>';
 				</div>
 
 				<!-- Social links -->
-				<?php if ( ! empty( $p['social'] ) && array_filter( $p['social'] ) ) : ?>
+				<?php if ( ! empty( $p['social'] ) && array_filter( $p['social'] ) ) :
+					$social_icons = [
+						'facebook'   => [ 'icon' => 'bi-facebook',  'label' => 'Facebook' ],
+						'instagram'  => [ 'icon' => 'bi-instagram', 'label' => 'Instagram' ],
+						'linkedin'   => [ 'icon' => 'bi-linkedin',  'label' => 'LinkedIn' ],
+						'pinterest'  => [ 'icon' => 'bi-pinterest', 'label' => 'Pinterest' ],
+						'ancestry'   => [ 'icon' => 'bi-tree',      'label' => 'Ancestry' ],
+						'familytree' => [ 'icon' => 'bi-diagram-3', 'label' => 'Family Tree' ],
+					];
+				?>
 					<div class="tclas-profile-social">
-						<?php if ( $p['social']['facebook'] ) : ?>
-							<a href="<?php echo esc_url( $p['social']['facebook'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-								<i class="bi bi-facebook" aria-hidden="true"></i>
+						<?php foreach ( $social_icons as $key => $cfg ) :
+							$url = $p['social'][ $key ] ?? '';
+							if ( ! $url ) continue;
+						?>
+							<a href="<?php echo esc_url( $url ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $cfg['label'] ); ?>">
+								<i class="bi <?php echo esc_attr( $cfg['icon'] ); ?>" aria-hidden="true"></i>
 							</a>
-						<?php endif; ?>
-						<?php if ( $p['social']['linkedin'] ) : ?>
-							<a href="<?php echo esc_url( $p['social']['linkedin'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-								<i class="bi bi-linkedin" aria-hidden="true"></i>
-							</a>
-						<?php endif; ?>
-						<?php if ( $p['social']['instagram'] ) : ?>
-							<a href="<?php echo esc_url( $p['social']['instagram'] ); ?>" class="tclas-profile-social__link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-								<i class="bi bi-instagram" aria-hidden="true"></i>
-							</a>
-						<?php endif; ?>
+						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
 
@@ -239,7 +259,7 @@ echo '</nav>';
 				<!-- Bio (no heading — just prose) -->
 				<?php if ( $p['bio'] ) : ?>
 					<div class="tclas-profile-bio">
-						<?php echo nl2br( esc_html( $p['bio'] ) ); ?>
+						<?php echo wp_kses_post( $p['bio'] ); ?>
 					</div>
 				<?php endif; ?>
 
@@ -361,7 +381,7 @@ echo '</nav>';
 									<p>
 										<?php esc_html_e( 'Think this map is cool? Add your Luxembourg ancestors and get one of your own.', 'tclas' ); ?>
 									</p>
-									<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-outline-ardoise">
+									<a href="<?php echo esc_url( home_url( '/member-hub/map-entries/' ) ); ?>" class="btn btn-sm btn-outline-ardoise">
 										<?php esc_html_e( 'Add my ancestors', 'tclas' ); ?>
 									</a>
 								</div>

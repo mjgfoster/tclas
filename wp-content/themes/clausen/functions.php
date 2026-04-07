@@ -49,6 +49,10 @@ $tclas_modules = [
 	// ── Newsletter admin + routing ────────────────────────────────────────
 	'inc/newsletter-admin.php',   // Issues dashboard, Posts list column/filter, ACF helpers
 	'inc/newsletter-rewrite.php', // /newsletter/issue/{YYYY-MM}/ virtual URL
+	'inc/newsletter-submissions.php', // Member story submission queue + admin meta boxes
+	// ── Member messaging ─────────────────────────────────────────────────
+	'inc/messaging.php',              // Member-to-member messaging: DB table, CRUD, AJAX, email
+	'inc/digest.php',                 // Weekly digest email: cron, content builder, HTML template
 	// ── Plugin template overrides ─────────────────────────────────────────
 	'inc/wprm-template.php',     // Clean recipe markup, dequeue plugin CSS
 ];

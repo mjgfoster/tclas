@@ -11,10 +11,8 @@
 }
 
 .tclas-map-caption {
-  font-size: var(--text-sm);
   color: #777;
   margin: 0.5rem 0 0;
-  text-align: center;
   line-height: 1.5;
 }
 
@@ -43,28 +41,28 @@
 }
 
 .tclas-map-popup-name {
-  font-size: var(--text-lg);
+  font-size: 1rem;
   font-weight: 700;
   color: var(--c-ardoise, #2B6282);
   line-height: 1.3;
 }
 
 .tclas-map-popup-canton {
-  font-size: var(--text-md);
+  font-size: 0.875rem;
   font-style: italic;
   color: var(--c-ardoise, #2B6282);
   opacity: 0.7;
 }
 
 .tclas-map-popup-count {
-  font-size: var(--text-md);
+  font-size: 0.875rem;
   color: var(--c-body-text, #333);
   font-weight: 400;
   margin-top: 0.25rem;
 }
 
 .tclas-map-popup-surnames {
-  font-size: var(--text-md);
+  font-size: 0.875rem;
   color: var(--c-muted, #777);
   margin-top: 0.15rem;
   line-height: 1.45;
@@ -72,7 +70,7 @@
 
 .tclas-map-popup-link {
   display: inline-block;
-  font-size: var(--text-md);
+  font-size: 0.875rem;
   color: var(--c-aigue, #3ea9e0);
   text-decoration: none;
   margin-top: 0.4rem;
@@ -84,7 +82,7 @@
 
 a.tclas-map-popup-cta {
   display: inline-block;
-  font-size: var(--text-md);
+  font-size: 0.875rem;
   color: #fff;
   background: var(--c-crimson, #8B3A3A);
   text-decoration: none;
@@ -100,7 +98,7 @@ a.tclas-map-popup-cta:hover {
 }
 
 .tclas-map-empty {
-  font-size: var(--text-md);
+  font-size: 0.9rem;
   color: #777;
   text-align: center;
   padding: 2rem;
@@ -126,7 +124,7 @@ a.tclas-map-popup-cta:hover {
   border: 1px solid var(--c-border, #ddd);
   border-radius: var(--radius, 8px);
   padding: 0.35rem 0.75rem;
-  font-size: var(--text-sm);
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--c-ardoise, #2B6282);
   cursor: pointer;
@@ -152,12 +150,10 @@ a.tclas-map-popup-cta:hover {
 .tclas-map-list__table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-md);
 }
 .tclas-map-list__table th {
   background: var(--c-or-pale, #FAF9F6);
   font-weight: 700;
-  font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--c-muted, #777);
@@ -186,7 +182,6 @@ a.tclas-map-popup-cta:hover {
 }
 
 .tclas-map-list__surnames {
-  font-size: var(--text-sm);
   color: var(--c-muted, #777);
 }
 
@@ -209,7 +204,7 @@ a.tclas-map-popup-cta:hover {
 
 .tclas-map-split {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   align-items: start;
 }
@@ -252,7 +247,6 @@ a.tclas-map-popup-cta:hover {
   border: 1px solid var(--c-border, #ddd);
   border-radius: 4px;
   padding: 0.35rem 0.5rem;
-  font-size: var(--text-sm);
   font-family: inherit;
   color: var(--c-body-text, #333);
   background: #fff;
@@ -266,7 +260,6 @@ a.tclas-map-popup-cta:hover {
 }
 
 .tclas-map-split__count {
-  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--c-muted, #777);
   white-space: nowrap;

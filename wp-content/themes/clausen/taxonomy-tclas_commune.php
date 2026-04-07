@@ -229,7 +229,7 @@ wp_enqueue_script( 'leaflet' );
 				<div class="tclas-commune-empty">
 					<p><?php esc_html_e( 'No members have recorded this commune yet.', 'tclas' ); ?></p>
 					<?php if ( tclas_is_member() ) : ?>
-					<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>" class="btn btn-sm btn-primary">
+					<a href="<?php echo esc_url( home_url( '/member-hub/map-entries/' ) ); ?>" class="btn btn-sm btn-primary">
 						<?php printf(
 							esc_html__( '+ Add %s to my story', 'tclas' ),
 							esc_html( $name )
@@ -297,7 +297,7 @@ wp_enqueue_script( 'leaflet' );
 				?>
 				<p class="tclas-commune-add-prompt">
 					<?php esc_html_e( 'Have roots here? ', 'tclas' ); ?>
-					<a href="<?php echo esc_url( home_url( '/member-hub/my-story/' ) ); ?>">
+					<a href="<?php echo esc_url( home_url( '/member-hub/map-entries/' ) ); ?>">
 						<?php printf(
 							esc_html__( 'Add %s to your story &rarr;', 'tclas' ),
 							esc_html( $name )

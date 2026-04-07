@@ -2,6 +2,9 @@
 /**
  * Template Name: Member hub
  *
+ * Personalized member dashboard with profile completion, membership status,
+ * fresh content, activity alerts, admin screen cards, and community sections.
+ *
  * @package TCLAS
  */
 
@@ -10,7 +13,6 @@ get_header();
 
 <div class="tclas-page-header">
 	<div class="container-tclas">
-		<?php tclas_breadcrumb(); ?>
 		<h1 class="tclas-page-header__title"><?php the_title(); ?></h1>
 	</div>
 </div>
@@ -20,7 +22,7 @@ get_header();
 		<div style="max-width: 1000px; margin: 0 auto;">
 
 			<?php
-			// Renew / expiry notice
+			// Renew / expiry notice (prominent banner).
 			$status = tclas_membership_status();
 			if ( in_array( $status, [ 'expiring', 'expired' ], true ) ) :
 				$days      = tclas_days_to_expiry();
@@ -49,10 +51,25 @@ get_header();
 				</div>
 			<?php endif; ?>
 
-			<!-- Connections panel -->
+			<!-- ── Status Widgets (side-by-side) ─────────────────────────────── -->
+			<div class="tclas-hub-status-row">
+				<?php tclas_render_profile_completion_widget(); ?>
+				<?php tclas_render_membership_status_widget(); ?>
+			</div>
+
+			<!-- ── Connections panel ──────────────────────────────────────────── -->
 			<?php tclas_render_connections_panel(); ?>
 
-			<!-- Dashboard cards -->
+			<!-- ── Fresh content ──────────────────────────────────────────────── -->
+			<?php tclas_render_fresh_content_block(); ?>
+
+			<!-- ── Activity alerts ────────────────────────────────────────────── -->
+			<?php tclas_render_activity_alerts(); ?>
+
+			<!-- ── Admin screen cards ─────────────────────────────────────────── -->
+			<?php tclas_render_admin_screen_cards(); ?>
+
+			<!-- ── Community sections ─────────────────────────────────────────── -->
 			<div class="tclas-hub-grid">
 				<?php foreach ( tclas_hub_dashboard_cards() as $card ) : ?>
 					<div class="tclas-hub-card<?php echo isset( $card['color'] ) ? ' tclas-hub-card--' . esc_attr( $card['color'] ) : ''; ?>">
@@ -71,7 +88,7 @@ get_header();
 				<?php endforeach; ?>
 			</div>
 
-			<!-- Referral card -->
+			<!-- ── Referral card ──────────────────────────────────────────────── -->
 			<?php tclas_render_referral_card(); ?>
 
 		</div>

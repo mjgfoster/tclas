@@ -28,52 +28,43 @@ get_header();
 	</div>
 </div>
 
-<!-- ── Main: intro + map ───────────────────────────────────────────────── -->
-<section class="tclas-section tclas-ancestry-main">
+<!-- ── Intro + Map + Resources ─────────────────────────────────────────── -->
+<section class="tclas-section" aria-labelledby="ancestry-resources-heading">
 	<div class="container-tclas">
+
+		<div class="tclas-ancestry-intro">
+			<?php
+			$anc_lede = function_exists( 'get_field' ) ? get_field( 'anc_lede' ) : '';
+			if ( $anc_lede ) {
+				echo wp_kses_post( $anc_lede );
+			} else {
+			?>
+			<p>
+				<?php esc_html_e( 'Tens of thousands of Luxembourgers settled in Minnesota between the 1840s and early 1900s. If your family is among them, the records are out there — and more accessible than you might think.', 'tclas' ); ?>
+			</p>
+			<p>
+				<?php esc_html_e( 'The ancestral commune map shows the Luxembourg communes that TCLAS members trace their roots to. Find your commune and discover who else shares your ancestry.', 'tclas' ); ?>
+			</p>
+			<?php } ?>
+		</div>
+
 		<div class="tclas-ancestry-grid">
 
-			<!-- LEFT: Intro + context -->
-			<div class="tclas-ancestry-grid__content">
-				<?php
-				$anc_lede = function_exists( 'get_field' ) ? get_field( 'anc_lede' ) : '';
-				if ( $anc_lede ) {
-					echo wp_kses_post( $anc_lede );
-				} else {
-				?>
-				<p>
-					<?php esc_html_e( 'Tens of thousands of Luxembourgers settled in Minnesota between the 1840s and early 1900s. If your family is among them, the records are out there — and more accessible than you might think.', 'tclas' ); ?>
-				</p>
-				<p>
-					<?php esc_html_e( 'The ancestral commune map shows the Luxembourg communes that TCLAS members trace their roots to. Find your commune and discover who else shares your ancestry.', 'tclas' ); ?>
-				</p>
-				<?php } ?>
+			<!-- LEFT: Map -->
+			<div class="tclas-ancestry-grid__map">
+				<?php echo do_shortcode( '[tclas_ancestor_map public="true"]' ); ?>
 				<?php if ( tclas_is_member() ) : ?>
-					<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>" class="btn btn-outline-ardoise">
+					<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>" class="btn btn-outline-ardoise" style="margin-top:1rem;">
 						<?php esc_html_e( 'Open full map →', 'tclas' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>
 
-			<!-- RIGHT: Map -->
-			<div class="tclas-ancestry-grid__map">
-				<?php echo do_shortcode( '[tclas_ancestor_map public="true"]' ); ?>
-			</div>
+			<!-- RIGHT: Resources -->
+			<div class="tclas-ancestry-grid__resources">
+				<span class="tclas-eyebrow"><?php esc_html_e( 'Dig deeper', 'tclas' ); ?></span>
+				<h2 id="ancestry-resources-heading"><?php esc_html_e( 'Research resources', 'tclas' ); ?></h2>
 
-		</div>
-	</div>
-</section>
-
-<!-- ── Resources ─────────────────────────────────────────────────────────── -->
-<section class="tclas-section" aria-labelledby="ancestry-resources-heading">
-	<div class="container-tclas">
-
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Dig deeper', 'tclas' ); ?></span>
-		<h2 id="ancestry-resources-heading"><?php esc_html_e( 'Research resources', 'tclas' ); ?></h2>
-
-		<div class="tclas-ancestry-resources">
-
-			<div class="tclas-ancestry-resources__col">
 				<h3><?php esc_html_e( 'Luxembourg archives', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
 				<?php if ( function_exists( 'have_rows' ) && have_rows( 'anc_resources_lux' ) ) : ?>
@@ -87,10 +78,8 @@ get_header();
 					<li><a href="https://www.luxroots.org/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'LuxRoots — genealogy community', 'tclas' ); ?></a></li>
 				<?php endif; ?>
 				</ul>
-			</div>
 
-			<div class="tclas-ancestry-resources__col">
-				<h3><?php esc_html_e( 'U.S. &amp; Minnesota', 'tclas' ); ?></h3>
+				<h3><?php esc_html_e( 'U.S. & Minnesota', 'tclas' ); ?></h3>
 				<ul class="tclas-msp-resources__list">
 				<?php if ( function_exists( 'have_rows' ) && have_rows( 'anc_resources_us' ) ) : ?>
 					<?php while ( have_rows( 'anc_resources_us' ) ) : the_row(); ?>

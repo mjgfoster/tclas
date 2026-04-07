@@ -1,13 +1,21 @@
 <?php
 /**
- * Template Name: My Luxembourg Story
+ * Template Name: My Luxembourg Story (Deprecated)
  *
- * Frontend profile edit page where members manage their profile photo, bio,
- * city, ancestral communes/surnames, travel log, social links, family info,
- * and per-field privacy settings.
+ * This template has been replaced by three focused screens:
+ * - Edit Profile:    /member-hub/edit-profile/
+ * - My Ancestral Map: /member-hub/map-entries/
+ * - Privacy Settings: /member-hub/privacy/
+ *
+ * Redirects to Edit Profile for backward compatibility.
  *
  * @package TCLAS
  */
+
+wp_safe_redirect( home_url( '/member-hub/edit-profile/' ), 301 );
+exit;
+
+// ── Legacy code below (kept for reference, never reached) ───────────────────
 
 get_header();
 

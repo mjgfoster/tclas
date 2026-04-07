@@ -132,9 +132,32 @@ function tclas_get_profile_photo_img( int $user_id, string $size = 'thumbnail', 
 
 /**
  * Whether a profile field is visible (not set to 'hidden' by the member).
- * Field keys: bio, city, ancestry, social, family.
+ *
+ * Checks the new individual _tclas_privacy_* meta keys first. If not set,
+ * falls back to the legacy _tclas_field_privacy array for backward compat.
+ *
+ * Field keys: bio, city, ancestry, surnames, communes, social, family.
  */
 function tclas_profile_field_visible( int $user_id, string $field ): bool {
+	// Map field keys to new privacy meta keys.
+	$new_key_map = [
+		'bio'      => '_tclas_privacy_show_bio',
+		'city'     => '_tclas_privacy_show_bio',       // city shares bio toggle
+		'ancestry' => '_tclas_privacy_show_communes',   // legacy "ancestry" maps to communes
+		'surnames' => '_tclas_privacy_show_surnames',
+		'communes' => '_tclas_privacy_show_communes',
+		'social'   => null,                             // no privacy toggle for social; controlled by leaving fields empty
+		'family'   => null,                             // always visible
+	];
+
+	if ( isset( $new_key_map[ $field ] ) && null !== $new_key_map[ $field ] ) {
+		$val = get_user_meta( $user_id, $new_key_map[ $field ], true );
+		if ( '' !== $val && false !== $val ) {
+			return (bool) $val;
+		}
+	}
+
+	// Fallback to legacy array.
 	$privacy = (array) ( get_user_meta( $user_id, '_tclas_field_privacy', true ) ?: [] );
 	return ( $privacy[ $field ] ?? 'members' ) !== 'hidden';
 }
@@ -153,17 +176,23 @@ function tclas_get_profile_data( int $user_id ): array {
 		return [];
 	}
 
+	// Display name override: if set, use it everywhere.
+	$display_override = (string) ( get_user_meta( $user_id, '_tclas_display_name_override', true ) ?: '' );
+	$display_name     = '' !== $display_override ? $display_override : $user->display_name;
+
 	$data = [
-		'user_id'      => $user_id,
-		'username'     => $user->user_nicename,
-		'display_name' => $user->display_name,
-		'first_name'   => $user->first_name,
-		'last_name'    => $user->last_name,
-		'photo_url'    => tclas_get_profile_photo_url( $user_id ),
-		'is_founding'  => tclas_is_founding_member( $user_id ),
-		'badges'       => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $user_id ) : [],
-		'member_since' => tclas_get_member_since_year( $user_id ),
-		'has_bio'      => ! empty( get_user_meta( $user_id, '_tclas_bio', true ) ),
+		'user_id'                => $user_id,
+		'username'               => $user->user_nicename,
+		'display_name'           => $display_name,
+		'display_name_override'  => $display_override,
+		'first_name'             => $user->first_name,
+		'last_name'              => $user->last_name,
+		'photo_url'              => tclas_get_profile_photo_url( $user_id ),
+		'is_founding'            => tclas_is_founding_member( $user_id ),
+		'badges'                 => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $user_id ) : [],
+		'member_since'           => tclas_get_member_since_year( $user_id ),
+		'has_bio'                => ! empty( get_user_meta( $user_id, '_tclas_bio', true ) ),
+		'citizenship_tag'        => (string) ( get_user_meta( $user_id, '_tclas_citizenship_tag', true ) ?: '' ),
 	];
 
 	// Membership level from PMPro.
@@ -189,9 +218,12 @@ function tclas_get_profile_data( int $user_id ): array {
 
 	$data['social'] = tclas_profile_field_visible( $user_id, 'social' )
 		? [
-			'facebook'  => (string) ( get_user_meta( $user_id, '_tclas_facebook_url',  true ) ?: '' ),
-			'linkedin'  => (string) ( get_user_meta( $user_id, '_tclas_linkedin_url',  true ) ?: '' ),
-			'instagram' => (string) ( get_user_meta( $user_id, '_tclas_instagram_url', true ) ?: '' ),
+			'facebook'   => (string) ( get_user_meta( $user_id, '_tclas_facebook_url',   true ) ?: '' ),
+			'linkedin'   => (string) ( get_user_meta( $user_id, '_tclas_linkedin_url',   true ) ?: '' ),
+			'instagram'  => (string) ( get_user_meta( $user_id, '_tclas_instagram_url',  true ) ?: '' ),
+			'pinterest'  => (string) ( get_user_meta( $user_id, '_tclas_pinterest_url',  true ) ?: '' ),
+			'ancestry'   => (string) ( get_user_meta( $user_id, '_tclas_ancestry_url',   true ) ?: '' ),
+			'familytree' => (string) ( get_user_meta( $user_id, '_tclas_familytree_url', true ) ?: '' ),
 		]
 		: [];
 
@@ -380,6 +412,8 @@ function tclas_get_directory_members(): array {
 		'_tclas_visibility', '_tclas_profile_photo', '_tclas_city',
 		'_tclas_bio', '_tclas_communes_norm', '_tclas_founding_member',
 		'_tclas_field_privacy', '_tclas_badge_board', '_tclas_badge_bierger', '_tclas_pronouns',
+		'_tclas_display_name_override', '_tclas_citizenship_tag',
+		'_tclas_privacy_show_in_directory', '_tclas_privacy_show_bio',
 	];
 	$id_placeholders  = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 	$key_placeholders = implode( ',', array_fill( 0, count( $meta_keys ), '%s' ) );
@@ -411,9 +445,18 @@ function tclas_get_directory_members(): array {
 	foreach ( $ids as $raw_id ) {
 		$id   = (int) $raw_id;
 		$meta = $meta_index[ $id ] ?? [];
-		$vis  = $meta['_tclas_visibility'] ?? 'members';
-		if ( 'hidden' === $vis ) {
-			continue;
+
+		// Check new privacy toggle first, then fall back to legacy visibility.
+		$new_dir_toggle = $meta['_tclas_privacy_show_in_directory'] ?? '';
+		if ( '' !== $new_dir_toggle ) {
+			if ( ! (int) $new_dir_toggle ) {
+				continue;
+			}
+		} else {
+			$vis = $meta['_tclas_visibility'] ?? 'members';
+			if ( 'hidden' === $vis ) {
+				continue;
+			}
 		}
 		$user = get_userdata( $id );
 		if ( ! $user ) {
@@ -456,16 +499,24 @@ function tclas_get_directory_members(): array {
 			$photo_url = get_avatar_url( $id, [ 'size' => 150 ] );
 		}
 
+		// Display name override.
+		$display_override = (string) ( $meta['_tclas_display_name_override'] ?? '' );
+		$display_name     = '' !== $display_override ? $display_override : $user->display_name;
+
+		// Bio/city privacy: new key first, then legacy fallback.
+		$new_bio_toggle = $meta['_tclas_privacy_show_bio'] ?? '';
+		$bio_visible    = ( '' !== $new_bio_toggle )
+			? (bool) (int) $new_bio_toggle
+			: ( ( $privacy['bio'] ?? 'members' ) !== 'hidden' );
+
 		$members[] = [
 			'user_id'      => $id,
 			'username'     => $user->user_nicename,
-			'display_name' => $user->display_name,
+			'display_name' => $display_name,
 			'first_name'   => $user->first_name,
 			'last_name'    => $user->last_name,
 			'photo_url'    => $photo_url,
-			'city'         => ( ( $privacy['city'] ?? 'members' ) !== 'hidden' )
-			                  ? (string) ( $meta['_tclas_city'] ?? '' )
-			                  : '',
+			'city'         => $bio_visible ? (string) ( $meta['_tclas_city'] ?? '' ) : '',
 			'is_founding'  => $is_founding,
 			'badges'       => $badges,
 			'has_ancestors'=> ! empty( array_filter(
@@ -473,9 +524,7 @@ function tclas_get_directory_members(): array {
 				fn( $s ) => '' !== $s && ! str_starts_with( $s, 'unresolved:' )
 			) ),
 			'has_bio'      => ! empty( $meta['_tclas_bio'] ?? '' ),
-			'pronouns'     => ( ( $privacy['bio'] ?? 'members' ) !== 'hidden' )
-			                  ? (string) ( $meta['_tclas_pronouns'] ?? '' )
-			                  : '',
+			'pronouns'     => $bio_visible ? (string) ( $meta['_tclas_pronouns'] ?? '' ) : '',
 		];
 	}
 
@@ -630,10 +679,13 @@ function tclas_ajax_remove_profile_photo(): void {
 
 add_action( 'wp_enqueue_scripts', 'tclas_enqueue_profile_assets' );
 function tclas_enqueue_profile_assets(): void {
-	$on_profiles = is_page_template( 'page-templates/page-member-profiles.php' );
-	$on_story    = is_page_template( 'page-templates/page-my-story.php' );
+	$on_profiles     = is_page_template( 'page-templates/page-member-profiles.php' );
+	$on_story        = is_page_template( 'page-templates/page-my-story.php' );
+	$on_edit_profile = is_page_template( 'page-templates/page-edit-profile.php' );
+	$on_ancestry     = is_page_template( 'page-templates/page-ancestral-map-edit.php' );
+	$on_privacy      = is_page_template( 'page-templates/page-privacy-settings.php' );
 
-	if ( ! $on_profiles && ! $on_story ) {
+	if ( ! $on_profiles && ! $on_story && ! $on_edit_profile && ! $on_ancestry && ! $on_privacy ) {
 		return;
 	}
 

@@ -14,7 +14,7 @@
 
     var data     = (typeof tclasMapData !== 'undefined') ? tclasMapData : {};
     var communes = data.communes || {};
-    var storyUrl = data.storyUrl || '/member-hub/my-story/';
+    var storyUrl = data.storyUrl || '/member-hub/map-entries/';
     var isPublic = !!data.isPublic;
     var isSplit  = data.layout === 'split';
     var joinUrl  = data.joinUrl || '/join/';
@@ -67,7 +67,8 @@
       if (!c.lat || !c.lng) return;
 
       var ll     = [c.lat, c.lng];
-      var radius = Math.max(7, Math.min(26, 6 + c.count * 4));
+      // Logarithmic scale: readable at 1 record, won't overwhelm at 50+
+      var radius = Math.max(6, Math.min(22, 6 + Math.log2(c.count + 1) * 4));
 
       latlngs.push(ll);
 

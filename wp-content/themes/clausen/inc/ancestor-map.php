@@ -97,7 +97,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         'isPublic'       => $is_public,
         'layout'         => $is_split ? 'split' : 'default',
         'joinUrl'        => home_url( '/join/' ),
-        'storyUrl'       => home_url( '/member-hub/my-story/' ),
+        'storyUrl'       => home_url( '/member-hub/map-entries/' ),
         'communeBaseUrl' => home_url( '/member-hub/ancestral-map/commune/' ),
         'totalCount'     => array_sum( array_column( $commune_data, 'count' ) ),
         'mapboxTileUrl'  => $mapbox_tile_url,
@@ -118,6 +118,9 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
                      class="tclas-ancestor-map"
                      role="img"
                      aria-label="<?php esc_attr_e( 'Map of ancestral communes in Luxembourg', 'tclas' ); ?>"></div>
+                <p class="tclas-map-caption">
+                    <?php esc_html_e( 'Circles mark where TCLAS members trace their ancestors. Larger circles represent a greater concentration of records. Tap or hover for details.', 'tclas' ); ?>
+                </p>
             </div>
             <div class="tclas-map-split__list">
                 <div class="tclas-map-split__list-header">
@@ -173,13 +176,6 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         </div>
         <?php endif; ?>
 
-        <p class="tclas-map-caption">
-            <?php if ( $is_public ) : ?>
-                <?php esc_html_e( 'Circles mark Luxembourg communes where TCLAS members trace their roots. Larger circles mean more members. Tap a commune for details.', 'tclas' ); ?>
-            <?php else : ?>
-                <?php esc_html_e( 'Circles mark Luxembourg villages where TCLAS members trace their ancestry. Larger circles = more members. Tap or hover for details.', 'tclas' ); ?>
-            <?php endif; ?>
-        </p>
     </div>
     <?php
     return ob_get_clean();

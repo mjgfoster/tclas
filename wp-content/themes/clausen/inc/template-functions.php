@@ -324,6 +324,18 @@ function tclas_is_member_page(): bool {
 	if ( is_page_template( 'page-templates/page-my-story.php' ) ) {
 		return true;
 	}
+	if ( is_page_template( 'page-templates/page-edit-profile.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-ancestral-map-edit.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-privacy-settings.php' ) ) {
+		return true;
+	}
+	if ( is_page_template( 'page-templates/page-messages.php' ) ) {
+		return true;
+	}
 	if ( is_page_template( 'page-templates/page-map.php' ) ) {
 		return true;
 	}
