@@ -110,18 +110,20 @@ function tclas_enqueue_assets(): void {
 
 	// ── Hero scripts (front page only) ───────────────────────────────────
 	if ( is_front_page() ) {
+		// Entry overlay — once-per-session welcome animation.
+		wp_enqueue_script(
+			'tclas-hero-entry',
+			TCLAS_ASSETS . '/js/hero-entry.js',
+			[],
+			filemtime( $dir . '/assets/js/hero-entry.js' ),
+			true
+		);
+
 		wp_enqueue_script(
 			'tclas-hero',
 			TCLAS_ASSETS . '/js/hero-slideshow.js',
 			[],
 			filemtime( $dir . '/assets/js/hero-slideshow.js' ),
-			true
-		);
-		wp_enqueue_script(
-			'tclas-hero-greeting',
-			TCLAS_ASSETS . '/js/hero-greeting.js',
-			[],
-			filemtime( $dir . '/assets/js/hero-greeting.js' ),
 			true
 		);
 	}
@@ -160,6 +162,25 @@ function tclas_enqueue_assets(): void {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'tclas_enqueue_assets' );
+
+/**
+ * Inline <head> script for the entry overlay gate.
+ *
+ * Hides the full-screen welcome overlay immediately for repeat visitors
+ * (sessionStorage) or prefers-reduced-motion users. Runs before any body
+ * content paints, so there's no flash.
+ */
+function tclas_entry_overlay_gate(): void {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	?>
+	<script>
+	(function(){try{if(sessionStorage.getItem("tclas_entry_seen")||window.matchMedia("(prefers-reduced-motion:reduce)").matches){document.documentElement.classList.add("tclas-entry-skip")}}catch(e){}})();
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'tclas_entry_overlay_gate', 1 );
 
 /**
  * Editor assets.
