@@ -77,10 +77,10 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 				<p class="tclas-hero__welcome"><?php echo esc_html( $hero_welcome ); ?></p>
 				<?php } ?>
 				<div class="tclas-hero__ctas">
-					<a href="<?php echo esc_url( home_url( $hero_cta1_url ) ); ?>" class="btn btn-primary">
+					<a href="<?php echo esc_url( home_url( $hero_cta1_url ) ); ?>" class="btn btn-primary btn-lg">
 						<?php echo esc_html( $hero_cta1_label ); ?>
 					</a>
-					<a href="<?php echo esc_url( home_url( $hero_cta2_url ) ); ?>" class="btn btn-outline-ardoise">
+					<a href="<?php echo esc_url( home_url( $hero_cta2_url ) ); ?>" class="btn btn-outline-ardoise btn-lg">
 						<?php echo esc_html( $hero_cta2_label ); ?>
 					</a>
 				</div>

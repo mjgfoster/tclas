@@ -15,7 +15,7 @@
 ( function () {
 	'use strict';
 
-	var SLIDE_INTERVAL   = 10000; // ms between advances
+	var SLIDE_INTERVAL   = 7000;  // ms between advances
 	var TRANSITION_MS    = 1800;  // must match CSS 1.8s
 	var currentIndex     = 0;
 	var totalPairs       = 0;
