@@ -1,10 +1,10 @@
 # Build Program — TCLAS Site Reconciliation
 
-_Updated 2026-03-11_
+_Updated 2026-04-22_
 
-**Copy + UI review with Rebecca**: March 12, 2026
-**Board preview deadline**: March 22, 2026
-**Soft launch deadline**: April 18, 2026
+**Status:** Phases 0–4 complete (Mar 1–11, 2026). Phases 5–6 (original content/launch-prep plan) were **superseded** on 2026-04-22 when the board approved a pared-down **May 9, 2026 MVP launch**. See `/Users/matthew/Local Sites/tclas-dev/BOARD_LAUNCH_BRIEF.md` Phase 0 for the current plan.
+
+Active branch for MVP work: `launch/mvp-may-9`.
 
 ---
 
@@ -17,16 +17,16 @@ _Updated 2026-03-11_
 | 2. Homepage | ✅ Done | Mar 7 | Hero slideshow, mission, newsletter preview, quiz CTA, join bar |
 | 3. Public pages | ✅ Done | Mar 8 | Citizenship (quiz v2.0), Join, MSP+LUX, Ancestry |
 | 4. Events + Newsletter | ✅ Done | Mar 8 | Events archive, featured event, past events, newsletter sticky subnav |
-| 5. Content + polish | **Pending** | — | Stub page content (FAQ, Mission, History, Contact, Financials) — **user-authored** |
-| 6. Launch prep | **Pending** | — | Final sign-off, DNS, staging, production config |
+| 5. Content + polish | ⛔ Superseded | — | Rolled into May 9 MVP scope — most Phase-5 pages (FAQ, Mission, History, Financials) are deferred past launch |
+| 6. Launch prep | ⛔ Superseded | — | Replaced by MVP Phase 0 launch plan (see `BOARD_LAUNCH_BRIEF.md`) |
 
-**Phases 0–4 are complete.** The remaining work is content authoring (Phase 5) and production deployment (Phase 6).
+Phases 0–4 shipped the full-vision foundation, which gives us the luxury of cutting scope for May 9 without rebuilding anything.
 
 ---
 
 ## Phase 0 — Decisions ✅ COMPLETE (Mar 1)
 
-All 8 decisions resolved. See `figma-gap-analysis.md §14` for the full log.
+All 8 decisions resolved.
 
 | ID | Decision | Outcome |
 |----|----------|---------|
@@ -103,63 +103,33 @@ All 8 decisions resolved. See `figma-gap-analysis.md §14` for the full log.
 
 ---
 
-## Phase 5 — Content + Polish (target: Apr 5–11)
+## Phases 5 & 6 — ⛔ Superseded by May 9 MVP (2026-04-22)
 
-### User-authored content (critical path)
-- FAQ page content (`/faq/`)
-- Mission page content (`/about/mission/`)
-- History page content (`/about/history/`)
-- Contact page content (create page)
-- Financials page content (`/about/financials/`)
+The original Phase 5 (content authoring for FAQ, Mission, History, Contact, Financials) and Phase 6 (full production deployment) were replaced by the May 9 MVP plan. The MVP launches five pages — Home, Events, About, Contact, and Legal — with everything else held for Phase 2.
 
-### Dev tasks (when needed)
-- Cross-browser QA: Chrome, Firefox, Safari, Edge
-- Mobile/tablet QA at 375px, 768px, 1024px
-- Accessibility fixes from `AUDIT-2026-03-05.md`
-- Performance review
+**See** `/Users/matthew/Local Sites/tclas-dev/BOARD_LAUNCH_BRIEF.md` **Phase 0** for:
+- MVP scope
+- Plugin activation/deactivation posture
+- Branch and file locations
+- Open items before May 9
+- Legal-page drafts in `/Users/matthew/Local Sites/tclas-dev/launch-content/`
 
----
-
-## Phase 6 — Launch Prep (target: Apr 12–17)
-
-- Final content sign-off
-- Production deployment to SiteGround
-- Brevo API key + form setup
-- FuseWP install for PMPro ↔ Brevo sync
-- WP Mail SMTP OAuth configuration
-- Complianz GDPR review
-- The SEO Framework OG/Twitter Card verification
-- Site Kit by Google activation
-- Final staging smoke test
-
----
-
-## Critical path to launch
-
-| Blocker | Deadline | Owner |
-|---------|----------|-------|
-| MSP+LUX copy + resource URLs | Mar 12 | Matthew |
-| Ancestry step copy + resource links | Mar 12 | Matthew |
-| Citizenship pathways copy | Mar 12 | Matthew |
-| Volunteer description | Mar 12 | Matthew |
-| Department icons for Browse by Topic | Apr 3 | Matthew |
-| Stub page content (FAQ, Mission, etc.) | Apr 11 | Matthew |
-| GiveWP setup | Apr 11 | Matthew |
-| Brevo config (API key, form, lists) | Apr 12 | Matthew |
-| Production hosting ready | Apr 12 | Matthew |
+The original Phase 5/6 checklist (FAQ, Mission, History, Financials content; GiveWP; Brevo; FuseWP; Complianz; full staging QA) remains the target for **Phase 2 / post-May-9** and is described in `BOARD_LAUNCH_BRIEF.md` PART 2.
 
 ---
 
 ## Post-launch backlog
 
-See `outstanding-items.md` §5 (Design & UX Backlog) and §6 (Parking Lot) for deferred items including:
+Deferred items (revisit after the May 9 MVP ships):
 - Homepage navbar branding for first-time visitors
 - Modern Footnotes styling
 - PMPro Gift Memberships
 - Member messaging plugin
 - Map match email alerts
 - CTA library CPT
+- Full legal review of the four MVP legal pages
+- Migration to role-based Google Workspace email aliases for contact routing
 
 ---
 
-*Originally created 2026-03-03. Updated 2026-03-08 to reflect all completed phases.*
+*Originally created 2026-03-03. Updated 2026-03-08 for completed phases. Updated 2026-04-22 for May 9 MVP pivot.*

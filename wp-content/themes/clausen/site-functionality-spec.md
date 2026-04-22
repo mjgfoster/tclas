@@ -2,8 +2,8 @@
 
 **Site**: Twin Cities Luxembourg American Society (TCLAS)
 **Theme**: Clausen v1.2 ("Ciel Bleu")
-**WordPress root**: `/Applications/MAMP/htdocs/tclas-local/`
-**Local URL**: `http://localhost:8888/tclas-local/`
+**WordPress root**: `/Users/matthew/Local Sites/tclas-dev/app/public/` (Local by Flywheel)
+**Local URL**: `http://tclas-dev.local/`
 **Document scope**: Functionality only — plugins, settings, integrations, custom code behavior. Not visual/styling.
 
 ---
