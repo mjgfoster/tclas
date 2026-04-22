@@ -367,6 +367,15 @@ function tclas_register_acf_fields(): void {
 				],
 			],
 		],
+		[
+			'key'           => 'field_show_board_emails',
+			'label'         => 'Show board emails publicly',
+			'name'          => 'show_board_emails',
+			'type'          => 'true_false',
+			'ui'            => 1,
+			'default_value' => 0,
+			'instructions'  => 'Off by default to prevent spam harvesting of named individuals. When off, the About page shows board members\' names and roles only; visitors reach board members via the Contact form.',
+		],
 	] );
 
 	// ── Illustrations field group ─────────────────────────────────────────

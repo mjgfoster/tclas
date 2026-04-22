@@ -35,6 +35,10 @@ get_header();
 				'order'          => 'ASC',
 			] );
 
+			// Site-wide toggle: off by default so board members' emails aren't exposed to spam harvesters.
+			// Toggle in WP Admin → Theme options → "Show board emails publicly".
+			$show_board_emails = function_exists( 'get_field' ) ? (bool) get_field( 'show_board_emails', 'option' ) : false;
+
 			if ( $board_members->have_posts() ) :
 			?>
 			<aside class="tclas-about-layout__sidebar">
@@ -53,7 +57,7 @@ get_header();
 								<?php if ( $role ) : ?>
 									<span class="tclas-board-card__role"><?php echo esc_html( $role ); ?></span>
 								<?php endif; ?>
-								<?php if ( $email ) : ?>
+								<?php if ( $show_board_emails && $email ) : ?>
 									<a href="mailto:<?php echo esc_attr( $email ); ?>">
 										<?php echo esc_html( $email ); ?>
 									</a>
