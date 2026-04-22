@@ -1715,7 +1715,7 @@ input[type=radio] {
 
 .tclas-entry__welcome-line {
   font-family: var(--font-sans);
-  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
   font-style: italic;
   text-align: center;
   opacity: 0;
@@ -1779,9 +1779,12 @@ input[type=radio] {
 }
 .tclas-hero__grid {
   position: relative;
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
 }
-/* Top half: ardoise (matches copy block 1 + MN photo) */
-.tclas-hero__grid::before {
+/* Top half: ardoise (matches copy block 1 + MN photo) — full viewport width */
+.tclas-hero::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1791,8 +1794,8 @@ input[type=radio] {
   background: var(--c-ardoise);
   z-index: 0;
 }
-/* Bottom half: or-pale (matches copy block 2 + LUX photo) */
-.tclas-hero__grid::after {
+/* Bottom half: or-pale (matches copy block 2 + LUX photo) — full viewport width */
+.tclas-hero::after {
   content: "";
   position: absolute;
   bottom: 0;

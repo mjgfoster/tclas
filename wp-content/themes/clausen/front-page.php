@@ -26,9 +26,9 @@ get_header();
 	<div class="tclas-entry__identity" aria-hidden="true">
 		<img class="tclas-entry__logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/tclas-welcome.svg' ) ); ?>" alt="Twin Cities Luxembourg American Society" width="2051" height="2198">
 		<div class="tclas-entry__welcomes">
-			<span class="tclas-entry__welcome-line" data-step="0" lang="fr">vous souhaite la bienvenue</span>
+			<span class="tclas-entry__welcome-line" data-step="0" lang="lb">begréisst Iech</span>
 			<span class="tclas-entry__welcome-line" data-step="1">welcomes you</span>
-			<span class="tclas-entry__welcome-line" data-step="2" lang="lb">begréisst Iech</span>
+			<span class="tclas-entry__welcome-line" data-step="2" lang="fr">vous souhaite la bienvenue</span>
 		</div>
 	</div>
 	<button class="tclas-entry__skip" type="button" aria-label="<?php esc_attr_e( 'Skip intro', 'tclas' ); ?>">
