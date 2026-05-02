@@ -3646,7 +3646,7 @@ input[type=radio] {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 1.5rem;
-  padding: 1.5rem;
+  padding: 1.5rem 0;
   text-decoration: none;
   transition: background 0.12s;
 }
@@ -3712,7 +3712,7 @@ input[type=radio] {
   .tclas-issue-toc__link {
     grid-template-columns: 140px 1fr;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1rem 0;
   }
 }
 @media (max-width: 480px) {

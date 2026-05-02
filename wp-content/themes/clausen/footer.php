@@ -132,9 +132,17 @@
 						<?php if ( get_privacy_policy_url() ) : ?>
 							<a href="<?php echo esc_url( get_privacy_policy_url() ); ?>"><?php esc_html_e( 'Privacy policy', 'tclas' ); ?></a>
 						<?php endif; ?>
-						<a href="<?php echo esc_url( home_url( '/about/terms/' ) ); ?>"><?php esc_html_e( 'Terms of use', 'tclas' ); ?></a>
+						<?php
+						$terms = get_posts( [ 'name' => 'terms', 'post_type' => 'page', 'posts_per_page' => 1 ] );
+						if ( $terms ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $terms[0] ) ); ?>"><?php esc_html_e( 'Terms of use', 'tclas' ); ?></a>
+						<?php endif; ?>
 						<button type="button" class="tclas-footer__cookie-link tclas-consent-manage"><?php esc_html_e( 'Manage cookies', 'tclas' ); ?></button>
-						<a href="<?php echo esc_url( home_url( '/accessibility/' ) ); ?>"><?php esc_html_e( 'Accessibility statement', 'tclas' ); ?></a>
+						<?php
+						$a11y = get_posts( [ 'name' => 'accessibility', 'post_type' => 'page', 'posts_per_page' => 1 ] );
+						if ( $a11y ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $a11y[0] ) ); ?>"><?php esc_html_e( 'Accessibility statement', 'tclas' ); ?></a>
+						<?php endif; ?>
 					</nav>
 
 				</div><!-- .tclas-footer__bottom-right -->
