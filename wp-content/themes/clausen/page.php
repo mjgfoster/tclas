@@ -18,7 +18,7 @@ while ( have_posts() ) :
 	</div>
 </div>
 
-<section class="tclas-section bg-white">
+<section class="tclas-section">
 	<div class="container-tclas container--medium">
 		<div class="entry-content">
 			<?php the_content(); ?>
