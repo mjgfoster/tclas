@@ -81,19 +81,15 @@
 						?>
 					</div>
 
-					<!-- Newsletter -->
+					<!-- Follow us -->
+					<?php
+					$fb_url  = function_exists( 'get_field' ) ? get_field( 'facebook_group_url', 'option' ) : '';
+					$ig_url  = function_exists( 'get_field' ) ? get_field( 'instagram_url', 'option' ) : '';
+					$li_url  = function_exists( 'get_field' ) ? get_field( 'linkedin_url', 'option' ) : '';
+					if ( $fb_url || $ig_url || $li_url ) :
+					?>
 					<div class="tclas-footer__newsletter">
-						<h2 class="tclas-footer__col-title"><?php esc_html_e( 'Stay in touch', 'tclas' ); ?></h2>
-						<p><?php esc_html_e( 'Bimonthly news, events, and Luxembourg stories — in your inbox.', 'tclas' ); ?></p>
-						<?php tclas_footer_newsletter_form(); ?>
-
-						<!-- Social icons -->
-						<?php
-						$fb_url  = function_exists( 'get_field' ) ? get_field( 'facebook_group_url', 'option' ) : '';
-						$ig_url  = function_exists( 'get_field' ) ? get_field( 'instagram_url', 'option' ) : '';
-						$li_url  = function_exists( 'get_field' ) ? get_field( 'linkedin_url', 'option' ) : '';
-						if ( $fb_url || $ig_url || $li_url ) :
-						?>
+						<h2 class="tclas-footer__col-title"><?php esc_html_e( 'Follow us', 'tclas' ); ?></h2>
 						<nav class="tclas-footer__social tclas-footer__social--newsletter" aria-label="<?php esc_attr_e( 'Social media', 'tclas' ); ?>">
 							<?php if ( $fb_url ) : ?>
 								<a href="<?php echo esc_url( $fb_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php esc_attr_e( 'Facebook (opens in new window)', 'tclas' ); ?>">
@@ -111,8 +107,8 @@
 								</a>
 							<?php endif; ?>
 						</nav>
-						<?php endif; ?>
 					</div>
+					<?php endif; ?>
 
 				</div><!-- .tclas-footer__grid -->
 			</div><!-- .container-tclas -->

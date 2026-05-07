@@ -1875,23 +1875,23 @@ input[type=radio] {
   object-fit: cover;
 }
 
-/* MN slides UP, LUX slides DOWN */
+/* Outside-in: MN slides in from the left, LUX slides in from the right */
 @media (min-width: 768px) {
   .tclas-hero__photo-stack[data-side="minnesota"] .tclas-hero__image-slide {
-    transform: translateY(100%);
+    transform: translateX(-100%);
     transition: transform 1.8s cubic-bezier(0.43, 0.13, 0.23, 0.96);
   }
   .tclas-hero__photo-stack[data-side="luxembourg"] .tclas-hero__image-slide {
-    transform: translateY(-100%);
+    transform: translateX(100%);
     transition: transform 1.8s cubic-bezier(0.43, 0.13, 0.23, 0.96);
   }
   .tclas-hero__image-slide[data-active="true"] {
-    transform: translateY(0) !important;
+    transform: translateX(0) !important;
     z-index: 10;
   }
   .tclas-hero__image-slide[data-previous="true"] {
     z-index: 5;
-    transform: translateY(0) !important;
+    transform: translateX(0) !important;
   }
 }
 
