@@ -1,14 +1,9 @@
 <?php
 /**
- * Homepage template
+ * Front page template.
  *
- * Sections (alternating light/dark):
- *  1. Hero            — ardoise (dark)
- *  2. Mission         — or-pale (warm light)
- *  3. Events          — white (light)
- *  4. Citizenship CTA — ardoise (dark)
- *  5. Join bar        — gold
- *  Footer             — ardoise (dark)
+ * Pared-down homepage for the May 9 launch — entry overlay, hero, events,
+ * newsletter preview (auto-hides when no issues are published).
  *
  * @package TCLAS
  */
@@ -18,10 +13,10 @@ get_header();
 
 <!-- ── 0. ENTRY OVERLAY (once per session) ──────────────────────────────── -->
 <div class="tclas-entry" id="tclas-entry" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>" role="dialog" aria-modal="true">
-	<div class="tclas-entry__greetings" aria-label="Bonjour. Hello. Moien.">
-		<span class="tclas-entry__word" data-step="0" lang="fr">Bonjour.</span>
+	<div class="tclas-entry__greetings" aria-label="Moien. Hello. Bonjour.">
+		<span class="tclas-entry__word" data-step="0" lang="lb">Moien.</span>
 		<span class="tclas-entry__word" data-step="1">Hello.</span>
-		<span class="tclas-entry__word" data-step="2" lang="lb">Moien.</span>
+		<span class="tclas-entry__word" data-step="2" lang="fr">Bonjour.</span>
 	</div>
 	<div class="tclas-entry__identity" aria-hidden="true">
 		<img class="tclas-entry__logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/tclas-welcome.svg' ) ); ?>" alt="Twin Cities Luxembourg American Society" width="2051" height="2198">
@@ -45,11 +40,12 @@ $hero_cta1_url    = function_exists( 'get_field' ) ? get_field( 'hp_hero_cta1_ur
 $hero_cta2_label  = function_exists( 'get_field' ) ? get_field( 'hp_hero_cta2_label' ) : '';
 $hero_cta2_url    = function_exists( 'get_field' ) ? get_field( 'hp_hero_cta2_url' ) : '';
 
+// Launch defaults retarget the primary CTA away from /join/ (Phase 2).
 if ( ! $hero_tagline )    $hero_tagline    = 'A heritage that connects to modern Europe';
 if ( ! $hero_welcome )    $hero_welcome    = 'TCLAS — the Twin Cities Luxembourg American Society — is a group based in the Minneapolis–Saint Paul, Minnesota, metro that brings together Americans of Luxembourgish descent, dual citizens of Luxembourg and the United States, and expatriate Luxembourgers living in the Upper Midwest.';
-if ( ! $hero_cta1_label ) $hero_cta1_label = 'Join us';
-if ( ! $hero_cta1_url )   $hero_cta1_url   = '/join/';
-if ( ! $hero_cta2_label ) $hero_cta2_label = 'Learn more';
+if ( ! $hero_cta1_label ) $hero_cta1_label = 'See upcoming events';
+if ( ! $hero_cta1_url )   $hero_cta1_url   = '/events/';
+if ( ! $hero_cta2_label ) $hero_cta2_label = 'About TCLAS';
 if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 ?>
 <section class="tclas-hero<?php echo tclas_is_national_day_season() ? ' tclas-hero--national-day' : ''; ?>" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>">
@@ -128,29 +124,8 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 	</div>
 </section>
 
-<!-- ── 3. CITIZENSHIP CTA ────────────────────────────────────────────────── -->
-<section class="tclas-quiz-cta" aria-labelledby="quiz-cta-heading">
-	<div class="container-tclas container--medium">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Luxembourg citizenship', 'tclas' ); ?></span>
-		<?php
-		$hp_cta_heading = function_exists( 'get_field' ) ? get_field( 'hp_cta_heading' ) : '';
-		$hp_cta_body    = function_exists( 'get_field' ) ? get_field( 'hp_cta_body' ) : '';
-		?>
-		<h2 id="quiz-cta-heading"><?php echo esc_html( $hp_cta_heading ?: 'Think you might qualify?' ); ?></h2>
-		<?php if ( $hp_cta_body ) : ?>
-			<?php echo wp_kses_post( $hp_cta_body ); ?>
-		<?php else : ?>
-		<p>Luxembourg recognizes citizenship through ancestry going back multiple generations. Our eligibility quiz walks you through the criteria for Articles 7, 23, and 7+23&mdash;in plain English.</p>
-		<?php endif; ?>
-		<a href="<?php echo esc_url( home_url( '/citizenship/' ) ); ?>" class="btn btn-primary btn-lg">
-			<?php esc_html_e( 'Check your eligibility', 'tclas' ); ?>
-		</a>
-	</div>
-</section>
-
-<!-- ── 4. NEWSLETTER PREVIEW ────────────────────────────────────────────── -->
+<!-- ── 3. NEWSLETTER PREVIEW (auto-hides when no issues are published) ──── -->
 <?php
-// Find the most-recent issue date
 $_nl_seed = get_posts( [
 	'post_type'      => 'post',
 	'post_status'    => 'publish',
@@ -174,14 +149,12 @@ $_nl_posts = get_posts( [
 	'order'          => 'ASC',
 ] );
 
-// Issue display title
 $_nl_title = (string) get_post_meta( $_nl_seed[0], 'tclas_issue_title', true );
 if ( ! $_nl_title ) {
 	$_nl_dt    = DateTime::createFromFormat( 'Y-m', $_nl_date );
 	$_nl_title = $_nl_dt ? $_nl_dt->format( 'F Y' ) : $_nl_date;
 }
 
-// Cover image: main-story post with a featured image
 $_nl_cover_id = 0;
 foreach ( $_nl_posts as $_nlp ) {
 	$_nl_terms = wp_get_post_terms( $_nlp->ID, 'tclas_department', [ 'fields' => 'slugs' ] );
@@ -253,23 +226,6 @@ foreach ( $_nl_posts as $_nlp ) {
 
 		</div><!-- /.tclas-nl-preview__layout -->
 	</div><!-- /.container-tclas -->
-</section>
-<?php endif; ?>
-
-<!-- ── 5. JOIN BAR ───────────────────────────────────────────────────────── -->
-<?php if ( ! tclas_is_member() ) : ?>
-<section class="tclas-join-bar" aria-labelledby="join-bar-heading">
-	<div class="container-tclas">
-		<h2 id="join-bar-heading"><?php esc_html_e( 'Join the community', 'tclas' ); ?></h2>
-		<div class="tclas-join-bar__actions">
-			<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-secondary btn-lg">
-				<?php esc_html_e( 'Become a member', 'tclas' ); ?>
-			</a>
-			<a href="<?php echo esc_url( wp_login_url() ); ?>" class="btn btn-outline-ardoise">
-				<?php esc_html_e( 'Member log in', 'tclas' ); ?>
-			</a>
-		</div>
-	</div>
 </section>
 <?php endif; ?>
 
