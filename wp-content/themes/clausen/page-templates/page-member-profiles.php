@@ -156,9 +156,6 @@ echo '</nav>';
 			if ( ! empty( $p['pronouns'] ) ) {
 				$meta_parts[] = esc_html( $p['pronouns'] );
 			}
-			if ( ! empty( $p['citizenship_tag'] ) ) {
-				$meta_parts[] = esc_html( $p['citizenship_tag'] );
-			}
 			if ( ! empty( $meta_parts ) ) :
 			?>
 			<p class="tclas-profile-intro__meta"><?php echo implode( ' · ', $meta_parts ); ?></p>

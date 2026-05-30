@@ -15,6 +15,18 @@
 	'use strict';
 
 	var STORAGE_KEY      = 'tclas_entry_seen';
+
+	// Replay control (homepage): clear the once-per-session gate and reload so
+	// the intro plays again. Wired before the overlay/skip checks below so it
+	// works even when the intro was already dismissed or skipped this session.
+	var replayBtn = document.querySelector( '[data-replay-intro]' );
+	if ( replayBtn ) {
+		replayBtn.addEventListener( 'click', function () {
+			try { sessionStorage.removeItem( STORAGE_KEY ); } catch ( e ) {}
+			location.reload();
+		} );
+	}
+
 	var WORD_DELAY       = 600;  // ms between each greeting
 	var MOIEN_HOLD       = 800;  // hold after last greeting before transition
 	var FADE_OUT_MS      = 500;  // greetings fade-out duration

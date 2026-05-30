@@ -24,48 +24,61 @@ get_header();
 	</div>
 </div>
 
-<!-- ── Introduction ─────────────────────────────────────────────────────── -->
+<!-- ── Intro + Quiz (33:66) ─────────────────────────────────────────────── -->
 <section class="tclas-section bg-white">
-	<div class="container-tclas container--medium">
-		<?php
-		$cit_lede   = function_exists( 'get_field' ) ? get_field( 'cit_lede' ) : '';
-		$cit_lede_2 = function_exists( 'get_field' ) ? get_field( 'cit_lede_2' ) : '';
-		?>
-		<?php if ( $cit_lede ) : ?>
-			<div class="tclas-citizenship-lede"><?php echo wp_kses_post( $cit_lede ); ?></div>
-		<?php else : ?>
-			<p class="tclas-citizenship-lede">
-				<?php esc_html_e( 'Under the Law of June 8, 2017 on Luxembourgish nationality — amended and expanded in 2021 — descendants of Luxembourg citizens may be eligible to recover or obtain citizenship. The pathway is open to multiple generations of descendants, whether your ancestor emigrated in the 1880s or the 1950s.', 'tclas' ); ?>
-			</p>
-		<?php endif; ?>
-		<?php if ( $cit_lede_2 ) : ?>
-			<?php echo wp_kses_post( $cit_lede_2 ); ?>
-		<?php else : ?>
-			<p>
-				<?php esc_html_e( 'The quiz below walks through your family history generation by generation and gives you a personalized assessment of your eligibility. It is not a legal opinion, but it reflects the published criteria as they apply to most cases. After the quiz, you\'ll find guidance on what to do next.', 'tclas' ); ?>
-			</p>
-		<?php endif; ?>
-		<p>
-			<a href="#quiz" class="btn btn-primary">
-				<?php esc_html_e( 'Take the quiz ↓', 'tclas' ); ?>
-			</a>
-			<a href="#resources" class="btn btn-outline-ardoise">
-				<?php esc_html_e( 'Skip to resources', 'tclas' ); ?>
-			</a>
-		</p>
+	<div class="container-tclas">
+		<div class="tclas-citizenship-intro-quiz-grid">
+
+			<!-- Left: Intro -->
+			<div class="tclas-citizenship-intro-col">
+				<?php
+				$cit_lede   = function_exists( 'get_field' ) ? get_field( 'cit_lede' ) : '';
+				$cit_lede_2 = function_exists( 'get_field' ) ? get_field( 'cit_lede_2' ) : '';
+				?>
+				<?php if ( $cit_lede ) : ?>
+					<div class="tclas-citizenship-lede"><?php echo wp_kses_post( $cit_lede ); ?></div>
+				<?php else : ?>
+					<p class="tclas-citizenship-lede">
+						<?php esc_html_e( 'Under the Law of June 8, 2017 on Luxembourgish nationality — amended and expanded in 2021 — descendants of Luxembourg citizens may be eligible to recover or obtain citizenship. The pathway is open to multiple generations of descendants, whether your ancestor emigrated in the 1880s or the 1950s.', 'tclas' ); ?>
+					</p>
+				<?php endif; ?>
+				<?php if ( $cit_lede_2 ) : ?>
+					<?php echo wp_kses_post( $cit_lede_2 ); ?>
+				<?php else : ?>
+					<p>
+						<?php esc_html_e( 'The quiz walks through your family history generation by generation and gives you a personalized assessment of your eligibility. It is not a legal opinion, but it reflects the published criteria as they apply to most cases. Common questions are below; further guidance is in the resources section.', 'tclas' ); ?>
+					</p>
+				<?php endif; ?>
+				<p>
+					<a href="#resources" class="btn btn-outline-ardoise">
+						<?php esc_html_e( 'Skip to resources', 'tclas' ); ?>
+					</a>
+				</p>
+			</div>
+
+			<!-- Right: Quiz -->
+			<div class="tclas-citizenship-quiz-col">
+				<div class="tclas-quiz-intro">
+					<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
+					<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
+					<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
+				</div>
+				<div class="tclas-quiz-wrapper" id="quiz">
+					<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
+				</div>
+			</div>
+
+		</div><!-- .tclas-citizenship-intro-quiz-grid -->
 	</div>
 </section>
 
-<!-- ── How it works (Accordion FAQs) + Quiz ────────────────────────────────── -->
+<!-- ── Common questions (full width) ────────────────────────────────────── -->
 <section class="tclas-section bg-white">
 	<div class="container-tclas">
-		<div class="tclas-citizenship-faq-quiz-grid">
-			<!-- Left: FAQ Section -->
-			<div class="tclas-citizenship-faq-col">
-				<span class="tclas-eyebrow"><?php esc_html_e( 'Before you start', 'tclas' ); ?></span>
-				<h2 class="tclas-ruled"><?php esc_html_e( 'Common questions about the rules.', 'tclas' ); ?></h2>
+		<span class="tclas-eyebrow"><?php esc_html_e( 'Before you start', 'tclas' ); ?></span>
+		<h2 class="tclas-ruled"><?php esc_html_e( 'Common questions about the rules.', 'tclas' ); ?></h2>
 
-				<div class="tclas-faq-accordion">
+		<div class="tclas-faq-accordion">
 
 			<!-- FAQ Item 1: The 1969 Rule -->
 			<div class="tclas-faq-item">
@@ -226,23 +239,7 @@ get_header();
 				</div>
 			</div>
 
-			</div><!-- .tclas-faq-accordion -->
-			</div><!-- .tclas-citizenship-faq-col -->
-
-			<!-- Right: Quiz Section -->
-			<div class="tclas-citizenship-quiz-col">
-				<div class="tclas-citizenship-quiz-sticky">
-					<div class="tclas-quiz-intro">
-						<span class="tclas-eyebrow"><?php esc_html_e( 'Eligibility quiz', 'tclas' ); ?></span>
-						<h2 class="tclas-ruled"><?php esc_html_e( 'Find out in a few steps.', 'tclas' ); ?></h2>
-						<p><?php esc_html_e( 'Answer a few questions about your Luxembourg ancestry to get a personalized assessment. Most people complete it in under two minutes.', 'tclas' ); ?></p>
-					</div>
-					<div class="tclas-quiz-wrapper" id="quiz">
-						<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
-					</div>
-				</div>
-			</div><!-- .tclas-citizenship-quiz-col -->
-		</div><!-- .tclas-citizenship-faq-quiz-grid -->
+		</div><!-- .tclas-faq-accordion -->
 	</div>
 </section>
 

@@ -38,9 +38,6 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 		// ── Pronouns ──────────────────────────────────────────────────────
 		update_user_meta( $uid, '_tclas_pronouns', sanitize_text_field( $_POST['tclas_pronouns'] ?? '' ) );
 
-		// ── Citizenship tag ───────────────────────────────────────────────
-		update_user_meta( $uid, '_tclas_citizenship_tag', sanitize_text_field( $_POST['tclas_citizenship_tag'] ?? '' ) );
-
 		// ── Social URLs ───────────────────────────────────────────────────
 		$social_fields = [
 			'_tclas_facebook_url'   => 'tclas_facebook_url',
@@ -75,7 +72,6 @@ $display_name_override = (string) ( get_user_meta( $user_id, '_tclas_display_nam
 $bio                   = (string) ( get_user_meta( $user_id, '_tclas_bio',                   true ) ?: '' );
 $city                  = (string) ( get_user_meta( $user_id, '_tclas_city',                  true ) ?: '' );
 $pronouns              = (string) ( get_user_meta( $user_id, '_tclas_pronouns',              true ) ?: '' );
-$citizenship_tag       = (string) ( get_user_meta( $user_id, '_tclas_citizenship_tag',       true ) ?: '' );
 $facebook_url          = (string) ( get_user_meta( $user_id, '_tclas_facebook_url',          true ) ?: '' );
 $instagram_url         = (string) ( get_user_meta( $user_id, '_tclas_instagram_url',         true ) ?: '' );
 $linkedin_url          = (string) ( get_user_meta( $user_id, '_tclas_linkedin_url',          true ) ?: '' );
@@ -261,23 +257,6 @@ $profile_photo_url = $profile_photo_id
 								maxlength="50"
 							>
 
-							<!-- Citizenship tag -->
-							<label class="tclas-story-social-label tclas-story-social-label--mt" for="tclas-citizenship-tag-field">
-								<?php esc_html_e( 'Citizenship (optional)', 'tclas' ); ?>
-							</label>
-							<p class="tclas-story-hint">
-								<?php esc_html_e( 'Shown on your profile if filled.', 'tclas' ); ?>
-							</p>
-							<input
-								type="text"
-								id="tclas-citizenship-tag-field"
-								name="tclas_citizenship_tag"
-								value="<?php echo esc_attr( $citizenship_tag ); ?>"
-								class="tclas-story-input"
-								placeholder="<?php esc_attr_e( 'e.g. US citizen, Dual US/Luxembourg', 'tclas' ); ?>"
-								maxlength="100"
-							>
-
 						</fieldset>
 
 						<!-- ── Social profiles ──────────────────────────────── -->
@@ -322,7 +301,7 @@ $profile_photo_url = $profile_photo_id
 						<fieldset class="tclas-story-fieldset">
 							<legend class="tclas-story-legend"><?php esc_html_e( 'Luxembourg Citizenship', 'tclas' ); ?></legend>
 							<p class="tclas-story-hint">
-								<?php esc_html_e( 'Check this if you are a Luxembourg citizen. A Bierger badge will appear on your member profile.', 'tclas' ); ?>
+								<?php esc_html_e( 'If you’re a citizen of Luxembourg, check this box and a Bierger·in badge will appear on your member profile.', 'tclas' ); ?>
 							</p>
 							<div class="tclas-story-check-row">
 								<label class="tclas-story-checkbox">
@@ -332,7 +311,7 @@ $profile_photo_url = $profile_photo_id
 										value="1"
 										<?php checked( $is_bierger ); ?>
 									>
-									<?php esc_html_e( 'I am a Luxembourg citizen (Bierger/Biergesch).', 'tclas' ); ?>
+									<?php esc_html_e( 'I am a citizen of Luxembourg', 'tclas' ); ?>
 								</label>
 							</div>
 						</fieldset>

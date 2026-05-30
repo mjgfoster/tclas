@@ -45,22 +45,8 @@ function tclas_hub_dashboard_cards(): array {
 			'link'  => home_url( '/member-hub/profiles/' ),
 			'link_label' => __( 'Browse directory →', 'tclas' ),
 		],
-		[
-			'title' => __( 'Documents & resources', 'tclas' ),
-			'icon'  => '📄',
-			'color' => 'vert',
-			'content' => __( 'Members-only documents, forms, and links.', 'tclas' ),
-			'link'  => home_url( '/member-hub/documents/' ),
-			'link_label' => __( 'View documents →', 'tclas' ),
-		],
-		[
-			'title' => __( 'Luxembourg Connections', 'tclas' ),
-			'icon'  => '🌳',
-			'color' => 'crimson',
-			'content' => __( 'The members-only genealogy and family search forum.', 'tclas' ),
-			'link'  => home_url( '/member-hub/forums/luxembourg-connections/' ),
-			'link_label' => __( 'Join the conversation →', 'tclas' ),
-		],
+		// Phase 2: Documents & resources and Luxembourg Connections (forum) cards
+		// were removed here pending those features being brought back online.
 	];
 
 	return apply_filters( 'tclas_hub_dashboard_cards', $cards );
@@ -139,9 +125,6 @@ function tclas_render_connections_panel(): void {
 				<div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;">
 					<a href="<?php echo esc_url( $ancestry_url ); ?>" class="btn btn-outline-ardoise btn-sm">
 						<?php esc_html_e( 'Update my ancestry', 'tclas' ); ?>
-					</a>
-					<a href="<?php echo esc_url( home_url( '/member-hub/forums/luxembourg-connections/' ) ); ?>" class="btn btn-outline-ardoise btn-sm">
-						<?php esc_html_e( 'Luxembourg Connections forum →', 'tclas' ); ?>
 					</a>
 				</div>
 			</div>

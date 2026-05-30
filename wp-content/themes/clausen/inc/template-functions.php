@@ -328,14 +328,12 @@ function tclas_get_member_nav_links(): array {
 	$user        = wp_get_current_user();
 	$profile_url = home_url( '/member-hub/profiles/' . rawurlencode( $user->user_nicename ) . '/' );
 
+	// Documents, Forum, and a duplicate Map link are deferred to Q3/Q4 — omitted for launch.
 	return [
 		[ 'label' => __( 'Member Hub', 'tclas' ),       'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
 		[ 'label' => __( 'My Member Profile', 'tclas' ),'url' => $profile_url,                           'icon' => 'bi-person-circle' ],
 		[ 'label' => __( 'Member Directory', 'tclas' ), 'url' => home_url( '/member-hub/profiles/' ),      'icon' => 'bi-people-fill' ],
 		[ 'label' => __( 'Ancestral Map', 'tclas' ),    'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
-		[ 'label' => __( 'Documents', 'tclas' ),        'url' => home_url( '/member-hub/documents/' ),     'icon' => 'bi-file-earmark-text' ],
-		[ 'label' => __( 'Forum',     'tclas' ),        'url' => home_url( '/member-hub/forums/' ),        'icon' => 'bi-chat-left-text-fill' ],
-		[ 'label' => __( 'Map',       'tclas' ), 'url' => home_url( '/member-hub/ancestral-map/' ), 'icon' => 'bi-map-fill' ],
 	];
 }
 

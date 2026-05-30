@@ -92,12 +92,32 @@
 		}
 	}
 
-	// variant: 'yes' | 'no' | 'neutral' | null
+	// variant: 'yes' | 'no' | 'idk' | 'neutral' | null
 	function addOptionBtn(label, onClick, variant) {
 		const btn = document.createElement('button');
 		btn.className = 'cq_option_btn';
+		// Auto-tag Yes/No/IDK from the label so the theme can style them distinctly.
+		if (!variant) {
+			if (label === 'Yes') variant = 'yes';
+			else if (label === 'No') variant = 'no';
+			else if (label === 'I don’t know') variant = 'idk';
+		}
 		if (variant) btn.classList.add('cq_option_btn--' + variant);
-		btn.textContent = label;
+		// Bilingual Yes/No: English on top, Luxembourgish as a flourish below.
+		// aria-hidden on the Lux span so screen readers announce just the English label.
+		if (variant === 'yes' || variant === 'no') {
+			const en = document.createElement('span');
+			en.className = 'cq_option_btn__en';
+			en.textContent = label;
+			btn.appendChild(en);
+			const lux = document.createElement('span');
+			lux.className = 'cq_option_btn__lux';
+			lux.setAttribute('aria-hidden', 'true');
+			lux.textContent = (variant === 'yes') ? 'Jo' : 'Neen';
+			btn.appendChild(lux);
+		} else {
+			btn.textContent = label;
+		}
 		btn.addEventListener('click', onClick);
 		buttonsEl.appendChild(btn);
 		return btn;
@@ -106,16 +126,20 @@
 	function addHint(text) {
 		const p = document.createElement('p');
 		p.className   = 'cq_label_hint';
-		p.textContent = text;
+		// Hints contain hand-authored <strong>/<em> tags \u2014 render them as HTML.
+		p.innerHTML = text;
 		buttonsEl.appendChild(p);
 	}
 
 	function addBackButton() {
 		const btn = document.createElement('button');
-		btn.className   = 'cq_back_btn mt-4';
+		btn.className   = 'cq_back_btn';
 		btn.textContent = '\u2190 Back';
 		btn.addEventListener('click', goBack);
-		buttonsEl.appendChild(btn);
+		// Attach to the quiz container (sibling of buttonsEl) so CSS can park it
+		// in a dedicated lower-left slot rather than wherever the answer buttons end.
+		const container = document.getElementById('lcq-quiz-container');
+		(container || buttonsEl).appendChild(btn);
 	}
 
 	// ── Lineage sidebar ─────────────────────────────────────────────────
@@ -290,12 +314,14 @@
 		gate_ancestor: {
 			progress: 5,
 			render: () => {
-				questionEl.innerHTML = 'Do you have a <strong>Luxembourgish ancestor</strong>?';
+				questionEl.innerHTML =
+					'Do you have an ancestor born in <strong>Luxembourg</strong> after <strong>June 9, 1815</strong>?';
 				buttonsEl.innerHTML = '';
 
 				addOptionBtn('Yes', () => {
 					pushHistory('gate_ancestor');
 					state.hasAncestor = 'yes';
+					state.after1815 = 'yes';
 					renderStep('gate_borders');
 				}, 'yes');
 				addOptionBtn('No', () => {
@@ -324,7 +350,7 @@
 				addOptionBtn('Yes', () => {
 					pushHistory('gate_borders');
 					state.modernBorders = 'yes';
-					renderStep('gate_date');
+					renderStep('intro');
 				}, 'yes');
 				addOptionBtn('No', () => {
 					state.modernBorders = 'no';
@@ -333,36 +359,6 @@
 				addOptionBtn('I don\u2019t know', () => {
 					state.modernBorders = 'unsure';
 					renderStep('outcome_unsure_territory');
-				}, 'neutral');
-
-				addBackButton();
-			}
-		},
-
-		gate_date: {
-			progress: 15,
-			render: () => {
-				questionEl.innerHTML =
-					'Was your ancestor born after <strong>June 9, 1815</strong>?';
-				buttonsEl.innerHTML = '';
-
-				addHint(
-					'June 9, 1815 is when the Congress of Vienna established Luxembourg ' +
-					'as an independent Grand Duchy \u2014 the date from which its nationality laws apply.'
-				);
-
-				addOptionBtn('Yes', () => {
-					pushHistory('gate_date');
-					state.after1815 = 'yes';
-					renderStep('intro');
-				}, 'yes');
-				addOptionBtn('No', () => {
-					state.after1815 = 'no';
-					renderStep('outcome_ineligible_pre1815');
-				}, 'no');
-				addOptionBtn('I don\u2019t know', () => {
-					state.after1815 = 'unsure';
-					renderStep('outcome_unsure_date');
 				}, 'neutral');
 
 				addBackButton();
@@ -384,133 +380,9 @@
 				btn.textContent = 'Continue';
 				btn.addEventListener('click', () => {
 					pushHistory('intro');
-					renderStep('explain_1969');
-				});
-				buttonsEl.appendChild(btn);
-
-				addBackButton();
-			}
-		},
-
-		explain_1969: {
-			progress: 22,
-			render: () => {
-				questionEl.textContent =
-					'Why is 1969 so important?';
-				buttonsEl.innerHTML = '';
-
-				// Create demo container
-				const demoWrapper = document.createElement('div');
-				demoWrapper.className = 'cq_demo_wrapper';
-
-				// Left side — male line (works)
-				const leftCol = document.createElement('div');
-				leftCol.className = 'cq_demo_column cq_demo_column--valid';
-
-				const leftTitle = document.createElement('h4');
-				leftTitle.className = 'cq_demo_title';
-				leftTitle.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i> Male Line';
-				leftCol.appendChild(leftTitle);
-
-				const leftDemoEl = document.createElement('div');
-				leftDemoEl.className = 'cq_demo_tree';
-				leftDemoEl.innerHTML = `
-					<div class="cq_demo_gen">
-						<div class="cq_demo_person cq_demo_person--ancestor">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>Grandfather</span>
-							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
-						</div>
-					</div>
-					<div class="cq_demo_arrow cq_demo_arrow--valid">
-						<span class="cq_demo_arrow__label"><i class="bi bi-check-lg"></i> passes</span>
-					</div>
-					<div class="cq_demo_gen">
-						<div class="cq_demo_person">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>Father</span>
-							<span class="cq_demo_year">b. 1950</span>
-						</div>
-					</div>
-					<div class="cq_demo_arrow cq_demo_arrow--valid">
-						<span class="cq_demo_arrow__label"><i class="bi bi-check-lg"></i> passes</span>
-					</div>
-					<div class="cq_demo_gen">
-						<div class="cq_demo_person cq_demo_person--you">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>You</span>
-							<span class="cq_demo_year">b. 1980</span>
-						</div>
-					</div>
-					<div class="cq_demo_outcome"><i class="bi bi-check-lg"></i> Eligible</div>
-				`;
-				leftCol.appendChild(leftDemoEl);
-				demoWrapper.appendChild(leftCol);
-
-				// Right side — female line (breaks)
-				const rightCol = document.createElement('div');
-				rightCol.className = 'cq_demo_column cq_demo_column--broken';
-
-				const rightTitle = document.createElement('h4');
-				rightTitle.className = 'cq_demo_title';
-				rightTitle.innerHTML = '<i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Female Line (Pre-1969)';
-				rightCol.appendChild(rightTitle);
-
-				const rightDemoEl = document.createElement('div');
-				rightDemoEl.className = 'cq_demo_tree';
-				rightDemoEl.innerHTML = `
-					<div class="cq_demo_gen">
-						<div class="cq_demo_person cq_demo_person--ancestor">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>Grandmother</span>
-							<span class="cq_demo_year">b. 1920<br>Luxembourg</span>
-						</div>
-					</div>
-					<div class="cq_demo_arrow cq_demo_arrow--broken">
-						<span class="cq_demo_arrow__label"><i class="bi bi-x-lg"></i> Can't pass<br>to child born<br>before 1969</span>
-					</div>
-					<div class="cq_demo_gen cq_demo_gen--broken">
-						<div class="cq_demo_person cq_demo_person--broken">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>Mother</span>
-							<span class="cq_demo_year">b. 1955</span>
-						</div>
-					</div>
-					<div class="cq_demo_arrow cq_demo_arrow--broken">
-						<span class="cq_demo_arrow__label">Line broken</span>
-					</div>
-					<div class="cq_demo_gen">
-						<div class="cq_demo_person cq_demo_person--you">
-							<span class="cq_demo_icon"><i class="bi bi-person-fill"></i></span>
-							<span>You</span>
-							<span class="cq_demo_year">b. 1980</span>
-						</div>
-					</div>
-					<div class="cq_demo_outcome cq_demo_outcome--article23"><i class="bi bi-exclamation-triangle"></i> Article 23</div>
-				`;
-				rightCol.appendChild(rightDemoEl);
-				demoWrapper.appendChild(rightCol);
-
-				buttonsEl.appendChild(demoWrapper);
-
-				// Explanation text
-				const explainer = document.createElement('p');
-				explainer.className = 'cq_demo_explainer';
-				explainer.innerHTML =
-					'<strong>In 1969,</strong> Luxembourg law changed to allow women to pass nationality equally. ' +
-					'Before then, a female ancestor could only pass citizenship to children born <em>after</em> 1969. ' +
-					'Same person, two different routes—one works, one doesn\'t. We\'ll help you trace the one that does.';
-				buttonsEl.appendChild(explainer);
-
-				// Continue button
-				const continueBtn = document.createElement('button');
-				continueBtn.className = 'cq_option_btn cq_submit_btn mt-4';
-				continueBtn.textContent = 'I understand — let\'s trace my line';
-				continueBtn.addEventListener('click', () => {
-					pushHistory('explain_1969');
 					renderStep('user_born');
 				});
-				buttonsEl.appendChild(continueBtn);
+				buttonsEl.appendChild(btn);
 
 				addBackButton();
 			}
@@ -519,24 +391,19 @@
 		user_born: {
 			progress: 25,
 			render: () => {
-				questionEl.innerHTML = 'Were you born before <strong>1969</strong>?';
+				questionEl.innerHTML = 'When were you born?';
 				buttonsEl.innerHTML = '';
 
-				addOptionBtn('Yes', () => {
+				addOptionBtn('Before 1969', () => {
 					pushHistory('user_born');
 					state.userBornBefore1969 = true;
 					renderStep('adopted_check');
-				}, 'yes');
-				addOptionBtn('No', () => {
+				}, 'neutral');
+				addOptionBtn('In or after 1969', () => {
 					pushHistory('user_born');
 					state.userBornBefore1969 = false;
 					renderStep('adopted_check');
-				}, 'no');
-
-				addHint(
-					'1969 is when Luxembourg law first allowed women to pass nationality ' +
-					'to their children equally.'
-				);
+				}, 'neutral');
 
 				addBackButton();
 			}
@@ -597,24 +464,22 @@
 			progress: 30,
 			render: () => {
 				questionEl.innerHTML =
-					'Which side do you want to <strong>start with</strong>?';
+					'Great \u2014 let\u2019s start with your <strong>father\u2019s side</strong>.';
 				buttonsEl.innerHTML = '';
 
 				addHint(
-					'Start with the <strong>shortest</strong> line \u2014 the one with the fewest ' +
-					'generations back. A viable route has an unbroken male line, or a female ancestor with children born after 1969. You can retake for the other side later.'
+					'When the Luxembourgish line could come from either parent, we trace the father\u2019s side first \u2014 the male-descent route (Article 7) usually has the clearest paperwork trail. You can retake the quiz for your mother\u2019s side later.'
 				);
 
-				addOptionBtn('My mom\u2019s side', () => {
-					pushHistory('choose_side_both');
-					setSide('mom');
-					afterSideChosen();
-				}, 'neutral');
-				addOptionBtn('My dad\u2019s side', () => {
+				const btn = document.createElement('button');
+				btn.className = 'cq_option_btn cq_submit_btn';
+				btn.textContent = 'Continue';
+				btn.addEventListener('click', () => {
 					pushHistory('choose_side_both');
 					setSide('dad');
 					afterSideChosen();
-				}, 'neutral');
+				});
+				buttonsEl.appendChild(btn);
 
 				addBackButton();
 			}
@@ -625,21 +490,21 @@
 			render: () => {
 				const label = state.lineage[0].label;
 				questionEl.innerHTML =
-					'Was your <strong>' + label + '</strong> born before <strong>1969</strong>?';
+					'When was your <strong>' + label + '</strong> born?';
 				buttonsEl.innerHTML = '';
 
-				addOptionBtn('Yes', () => {
+				addOptionBtn('Before 1969', () => {
 					pushHistory('parent_born');
 					state.lineage[0].bornBefore1969 = true;
 					state.genIndex = 1;
 					renderStep('gen_gender');
-				}, 'yes');
-				addOptionBtn('No', () => {
+				}, 'neutral');
+				addOptionBtn('In or after 1969', () => {
 					pushHistory('parent_born');
 					state.lineage[0].bornBefore1969 = false;
 					state.genIndex = 1;
 					renderStep('gen_gender');
-				}, 'no');
+				}, 'neutral');
 
 				addBackButton();
 			}
@@ -684,6 +549,17 @@
 					};
 					afterGenderChosen();
 				}, 'neutral');
+				// If both were Luxembourgish, trace via the male line for the clearest path.
+				addOptionBtn('Both', () => {
+					pushHistory('gen_gender');
+					state.lineage[state.genIndex] = {
+						label:          maleLabel,
+						gender:         'm',
+						bornBefore1969: null,
+						bornInLux:      null
+					};
+					afterGenderChosen();
+				}, 'neutral');
 
 				addBackButton();
 			}
@@ -696,21 +572,19 @@
 
 				var label = state.lineage[state.genIndex].label;
 				questionEl.innerHTML =
-					'Was your <strong>' + label + '</strong> born before <strong>1969</strong>?';
+					'When was your <strong>' + label + '</strong> born?';
 				buttonsEl.innerHTML = '';
 
-				addOptionBtn('Yes', () => {
+				addOptionBtn('Before 1969', () => {
 					pushHistory('gen_born');
 					state.lineage[state.genIndex].bornBefore1969 = true;
 					renderStep('gen_country');
-				}, 'yes');
-				addOptionBtn('No', () => {
+				}, 'neutral');
+				addOptionBtn('In or after 1969', () => {
 					pushHistory('gen_born');
 					state.lineage[state.genIndex].bornBefore1969 = false;
 					renderStep('gen_country');
-				}, 'no');
-
-				addHint('Most ancestors at this generation level were likely born before 1969.');
+				}, 'neutral');
 
 				addBackButton();
 			}
@@ -787,15 +661,6 @@
 			)
 		},
 
-		outcome_ineligible_pre1815: {
-			progress: 100,
-			render: () => renderOutcome(
-				'Your ancestor predates Luxembourg\u2019s founding.',
-				'Luxembourg was established as an independent Grand Duchy on June 9, 1815, by the Congress of Vienna. Citizenship by descent under Articles 7 and 23 applies to descendants of citizens of the Grand Duchy from that date forward. An ancestor born before 1815 would not have been a citizen of the modern Luxembourg state as defined by current nationality law. While your family\u2019s historical connection to the region is genuine, the formal citizenship recovery pathway is unlikely to apply to this line. We encourage you to contact the Luxembourg Ministry of Justice directly if you believe your circumstances may be an exception.',
-				null
-			)
-		},
-
 		outcome_unsure_ancestor: {
 			progress: 100,
 			render: () => renderOutcome(
@@ -810,15 +675,6 @@
 			render: () => renderOutcome(
 				'Worth confirming before you go further.',
 				'The historical Province of Luxembourg and the modern Grand Duchy share a name and much of their history \u2014 but they are different countries today. The 1839 Treaty of London split the original duchy: the western, French-speaking portion became a Belgian province, while the eastern portion remained the independent Grand Duchy. If your ancestor\u2019s records show \u201cLuxembourg\u201d as a birthplace, cross-reference the specific commune against a current map of the Grand Duchy. The Luxembourg National Archives (ANLux) and genealogical databases such as Portail G\u00e9n\u00e9alogique Grand-Ducal can help confirm whether a town is inside modern Luxembourg. Once verified, you can retake this quiz with that detail confirmed.',
-				null
-			)
-		},
-
-		outcome_unsure_date: {
-			progress: 100,
-			render: () => renderOutcome(
-				'You\u2019ll want to confirm the birth year before applying.',
-				'The June 9, 1815 threshold matters for your application \u2014 that is when Luxembourg\u2019s nationality laws began. If you don\u2019t have a confirmed birth year for your Luxembourg ancestor, vital records offices, the Luxembourg National Archives (ANLux), or genealogical databases can help locate birth records. Parish registers (registres paroissiaux) and civil registration records (registres d\u2019\u00e9tat civil) from Luxembourg communes are increasingly digitized and searchable online. Once you have a confirmed birth year \u2014 even an approximate decade from a death certificate \u2014 you can retake this quiz or proceed to the consulate directly if the date is clearly after 1815.',
 				null
 			)
 		},
@@ -930,16 +786,6 @@
 		bodyEl.className   = 'cq_outcome_body';
 		bodyEl.textContent = bodyText;
 		buttonsEl.appendChild(bodyEl);
-
-		// Soft member CTA (qualifying outcomes only)
-		if (outcomeType === 'article7' || outcomeType === 'article23') {
-			buttonsEl.insertAdjacentHTML('beforeend', '\
-				<div class="cq_cta_box">\
-					<p class="cq_cta_text"><strong>Want the full picture?</strong> TCLAS members have access to a detailed, step-by-step guide that walks through the complete application process for both Article 7 and Article 23. We also host occasional peer-to-peer citizenship workshops where members share firsthand experiences navigating the process.</p>\
-					<a href="/join/" class="cq_option_btn cq_submit_btn cq_cta_btn">Learn about TCLAS membership \u2192</a>\
-				</div>\
-			');
-		}
 
 		// Legal disclaimer
 		buttonsEl.insertAdjacentHTML('beforeend', '\

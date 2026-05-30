@@ -139,6 +139,22 @@ function tclas_enqueue_assets(): void {
 		);
 	}
 
+	// ── Checkout enhancements (PMPro checkout page only) ─────────────────
+	$is_checkout = ( function_exists( 'pmpro_is_checkout' ) && pmpro_is_checkout() );
+	if ( ! $is_checkout ) {
+		$checkout_id = (int) get_option( 'pmpro_checkout_page_id' );
+		$is_checkout = ( $checkout_id && is_page( $checkout_id ) );
+	}
+	if ( $is_checkout ) {
+		wp_enqueue_script(
+			'tclas-checkout-enhance',
+			TCLAS_ASSETS . '/js/checkout-enhance.js',
+			[],
+			filemtime( $dir . '/assets/js/checkout-enhance.js' ),
+			true
+		);
+	}
+
 	// ── Cookie consent banner ────────────────────────────────────────────
 	wp_enqueue_script(
 		'tclas-cookie-consent',

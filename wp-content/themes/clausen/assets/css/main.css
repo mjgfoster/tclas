@@ -1777,6 +1777,31 @@ input[type=radio] {
   overflow: hidden;
   border-bottom: 1px solid var(--c-or-pale-dk);
 }
+.tclas-replay-intro {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 14px; /* intentional exception to the theme's no-small-fonts default, for this subtle control */
+  border: 1px solid rgba(43, 98, 130, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--c-ardoise);
+  cursor: pointer;
+  opacity: 0.7;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+.tclas-replay-intro:hover,
+.tclas-replay-intro:focus-visible {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.95);
+}
 .tclas-hero__grid {
   position: relative;
   max-width: 1800px;
@@ -2575,9 +2600,14 @@ input[type=radio] {
 
 .tclas-tiers {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   margin-top: 2rem;
+}
+@media (max-width: 1024px) {
+  .tclas-tiers {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 @media (max-width: 767px) {
   .tclas-tiers {
@@ -2586,6 +2616,11 @@ input[type=radio] {
     margin-left: auto;
     margin-right: auto;
   }
+}
+.tclas-tiers__note {
+  margin-top: 1.5rem;
+  text-align: center;
+  opacity: 0.85;
 }
 
 .tclas-tier {
@@ -9320,3 +9355,306 @@ input:disabled + .tclas-toggle__slider::before {
 .tclas-hub-admin-card__icon  { font-size: 1.5rem; color: var(--c-ardoise); margin-bottom: .75rem; display: block; }
 .tclas-hub-admin-card__title { font-weight: 700; color: var(--c-ardoise); margin-bottom: .35rem; }
 .tclas-hub-admin-card__desc  { color: var(--c-muted); margin: 0; }
+
+/* ── Checkout: display-name picker ──────────────────────────────────────── */
+.tclas-dn-option { display: block; margin: 0.3rem 0; }
+.tclas-dn-custom { margin-top: 0.5rem; display: block; }
+
+/* ── Citizenship: intro + quiz grid (33:66) ─────────────────────────────── */
+.tclas-citizenship-intro-quiz-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .tclas-citizenship-intro-quiz-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Citizenship quiz: big bilingual Yes/No circles + ghost-pill IDK ────── */
+/* Higher specificity than the plugin's .cq_button_container { flex-direction: column } */
+.cq_quiz_container .cq_button_container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem 2rem;
+  margin-top: 1.5rem;
+}
+.cq_option_btn--yes,
+.cq_option_btn--no {
+  width: clamp(120px, 16vw, 170px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: #fff;
+  border: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.15;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.cq_option_btn--yes { background: var(--c-vert); }
+.cq_option_btn--no  { background: var(--c-crimson); }
+.cq_option_btn--yes:hover,
+.cq_option_btn--no:hover,
+.cq_option_btn--yes:focus-visible,
+.cq_option_btn--no:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+/* English on top, bold */
+.cq_option_btn--yes .cq_option_btn__en,
+.cq_option_btn--no  .cq_option_btn__en {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+/* Luxembourgish below, italic, standard weight — same size as the English */
+.cq_option_btn--yes .cq_option_btn__lux,
+.cq_option_btn--no  .cq_option_btn__lux {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+  margin-top: 0.15rem;
+  opacity: 0.95;
+}
+.cq_option_btn--idk {
+  flex-basis: 100%;
+  max-width: max-content;
+  margin: 0.5rem auto 0;
+  background: transparent;
+  border: 1px solid var(--c-muted);
+  color: var(--c-muted);
+  border-radius: 999px;
+  padding: 0.45rem 1.25rem;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.cq_option_btn--idk:hover,
+.cq_option_btn--idk:focus-visible {
+  background: rgba(43, 98, 130, 0.08);
+  color: var(--c-ardoise);
+  border-color: var(--c-ardoise);
+  outline: none;
+}
+
+/* ── Citizenship quiz: fill its column (override plugin's 640/920 caps) ── */
+#lcq-quiz-layout.cq_layout,
+#lcq-quiz-layout.cq_layout.cq_layout--with-sidebar {
+  max-width: none;
+  margin: 0;
+}
+/* ── Citizenship quiz: dedicated back button in lower-left ──────────────── */
+#lcq-quiz-container.cq_quiz_container {
+  position: relative;
+  padding-bottom: 4rem;
+  max-width: none;
+  margin: 0;
+}
+#lcq-quiz-container .cq_back_btn {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  padding: 0.35rem 0.5rem;
+  color: var(--c-muted);
+  font-family: inherit;
+  cursor: pointer;
+  transition: color .15s;
+}
+#lcq-quiz-container .cq_back_btn:hover,
+#lcq-quiz-container .cq_back_btn:focus-visible {
+  color: var(--c-ardoise);
+  outline: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Member hub v2 — minimalist 3-col layout
+   ══════════════════════════════════════════════════════════════════════════ */
+.tclas-hub2-page {
+  width: 100%;
+  padding: 2rem 2rem 3rem;
+  background: #fff;
+  font-family: var(--font-sans);
+}
+.tclas-hub2-page,
+.tclas-hub2-page * {
+  font-family: var(--font-sans);
+}
+.tclas-hub2-banner {
+  margin: 0 0 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 4px solid var(--c-crimson);
+  background: #fff8f6;
+  color: var(--c-ardoise);
+}
+.tclas-hub2-banner--expired {
+  border-left-color: var(--c-crimson);
+  background: #fff0ed;
+}
+.tclas-hub2-banner a { color: var(--c-ardoise); text-decoration: underline; }
+.tclas-hub2-greeting {
+  margin: 0 0 2rem;
+  font-weight: 700;
+  color: var(--c-ardoise);
+}
+.tclas-hub2-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  .tclas-hub2-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+.tclas-hub2-col { min-width: 0; }
+.tclas-hub2-col__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-muted);
+}
+.tclas-hub2-meta {
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+.tclas-hub2-meta__level { font-weight: 700; color: var(--c-ardoise); }
+.tclas-hub2-meta__renewal { color: var(--c-muted); }
+.tclas-hub2-action { margin: 0 0 0.5rem; }
+.tclas-hub2-link {
+  color: var(--c-ardoise);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s;
+}
+.tclas-hub2-link:hover,
+.tclas-hub2-link:focus-visible { border-bottom-color: var(--c-ardoise); }
+.tclas-hub2-link--primary { font-weight: 600; }
+.tclas-hub2-rule {
+  border: 0;
+  border-top: 1px solid var(--c-or-pale-dk, #e6e1d3);
+  margin: 1.25rem 0;
+}
+.tclas-hub2-rule--big { margin: 2rem 0; }
+.tclas-hub2-legal {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+.tclas-hub2-legal li { margin-bottom: 0.35rem; }
+.tclas-hub2-legal a {
+  color: var(--c-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.tclas-hub2-legal a:hover,
+.tclas-hub2-legal a:focus-visible {
+  color: var(--c-ardoise);
+  border-bottom-color: var(--c-ardoise);
+}
+.tclas-hub2-referral { margin-top: 1.5rem; }
+.tclas-hub2-logout {
+  margin: 2rem 0 0;
+}
+.tclas-hub2-logout a {
+  color: var(--c-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.tclas-hub2-logout a:hover,
+.tclas-hub2-logout a:focus-visible {
+  color: var(--c-ardoise);
+  border-bottom-color: var(--c-ardoise);
+}
+
+/* ── Col 2 blocks ───────────────────────────────────────────────────────── */
+.tclas-hub2-block { margin-bottom: 2rem; }
+.tclas-hub2-block:last-child { margin-bottom: 0; }
+
+.tclas-hub2-profile-card {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 1rem;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+}
+.tclas-hub2-profile-card__photo {
+  grid-row: 1 / span 2;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--c-or-pale-dk, #e6e1d3);
+  display: block;
+}
+.tclas-hub2-profile-card__photo--placeholder {
+  background: var(--c-or-pale-dk, #e6e1d3);
+}
+.tclas-hub2-profile-card__name {
+  font-weight: 700;
+  color: var(--c-ardoise);
+}
+.tclas-hub2-profile-card__view {
+  color: var(--c-muted);
+}
+.tclas-hub2-profile-card:hover .tclas-hub2-profile-card__view,
+.tclas-hub2-profile-card:focus-visible .tclas-hub2-profile-card__view {
+  color: var(--c-ardoise);
+  text-decoration: underline;
+}
+.tclas-hub2-action-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tclas-hub2-action-list li { margin-bottom: 0.4rem; }
+
+/* ── Admin section (full width, below grid) ─────────────────────────────── */
+.tclas-hub2-admin {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--c-or-pale-dk, #e6e1d3);
+}
+
+/* ── Neutralize existing widget chrome inside hub2 ──────────────────────── */
+.tclas-hub2-page .tclas-conn-panel,
+.tclas-hub2-page .tclas-referral-card,
+.tclas-hub2-page .tclas-fresh-content,
+.tclas-hub2-page .tclas-hub-admin-cards,
+.tclas-hub2-page .tclas-profile-completion {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+.tclas-hub2-page .tclas-conn-panel__header,
+.tclas-hub2-page .tclas-conn-panel__title,
+.tclas-hub2-page .tclas-fresh-content__title,
+.tclas-hub2-page .tclas-profile-completion__title,
+.tclas-hub2-page .tclas-referral-card__title {
+  font-family: var(--font-sans);
+}
+/* Hide emoji icons that survive inside widgets we still call. */
+.tclas-hub2-page .tclas-hub-fresh-content__icon { display: none; }

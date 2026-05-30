@@ -192,7 +192,6 @@ function tclas_get_profile_data( int $user_id ): array {
 		'badges'                 => function_exists( 'tclas_get_user_badges' ) ? tclas_get_user_badges( $user_id ) : [],
 		'member_since'           => tclas_get_member_since_year( $user_id ),
 		'has_bio'                => ! empty( get_user_meta( $user_id, '_tclas_bio', true ) ),
-		'citizenship_tag'        => (string) ( get_user_meta( $user_id, '_tclas_citizenship_tag', true ) ?: '' ),
 	];
 
 	// Membership level from PMPro.

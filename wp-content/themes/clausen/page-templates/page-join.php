@@ -22,9 +22,11 @@ get_header();
 $price_individual = function_exists( 'get_field' ) ? (int) get_field( 'price_individual', 'option' ) : 0;
 $price_family     = function_exists( 'get_field' ) ? (int) get_field( 'price_family',     'option' ) : 0;
 $price_student    = function_exists( 'get_field' ) ? (int) get_field( 'price_student',    'option' ) : 0;
-$price_individual = $price_individual ?: 30;
-$price_family     = $price_family     ?: 45;
-$price_student    = $price_student    ?: 15;
+$price_benefactor = function_exists( 'get_field' ) ? (int) get_field( 'price_benefactor', 'option' ) : 0;
+$price_individual = $price_individual ?: 50;
+$price_family     = $price_family     ?: 100;
+$price_student    = $price_student    ?: 25;
+$price_benefactor = $price_benefactor ?: 1000;
 
 $checkout_url = function_exists( 'pmpro_url' ) ? pmpro_url( 'checkout' ) : home_url( '/membership-checkout/' );
 $is_member    = tclas_is_member();
@@ -100,6 +102,7 @@ $is_member    = tclas_is_member();
 			$tier_0 = ! empty( $join_tiers[0] ) ? $join_tiers[0] : [];
 			$tier_1 = ! empty( $join_tiers[1] ) ? $join_tiers[1] : [];
 			$tier_2 = ! empty( $join_tiers[2] ) ? $join_tiers[2] : [];
+			$tier_3 = ! empty( $join_tiers[3] ) ? $join_tiers[3] : [];
 			?>
 
 			<!-- Individual -->
@@ -126,11 +129,11 @@ $is_member    = tclas_is_member();
 				</div>
 			</div>
 
-			<!-- Family -->
+			<!-- Household -->
 			<div class="tclas-tier tclas-tier--featured">
 				<div class="tclas-tier__header">
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_1['tier_invite'] ) ? $tier_1['tier_invite'] : 'Bring the people you love.' ); ?></span>
-					<span class="tclas-tier__name"><?php esc_html_e( 'Family', 'tclas' ); ?></span>
+					<span class="tclas-tier__name"><?php esc_html_e( 'Household', 'tclas' ); ?></span>
 					<span class="tclas-tier__price">$<?php echo esc_html( $price_family ); ?></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
@@ -142,7 +145,7 @@ $is_member    = tclas_is_member();
 						<span class="tclas-tier__member-note"><?php esc_html_e( "You're a member &mdash; welcome!", 'tclas' ); ?></span>
 					<?php else : ?>
 						<a href="<?php echo esc_url( add_query_arg( 'level', '2', $checkout_url ) ); ?>" class="btn btn-primary">
-							<?php esc_html_e( 'Join as family', 'tclas' ); ?>
+							<?php esc_html_e( 'Join as a household', 'tclas' ); ?>
 						</a>
 					<?php endif; ?>
 				</div>
@@ -170,7 +173,33 @@ $is_member    = tclas_is_member();
 				</div>
 			</div>
 
+			<!-- Benefactor -->
+			<div class="tclas-tier tclas-tier--benefactor">
+				<div class="tclas-tier__header">
+					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_3['tier_invite'] ) ? $tier_3['tier_invite'] : 'Help carry the whole community forward.' ); ?></span>
+					<span class="tclas-tier__name"><?php esc_html_e( 'Benefactor', 'tclas' ); ?></span>
+					<span class="tclas-tier__price">$<?php echo esc_html( number_format( $price_benefactor ) ); ?>+</span>
+					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
+				</div>
+				<div class="tclas-tier__body">
+					<p class="tclas-tier__note"><?php echo esc_html( ! empty( $tier_3['tier_note'] ) ? $tier_3['tier_note'] : 'Give at the benefactor level or more. You may be acknowledged on our website, or remain anonymous — your choice.' ); ?></p>
+				</div>
+				<div class="tclas-tier__cta">
+					<?php if ( $is_member ) : ?>
+						<span class="tclas-tier__member-note"><?php esc_html_e( "You're a member &mdash; welcome!", 'tclas' ); ?></span>
+					<?php else : ?>
+						<a href="<?php echo esc_url( add_query_arg( 'level', '4', $checkout_url ) ); ?>" class="btn btn-outline-light">
+							<?php esc_html_e( 'Become a benefactor', 'tclas' ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+			</div>
+
 		</div><!-- .tclas-tiers -->
+
+		<p class="tclas-tiers__note">
+			<?php esc_html_e( 'Membership renews on an annual basis from your date of enrollment. If there are financial barriers to joining, please reach out — we&rsquo;ll help.', 'tclas' ); ?>
+		</p>
 	</div>
 </section>
 

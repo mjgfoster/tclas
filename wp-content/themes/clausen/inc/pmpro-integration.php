@@ -7,6 +7,13 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+// PMPro membership level IDs (must match wp_pmpro_membership_levels).
+const TCLAS_LEVEL_INDIVIDUAL = 1;
+const TCLAS_LEVEL_HOUSEHOLD  = 2;
+const TCLAS_LEVEL_STUDENT    = 3;
+const TCLAS_LEVEL_BENEFACTOR = 4;
+const TCLAS_BENEFACTOR_MIN   = 1000;
+
 /**
  * Redirect to member hub after login if user is a member.
  */
@@ -82,6 +89,22 @@ add_filter( 'pmpro_levels_page_content', 'tclas_pmpro_levels_shortcode' );
 // Member subscribe/unsubscribe sync is handled by FuseWP → Brevo.
 // No custom Mailchimp hooks needed.
 
+/**
+ * Members log in with their email (email = username), so relabel the login
+ * field from "Username or Email Address" to just "Email".
+ */
+add_filter( 'gettext', function ( $translation, $text, $domain ) {
+	switch ( $text ) {
+		case 'Username or Email Address':
+		case 'Username or Email':
+			return 'Email';
+		case 'Billing Address':
+			// We use this address to mail members things (e.g. the annual gift).
+			return 'Mailing Address';
+	}
+	return $translation;
+}, 10, 3 );
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Family membership section on account page
 // ═══════════════════════════════════════════════════════════════════════════
@@ -121,11 +144,12 @@ function tclas_pmpro_family_section(): void {
 		return;
 	}
 
-	// Only show for family-level memberships, or if they already have family names saved.
+	// Only show for Household memberships, or if they already have family names saved.
 	$family_names = (array) ( get_user_meta( $uid, '_tclas_family_names', true ) ?: [] );
 	$has_children = (bool) get_user_meta( $uid, '_tclas_has_children', true );
 	$level        = function_exists( 'pmpro_getMembershipLevelForUser' ) ? pmpro_getMembershipLevelForUser( $uid ) : null;
-	$is_family    = $level && stripos( $level->name, 'family' ) !== false;
+	// Household is level ID 2 (formerly "Family"); key off ID so renames don't break this.
+	$is_family    = $level && (int) $level->id === TCLAS_LEVEL_HOUSEHOLD;
 
 	if ( ! $is_family && empty( $family_names ) ) {
 		return;

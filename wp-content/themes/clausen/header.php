@@ -54,7 +54,13 @@
 					?>
 				</nav>
 
-				<?php // Launch (May 9): search + member action hidden — restore for Phase 2. ?>
+				<!-- Desktop utility bar: search + member action -->
+				<div class="tclas-header__utility">
+					<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" class="tclas-search-btn" aria-label="<?php esc_attr_e( 'Search', 'tclas' ); ?>">
+						<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+					</a>
+					<?php tclas_render_header_actions(); ?>
+				</div>
 
 				<!-- Mobile toggle -->
 				<button
@@ -83,7 +89,13 @@
 				] );
 				?>
 			</nav>
-			<?php // Launch (May 9): drawer search + member action hidden — restore for Phase 2. ?>
+			<div class="tclas-nav-drawer__utility">
+				<a href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" class="tclas-nav-drawer__search">
+					<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+					<span><?php esc_html_e( 'Search', 'tclas' ); ?></span>
+				</a>
+				<?php tclas_render_header_actions( true ); ?>
+			</div>
 		</div><!-- .tclas-nav-drawer -->
 
 	</header>

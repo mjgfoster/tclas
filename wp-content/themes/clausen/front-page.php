@@ -13,10 +13,10 @@ get_header();
 
 <!-- ── 0. ENTRY OVERLAY (once per session) ──────────────────────────────── -->
 <div class="tclas-entry" id="tclas-entry" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>" role="dialog" aria-modal="true">
-	<div class="tclas-entry__greetings" aria-label="Moien. Hello. Bonjour.">
-		<span class="tclas-entry__word" data-step="0" lang="lb">Moien.</span>
+	<div class="tclas-entry__greetings" aria-label="Bonjour. Hello. Moien.">
+		<span class="tclas-entry__word" data-step="0" lang="fr">Bonjour.</span>
 		<span class="tclas-entry__word" data-step="1">Hello.</span>
-		<span class="tclas-entry__word" data-step="2" lang="fr">Bonjour.</span>
+		<span class="tclas-entry__word" data-step="2" lang="lb">Moien.</span>
 	</div>
 	<div class="tclas-entry__identity" aria-hidden="true">
 		<img class="tclas-entry__logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/tclas-welcome.svg' ) ); ?>" alt="Twin Cities Luxembourg American Society" width="2051" height="2198">
@@ -49,6 +49,10 @@ if ( ! $hero_cta2_label ) $hero_cta2_label = 'About TCLAS';
 if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 ?>
 <section class="tclas-hero<?php echo tclas_is_national_day_season() ? ' tclas-hero--national-day' : ''; ?>" aria-label="<?php esc_attr_e( 'Welcome', 'tclas' ); ?>">
+	<button class="tclas-replay-intro" type="button" data-replay-intro aria-label="<?php esc_attr_e( 'Replay the welcome animation', 'tclas' ); ?>">
+		<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+		<span><?php esc_html_e( 'Replay welcome', 'tclas' ); ?></span>
+	</button>
 	<div class="tclas-hero__grid">
 
 		<!-- Row 1: MN photo (left ~62%) + Copy block 1 (right ~38%) -->
