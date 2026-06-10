@@ -11,7 +11,11 @@
  *
  * Relies on commune coordinate data from inc/commune-data.php (tclas_get_communes()).
  * Uses member `_tclas_communes_norm` user meta (PHP-serialized string[]).
- * Respects `_tclas_visibility`: users set to 'private' are excluded from counts.
+ *
+ * Privacy: members hidden from the directory, or who opt out of community
+ * stats/maps or of showing their communes, are excluded entirely. Members who
+ * opt out of showing surnames are still counted but contribute no names. On the
+ * public map (`public="true"`) surnames are never sent to the browser at all.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -71,12 +75,15 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
         if ( ! isset( $all_communes[ $slug ] ) ) continue;
         $c = $all_communes[ $slug ];
         $map_communes[ $slug ] = [
-            'name'     => $c['name'],
-            'canton'   => $c['canton'],
-            'lat'      => (float) $c['lat'],
-            'lng'      => (float) $c['lng'],
-            'count'    => (int) $d['count'],
-            'surnames' => array_values( array_slice( $d['surnames'], 0, 12 ) ), // cap at 12 for popup
+            'name'   => $c['name'],
+            'canton' => $c['canton'],
+            'lat'    => (float) $c['lat'],
+            'lng'    => (float) $c['lng'],
+            'count'  => (int) $d['count'],
+            // Surnames are member-only genealogical PII. On the public map they are
+            // never sent to the browser (client-side hiding is not enough — the data
+            // would still sit in the page source). Counts/communes only when public.
+            'surnames' => $is_public ? [] : array_values( array_slice( $d['surnames'], 0, 12 ) ), // cap at 12 for popup
         ];
     }
 
@@ -184,6 +191,40 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
 // ── Data helpers ──────────────────────────────────────────────────────────────
 
 /**
+ * Read a member privacy toggle (true/false), honoring its default and falling
+ * back to the legacy `_tclas_field_privacy` / `_tclas_visibility` fields for
+ * members who predate the granular privacy screen.
+ *
+ * Toggles are stored as 1/0 by page-privacy-settings.php; an empty value means
+ * the member has never saved that screen, so we derive intent from the legacy
+ * fields (or the supplied default). This mirrors the $get_toggle helper in
+ * page-privacy-settings.php so the settings UI and every consumer agree.
+ */
+function tclas_get_privacy_toggle( int $user_id, string $meta_key, bool $default ): bool {
+    $val = get_user_meta( $user_id, $meta_key, true );
+    if ( '' !== $val && false !== $val ) {
+        return (bool) (int) $val;
+    }
+
+    $legacy_privacy = (array) ( get_user_meta( $user_id, '_tclas_field_privacy', true ) ?: [] );
+    $legacy_vis     = get_user_meta( $user_id, '_tclas_visibility', true ) ?: 'members';
+
+    switch ( $meta_key ) {
+        case '_tclas_privacy_show_in_directory':
+            return 'hidden' !== $legacy_vis;
+        case '_tclas_privacy_show_bio':
+            return ( $legacy_privacy['bio'] ?? 'members' ) !== 'hidden';
+        case '_tclas_privacy_show_surnames':
+        case '_tclas_privacy_show_communes':
+            return ( $legacy_privacy['ancestry'] ?? 'members' ) !== 'hidden';
+        case '_tclas_privacy_allow_contact':
+            return (bool) get_user_meta( $user_id, '_tclas_open_to_contact', true );
+        default:
+            return $default;
+    }
+}
+
+/**
  * Query all users with lineage data and return a slug → {count, surnames[]} array.
  * Collects associated surnames per commune (aggregated, anonymous).
  * Results are cached in a transient for 1 hour.
@@ -218,10 +259,21 @@ function tclas_build_commune_data(): array {
     $data = []; // slug → ['count' => int, 'surnames_set' => [name => true]]
 
     foreach ( $users as $user_id ) {
-        $visibility = get_user_meta( $user_id, '_tclas_visibility', true );
-        if ( 'hidden' === $visibility ) {
+        // Baseline: members hidden from the directory never appear on the map
+        // either (keeps legacy "hidden" members off the map even though the new
+        // granular toggles below default to ON).
+        if ( 'hidden' === get_user_meta( $user_id, '_tclas_visibility', true ) ) {
             continue;
         }
+
+        // Honor the member's own map/stats choices (all default ON). Opting out of
+        // community stats/maps, or out of showing communes, removes them entirely;
+        // opting out of surnames keeps the commune count but drops their names.
+        if ( ! tclas_get_privacy_toggle( $user_id, '_tclas_privacy_in_community_stats', true )
+          || ! tclas_get_privacy_toggle( $user_id, '_tclas_privacy_show_communes', true ) ) {
+            continue;
+        }
+        $include_surnames = tclas_get_privacy_toggle( $user_id, '_tclas_privacy_show_surnames', true );
 
         $lineages = get_user_meta( $user_id, '_tclas_lineages', true );
         $lineages = is_array( $lineages ) ? $lineages : maybe_unserialize( $lineages );
@@ -240,7 +292,11 @@ function tclas_build_commune_data(): array {
             }
             $data[ $slug ]['count']++;
 
-            // Collect raw surname labels (use the raw display form, not normalised).
+            // Collect raw surname labels (use the raw display form, not normalised)
+            // only when the member allows their surnames to be shown.
+            if ( ! $include_surnames ) {
+                continue;
+            }
             $s_raw = is_array( $l['surnames_raw'] ?? null ) ? $l['surnames_raw'] : [];
             foreach ( $s_raw as $sname ) {
                 $sname = trim( $sname );
