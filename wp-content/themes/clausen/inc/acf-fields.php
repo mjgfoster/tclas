@@ -794,14 +794,14 @@ function tclas_register_acf_fields(): void {
 			],
 			[
 				'key'          => 'field_cit_resources',
-				'label'        => 'Official resources',
+				'label'        => 'Citizenship resources',
 				'name'         => 'cit_resources',
 				'type'         => 'repeater',
 				'layout'       => 'block',
 				'min'          => 1,
 				'max'          => 8,
 				'button_label' => 'Add resource',
-				'instructions' => 'Link cards shown in the "Official resources" column.',
+				'instructions' => 'Link cards shown in the "Citizenship resources" column.',
 				'sub_fields'   => [
 					[
 						'key'           => 'field_cit_res_icon',

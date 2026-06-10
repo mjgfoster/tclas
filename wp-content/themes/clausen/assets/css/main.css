@@ -12,7 +12,7 @@
   --c-gold-focus: #C07C32;
   --c-vert: #3D6B4F;
   --c-white: #FFFFFF;
-  --c-body-bg: #FAF9F6;
+  --c-body-bg: #fff;
   --c-body-text: #454F55;
   --c-muted: #626D78;
   --c-border: #DDD5C4;
@@ -843,7 +843,7 @@ input[type=radio] {
   position: sticky;
   top: 0;
   z-index: 1030;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(250, 249, 246, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(69, 79, 85, 0.15);
@@ -853,7 +853,7 @@ input[type=radio] {
 @media (prefers-reduced-motion: reduce) {
   .tclas-header {
     backdrop-filter: none;
-    background: #fff;
+    background: var(--c-or-pale);
   }
 }
 
@@ -2624,25 +2624,27 @@ input[type=radio] {
 }
 
 .tclas-tier {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(235, 245, 252, 0.12);
-  border-top: 3px solid rgba(235, 245, 252, 0.2);
+  background: #fff;
+  border: 2px solid var(--c-or-pale-dk, #E8D9C5);
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s, background 0.2s;
+  box-shadow: 0 1px 2px rgba(69, 79, 85, 0.04);
+  transform: translateZ(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .tclas-tier:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-top-color: var(--c-or-pale);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 12px 28px rgba(69, 79, 85, 0.14);
+  border-color: var(--c-ardoise);
 }
 .tclas-tier--featured {
-  border-color: rgba(43, 98, 130, 0.5);
-  border-top-color: var(--c-ardoise);
-  background: rgba(43, 98, 130, 0.12);
+  border-color: var(--c-ardoise);
+  border-width: 3px;
   position: relative;
 }
 .tclas-tier--featured:hover {
-  background: rgba(43, 98, 130, 0.18);
+  box-shadow: 0 14px 32px rgba(43, 98, 130, 0.22);
 }
 
 .tclas-tier__badge {
@@ -2652,7 +2654,6 @@ input[type=radio] {
   transform: translateX(-50%);
   background: var(--c-ardoise);
   color: #fff;
-  font-size: var(--text-sm);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -2661,37 +2662,39 @@ input[type=radio] {
 }
 
 .tclas-tier__header {
-  padding: 1.5rem 1.5rem 1rem;
+  padding: 1.75rem 1.5rem 1rem;
   text-align: center;
 }
 
 .tclas-tier__invite {
-  font-size: var(--text-md);
   font-style: italic;
-  color: rgba(235, 245, 252, 0.75);
+  color: var(--c-muted);
   margin-bottom: 0.85rem;
   display: block;
 }
 
 .tclas-tier__name {
-  font-size: var(--text-sm);
+  font-family: var(--font-serif, var(--font-sans));
+  font-size: 1.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(235, 245, 252, 0.85);
-  margin-bottom: 0.4rem;
+  color: var(--c-ardoise);
+  line-height: 1.15;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .tclas-tier__price {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--c-or-pale);
-  line-height: 1;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--c-body-text);
+  line-height: 1.2;
+  display: inline;
 }
 
 .tclas-tier__period {
-  font-size: var(--text-sm);
-  color: rgba(235, 245, 252, 0.45);
+  color: var(--c-muted);
+  display: inline;
+  margin-left: 0.15em;
 }
 
 .tclas-tier__body {
@@ -2733,6 +2736,7 @@ input[type=radio] {
 
 .tclas-tier__cta {
   padding: 0 1.5rem 1.5rem;
+  margin-top: auto;
 }
 .tclas-tier__cta .btn {
   width: 100%;
@@ -6142,6 +6146,13 @@ input[type=radio] {
 
 .tclas-join-intro {
   padding-top: 0;
+  padding-bottom: 1.5rem;
+}
+.tclas-tiers-section {
+  padding-top: 0.5rem;
+}
+.bg-ardoise.tclas-join-perks-section .tclas-join-perks p {
+  color: rgba(235, 245, 252, 0.8);
 }
 
 .tclas-join-lede {
@@ -6152,8 +6163,7 @@ input[type=radio] {
 }
 
 .tclas-tier__note {
-  font-size: var(--text-md);
-  color: rgba(235, 245, 252, 0.85);
+  color: var(--c-body-text);
   margin: 0;
   text-align: center;
 }
@@ -6161,8 +6171,7 @@ input[type=radio] {
 .tclas-tier__member-note {
   display: block;
   text-align: center;
-  font-size: var(--text-md);
-  color: var(--c-or-pale);
+  color: var(--c-muted);
   font-style: italic;
   padding-bottom: 0.25rem;
 }
@@ -6621,19 +6630,117 @@ input[type=radio] {
   flex-direction: column;
 }
 
+.tclas-board-card__link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: inherit;
+  text-decoration: none;
+}
+.tclas-board-card__link:hover .tclas-board-card__name,
+.tclas-board-card__link:focus-visible .tclas-board-card__name {
+  text-decoration: underline;
+  text-decoration-color: var(--c-ardoise);
+  text-underline-offset: 3px;
+}
+
+.tclas-board-card__photo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--c-or-pale-dk, #E8D9C5);
+}
+.tclas-board-card__photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tclas-board-card__photo-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .tclas-board-card__info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .tclas-board-card__name {
   font-size: var(--text-lg);
+  display: inline-block;
 }
 
 .tclas-board-card__role {
   font-style: italic;
   color: var(--c-muted);
 }
+
+.tclas-board-card__email {
+  font-size: var(--text-md);
+  margin-top: 0.25rem;
+}
+
+/* ── /about/board/ — full bios listing ─────────────────────────────────── */
+.tclas-board-intro {
+  margin-bottom: 2.5rem;
+}
+
+.tclas-board-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.tclas-board-member {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2rem;
+  align-items: start;
+  scroll-margin-top: 6rem; /* anchor offset so the sticky header doesn't cover the target */
+}
+@media (max-width: 640px) {
+  .tclas-board-member {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.tclas-board-member__photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--c-or-pale-dk, #E8D9C5);
+}
+.tclas-board-member__photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.tclas-board-member__photo-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tclas-board-member__name {
+  margin: 0 0 0.4rem;
+}
+
+.tclas-board-member__role {
+  font-style: italic;
+  color: var(--c-muted);
+  margin: 0 0 1rem;
+}
+
+.tclas-board-member__bio p:first-child { margin-top: 0; }
+.tclas-board-member__bio p:last-child  { margin-bottom: 0; }
 
 .tclas-issue-group {
   margin-bottom: 4rem;
@@ -9486,7 +9593,8 @@ input:disabled + .tclas-toggle__slider::before {
    Member hub v2 — minimalist 3-col layout
    ══════════════════════════════════════════════════════════════════════════ */
 .tclas-hub2-page {
-  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem 2rem 3rem;
   background: #fff;
   font-family: var(--font-sans);
@@ -9546,6 +9654,15 @@ input:disabled + .tclas-toggle__slider::before {
 .tclas-hub2-link:hover,
 .tclas-hub2-link:focus-visible { border-bottom-color: var(--c-ardoise); }
 .tclas-hub2-link--primary { font-weight: 600; }
+.tclas-hub2-link--button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.tclas-hub2-link--button.is-copied { color: var(--c-crimson, #a02331); }
 .tclas-hub2-rule {
   border: 0;
   border-top: 1px solid var(--c-or-pale-dk, #e6e1d3);
@@ -9658,3 +9775,105 @@ input:disabled + .tclas-toggle__slider::before {
 }
 /* Hide emoji icons that survive inside widgets we still call. */
 .tclas-hub2-page .tclas-hub-fresh-content__icon { display: none; }
+
+/* ── Col 2: Inline connections list ─────────────────────────────────────── */
+.tclas-hub2-connections {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+.tclas-hub2-connections__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--c-or-pale-dk, #e6e1d3);
+}
+.tclas-hub2-connections__item:last-child { border-bottom: 0; }
+.tclas-hub2-connections__link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--c-ardoise);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.tclas-hub2-connections__link:hover,
+.tclas-hub2-connections__link:focus-visible {
+  border-bottom-color: var(--c-ardoise);
+}
+.tclas-hub2-connections__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tclas-hub2-connections__name { font-weight: 600; }
+.tclas-hub2-connections__strength {
+  color: var(--c-muted);
+  letter-spacing: 0.03em;
+}
+
+.tclas-hub2-muted { color: var(--c-muted); margin: 0.5rem 0 0; }
+
+/* ── Col 2: Slim profile completion bar ────────────────────────────────── */
+.tclas-hub2-completion__label {
+  color: var(--c-muted);
+  margin: 0 0 0.35rem;
+}
+.tclas-hub2-completion__bar {
+  height: 4px;
+  background: var(--c-or-pale-dk, #e6e1d3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.tclas-hub2-completion__fill {
+  height: 100%;
+  background: var(--c-crimson, #a02331);
+  transition: width 0.3s ease;
+}
+
+/* ── Col 3: Upcoming events list ────────────────────────────────────────── */
+.tclas-hub2-events {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+.tclas-hub2-events__item {
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--c-or-pale-dk, #e6e1d3);
+}
+.tclas-hub2-events__item:last-child { border-bottom: 0; }
+.tclas-hub2-events__date {
+  color: var(--c-muted);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.tclas-hub2-events__mon { margin-right: 0.35em; }
+.tclas-hub2-events__title {
+  color: var(--c-ardoise);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.tclas-hub2-events__title:hover,
+.tclas-hub2-events__title:focus-visible {
+  border-bottom-color: var(--c-ardoise);
+}
+
+/* ── Col 3: Newsletter block ────────────────────────────────────────────── */
+.tclas-hub2-newsletter__title {
+  font-weight: 700;
+  color: var(--c-ardoise);
+  margin: 0 0 0.4rem;
+}
+.tclas-hub2-newsletter__excerpt {
+  color: var(--c-text, inherit);
+  margin: 0 0 0.75rem;
+}
