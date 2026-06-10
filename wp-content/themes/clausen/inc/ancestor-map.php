@@ -143,7 +143,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
                             <tr>
                                 <th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
                                 <th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
-                                <th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th>
+                                <?php if ( ! $is_public ) : ?><th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th><?php endif; ?>
                                 <th scope="col"><?php esc_html_e( 'Members', 'tclas' ); ?></th>
                             </tr>
                         </thead>
@@ -174,7 +174,7 @@ function tclas_ancestor_map_shortcode( array $atts = [] ): string {
                     <tr>
                         <th scope="col"><?php esc_html_e( 'Commune', 'tclas' ); ?></th>
                         <th scope="col"><?php esc_html_e( 'Canton', 'tclas' ); ?></th>
-                        <th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th>
+                        <?php if ( ! $is_public ) : ?><th scope="col"><?php esc_html_e( 'Surnames', 'tclas' ); ?></th><?php endif; ?>
                         <th scope="col"><?php esc_html_e( 'Members', 'tclas' ); ?></th>
                     </tr>
                 </thead>

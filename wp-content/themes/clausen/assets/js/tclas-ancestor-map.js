@@ -166,27 +166,29 @@
       var cantonCell = document.createElement('td');
       cantonCell.textContent = c.canton;
 
-      var surnameCell = document.createElement('td');
-      surnameCell.className = 'tclas-map-list__surnames';
-      if (c.surnames && c.surnames.length > 0) {
-        var shown = c.surnames.slice(0, MAX_SURNAMES).join(', ');
-        var remaining = c.surnames.length - MAX_SURNAMES;
-        if (remaining > 0) {
-          surnameCell.innerHTML = _esc(shown) + ', <a href="' + _esc(communeUrl) +
-            '" class="tclas-map-list__more">+' + remaining + ' more</a>';
-        } else {
-          surnameCell.textContent = shown;
-        }
-      } else {
-        surnameCell.textContent = '—';
-      }
-
       var countCell = document.createElement('td');
       countCell.textContent = c.count;
 
       tr.appendChild(nameCell);
       tr.appendChild(cantonCell);
-      tr.appendChild(surnameCell);
+      // Surnames column is member-only; omit it entirely on the public map.
+      if (!isPublic) {
+        var surnameCell = document.createElement('td');
+        surnameCell.className = 'tclas-map-list__surnames';
+        if (c.surnames && c.surnames.length > 0) {
+          var shown = c.surnames.slice(0, MAX_SURNAMES).join(', ');
+          var remaining = c.surnames.length - MAX_SURNAMES;
+          if (remaining > 0) {
+            surnameCell.innerHTML = _esc(shown) + ', <a href="' + _esc(communeUrl) +
+              '" class="tclas-map-list__more">+' + remaining + ' more</a>';
+          } else {
+            surnameCell.textContent = shown;
+          }
+        } else {
+          surnameCell.textContent = '—';
+        }
+        tr.appendChild(surnameCell);
+      }
       tr.appendChild(countCell);
 
       // Click row to fly map to the commune marker
