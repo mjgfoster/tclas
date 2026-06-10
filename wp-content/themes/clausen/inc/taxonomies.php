@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 function tclas_register_taxonomies(): void {
 
-	// Ancestral commune
-	register_taxonomy( 'tclas_commune', [ 'tclas_story', 'post' ], [
+	// Ancestral commune (drives the per-commune pages under the ancestral map)
+	register_taxonomy( 'tclas_commune', [ 'post' ], [
 		'labels' => [
 			'name'          => __( 'Ancestral communes', 'tclas' ),
 			'singular_name' => __( 'Ancestral commune', 'tclas' ),
@@ -27,37 +27,6 @@ function tclas_register_taxonomies(): void {
 		'show_admin_column' => true,
 	] );
 
-	// Family surname
-	register_taxonomy( 'tclas_surname', [ 'tclas_story', 'post' ], [
-		'labels' => [
-			'name'          => __( 'Family surnames', 'tclas' ),
-			'singular_name' => __( 'Surname', 'tclas' ),
-			'search_items'  => __( 'Search surnames', 'tclas' ),
-			'all_items'     => __( 'All surnames', 'tclas' ),
-			'edit_item'     => __( 'Edit surname', 'tclas' ),
-			'add_new_item'  => __( 'Add surname', 'tclas' ),
-			'menu_name'     => __( 'Surnames', 'tclas' ),
-		],
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_in_rest'      => true,
-		'rewrite'           => [ 'slug' => 'surname', 'with_front' => false ],
-		'show_admin_column' => true,
-	] );
-
-	// Immigration generation
-	register_taxonomy( 'tclas_generation', [ 'tclas_story' ], [
-		'labels' => [
-			'name'          => __( 'Immigration generations', 'tclas' ),
-			'singular_name' => __( 'Generation', 'tclas' ),
-			'menu_name'     => __( 'Generation', 'tclas' ),
-		],
-		'hierarchical'      => true,
-		'public'            => false,
-		'show_ui'           => true,
-		'show_admin_column' => true,
-		'rewrite'           => false,
-	] );
 
 	// Newsletter department + topic (unified: structural layout + public browsing)
 	// `main-story` slug is reserved — detected by templates to select the cover image.
