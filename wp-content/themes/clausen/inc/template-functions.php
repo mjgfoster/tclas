@@ -458,7 +458,21 @@ function tclas_lux_greeting(): string {
  * Wrap a Lëtzebuergesch phrase with translation tooltip.
  */
 function tclas_ltz( string $phrase, string $translation, bool $echo = true ): string {
-	$html = '<span lang="lb"><abbr class="ltz" tabindex="0" title="' . esc_attr( $translation ) . '">' . esc_html( $phrase ) . '</abbr></span>';
+	// Allow inline text-formatting tags inside the phrase — the editor wraps
+	// bold/italic in <strong>/<em>, so esc_html() would leak them as literal
+	// text. wp_kses() keeps these and strips anything else, so author-entered
+	// content stays safe.
+	$allowed_inline = [
+		'em'     => [],
+		'strong' => [],
+		'i'      => [],
+		'b'      => [],
+		'span'   => [],
+		'sub'    => [],
+		'sup'    => [],
+		'br'     => [],
+	];
+	$html = '<span lang="lb"><abbr class="ltz" tabindex="0" title="' . esc_attr( $translation ) . '">' . wp_kses( $phrase, $allowed_inline ) . '</abbr></span>';
 	if ( $echo ) {
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
