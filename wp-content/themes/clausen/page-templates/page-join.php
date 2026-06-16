@@ -40,6 +40,32 @@ $is_member    = tclas_is_member();
 	</div>
 </div>
 
+<?php
+// When the member-area gate redirects someone here (?tclas_gate=1), greet them
+// with context instead of a generic pitch.
+if ( isset( $_GET['tclas_gate'] ) ) :
+	$gate_status = function_exists( 'tclas_membership_status' ) ? tclas_membership_status() : 'none';
+	?>
+	<section class="tclas-section">
+		<div class="container-tclas">
+			<div class="tclas-hub2-banner tclas-hub2-banner--expired" role="alert">
+				<?php if ( 'expired' === $gate_status ) : ?>
+					<?php esc_html_e( 'Welcome back! Your membership has expired — renew below to restore access to the member hub, directory, ancestral map, and events.', 'tclas' ); ?>
+				<?php elseif ( is_user_logged_in() ) : ?>
+					<?php esc_html_e( 'That area is for members. Choose a membership below to unlock the member hub, directory, ancestral map, and events.', 'tclas' ); ?>
+				<?php else : ?>
+					<?php
+					printf(
+						wp_kses( __( 'That area is for members. <a href="%s">Log in</a> if you already have an account, or choose a membership below.', 'tclas' ), [ 'a' => [ 'href' => [] ] ] ),
+						esc_url( wp_login_url( home_url( '/member-hub/' ) ) )
+					);
+					?>
+				<?php endif; ?>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>
+
 <!-- ── Intro ─────────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-join-intro">
 	<div class="container-tclas">

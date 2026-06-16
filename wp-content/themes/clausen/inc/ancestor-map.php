@@ -240,13 +240,15 @@ function tclas_build_commune_data(): array {
     // Only count active PMPro members (not expired/cancelled).
     global $wpdb;
     if ( $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}pmpro_memberships_users'" ) ) {
-        $users = $wpdb->get_col(
+        $users = $wpdb->get_col( $wpdb->prepare(
             "SELECT DISTINCT mu.user_id
              FROM {$wpdb->prefix}pmpro_memberships_users mu
              INNER JOIN {$wpdb->usermeta} um
                ON um.user_id = mu.user_id AND um.meta_key = '_tclas_lineages'
-             WHERE mu.status = 'active'"
-        );
+             WHERE mu.status = 'active'
+               AND ( mu.enddate IS NULL OR mu.enddate = '0000-00-00 00:00:00' OR mu.enddate > %s )",
+            current_time( 'mysql' )
+        ) );
     } else {
         $users = get_users( [
             'meta_key'     => '_tclas_lineages',
