@@ -35,14 +35,25 @@
 - [ ] **Walk the member hub as a real member** (not admin) — hub, directory, edit profile, privacy settings, map editor all work.
 - [ ] **`lapsed-demo` test user absent** on staging5. ✓ (deleted)
 
-## D. Security & hardening
+## D. Cookie consent — ONE system (decided: keep the theme banner, drop Complianz)
+
+The theme's hand-built banner is the consent system; it loads GA/Brevo only on opt-in (`anonymize_ip` on). Complianz is redundant. **The critical step is #1 — without it, GA4 loads outside the banner and nothing is actually gated.**
+
+- [ ] **Disable Google Site Kit's Analytics module** (keep Search Console + PageSpeed). Site Kit was loading GA4 independently of the banner.
+- [ ] **Set GA4 ID** (`G-XXXXXXX`, from Site Kit before disconnecting) in ACF Theme Options → `google_analytics_id`. Brevo tracking key only if used.
+- [ ] **Deactivate + delete Complianz.**
+- [ ] **Verify:** decline analytics → no `gtag`/googletagmanager request fires; accept → GA loads; only one banner shows.
+- [ ] Confirm the **Cookie Policy page text** matches what the banner gates (no auto-generation now).
+- [ ] Check the **Brevo (mailin) plugin** isn't injecting its own tracker independently.
+
+## E. Security & hardening
 
 - [ ] **PMPro daily cron** on SiteGround (Site Tools → Cron → hit `wp-cron.php`) so expiration *emails* + status flips run. (Access already cuts off in real time, but emails/reporting need this.)
 - [ ] **User-enumeration** — enable SG Security's block (optional but recommended now that members exist).
 - [ ] **Mapbox token** restricted to the live domain in the Mapbox dashboard.
 - [ ] _(Housekeeping)_ consider gitignoring `sgs_encrypt_key.php`.
 
-## E. Go-live mechanics — June 23
+## F. Go-live mechanics — June 23
 
 - [ ] **Confirm the cutover mechanism** — how does staging5 become the live `twincities.lu` site? (Promote staging5, or push staging5 → production DB+files?) **Decide and document this** — it's the one launch-day unknown.
 - [ ] **Full backup** taken immediately before cutover.
