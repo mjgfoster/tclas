@@ -769,43 +769,6 @@ function tclas_get_activity_alerts( int $user_id ): array {
 		}
 	}
 
-	// ── New stories about user's communes (last 7 days) ─────────────────
-	if ( ! empty( $resolved ) ) {
-		$commune_terms = [];
-		foreach ( $resolved as $slug ) {
-			$term = get_term_by( 'slug', $slug, 'tclas_commune' );
-			if ( $term ) { $commune_terms[] = $term->term_id; }
-		}
-		if ( ! empty( $commune_terms ) ) {
-			$stories = get_posts( [
-				'post_type'      => 'tclas_story',
-				'posts_per_page' => 3,
-				'date_query'     => [ [ 'after' => gmdate( 'Y-m-d', $cutoff ) ] ],
-				'tax_query'      => [ [
-					'taxonomy' => 'tclas_commune',
-					'terms'    => $commune_terms,
-				] ],
-			] );
-			if ( ! empty( $stories ) ) {
-				$alerts[] = [
-					'type'        => 'new_stories',
-					'icon'        => '📖',
-					'title'       => sprintf(
-						_n( '%d new story about your communes', '%d new stories about your communes', count( $stories ), 'tclas' ),
-						count( $stories )
-					),
-					'description' => sprintf(
-						/* translators: %s: story title */
-						__( '"%s"', 'tclas' ),
-						get_the_title( $stories[0] )
-					),
-					'link'        => home_url( '/stories/' ),
-					'link_label'  => __( 'Read Stories →', 'tclas' ),
-				];
-			}
-		}
-	}
-
 	// ── New members with matching surnames (last 7 days) ─────────────────
 	if ( ! empty( $user_surnames ) && ! empty( $recent_ids ?? [] ) ) {
 		$surname_matches = [];

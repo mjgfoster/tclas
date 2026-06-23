@@ -317,9 +317,9 @@ get_header();
 				</ol>
 			</div>
 
-			<!-- Official resources -->
+			<!-- Citizenship resources -->
 			<div>
-				<h3><?php esc_html_e( 'Official resources', 'tclas' ); ?></h3>
+				<h3><?php esc_html_e( 'Citizenship resources', 'tclas' ); ?></h3>
 				<div class="tclas-doc-list">
 					<?php if ( function_exists( 'have_rows' ) && have_rows( 'cit_resources' ) ) : ?>
 						<?php while ( have_rows( 'cit_resources' ) ) : the_row(); ?>

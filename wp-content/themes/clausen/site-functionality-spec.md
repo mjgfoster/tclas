@@ -72,15 +72,7 @@
 
 ### Post types
 
-#### `tclas_story` — Luxembourg Stories
-- **Archive slug**: `/stories/`
-- **Supports**: title, editor, author, thumbnail, excerpt
-- **REST API**: enabled
-- **ACF fields**:
-  - `story_member_name` (text)
-  - `story_connection_type` (checkbox: ancestry, citizenship, marriage, work, travel, culture)
-  - `story_immigration_generation` (select: 1st–4th, further, N/A)
-  - `story_citizenship_status` (select: citizen, in progress, eligible, researching, N/A)
+> _`tclas_story` (Luxembourg Stories) was removed 2026-06-10 — placeholder-only and redundant with member profile bios. Its public-storytelling role will move into the newsletter (e.g. a "Communautéit" section)._
 
 #### `tclas_board` — Board Members
 - **Public archive**: no
@@ -94,9 +86,7 @@
 
 | Taxonomy | Attached to | Hierarchical | Notes |
 |----------|-------------|:---:|-------|
-| `tclas_commune` | tclas_story, post | No | 583 Luxembourg places from official index (localities + municipalities) |
-| `tclas_surname` | tclas_story, post | No | Family surnames |
-| `tclas_generation` | tclas_story | Yes | Immigration generation (1st, 2nd, …) |
+| `tclas_commune` | post | No | 583 Luxembourg places from official index; drives the per-commune pages under the ancestral map |
 | `tclas_department` | post | No | Newsletter sections (intro, main-story, community, recipe, news) |
 | `tclas_category` | post | Yes | Content categories (public-facing) |
 

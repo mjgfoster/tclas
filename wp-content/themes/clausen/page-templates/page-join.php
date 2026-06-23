@@ -40,6 +40,32 @@ $is_member    = tclas_is_member();
 	</div>
 </div>
 
+<?php
+// When the member-area gate redirects someone here (?tclas_gate=1), greet them
+// with context instead of a generic pitch.
+if ( isset( $_GET['tclas_gate'] ) ) :
+	$gate_status = function_exists( 'tclas_membership_status' ) ? tclas_membership_status() : 'none';
+	?>
+	<section class="tclas-section">
+		<div class="container-tclas">
+			<div class="tclas-hub2-banner tclas-hub2-banner--expired" role="alert">
+				<?php if ( 'expired' === $gate_status ) : ?>
+					<?php esc_html_e( 'Welcome back! Your membership has expired — renew below to restore access to the member hub, directory, ancestral map, and events.', 'tclas' ); ?>
+				<?php elseif ( is_user_logged_in() ) : ?>
+					<?php esc_html_e( 'That area is for members. Choose a membership below to unlock the member hub, directory, ancestral map, and events.', 'tclas' ); ?>
+				<?php else : ?>
+					<?php
+					printf(
+						wp_kses( __( 'That area is for members. <a href="%s">Log in</a> if you already have an account, or choose a membership below.', 'tclas' ), [ 'a' => [ 'href' => [] ] ] ),
+						esc_url( wp_login_url( home_url( '/member-hub/' ) ) )
+					);
+					?>
+				<?php endif; ?>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>
+
 <!-- ── Intro ─────────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-join-intro">
 	<div class="container-tclas">
@@ -93,7 +119,7 @@ $is_member    = tclas_is_member();
 <?php endif; ?>
 
 <!-- ── Tier cards ────────────────────────────────────────────────────────── -->
-<section class="tclas-section bg-ardoise" id="tiers">
+<section class="tclas-section tclas-tiers-section" id="tiers">
 	<div class="container-tclas">
 		<div class="tclas-tiers">
 
@@ -110,7 +136,7 @@ $is_member    = tclas_is_member();
 				<div class="tclas-tier__header">
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_0['tier_invite'] ) ? $tier_0['tier_invite'] : 'Just you — and everyone here.' ); ?></span>
 					<span class="tclas-tier__name"><?php esc_html_e( 'Individual', 'tclas' ); ?></span>
-					<span class="tclas-tier__price">$<?php echo esc_html( $price_individual ); ?></span>
+					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_individual ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
 				<?php if ( ! empty( $tier_0['tier_note'] ) ) : ?>
@@ -122,7 +148,7 @@ $is_member    = tclas_is_member();
 					<?php if ( $is_member ) : ?>
 						<span class="tclas-tier__member-note"><?php esc_html_e( "You're a member &mdash; welcome!", 'tclas' ); ?></span>
 					<?php else : ?>
-						<a href="<?php echo esc_url( add_query_arg( 'level', '1', $checkout_url ) ); ?>" class="btn btn-outline-light">
+						<a href="<?php echo esc_url( add_query_arg( 'level', '1', $checkout_url ) ); ?>" class="btn btn-outline-ardoise">
 							<?php esc_html_e( 'Join as individual', 'tclas' ); ?>
 						</a>
 					<?php endif; ?>
@@ -134,7 +160,7 @@ $is_member    = tclas_is_member();
 				<div class="tclas-tier__header">
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_1['tier_invite'] ) ? $tier_1['tier_invite'] : 'Bring the people you love.' ); ?></span>
 					<span class="tclas-tier__name"><?php esc_html_e( 'Household', 'tclas' ); ?></span>
-					<span class="tclas-tier__price">$<?php echo esc_html( $price_family ); ?></span>
+					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_family ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
 				<div class="tclas-tier__body">
@@ -156,7 +182,7 @@ $is_member    = tclas_is_member();
 				<div class="tclas-tier__header">
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_2['tier_invite'] ) ? $tier_2['tier_invite'] : 'Same community, adjusted rate.' ); ?></span>
 					<span class="tclas-tier__name"><?php esc_html_e( 'Student / Senior', 'tclas' ); ?></span>
-					<span class="tclas-tier__price">$<?php echo esc_html( $price_student ); ?></span>
+					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_student ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
 				<div class="tclas-tier__body">
@@ -166,7 +192,7 @@ $is_member    = tclas_is_member();
 					<?php if ( $is_member ) : ?>
 						<span class="tclas-tier__member-note"><?php esc_html_e( "You're a member &mdash; welcome!", 'tclas' ); ?></span>
 					<?php else : ?>
-						<a href="<?php echo esc_url( add_query_arg( 'level', '3', $checkout_url ) ); ?>" class="btn btn-outline-light">
+						<a href="<?php echo esc_url( add_query_arg( 'level', '3', $checkout_url ) ); ?>" class="btn btn-outline-ardoise">
 							<?php esc_html_e( 'Join as student/senior', 'tclas' ); ?>
 						</a>
 					<?php endif; ?>
@@ -178,7 +204,7 @@ $is_member    = tclas_is_member();
 				<div class="tclas-tier__header">
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_3['tier_invite'] ) ? $tier_3['tier_invite'] : 'Help carry the whole community forward.' ); ?></span>
 					<span class="tclas-tier__name"><?php esc_html_e( 'Benefactor', 'tclas' ); ?></span>
-					<span class="tclas-tier__price">$<?php echo esc_html( number_format( $price_benefactor ) ); ?>+</span>
+					<span class="tclas-tier__price"><strong>$<?php echo esc_html( number_format( $price_benefactor ) ); ?>+</strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
 				<div class="tclas-tier__body">
@@ -188,7 +214,7 @@ $is_member    = tclas_is_member();
 					<?php if ( $is_member ) : ?>
 						<span class="tclas-tier__member-note"><?php esc_html_e( "You're a member &mdash; welcome!", 'tclas' ); ?></span>
 					<?php else : ?>
-						<a href="<?php echo esc_url( add_query_arg( 'level', '4', $checkout_url ) ); ?>" class="btn btn-outline-light">
+						<a href="<?php echo esc_url( add_query_arg( 'level', '4', $checkout_url ) ); ?>" class="btn btn-outline-ardoise">
 							<?php esc_html_e( 'Become a benefactor', 'tclas' ); ?>
 						</a>
 					<?php endif; ?>
@@ -204,9 +230,9 @@ $is_member    = tclas_is_member();
 </section>
 
 <!-- ── Member perks ──────────────────────────────────────────────────────── -->
-<section class="tclas-section">
+<section class="tclas-section bg-ardoise tclas-join-perks-section">
 	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'What you get', 'tclas' ); ?></span>
+		<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'What you get', 'tclas' ); ?></span>
 		<h2><?php esc_html_e( 'More than a card in your wallet.', 'tclas' ); ?></h2>
 		<div class="tclas-join-perks">
 		<?php if ( function_exists( 'have_rows' ) && have_rows( 'join_perks' ) ) : ?>

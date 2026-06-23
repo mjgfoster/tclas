@@ -227,12 +227,12 @@
 
   // ── Primary navigation dropdown menu ──────────────────────────────────────
   function initDropdowns() {
-    // Only initialize on desktop (992px+)
-    if (window.innerWidth < 992) return;
-
+    // Wire toggles at every width: the desktop nav uses them as popovers and the
+    // mobile drawer uses them as inline accordions (both driven by aria-expanded).
     const parentItems = qsa('.tclas-nav__item.has-dropdown');
 
     parentItems.forEach(item => {
+      // The toggle is a <button class="tclas-nav__link"> (see TCLAS_Nav_Walker).
       const link = qs('.tclas-nav__link', item);
       const dropdown = qs('.tclas-nav__dropdown', item);
       if (!link || !dropdown) return;
@@ -240,20 +240,15 @@
       // Initialize aria-expanded to false
       link.setAttribute('aria-expanded', 'false');
 
-      // Click to toggle dropdown
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
+      // Click toggles the submenu. A native <button> also fires click on
+      // Enter/Space, so no separate key handler is needed for activation.
+      link.addEventListener('click', () => {
         const isExpanded = link.getAttribute('aria-expanded') === 'true';
         link.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
       });
 
       // Keyboard navigation
       link.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const isExpanded = link.getAttribute('aria-expanded') === 'true';
-          link.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-        }
         // Arrow down to focus first dropdown item
         if (e.key === 'ArrowDown') {
           e.preventDefault();

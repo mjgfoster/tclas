@@ -32,18 +32,26 @@ class TCLAS_Nav_Walker extends Walker_Nav_Menu {
 		$class_str = implode( ' ', array_filter( array_unique( $classes ) ) );
 		$output   .= '<li class="' . esc_attr( $class_str ) . '">';
 
-		$atts             = [];
-		$atts['class']    = $depth === 0 ? 'tclas-nav__link' : '';
-		$atts['href']     = ! empty( $item->url ) ? $item->url : '#';
-		$atts['target']   = ! empty( $item->target ) ? $item->target : '';
-		$atts['rel']      = ! empty( $item->xfn ) ? $item->xfn : '';
-		$atts['title']    = ! empty( $item->attr_title ) ? $item->attr_title : '';
-		$atts['aria-current'] = in_array( 'current-menu-item', $classes, true ) ? 'page' : '';
+		$title        = apply_filters( 'the_title', $item->title, $item->ID );
+		$has_children = in_array( 'menu-item-has-children', (array) $item->classes, true );
 
-		if ( in_array( 'menu-item-has-children', (array) $item->classes, true ) && $depth === 0 ) {
-			$atts['aria-haspopup'] = 'true';
-			$atts['aria-expanded'] = 'false';
+		// Top-level items with a submenu are dropdown toggles, never destinations
+		// (the JS hijacks the click to open the submenu), so render a real <button>
+		// rather than an <a href="#">. The section's own landing page is reached via
+		// its first child link. Sub-items and childless items render as normal links.
+		if ( $has_children && $depth === 0 ) {
+			$output .= '<button type="button" class="tclas-nav__link" aria-haspopup="true" aria-expanded="false">'
+				. esc_html( $title ) . '</button>';
+			return;
 		}
+
+		$atts                 = [];
+		$atts['class']        = $depth === 0 ? 'tclas-nav__link' : '';
+		$atts['href']         = ! empty( $item->url ) ? $item->url : '#';
+		$atts['target']       = ! empty( $item->target ) ? $item->target : '';
+		$atts['rel']          = ! empty( $item->xfn ) ? $item->xfn : '';
+		$atts['title']        = ! empty( $item->attr_title ) ? $item->attr_title : '';
+		$atts['aria-current'] = in_array( 'current-menu-item', $classes, true ) ? 'page' : '';
 
 		$atts = array_filter( $atts );
 		$attr_str = '';
@@ -51,7 +59,6 @@ class TCLAS_Nav_Walker extends Walker_Nav_Menu {
 			$attr_str .= ' ' . $attr . '="' . esc_attr( $val ) . '"';
 		}
 
-		$title = apply_filters( 'the_title', $item->title, $item->ID );
 		$output .= '<a' . $attr_str . '>' . esc_html( $title ) . '</a>';
 	}
 

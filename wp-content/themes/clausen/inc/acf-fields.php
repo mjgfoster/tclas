@@ -450,66 +450,6 @@ function tclas_register_acf_fields(): void {
 		],
 	] );
 
-	// ── Luxembourg Story fields ───────────────────────────────────────────
-	acf_add_local_field_group( [
-		'key'      => 'group_tclas_story',
-		'title'    => 'Story details',
-		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_story' ] ] ],
-		'fields'   => [
-			[
-				'key'   => 'field_story_member_name',
-				'label' => 'Member name',
-				'name'  => 'story_member_name',
-				'type'  => 'text',
-				'instructions' => 'As you would like it to appear on the site.',
-			],
-			[
-				'key'   => 'field_story_connection_type',
-				'label' => 'Luxembourg connection',
-				'name'  => 'story_connection_type',
-				'type'  => 'checkbox',
-				'choices' => [
-					'ancestry'    => 'Family ancestry',
-					'citizenship' => 'Citizenship / passport',
-					'marriage'    => 'Married into a Luxembourg family',
-					'work'        => 'Work / career connection',
-					'travel'      => 'Frequent traveller / enthusiast',
-					'culture'     => 'Food, language, culture',
-				],
-				'layout' => 'vertical',
-			],
-			[
-				'key'   => 'field_story_immigration_generation',
-				'label' => 'Immigration generation',
-				'name'  => 'story_immigration_generation',
-				'type'  => 'select',
-				'choices' => [
-					'1st'     => '1st generation (born in Luxembourg)',
-					'2nd'     => '2nd generation (parents born in Luxembourg)',
-					'3rd'     => '3rd generation',
-					'4th'     => '4th generation',
-					'further' => 'Further back',
-					'na'      => 'Not applicable',
-				],
-				'allow_null' => 1,
-			],
-			[
-				'key'   => 'field_story_citizenship_status',
-				'label' => 'Citizenship / passport status',
-				'name'  => 'story_citizenship_status',
-				'type'  => 'select',
-				'choices' => [
-					'citizen'     => 'Luxembourg citizen',
-					'in_progress' => 'Application in progress',
-					'eligible'    => 'Eligible, not applied',
-					'researching' => 'Researching eligibility',
-					'na'          => 'Not applicable',
-				],
-				'allow_null' => 1,
-			],
-		],
-	] );
-
 	// ── Board member fields ───────────────────────────────────────────────
 	acf_add_local_field_group( [
 		'key'      => 'group_tclas_board',
@@ -794,14 +734,14 @@ function tclas_register_acf_fields(): void {
 			],
 			[
 				'key'          => 'field_cit_resources',
-				'label'        => 'Official resources',
+				'label'        => 'Citizenship resources',
 				'name'         => 'cit_resources',
 				'type'         => 'repeater',
 				'layout'       => 'block',
 				'min'          => 1,
 				'max'          => 8,
 				'button_label' => 'Add resource',
-				'instructions' => 'Link cards shown in the "Official resources" column.',
+				'instructions' => 'Link cards shown in the "Citizenship resources" column.',
 				'sub_fields'   => [
 					[
 						'key'           => 'field_cit_res_icon',

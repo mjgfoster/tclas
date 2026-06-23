@@ -169,22 +169,34 @@ function tclas_membership_status(): string {
 	}
 
 	$user_id = get_current_user_id();
+	global $wpdb;
 
-	if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		$level = pmpro_getMembershipLevelForUser( $user_id );
-		if ( $level && ! empty( $level->enddate ) ) {
-			$end = (int) $level->enddate;
-			$now = time();
-			if ( $end < $now ) {
-				return 'expired';
-			}
-			if ( $end - $now < 30 * DAY_IN_SECONDS ) {
+	// Active and not past its end date? Then 'active', or 'expiring' within 30 days.
+	// We read the end date straight from the membership row rather than trusting the
+	// row's status, because PMPro only flips a lapsed row to a non-active status via a
+	// daily cron — until that runs, a past-due membership still reports as active.
+	if ( tclas_has_active_membership( $user_id ) ) {
+		$enddate = $wpdb->get_var( $wpdb->prepare(
+			"SELECT enddate FROM {$wpdb->prefix}pmpro_memberships_users
+			 WHERE user_id = %d AND status = 'active' ORDER BY id DESC LIMIT 1",
+			$user_id
+		) );
+		if ( $enddate && '0000-00-00 00:00:00' !== $enddate ) {
+			$secs_left = strtotime( $enddate ) - current_time( 'timestamp' );
+			if ( $secs_left > 0 && $secs_left < 30 * DAY_IN_SECONDS ) {
 				return 'expiring';
 			}
 		}
+		return 'active';
 	}
 
-	return pmpro_hasMembershipLevel( null, $user_id ) ? 'active' : 'none';
+	// Not active. If they have any membership history they've lapsed (show "renew");
+	// otherwise they've simply never joined.
+	$ever = (int) $wpdb->get_var( $wpdb->prepare(
+		"SELECT COUNT(*) FROM {$wpdb->prefix}pmpro_memberships_users WHERE user_id = %d",
+		$user_id
+	) );
+	return $ever > 0 ? 'expired' : 'none';
 }
 
 /**
@@ -202,6 +214,35 @@ function tclas_days_to_expiry(): int {
 }
 
 /**
+ * Does the user hold an active membership that has not passed its end date?
+ *
+ * PMPro only demotes a lapsed membership to a non-active status via a daily cron,
+ * so a past-due membership can keep status 'active' for up to a day — longer if
+ * that cron isn't running. Checking the end date here cuts access at the deadline
+ * regardless of when the cron next runs. Recurring memberships carry no end date
+ * (enddate 0) and are unaffected. Result is cached per request.
+ */
+function tclas_has_active_membership( int $user_id ): bool {
+	static $cache = [];
+	if ( ! $user_id ) {
+		return false;
+	}
+	if ( isset( $cache[ $user_id ] ) ) {
+		return $cache[ $user_id ];
+	}
+	global $wpdb;
+	$count = (int) $wpdb->get_var( $wpdb->prepare(
+		"SELECT COUNT(*) FROM {$wpdb->prefix}pmpro_memberships_users
+		 WHERE user_id = %d AND status = 'active'
+		   AND ( enddate IS NULL OR enddate = '0000-00-00 00:00:00' OR enddate > %s )",
+		$user_id,
+		current_time( 'mysql' )
+	) );
+	$cache[ $user_id ] = ( $count > 0 );
+	return $cache[ $user_id ];
+}
+
+/**
  * Is the current user a TCLAS member?
  */
 function tclas_is_member(): bool {
@@ -215,7 +256,7 @@ function tclas_is_member(): bool {
 	if ( ! function_exists( 'pmpro_hasMembershipLevel' ) ) {
 		return true;
 	}
-	return (bool) pmpro_hasMembershipLevel();
+	return tclas_has_active_membership( get_current_user_id() );
 }
 
 /**
@@ -458,7 +499,21 @@ function tclas_lux_greeting(): string {
  * Wrap a Lëtzebuergesch phrase with translation tooltip.
  */
 function tclas_ltz( string $phrase, string $translation, bool $echo = true ): string {
-	$html = '<span lang="lb"><abbr class="ltz" tabindex="0" title="' . esc_attr( $translation ) . '">' . esc_html( $phrase ) . '</abbr></span>';
+	// Allow inline text-formatting tags inside the phrase — the editor wraps
+	// bold/italic in <strong>/<em>, so esc_html() would leak them as literal
+	// text. wp_kses() keeps these and strips anything else, so author-entered
+	// content stays safe.
+	$allowed_inline = [
+		'em'     => [],
+		'strong' => [],
+		'i'      => [],
+		'b'      => [],
+		'span'   => [],
+		'sub'    => [],
+		'sup'    => [],
+		'br'     => [],
+	];
+	$html = '<span lang="lb"><abbr class="ltz" tabindex="0" title="' . esc_attr( $translation ) . '">' . wp_kses( $phrase, $allowed_inline ) . '</abbr></span>';
 	if ( $echo ) {
 		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
