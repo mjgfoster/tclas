@@ -80,6 +80,12 @@ function tclas_checkout_level( $level ) {
 		return $level;
 	}
 
+	// The free Household Member level is assigned directly (never via checkout);
+	// leave it untouched if it somehow reaches here.
+	if ( defined( 'TCLAS_LEVEL_HOUSEHOLD_MEMBER' ) && TCLAS_LEVEL_HOUSEHOLD_MEMBER === (int) $level->id ) {
+		return $level;
+	}
+
 	if ( TCLAS_LEVEL_BENEFACTOR === (int) $level->id ) {
 		$amount                  = tclas_benefactor_amount_from_request();
 		$level->initial_payment  = $amount;

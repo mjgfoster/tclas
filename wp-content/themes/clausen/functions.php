@@ -26,6 +26,8 @@ $tclas_modules = [
 	'inc/acf-fields.php',
 	'inc/pmpro-integration.php',
 	'inc/pmpro-checkout.php',
+	'inc/household-accounts.php', // Household sub-accounts: invites, cascade, "Manage Household" panel
+
 	'inc/brevo-integration.php',
 	'inc/givewp-integration.php',
 	'inc/events-integration.php',

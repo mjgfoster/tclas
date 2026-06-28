@@ -12,6 +12,10 @@ const TCLAS_LEVEL_INDIVIDUAL = 1;
 const TCLAS_LEVEL_HOUSEHOLD  = 2;
 const TCLAS_LEVEL_STUDENT    = 3;
 const TCLAS_LEVEL_BENEFACTOR = 4;
+// Free, linked sub-account level held by invited household members. $0, no
+// expiration of its own; access is governed by the owner's Household status
+// via the cascade in inc/household-accounts.php.
+const TCLAS_LEVEL_HOUSEHOLD_MEMBER = 5;
 const TCLAS_BENEFACTOR_MIN   = 1000;
 
 /**
@@ -124,11 +128,10 @@ function tclas_pmpro_save_family_members(): void {
 		return;
 	}
 
-	$family_names = array_values( array_filter(
-		array_map( 'sanitize_text_field', (array) ( $_POST['tclas_family_names'] ?? [] ) ),
-		'strlen'
-	) );
-	update_user_meta( $uid, '_tclas_family_names', $family_names );
+	// Adult household members are now managed as real linked accounts in the
+	// member hub (see inc/household-accounts.php). We no longer write the legacy
+	// _tclas_family_names text list — existing values are left untouched so no
+	// data is orphaned. This form now only saves the "covers children" flag.
 	update_user_meta( $uid, '_tclas_has_children', ! empty( $_POST['tclas_has_children'] ) ? 1 : 0 );
 
 	delete_transient( 'tclas_directory_members' );
@@ -144,7 +147,7 @@ function tclas_pmpro_family_section(): void {
 		return;
 	}
 
-	// Only show for Household memberships, or if they already have family names saved.
+	// Only show for Household memberships, or if they have legacy family names saved.
 	$family_names = (array) ( get_user_meta( $uid, '_tclas_family_names', true ) ?: [] );
 	$has_children = (bool) get_user_meta( $uid, '_tclas_has_children', true );
 	$level        = function_exists( 'pmpro_getMembershipLevelForUser' ) ? pmpro_getMembershipLevelForUser( $uid ) : null;
@@ -153,10 +156,6 @@ function tclas_pmpro_family_section(): void {
 
 	if ( ! $is_family && empty( $family_names ) ) {
 		return;
-	}
-
-	if ( empty( $family_names ) ) {
-		$family_names[] = '';
 	}
 
 	$saved = isset( $_POST['tclas_family_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['tclas_family_nonce'] ) ), 'tclas_save_family_' . $uid );
@@ -171,45 +170,32 @@ function tclas_pmpro_family_section(): void {
 		<?php endif; ?>
 
 		<p class="tclas-story-hint">
-			<?php esc_html_e( 'If your membership covers additional family members, list their names here. These appear on your member profile.', 'tclas' ); ?>
+			<?php esc_html_e( 'Adult household members now get their own login and member profile. Invite them from the “Household members” section of your member hub.', 'tclas' ); ?>
 		</p>
+
+		<p class="tclas-hub2-action">
+			<a class="btn btn-sm btn-outline-ardoise" href="<?php echo esc_url( home_url( '/member-hub/' ) . '#tclas-household' ); ?>">
+				<?php esc_html_e( 'Manage household members →', 'tclas' ); ?>
+			</a>
+		</p>
+
+		<?php
+		$legacy_names = array_values( array_filter( array_map( 'trim', (array) $family_names ), 'strlen' ) );
+		if ( $legacy_names ) :
+			?>
+			<p class="tclas-story-hint">
+				<?php
+				printf(
+					/* translators: %s: comma-separated list of previously entered names */
+					esc_html__( 'Previously listed (text only, not accounts): %s. Send each adult an invitation from the hub so they get their own profile.', 'tclas' ),
+					esc_html( implode( ', ', $legacy_names ) )
+				);
+				?>
+			</p>
+		<?php endif; ?>
 
 		<form method="post" action="">
 			<?php wp_nonce_field( 'tclas_save_family_' . $uid, 'tclas_family_nonce' ); ?>
-
-			<div id="tclas-family-names-list" class="tclas-repeater-list">
-				<?php foreach ( $family_names as $i => $fname ) : ?>
-					<div class="tclas-repeater-row" data-index="<?php echo (int) $i; ?>" style="margin-bottom:.5rem;">
-						<input
-							type="text"
-							name="tclas_family_names[]"
-							value="<?php echo esc_attr( $fname ); ?>"
-							class="tclas-story-input"
-							placeholder="<?php esc_attr_e( 'e.g. Jane Smith', 'tclas' ); ?>"
-							aria-label="<?php esc_attr_e( 'Family member name', 'tclas' ); ?>"
-							style="max-width:300px;"
-						>
-						<?php if ( $i > 0 ) : ?>
-							<button
-								type="button"
-								class="tclas-repeater-remove"
-								aria-label="<?php esc_attr_e( 'Remove this name', 'tclas' ); ?>"
-							>&times;</button>
-						<?php endif; ?>
-					</div>
-				<?php endforeach; ?>
-			</div>
-
-			<button
-				type="button"
-				class="btn btn-sm btn-outline-ardoise tclas-repeater-add"
-				data-target="tclas-family-names-list"
-				data-placeholder="<?php esc_attr_e( 'e.g. John Smith Jr.', 'tclas' ); ?>"
-				data-name="tclas_family_names[]"
-				style="margin-bottom:1rem;"
-			>
-				<?php esc_html_e( '+ Add family member', 'tclas' ); ?>
-			</button>
 
 			<div style="margin-bottom:1rem;">
 				<label class="tclas-story-checkbox">
@@ -224,7 +210,7 @@ function tclas_pmpro_family_section(): void {
 			</div>
 
 			<button type="submit" class="btn btn-primary btn-sm">
-				<?php esc_html_e( 'Save family members', 'tclas' ); ?>
+				<?php esc_html_e( 'Save', 'tclas' ); ?>
 			</button>
 		</form>
 	</div>
