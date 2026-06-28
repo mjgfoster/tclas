@@ -10,6 +10,8 @@
 # ── Sensitive config ──────────────────────────────────────────────────────────
 # wp-config-sample.php is safe to track; wp-config.php is not (holds DB creds)
 wp-config.php
+# SiteGround Security's per-environment encryption key — not portable, keep local
+wp-content/sgs_encrypt_key.php
 
 # ── Local by Flywheel ────────────────────────────────────────────────────────
 local-xdebuginfo.php
