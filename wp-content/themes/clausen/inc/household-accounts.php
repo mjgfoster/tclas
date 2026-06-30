@@ -429,40 +429,14 @@ function tclas_household_accept_invite( object $invite, string $password ): arra
 		return [ 'ok' => false, 'error' => __( 'Could not create your account. Please try again.', 'tclas' ), 'user_id' => 0 ];
 	}
 
-	global $wpdb;
-
-	// Free Household Member level — assigned directly, never through checkout.
-	// Inherit the owner's membership term (start + end dates) so the sub-account
-	// matches what the owner paid for, rather than starting "today" with the
-	// level's default expiration. Read the owner's active row directly so the
-	// dates are copied in the same stored format (no timezone conversion).
-	if ( function_exists( 'pmpro_changeMembershipLevel' ) ) {
-		$level_args = TCLAS_LEVEL_HOUSEHOLD_MEMBER;
-
-		$owner_term = $wpdb->get_row( $wpdb->prepare(
-			"SELECT startdate, enddate FROM {$wpdb->prefix}pmpro_memberships_users
-			 WHERE user_id = %d AND status = 'active' ORDER BY id DESC LIMIT 1",
-			(int) $invite->owner_id
-		) );
-
-		if ( $owner_term ) {
-			$inherited_enddate = ( ! empty( $owner_term->enddate ) && '0000-00-00 00:00:00' !== $owner_term->enddate )
-				? $owner_term->enddate
-				: ''; // empty = no expiration, matching a non-expiring owner term
-			$level_args = [
-				'membership_id' => TCLAS_LEVEL_HOUSEHOLD_MEMBER,
-				'user_id'       => $user_id,
-				'startdate'     => $owner_term->startdate,
-				'enddate'       => $inherited_enddate,
-			];
-		}
-
-		pmpro_changeMembershipLevel( $level_args, $user_id );
-	}
-
+	// Link first so the child carries its parent meta, then grant the free
+	// Household Member level seeded with the owner's current term. The lifecycle
+	// cascade keeps those dates in sync on later renewals.
 	tclas_household_link_member( (int) $invite->owner_id, (int) $user_id );
+	tclas_household_apply_owner_term( (int) $invite->owner_id, (int) $user_id );
 
 	// Consume the invite (single-use: any reuse now fails the status check).
+	global $wpdb;
 	$wpdb->update(
 		tclas_household_invites_table(),
 		[ 'status' => 'accepted', 'accepted_user_id' => $user_id ],
@@ -500,6 +474,74 @@ function tclas_household_link_member( int $owner_id, int $child_id ): void {
 }
 
 /**
+ * Assign or refresh a child's free Household Member level so its term matches
+ * the owner's current Household membership (start + end dates). This is the
+ * single source of truth for sub-account dates — used at invite acceptance, on
+ * restore, and by the renewal cascade / daily reconcile.
+ *
+ * Idempotent: if the child is already active on exactly the owner's dates it
+ * does nothing, so the daily reconcile can call it on every child without
+ * churning PMPro membership history. No-ops if the owner has no active
+ * Household row (nothing to inherit). The owner's dates are read in their
+ * stored format and copied verbatim, so no timezone conversion is involved.
+ */
+function tclas_household_apply_owner_term( int $owner_id, int $child_id ): void {
+	if ( ! function_exists( 'pmpro_changeMembershipLevel' ) ) {
+		return;
+	}
+
+	global $wpdb;
+
+	$norm = static function ( $d ): string {
+		return ( ! empty( $d ) && '0000-00-00 00:00:00' !== $d ) ? (string) $d : '';
+	};
+
+	$owner_term = $wpdb->get_row( $wpdb->prepare(
+		"SELECT startdate, enddate FROM {$wpdb->prefix}pmpro_memberships_users
+		 WHERE user_id = %d AND status = 'active' AND membership_id = %d
+		 ORDER BY id DESC LIMIT 1",
+		$owner_id,
+		TCLAS_LEVEL_HOUSEHOLD
+	) );
+	if ( ! $owner_term ) {
+		return; // Owner not active — nothing to inherit.
+	}
+
+	$start = $norm( $owner_term->startdate );
+	$end   = $norm( $owner_term->enddate ); // '' = no expiration
+
+	// Skip if the child is already active on exactly these dates (avoid churn).
+	$child_term = $wpdb->get_row( $wpdb->prepare(
+		"SELECT startdate, enddate FROM {$wpdb->prefix}pmpro_memberships_users
+		 WHERE user_id = %d AND status = 'active' AND membership_id = %d
+		 ORDER BY id DESC LIMIT 1",
+		$child_id,
+		TCLAS_LEVEL_HOUSEHOLD_MEMBER
+	) );
+	if ( $child_term && $norm( $child_term->startdate ) === $start && $norm( $child_term->enddate ) === $end ) {
+		return;
+	}
+
+	// Free, non-recurring level — the billing keys are all zero. They're spelled
+	// out so PMPro's pmpro_changeMembershipLevel() doesn't emit "undefined array
+	// key" notices when reading them from the custom level array.
+	pmpro_changeMembershipLevel( [
+		'membership_id'   => TCLAS_LEVEL_HOUSEHOLD_MEMBER,
+		'user_id'         => $child_id,
+		'startdate'       => $start,
+		'enddate'         => $end,
+		'code_id'         => 0,
+		'initial_payment' => 0,
+		'billing_amount'  => 0,
+		'cycle_number'    => 0,
+		'cycle_period'    => '',
+		'billing_limit'   => 0,
+		'trial_amount'    => 0,
+		'trial_limit'     => 0,
+	], $child_id );
+}
+
+/**
  * Revoke a child's access (cascade): cancel L5, move to the revoked list but
  * keep the link for a clean restore. Profile/lineage data is untouched.
  */
@@ -521,10 +563,9 @@ function tclas_household_revoke_member( int $owner_id, int $child_id ): void {
  * Restore a previously-revoked child to active L5.
  */
 function tclas_household_restore_member( int $owner_id, int $child_id ): void {
-	if ( function_exists( 'pmpro_changeMembershipLevel' ) ) {
-		pmpro_changeMembershipLevel( TCLAS_LEVEL_HOUSEHOLD_MEMBER, $child_id );
-	}
 	tclas_household_link_member( $owner_id, $child_id );
+	// Grant L5 with the owner's current term (not a fresh "today" expiration).
+	tclas_household_apply_owner_term( $owner_id, $child_id );
 }
 
 /**
@@ -573,9 +614,14 @@ function tclas_household_cascade_on_change( $level_id, $user_id, $cancel_level =
 	$in_flight = true;
 
 	if ( TCLAS_LEVEL_HOUSEHOLD === $level_id ) {
-		// Renewed / re-upgraded: restore everyone we previously revoked.
+		// Renewed / re-upgraded: restore anyone we previously revoked, AND push
+		// the owner's new term onto children who were still active (i.e. the
+		// owner renewed before lapsing) so their end date moves with the owner's.
 		foreach ( $revoked as $child_id ) {
 			tclas_household_restore_member( $user_id, $child_id );
+		}
+		foreach ( $members as $child_id ) {
+			tclas_household_apply_owner_term( $user_id, $child_id );
 		}
 	} else {
 		// Lost / changed / cancelled Household: revoke every active child.
@@ -621,6 +667,12 @@ function tclas_household_run_reconcile(): void {
 		if ( $active ) {
 			foreach ( tclas_household_revoked_ids( $owner_id ) as $child_id ) {
 				tclas_household_restore_member( $owner_id, $child_id );
+			}
+			// Converge active children's dates onto the owner's current term.
+			// apply_owner_term is a no-op when they already match, so this is
+			// cheap to run daily and catches renewals the hook may have missed.
+			foreach ( tclas_household_member_ids( $owner_id ) as $child_id ) {
+				tclas_household_apply_owner_term( $owner_id, $child_id );
 			}
 		} else {
 			foreach ( tclas_household_member_ids( $owner_id ) as $child_id ) {
