@@ -38,6 +38,52 @@ $lux_website   = function_exists( 'get_field' )
 	? get_field( 'tclas_commune_lux_website_url', $term )
 	: '';
 
+// ── Member gate ─────────────────────────────────────────────────────────────
+// Commune profiles list members by name and surname, so the page is members
+// only — mirrors the gate on the parent map (/member-hub/ancestral-map/).
+// Bail before loading any member data for non-members.
+if ( ! function_exists( 'tclas_is_member' ) || ! tclas_is_member() ) :
+	?>
+	<div class="tclas-page-header">
+		<div class="container-tclas">
+			<nav class="tclas-breadcrumb" aria-label="<?php esc_attr_e( 'Breadcrumb', 'tclas' ); ?>">
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Home', 'tclas' ); ?></a>
+				<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
+				<a href="<?php echo esc_url( home_url( '/member-hub/ancestral-map/' ) ); ?>"><?php esc_html_e( 'Ancestral Map', 'tclas' ); ?></a>
+				<span class="tclas-breadcrumb__sep" aria-hidden="true">›</span>
+				<span class="tclas-breadcrumb__current" aria-current="page"><?php echo esc_html( $name ); ?></span>
+			</nav>
+			<h1 class="tclas-page-header__title"><?php echo esc_html( $name ); ?></h1>
+		</div>
+	</div>
+
+	<section class="tclas-section">
+		<div class="container-tclas">
+			<div class="tclas-member-gate">
+				<div class="tclas-member-gate__inner">
+					<?php tclas_illustration( 'member_gate_illustration', __( 'Member-only content', 'tclas' ), 'tclas-member-gate__illustration' ); ?>
+					<h2><?php esc_html_e( 'Members only.', 'tclas' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'Commune profiles show the TCLAS members who trace their roots here. Join us to explore the ancestral map and connect with fellow members.', 'tclas' ); ?>
+					</p>
+					<div class="tclas-member-gate__actions">
+						<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary">
+							<?php esc_html_e( 'Join TCLAS', 'tclas' ); ?>
+						</a>
+						<?php $tclas_login_redirect = get_term_link( $term ); ?>
+						<a href="<?php echo esc_url( wp_login_url( is_wp_error( $tclas_login_redirect ) ? '' : $tclas_login_redirect ) ); ?>" class="btn btn-outline-ardoise">
+							<?php esc_html_e( 'Log in', 'tclas' ); ?>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<?php
+	get_footer();
+	return;
+endif;
+
 // ── Members with this commune, grouped by surname ───────────────────────────
 $surname_groups = []; // surname => [ user objects ]
 $ungrouped      = []; // members at this commune but no surname recorded for it
