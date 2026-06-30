@@ -111,6 +111,13 @@ $logout_url  = wp_logout_url( home_url() );
 				</a>
 			</p>
 
+			<?php
+			// "Manage Household" panel (renders only for Household owners).
+			if ( function_exists( 'tclas_household_panel' ) ) {
+				tclas_household_panel( $uid );
+			}
+			?>
+
 			<hr class="tclas-hub2-rule">
 
 			<p class="tclas-hub2-action">
