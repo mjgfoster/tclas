@@ -102,6 +102,21 @@ foreach ( $all_users as $u ) {
 		continue;
 	}
 
+	// Honor the member's Privacy Settings toggles — same rules the ancestral map
+	// applies in tclas_build_commune_data(). A member who opted out of community
+	// stats or of showing their communes is excluded entirely; one who hid only
+	// their surnames is still listed (they do trace ancestry here) but without
+	// their surnames revealed.
+	if ( function_exists( 'tclas_get_privacy_toggle' ) ) {
+		if ( ! tclas_get_privacy_toggle( $u->ID, '_tclas_privacy_in_community_stats', true )
+		  || ! tclas_get_privacy_toggle( $u->ID, '_tclas_privacy_show_communes', true ) ) {
+			continue;
+		}
+		$include_surnames = tclas_get_privacy_toggle( $u->ID, '_tclas_privacy_show_surnames', true );
+	} else {
+		$include_surnames = true;
+	}
+
 	$lineages = get_user_meta( $u->ID, '_tclas_lineages', true );
 	$lineages = is_array( $lineages ) ? $lineages : maybe_unserialize( $lineages );
 	if ( ! is_array( $lineages ) ) {
@@ -123,20 +138,26 @@ foreach ( $all_users as $u ) {
 		}
 	}
 
-	if ( empty( $found_surnames ) ) {
-		// Check _tclas_communes_norm as fallback (member has commune but no surnames)
+	// Does this member belong on this commune at all?
+	$has_commune_entry = ! empty( $found_surnames );
+	if ( ! $has_commune_entry ) {
+		// Fallback: member has the commune recorded but no surnames for it.
 		$cnorm = get_user_meta( $u->ID, '_tclas_communes_norm', true );
 		$cnorm = is_array( $cnorm ) ? $cnorm : maybe_unserialize( $cnorm );
-		if ( is_array( $cnorm ) && in_array( $slug, $cnorm, true ) ) {
-			$ungrouped[] = $u;
-			$member_count++;
-		}
+		$has_commune_entry = is_array( $cnorm ) && in_array( $slug, $cnorm, true );
+	}
+	if ( ! $has_commune_entry ) {
 		continue;
 	}
 
 	$member_count++;
-	foreach ( $found_surnames as $s ) {
-		$surname_groups[ $s ][] = $u;
+	if ( $include_surnames && ! empty( $found_surnames ) ) {
+		foreach ( $found_surnames as $s ) {
+			$surname_groups[ $s ][] = $u;
+		}
+	} else {
+		// Surnames hidden by the member, or none recorded for this commune.
+		$ungrouped[] = $u;
 	}
 }
 
