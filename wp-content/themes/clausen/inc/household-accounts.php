@@ -429,15 +429,40 @@ function tclas_household_accept_invite( object $invite, string $password ): arra
 		return [ 'ok' => false, 'error' => __( 'Could not create your account. Please try again.', 'tclas' ), 'user_id' => 0 ];
 	}
 
+	global $wpdb;
+
 	// Free Household Member level — assigned directly, never through checkout.
+	// Inherit the owner's membership term (start + end dates) so the sub-account
+	// matches what the owner paid for, rather than starting "today" with the
+	// level's default expiration. Read the owner's active row directly so the
+	// dates are copied in the same stored format (no timezone conversion).
 	if ( function_exists( 'pmpro_changeMembershipLevel' ) ) {
-		pmpro_changeMembershipLevel( TCLAS_LEVEL_HOUSEHOLD_MEMBER, $user_id );
+		$level_args = TCLAS_LEVEL_HOUSEHOLD_MEMBER;
+
+		$owner_term = $wpdb->get_row( $wpdb->prepare(
+			"SELECT startdate, enddate FROM {$wpdb->prefix}pmpro_memberships_users
+			 WHERE user_id = %d AND status = 'active' ORDER BY id DESC LIMIT 1",
+			(int) $invite->owner_id
+		) );
+
+		if ( $owner_term ) {
+			$inherited_enddate = ( ! empty( $owner_term->enddate ) && '0000-00-00 00:00:00' !== $owner_term->enddate )
+				? $owner_term->enddate
+				: ''; // empty = no expiration, matching a non-expiring owner term
+			$level_args = [
+				'membership_id' => TCLAS_LEVEL_HOUSEHOLD_MEMBER,
+				'user_id'       => $user_id,
+				'startdate'     => $owner_term->startdate,
+				'enddate'       => $inherited_enddate,
+			];
+		}
+
+		pmpro_changeMembershipLevel( $level_args, $user_id );
 	}
 
 	tclas_household_link_member( (int) $invite->owner_id, (int) $user_id );
 
 	// Consume the invite (single-use: any reuse now fails the status check).
-	global $wpdb;
 	$wpdb->update(
 		tclas_household_invites_table(),
 		[ 'status' => 'accepted', 'accepted_user_id' => $user_id ],
