@@ -219,13 +219,11 @@ $map_communes = tclas_get_profile_map_data( $user_id );
 												list="tclas-commune-options"
 												aria-label="<?php esc_attr_e( 'Ancestral commune', 'tclas' ); ?>"
 											>
-											<?php if ( $ci > 0 ) : ?>
-												<button
-													type="button"
-													class="tclas-repeater-remove tclas-lineage-remove-card"
-													aria-label="<?php esc_attr_e( 'Remove this lineage', 'tclas' ); ?>"
-												>×</button>
-											<?php endif; ?>
+											<button
+												type="button"
+												class="tclas-repeater-remove tclas-lineage-remove-card"
+												aria-label="<?php esc_attr_e( 'Remove this lineage', 'tclas' ); ?>"
+											>×</button>
 										</div>
 										<div class="tclas-lineage-card__surnames">
 											<?php foreach ( ( (array) ( $lineage['surnames_raw'] ?? [] ) ) as $si => $sraw ) : ?>
@@ -239,13 +237,11 @@ $map_communes = tclas_get_profile_map_data( $user_id );
 														autocomplete="off"
 														aria-label="<?php esc_attr_e( 'Paired surname', 'tclas' ); ?>"
 													>
-													<?php if ( $si > 0 ) : ?>
-														<button
-															type="button"
-															class="tclas-repeater-remove"
-															aria-label="<?php esc_attr_e( 'Remove this surname', 'tclas' ); ?>"
-														>×</button>
-													<?php endif; ?>
+													<button
+														type="button"
+														class="tclas-repeater-remove"
+														aria-label="<?php esc_attr_e( 'Remove this surname', 'tclas' ); ?>"
+													>×</button>
 												</div>
 											<?php endforeach; ?>
 										</div>
@@ -253,7 +249,7 @@ $map_communes = tclas_get_profile_map_data( $user_id );
 											type="button"
 											class="btn btn-sm btn-link tclas-lineage-add-surname"
 										>
-											<?php esc_html_e( '+ Add surname', 'tclas' ); ?>
+											<?php esc_html_e( '+ Add a surname', 'tclas' ); ?>
 										</button>
 									</div>
 								<?php endforeach; ?>
@@ -264,7 +260,7 @@ $map_communes = tclas_get_profile_map_data( $user_id );
 								class="btn btn-sm btn-outline-ardoise"
 								id="tclas-lineage-add-card"
 							>
-								<?php esc_html_e( '+ Add another commune lineage', 'tclas' ); ?>
+								<?php esc_html_e( '+ Add a commune', 'tclas' ); ?>
 							</button>
 
 						</fieldset>

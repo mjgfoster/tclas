@@ -627,7 +627,7 @@
             '</div>' +
           '</div>' +
           '<button type="button" class="btn btn-sm btn-link tclas-lineage-add-surname">' +
-            '+ Add surname' +
+            '+ Add a surname' +
           '</button>';
 
         lineageList.appendChild(card);
@@ -642,22 +642,50 @@
       // ── Remove entire card ──────────────────────────────────────────
       if (target.closest('.tclas-lineage-remove-card')) {
         var card = target.closest('.tclas-lineage-card');
-        if (card) {
-          card.style.opacity = '0';
-          card.style.transition = 'opacity .2s';
-          setTimeout(() => card.remove(), 220);
+        if (!card) return;
+
+        var communeInput = card.querySelector('.tclas-lineage-commune-input');
+        var communeName   = (communeInput && communeInput.value.trim()) || 'this commune';
+        var surnameValues = Array.prototype.map.call(
+          card.querySelectorAll('.tclas-lineage-card__surnames input'),
+          function (input) { return input.value.trim(); }
+        ).filter(Boolean);
+
+        if (surnameValues.length) {
+          var cardMsg = 'Remove ' + communeName + '? This will also remove its linked surname(s): ' + surnameValues.join(', ') + '.';
+          if (!window.confirm(cardMsg)) return;
         }
+
+        card.style.opacity = '0';
+        card.style.transition = 'opacity .2s';
+        setTimeout(() => card.remove(), 220);
         return;
       }
 
       // ── Remove a single surname row ─────────────────────────────────
       if (target.closest('.tclas-repeater-remove')) {
         var row = target.closest('.tclas-repeater-row');
-        if (row) {
-          row.style.opacity = '0';
-          row.style.transition = 'opacity .2s';
-          setTimeout(() => row.remove(), 220);
+        if (!row) return;
+
+        var parentCard = target.closest('.tclas-lineage-card');
+        if (parentCard) {
+          var rowInput = row.querySelector('input');
+          var remainingCount = Array.prototype.filter.call(
+            parentCard.querySelectorAll('.tclas-lineage-card__surnames input'),
+            function (input) { return input !== rowInput && input.value.trim(); }
+          ).length;
+
+          if (remainingCount === 0) {
+            var cardCommuneInput = parentCard.querySelector('.tclas-lineage-commune-input');
+            var cardCommuneName  = (cardCommuneInput && cardCommuneInput.value.trim()) || 'this commune';
+            var rowMsg = 'This is the only surname for ' + cardCommuneName + '. Removing it means ' + cardCommuneName + ' won’t appear on your map until you add a surname back. Continue?';
+            if (!window.confirm(rowMsg)) return;
+          }
         }
+
+        row.style.opacity = '0';
+        row.style.transition = 'opacity .2s';
+        setTimeout(() => row.remove(), 220);
         return;
       }
 
