@@ -525,7 +525,7 @@
 
   // ── My Luxembourg Story form — repeater fields ────────────────────────────
   function initMyStoryForm() {
-    const form = qs('#tclas-my-story-form');
+    const form = qs('.tclas-my-story-form');
     if (!form) return;
 
     // ── Generic repeater: add row ──────────────────────────────────────
