@@ -1,0 +1,15 @@
+# Copy to bin/deploy.conf (gitignored) and fill in.
+#
+# REMOTE is an SSH host alias from your ~/.ssh/config, e.g.:
+#
+#   Host tclas-prod
+#       HostName <server from Site Tools → Devs → SSH Keys Manager>
+#       User <ssh username from Site Tools>
+#       Port 18765
+#       IdentityFile ~/.ssh/tclas_siteground
+#
+REMOTE="tclas-prod"
+
+# Absolute or home-relative path to the WordPress root on the server,
+# e.g. "www/twincities.lu/public_html"
+REMOTE_PATH="www/twincities.lu/public_html"

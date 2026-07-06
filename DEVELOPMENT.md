@@ -18,10 +18,12 @@ made where the data lives (production), or scripted as one-off migrations.
 | Env | Where | Role | Database |
 |-----|-------|------|----------|
 | **Local (dev)** | Local by Flywheel | Where you build | Disposable — refresh from prod whenever |
-| **Staging** | staging5.twincities.lu | Permanent mirror of prod; rehearse every change here | Refreshed *from* prod |
+| **Staging** | Site Tools → WordPress → Staging (ephemeral copies) | Rehearse risky changes, then delete | Fresh prod clone each time |
 | **Production** | live site (SiteGround) | The real thing | **Source of truth for all member data** |
 
-Keep staging private — HTTP auth + `noindex` — because it holds a copy of real member PII.
+Staging copies are created fresh from prod per rehearsal and deleted after — no
+permanent mirror to drift or to hold member PII long-term. *(staging5.twincities.lu,
+the standalone site used to launch, is retired from the workflow.)*
 
 ---
 
@@ -52,43 +54,78 @@ creds + keys). Set `WP_ENVIRONMENT_TYPE` in each so you always know where you ar
 
 ---
 
-## Deploying code (dev → prod) — SiteGround Git push-to-deploy
+## Deploying code (dev → prod) — `bin/deploy.sh` (rsync over SSH)
 
-GitHub (`origin`) stays your source of truth and backup. The SiteGround Git remote is
-the deploy pipe. Because only your code is tracked (theme, custom plugin, mu-plugins),
-a deploy overlays those files and leaves core, uploads, `wp-config.php`, and
-third-party plugins untouched.
+GitHub (`origin`) stays your source of truth and backup. Deploys are an rsync of the
+**committed** tree (via `git archive` — never the working tree, so uncommitted edits
+and untracked local files like the mail-guard mu-plugin can never ship) to prod over
+plain SSH. Only the tracked code paths move — theme, custom plugin, mu-plugins — and
+core, uploads, `wp-config.php`, `.htaccess` (SG Optimizer owns prod's copy), and
+third-party plugins are never touched.
+
+```
+bin/deploy.sh              # dry run — shows exactly what would change
+bin/deploy.sh --go         # deploy HEAD
+bin/deploy.sh --go v1.2    # deploy a tag  →  rollback = deploy the previous tag
+```
 
 **Everyday flow:**
 1. Build on a feature branch; push to GitHub.
-2. Deploy that branch to **staging5** and test against fresh prod data.
+2. Rehearse on staging if the change is risky (see Staging below).
 3. Merge to `main`; tag the release.
-4. Deploy `main` to **production**.
-5. If the change needs a data/config step, do it on prod now (see next section).
-6. Smoke-test prod; purge SG Optimizer cache; flush rewrites if routes changed
-   (Settings → Permalinks → Save).
+4. `bin/deploy.sh` (check the dry run), then `bin/deploy.sh --go`.
+5. If the change needs a DB/config step, run its **migration** now (next section).
+6. Smoke-test prod; the script purges SG Optimizer's cache; flush rewrites if
+   routes changed (Settings → Permalinks → Save).
 
-**One-time setup** (Site Tools → Devs → Git): create the repo and map deploy targets —
-the staging path from your working branch, the production path from `main`. Back up
-first and confirm the first deploy leaves `uploads/` and plugins in place. *(Happy to
-walk through the exact wiring when you set it up.)*
+**One-time setup:**
+1. Site Tools → Devs → **SSH Keys Manager** → generate (or import) a key; note the
+   hostname, username, and port (usually 18765).
+2. Add a host alias to `~/.ssh/config` (see `bin/deploy.conf.example`).
+3. `cp bin/deploy.conf.example bin/deploy.conf` and fill in the alias + WP root path.
+   (`deploy.conf` is gitignored — it's per-machine.)
+4. First deploy: run the dry run and confirm it only lists theme/plugin/mu-plugin
+   files before `--go`.
 
-**Rollback:** redeploy the previous tag. (Data rollback is a separate restore — below.)
+**Rollback:** `bin/deploy.sh --go <previous-tag>`. (Data rollback is a separate
+restore — below.)
 
 ---
 
-## Refreshing data DOWN (prod → staging → dev) — WP Synchro
+## Staging — SiteGround's built-in staging (ephemeral, not a pet)
 
-This is how you get realistic member data to develop and rehearse against. Do it
-*before* building anything that touches member data.
+GrowBig includes one-click staging: **Site Tools → WordPress → Staging**. Use it as a
+disposable rehearsal space, not a standing mirror — a permanent staging site drifts
+and holds a copy of member PII around the clock.
 
-- Use a WP Synchro **Pull**: prod → staging, and prod → local.
+**When to rehearse on staging:** plugin updates (PMPro / Stripe / TEC especially),
+migrations, permalink/routing changes, anything touching checkout or member data.
+CSS and template-text changes can go local → prod directly.
+
+**Flow:** create a fresh staging copy (it clones current prod, data included) →
+deploy the feature branch to it / run the migration against it → click through →
+delete the copy (or use push-to-live only if you fully understand what it replaces —
+deploying to prod via `bin/deploy.sh` is the normal route).
+
+Staging copies hold real member PII: keep them short-lived and don't hand out the URL.
+
+---
+
+## Refreshing data DOWN (prod → dev) — WP Synchro
+
+This is how you get realistic member data to develop against. Make it routine: pull
+**before starting any feature work**, not just when local feels stale — most "does
+prod match local?" uncertainty comes from skipping this.
+
+- Use a WP Synchro **Pull**: prod → local.
 - WP Synchro handles URL search-replace, serialized data, and makes a safety backup.
-- **PII caution:** this copies real emails / addresses / ancestry onto your laptop and
-  staging. Refresh only as needed, keep local secure, keep staging private. *(If you
-  want, I can write a small wp-cli scrub to anonymize emails on the dev copy.)*
+- The mail-guard mu-plugin (`zzz-local-email-guard.php`, untracked) must stay in
+  place locally — a pull brings prod's live Brevo keys with it.
+- **PII caution:** this copies real emails / addresses / ancestry onto your laptop.
+  Refresh only as needed and keep local secure. *(A wp-cli scrub to anonymize emails
+  on the dev copy is a good future addition.)*
 
-**Never run the reverse (push local/staging DB → prod).** The only thing going up is code.
+**Never run the reverse (push local DB → prod).** The only thing going up is code.
 
 ---
 
@@ -96,34 +133,37 @@ This is how you get realistic member data to develop and rehearse against. Do it
 
 Because you can't push a DB up, these changes happen where the data is — **production**:
 
-- **Content** (page text, Privacy/Terms, menus): edit directly in prod. Draft/preview
-  in dev first if you like, then re-apply in prod. `LAUNCH_PHASE2_REVERSIONS.md` is the
-  pattern — write down exactly what to change, then do it on prod.
+- **One-off prose edits** (Privacy/Terms text, a menu item): edit directly in prod
+  admin. Draft/preview in dev first if you like, then re-apply in prod.
 - **PMPro levels/prices, plugin settings, theme options:** change in the prod admin.
 - **ACF *fields*:** change in code (`inc/acf-fields.php`) → deploys up like any code.
   Their *values* are data.
-- **Bulk/structural data changes** (e.g. backfilling a new user-meta default across all
-  members): write a **one-off migration** — a `wp-cli eval-file` script or a run-once
-  mu-plugin — and run it against prod *after a backup*. Don't hand-edit rows.
+- **Anything a code change depends on, and any bulk/structural change: write a
+  migration.** Migrations live in `bin/migrations/YYYY-MM-DD-slug.php`, run via
+  `bin/migrate.sh` (locally) and `bin/migrate.sh --prod` (over SSH), and must be
+  **idempotent** — verify state before changing it, log every action, leave anything
+  unexpected alone with a warning. Test against local first (where the change is
+  usually already applied — a clean all-"OK" run is your idempotency proof), then run
+  against prod right after the code deploy. Don't hand-type checklists into prod.
+  `bin/migrations/2026-07-06-launch-audit-cleanup.php` is the reference example.
 
 ---
 
 ## Checklists
 
 **Before every prod deploy**
-- [ ] Tested on staging (refreshed from prod)
 - [ ] Prod DB backup taken (SiteGround on-demand backup)
 - [ ] Merged to `main`, release tagged
-- [ ] Deployed `main` → prod
-- [ ] Any required data/config step applied on prod (migration, menu, price)
-- [ ] Smoke-tested; caches purged; rewrites flushed if routes changed
+- [ ] `bin/deploy.sh` dry run reviewed, then `bin/deploy.sh --go`
+- [ ] Any companion migration run: `bin/migrate.sh --prod bin/migrations/<file>.php`
+- [ ] Smoke-tested; rewrites flushed if routes changed (cache purge is automatic)
 
 **Risky change (data migration, plugin update, PMPro/Stripe change)**
-- [ ] Rehearsed on staging with a fresh prod copy
-- [ ] Migration scripted and dry-run on staging
+- [ ] Rehearsed on a fresh Site Tools staging copy (deploy + migration both)
+- [ ] Migration tested on local first (idempotent, all-"OK" on re-run)
 - [ ] Prod DB backup taken immediately before
 - [ ] Rollback ready (previous tag + DB backup)
-- [ ] Deployed in a low-traffic window
+- [ ] Deployed in a low-traffic window; staging copy deleted after
 
 ---
 
