@@ -75,7 +75,7 @@ tclas_seed( 'cit_next_steps', [
 	],
 	[
 		'step_title' => 'Research your ancestry',
-		'step_body'  => '<p>TCLAS members can use the <a href="/ancestry/">ancestral commune map</a> to find others with roots in the same communes, and connect with experienced researchers in our community forums.</p>',
+		'step_body'  => '<p>TCLAS members can use the <a href="/ancestry/">ancestral commune map</a> to find others with roots in the same communes, and connect with experienced researchers in our member community.</p>',
 	],
 	[
 		'step_title' => 'Contact the Luxembourg consulate',

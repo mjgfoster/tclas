@@ -299,7 +299,7 @@ get_header();
 									<?php
 									printf(
 										/* translators: %s: ancestral map URL */
-										wp_kses( __( 'TCLAS members can use the <a href="%s">ancestral commune map</a> to find others with roots in the same communes, and connect with experienced researchers in our community forums.', 'tclas' ), [ 'a' => [ 'href' => [] ] ] ),
+										wp_kses( __( 'TCLAS members can use the <a href="%s">ancestral commune map</a> to find others with roots in the same communes, and connect with experienced researchers in our member community.', 'tclas' ), [ 'a' => [ 'href' => [] ] ] ),
 										esc_url( home_url( '/ancestry/' ) )
 									);
 									?>
@@ -428,8 +428,8 @@ get_header();
 				<?php esc_html_e( 'Join TCLAS', 'tclas' ); ?>
 			</a>
 			<?php if ( tclas_is_member() ) : ?>
-				<a href="<?php echo esc_url( home_url( '/member-hub/forums/' ) ); ?>" class="btn btn-outline-light">
-					<?php esc_html_e( 'Visit the forums →', 'tclas' ); ?>
+				<a href="<?php echo esc_url( home_url( '/member-hub/' ) ); ?>" class="btn btn-outline-light">
+					<?php esc_html_e( 'Visit the member hub →', 'tclas' ); ?>
 				</a>
 			<?php else : ?>
 				<a href="<?php echo esc_url( home_url( '/about/' ) ); ?>" class="btn btn-outline-light">

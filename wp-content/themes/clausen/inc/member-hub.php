@@ -45,8 +45,8 @@ function tclas_hub_dashboard_cards(): array {
 			'link'  => home_url( '/member-hub/profiles/' ),
 			'link_label' => __( 'Browse directory →', 'tclas' ),
 		],
-		// Phase 2: Documents & resources and Luxembourg Connections (forum) cards
-		// were removed here pending those features being brought back online.
+		// Phase 2: the Documents & resources card was removed here pending that
+		// feature being brought back online.
 	];
 
 	return apply_filters( 'tclas_hub_dashboard_cards', $cards );
@@ -76,7 +76,7 @@ function tclas_hub_upcoming_events_snippet(): string {
  *
  * Shows up to 3 connection cards (sorted by score), with unseen ones highlighted.
  * Dismissed connections are hidden.  Empty states guide the member toward
- * completing their profile or visiting the forum.
+ * completing their profile.
  */
 function tclas_render_connections_panel(): void {
 	$user_id     = get_current_user_id();
@@ -815,40 +815,6 @@ function tclas_get_activity_alerts( int $user_id ): array {
 				'link'        => home_url( '/member-hub/messages/' ),
 				'link_label'  => __( 'View Messages →', 'tclas' ),
 			];
-		}
-	}
-
-	// ── Forum @mentions (last 7 days) ───────────────────────────────────
-	if ( function_exists( 'bbp_get_reply_post_type' ) ) {
-		$user     = get_userdata( $user_id );
-		$username = $user ? $user->user_login : '';
-		if ( $username ) {
-			global $wpdb;
-			$mention_count = (int) $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM {$wpdb->posts}
-				 WHERE post_type = %s
-				   AND post_status = 'publish'
-				   AND post_date >= %s
-				   AND post_author != %d
-				   AND post_content LIKE %s",
-				bbp_get_reply_post_type(),
-				gmdate( 'Y-m-d H:i:s', $cutoff ),
-				$user_id,
-				'%@' . $wpdb->esc_like( $username ) . '%'
-			) );
-			if ( $mention_count > 0 ) {
-				$alerts[] = [
-					'type'        => 'forum_mention',
-					'icon'        => '💬',
-					'title'       => sprintf(
-						_n( 'You were mentioned in %d forum reply', 'You were mentioned in %d forum replies', $mention_count, 'tclas' ),
-						$mention_count
-					),
-					'description' => '',
-					'link'        => home_url( '/member-hub/forums/luxembourg-connections/' ),
-					'link_label'  => __( 'View Forum →', 'tclas' ),
-				];
-			}
 		}
 	}
 

@@ -309,9 +309,6 @@ function tclas_is_member_page(): bool {
 	if ( is_page_template( 'page-templates/page-map.php' ) ) {
 		return true;
 	}
-	if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
-		return true;
-	}
 	if ( is_tax( 'tclas_commune' ) ) {
 		return true;
 	}
@@ -371,7 +368,7 @@ function tclas_get_member_nav_links(): array {
 	$user        = wp_get_current_user();
 	$profile_url = home_url( '/member-hub/profiles/' . rawurlencode( $user->user_nicename ) . '/' );
 
-	// Documents, Forum, and a duplicate Map link are deferred to Q3/Q4 — omitted for launch.
+	// Documents and a duplicate Map link are deferred to Q3/Q4 — omitted for launch.
 	return [
 		[ 'label' => __( 'Member Hub', 'tclas' ),       'url' => home_url( '/member-hub/' ),              'icon' => 'bi-house-door-fill' ],
 		[ 'label' => __( 'My Member Profile', 'tclas' ),'url' => $profile_url,                           'icon' => 'bi-person-circle' ],

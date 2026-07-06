@@ -317,7 +317,7 @@ $weekly_digest            = $get_toggle( '_tclas_privacy_weekly_digest',        
 									<?php esc_html_e( 'Send me a weekly digest of unread activity', 'tclas' ); ?>
 								</label>
 								<p class="tclas-story-hint">
-									<?php esc_html_e( 'A Monday summary of new messages, forum mentions, and member matches.', 'tclas' ); ?>
+									<?php esc_html_e( 'A Monday summary of new messages and member matches.', 'tclas' ); ?>
 								</p>
 							</div>
 						</fieldset>

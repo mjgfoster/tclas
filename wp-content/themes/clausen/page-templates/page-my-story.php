@@ -757,8 +757,8 @@ $profile_photo_url = $profile_photo_id
 								<?php esc_html_e( 'No connections found yet. As more members complete their profiles, we\'ll surface matches on your dashboard.', 'tclas' ); ?>
 							</p>
 							<p class="tclas-story-hint">
-								<a href="<?php echo esc_url( home_url( '/member-hub/forums/luxembourg-connections/' ) ); ?>">
-									<?php esc_html_e( 'Visit the Luxembourg Connections forum →', 'tclas' ); ?>
+								<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>">
+									<?php esc_html_e( 'Browse the member directory →', 'tclas' ); ?>
 								</a>
 							</p>
 						</div>

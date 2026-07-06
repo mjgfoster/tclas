@@ -3,7 +3,7 @@
  * Weekly digest email
  *
  * Sends a weekly summary of unread activity to opted-in members:
- * forum @mentions, unread messages, new connections, new matching members.
+ * unread messages, new connections, new matching members.
  *
  * Schedule and day/time are configurable via Theme Options → Member Hub.
  * Members opt out via Privacy Settings → "Send me a weekly digest".
@@ -180,58 +180,6 @@ function tclas_build_digest( int $user_id ) {
 				'link'  => home_url( '/member-hub/messages/' ),
 				'cta'   => __( 'Read Messages', 'tclas' ),
 			];
-		}
-	}
-
-	// ── Forum @mentions ─────────────────────────────────────────────────
-	if ( function_exists( 'bbp_get_reply_post_type' ) ) {
-		$user     = get_userdata( $user_id );
-		$username = $user ? $user->user_login : '';
-		if ( $username ) {
-			global $wpdb;
-			$cutoff  = gmdate( 'Y-m-d H:i:s', strtotime( '-7 days' ) );
-			$mentions = $wpdb->get_results( $wpdb->prepare(
-				"SELECT p.ID, p.post_parent, p.post_author
-				 FROM {$wpdb->posts} p
-				 WHERE p.post_type = %s
-				   AND p.post_status = 'publish'
-				   AND p.post_date >= %s
-				   AND p.post_author != %d
-				   AND p.post_content LIKE %s
-				 ORDER BY p.post_date DESC
-				 LIMIT 5",
-				bbp_get_reply_post_type(),
-				$cutoff,
-				$user_id,
-				'%@' . $wpdb->esc_like( $username ) . '%'
-			) );
-
-			if ( ! empty( $mentions ) ) {
-				$items = [];
-				foreach ( $mentions as $m ) {
-					$author = get_userdata( (int) $m->post_author );
-					$topic  = get_post( (int) $m->post_parent );
-					if ( $author && $topic ) {
-						$items[] = sprintf(
-							/* translators: 1: author name, 2: topic title */
-							__( '%1$s mentioned you in "%2$s"', 'tclas' ),
-							$author->display_name,
-							get_the_title( $topic )
-						);
-					}
-				}
-				if ( ! empty( $items ) ) {
-					$sections['forum'] = [
-						'title' => sprintf(
-							_n( '%d forum mention this week', '%d forum mentions this week', count( $mentions ), 'tclas' ),
-							count( $mentions )
-						),
-						'items' => $items,
-						'link'  => home_url( '/member-hub/forums/luxembourg-connections/' ),
-						'cta'   => __( 'View Forum', 'tclas' ),
-					];
-				}
-			}
 		}
 	}
 
