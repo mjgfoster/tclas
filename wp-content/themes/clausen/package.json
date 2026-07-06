@@ -4,9 +4,12 @@
   "private": true,
   "description": "Clausen theme — Twin Cities Luxembourg American Society",
   "scripts": {
-    "sass": "sass assets/scss:assets/css --style=expanded --no-source-map",
-    "sass:watch": "sass --watch assets/scss:assets/css --style=expanded --no-source-map",
-    "sass:build": "sass assets/scss:assets/css --style=compressed --no-source-map"
+    "sass": "echo 'BLOCKED: assets/css/main.css is the source of truth; the SCSS sources have forked from it and rebuilding REVERTS live styling. See BUILD.md. During a deliberate reconciliation only, use: npm run sass:unsafe' && exit 1",
+    "sass:watch": "echo 'BLOCKED: see BUILD.md. Use npm run sass:watch:unsafe only during SCSS reconciliation.' && exit 1",
+    "sass:build": "echo 'BLOCKED: see BUILD.md. Use npm run sass:build:unsafe only during SCSS reconciliation.' && exit 1",
+    "sass:unsafe": "sass assets/scss:assets/css --style=expanded --no-source-map",
+    "sass:watch:unsafe": "sass --watch assets/scss:assets/css --style=expanded --no-source-map",
+    "sass:build:unsafe": "sass assets/scss:assets/css --style=compressed --no-source-map"
   },
   "devDependencies": {
     "sass": "^1.97.3"
