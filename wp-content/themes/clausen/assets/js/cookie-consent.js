@@ -196,12 +196,17 @@
 					'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
 				);
 				if ( ! focusables.length ) return;
-				var first = focusables[0];
-				var last  = focusables[ focusables.length - 1 ];
-				if ( e.shiftKey && document.activeElement === first ) {
+				var first  = focusables[0];
+				var last   = focusables[ focusables.length - 1 ];
+				var active = document.activeElement;
+				// Focus starts on the panel itself (tabindex="-1"), which isn't in
+				// focusables — treat any such position as the first stop so
+				// Shift+Tab wraps to the end instead of escaping the dialog.
+				var inList = Array.prototype.indexOf.call( focusables, active ) !== -1;
+				if ( e.shiftKey && ( active === first || ! inList ) ) {
 					e.preventDefault();
 					last.focus();
-				} else if ( ! e.shiftKey && document.activeElement === last ) {
+				} else if ( ! e.shiftKey && active === last ) {
 					e.preventDefault();
 					first.focus();
 				}
