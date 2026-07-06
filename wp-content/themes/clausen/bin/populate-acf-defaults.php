@@ -83,7 +83,7 @@ tclas_seed( 'cit_next_steps', [
 	],
 	[
 		'step_title' => 'Submit your application',
-		'step_body'  => '<p>Applications are processed by Luxembourg\'s SCAS (Service Central d\'Assistance Sociale). Processing times vary &mdash; plan for 12 to 24 months. The consulate will guide you through required forms and notarization.</p>',
+		'step_body'  => '<p>Applications are processed by Luxembourg\'s SCAS (Service Central d\'Assistance Sociale). Processing times vary by pathway &mdash; plan for about 4 to 6 months for Article 23 (maternal-line) cases and 12 to 24 months for Article 7 (direct descent). The consulate will guide you through required forms and notarization.</p>',
 	],
 ], $cit );
 

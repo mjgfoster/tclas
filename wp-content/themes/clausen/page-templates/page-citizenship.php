@@ -65,6 +65,20 @@ get_header();
 				</div>
 				<div class="tclas-quiz-wrapper" id="quiz">
 					<?php echo do_shortcode( '[luxembourg_eligibility_quiz]' ); ?>
+					<noscript>
+						<div class="tclas-quiz-noscript">
+							<p><strong><?php esc_html_e( 'The interactive quiz needs JavaScript. Here\'s the short version:', 'tclas' ); ?></strong></p>
+							<ul>
+								<li><?php echo wp_kses_post( __( '<strong>Article 7 (direct descent):</strong> you may qualify through an unbroken line of descent from a Luxembourg ancestor. Applications are made by mail through the consulate.', 'tclas' ) ); ?></li>
+								<li><?php echo wp_kses_post( __( '<strong>Article 23 (maternal line):</strong> you may qualify through a female ancestor born before 1969, via an in-person appointment in Luxembourg.', 'tclas' ) ); ?></li>
+							</ul>
+							<p><?php printf(
+								/* translators: %s: URL of the "what to do next" resources section */
+								wp_kses( __( 'See <a href="%s">what to do next</a> below, or contact us if you have questions.', 'tclas' ), [ 'a' => [ 'href' => [] ] ] ),
+								esc_url( '#resources' )
+							); ?></p>
+						</div>
+					</noscript>
 				</div>
 			</div>
 
@@ -308,7 +322,7 @@ get_header();
 							<div class="tclas-step__body">
 								<strong class="tclas-step__title"><?php esc_html_e( 'Submit your application', 'tclas' ); ?></strong>
 								<p class="tclas-step__text">
-									<?php esc_html_e( 'Applications are processed by Luxembourg\'s SCAS (Service Central d\'Assistance Sociale). Processing times vary — plan for 12 to 24 months. The consulate will guide you through required forms and notarization.', 'tclas' ); ?>
+									<?php esc_html_e( 'Applications are processed by Luxembourg\'s SCAS (Service Central d\'Assistance Sociale). Processing times vary by pathway — plan for about 4 to 6 months for Article 23 (maternal-line) cases and 12 to 24 months for Article 7 (direct descent). The consulate will guide you through required forms and notarization.', 'tclas' ); ?>
 								</p>
 							</div>
 						</li>

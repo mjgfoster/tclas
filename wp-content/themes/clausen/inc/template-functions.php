@@ -83,7 +83,9 @@ function tclas_render_hero_photo_stack( string $side ): void {
 		$credit = isset( $pair[ $field_credit ] ) ? trim( $pair[ $field_credit ] ) : '';
 		$active = $index === 0 ? ' data-active="true"' : '';
 
-		echo '<div class="tclas-hero__image-slide" data-index="' . esc_attr( $index ) . '" data-side="' . esc_attr( $side ) . '"' . $active . '>';
+		// <figure> groups each photo with its city <figcaption> so the caption is
+		// programmatically associated with the image it labels.
+		echo '<figure class="tclas-hero__image-slide" data-index="' . esc_attr( $index ) . '" data-side="' . esc_attr( $side ) . '"' . $active . '>';
 		if ( $img && ! empty( $img['url'] ) ) {
 			$src    = esc_url( ! empty( $img['sizes']['large'] ) ? $img['sizes']['large'] : $img['url'] );
 			$srcset = ! empty( $img['sizes']['large'] )
@@ -92,14 +94,14 @@ function tclas_render_hero_photo_stack( string $side ): void {
 			echo '<img src="' . $src . '"' . $srcset . ' sizes="(min-width: 768px) 62vw, 100vw" alt="" aria-hidden="true" loading="' . ( $index === 0 ? 'eager' : 'lazy' ) . '">';
 		}
 		if ( $city ) {
-			echo '<div class="tclas-hero__label tclas-hero__label--' . esc_attr( $label_pos ) . '">';
+			echo '<figcaption class="tclas-hero__label tclas-hero__label--' . esc_attr( $label_pos ) . '">';
 			echo '<p class="tclas-hero__label-city">' . esc_html( $city ) . '</p>';
 			if ( $credit ) {
 				echo '<p class="tclas-hero__label-credit">' . esc_html( $credit ) . '</p>';
 			}
-			echo '</div>';
+			echo '</figcaption>';
 		}
-		echo '</div>';
+		echo '</figure>';
 	}
 	echo '</div>';
 }
@@ -634,6 +636,41 @@ function tclas_json_ld(): void {
 	echo '<script type="application/ld+json">' . wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ) . '</script>' . "\n";
 }
 add_action( 'wp_head', 'tclas_json_ld' );
+
+// ── MSP+LUX stat formatting ────────────────────────────────────────────────
+
+/**
+ * Format a comparison-stat value for server-side rendering.
+ *
+ * Mirrors formatValue() in assets/js/msp-lux-counters.js so the figure is
+ * present in the HTML (visible without JS / to search engines) and the counter
+ * animation overwrites it with an identical final value.
+ *
+ * @param mixed  $value  Raw numeric value.
+ * @param string $fmt    One of: int | pct | year | m1 | m2 | usd-k.
+ * @return string Formatted figure, or '' when the value isn't numeric.
+ */
+function tclas_msp_format_stat( $value, string $fmt = 'int' ): string {
+	if ( ! is_numeric( $value ) ) {
+		return '';
+	}
+	$num = (float) $value;
+	switch ( $fmt ) {
+		case 'pct':
+			return round( $num ) . '%';
+		case 'year':
+			return (string) round( $num );
+		case 'm1':
+			return number_format( $num / 1e6, 1 ) . 'M';
+		case 'm2':
+			return number_format( $num / 1e6, 2 ) . 'M';
+		case 'usd-k':
+			return '$' . round( $num / 1000 ) . 'K';
+		case 'int':
+		default:
+			return number_format( round( $num ) );
+	}
+}
 
 // ── Transient cache busting ────────────────────────────────────────────────
 

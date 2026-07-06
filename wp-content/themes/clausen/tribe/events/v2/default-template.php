@@ -206,7 +206,13 @@ if ( is_singular( 'tribe_events' ) ) :
 			<div class="tclas-event-main">
 				<?php if ( $thumb_id ) : ?>
 					<figure class="tclas-event-image">
-						<?php echo get_the_post_thumbnail( $eid, 'large', [ 'class' => 'tclas-event-image__img', 'loading' => 'eager', 'alt' => get_the_title( $eid ) ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php
+						// Prefer the media library's own alt text; fall back to empty
+						// (decorative) rather than repeating the event title, which is
+						// already the adjacent H1.
+						$thumb_alt = trim( (string) get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) );
+						echo get_the_post_thumbnail( $eid, 'large', [ 'class' => 'tclas-event-image__img', 'loading' => 'eager', 'alt' => $thumb_alt ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						?>
 						<?php if ( $caption ) : ?>
 							<figcaption class="tclas-event-image__caption"><?php echo esc_html( $caption ); ?></figcaption>
 						<?php endif; ?>

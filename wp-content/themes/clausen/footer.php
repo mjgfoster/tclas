@@ -67,10 +67,14 @@
 							'walker'         => new TCLAS_Footer_Nav_Walker(),
 							'fallback_cb'    => function() {
 								echo '<ul class="tclas-footer__nav">';
+								$terms_page = get_posts( [ 'name' => 'terms', 'post_type' => 'page', 'posts_per_page' => 1 ] );
+								$a11y_page  = get_posts( [ 'name' => 'accessibility', 'post_type' => 'page', 'posts_per_page' => 1 ] );
 								$links = [
 									__( 'Board of directors', 'tclas' ) => home_url( '/about/board/' ),
 									__( 'Contact',            'tclas' ) => home_url( '/contact/' ),
-									__( 'Privacy policy',    'tclas' ) => get_privacy_policy_url(),
+									__( 'Accessibility',      'tclas' ) => $a11y_page ? get_permalink( $a11y_page[0] ) : '',
+									__( 'Terms of use',       'tclas' ) => $terms_page ? get_permalink( $terms_page[0] ) : '',
+									__( 'Privacy policy',     'tclas' ) => get_privacy_policy_url(),
 								];
 								foreach ( $links as $label => $url ) {
 									if ( $url ) echo '<li><a href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a></li>';

@@ -42,13 +42,22 @@ function tclas_render_event_card( WP_Post $event ): void {
 	$members  = get_post_meta( $event->ID, '_tclas_members_only', true );
 	$excerpt  = get_the_excerpt( $event->ID );
 
+	// Build a clean, human-readable accessible name for the whole-card link so
+	// screen readers announce "Title — date — time — venue" instead of the raw
+	// concatenation of every nested node.
+	$label_parts = [ $title, $date_str ];
+	if ( $time_str ) { $label_parts[] = $time_str; }
+	if ( $venue )    { $label_parts[] = $venue; }
+	if ( $members )  { $label_parts[] = __( 'Members only', 'tclas' ); }
+	$card_label = implode( ' — ', $label_parts );
+
 	// Inline SVG icons — avoids external icon library dependency
 	$icon_cal   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 	$icon_clock = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 	$icon_pin   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 	$icon_lock  = '<svg aria-hidden="true" focusable="false" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
 	?>
-	<a href="<?php echo esc_url( $permalink ); ?>" class="tclas-event-card" aria-label="<?php echo esc_attr( $title ); ?>">
+	<a href="<?php echo esc_url( $permalink ); ?>" class="tclas-event-card" aria-label="<?php echo esc_attr( $card_label ); ?>">
 		<article>
 			<div class="tclas-event-card__image">
 				<?php if ( has_post_thumbnail( $event->ID ) ) : ?>
@@ -315,6 +324,54 @@ function tclas_tec_ap_style_time( string $text ): string {
 add_filter( 'tribe_events_event_schedule_details', 'tclas_tec_ap_style_time', 20 );
 add_filter( 'tribe_get_start_time',               'tclas_tec_ap_style_time', 20 );
 add_filter( 'tribe_get_end_time',                 'tclas_tec_ap_style_time', 20 );
+
+// ── Events archive document title ─────────────────────────────────────────────
+
+/**
+ * Whether the current request is a TEC events archive/list view (not a single
+ * event). Used to scope the title override below.
+ */
+function tclas_is_events_archive(): bool {
+	if ( ! class_exists( 'Tribe__Events__Main' ) || is_singular() ) {
+		return false;
+	}
+	if ( function_exists( 'tribe_is_event_query' ) && tribe_is_event_query() ) {
+		return true;
+	}
+	return is_post_type_archive( Tribe__Events__Main::POSTTYPE );
+}
+
+/**
+ * Give the events archive a clean <title> ("Events - Site") instead of TEC's
+ * default "Archives: Events" prefix, which shows verbatim in browser tabs and
+ * shared links.
+ *
+ * @param array $parts  wp_get_document_title() parts.
+ */
+function tclas_events_document_title( array $parts ): array {
+	if ( tclas_is_events_archive() ) {
+		$parts['title'] = __( 'Events', 'tclas' );
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'tclas_events_document_title', 20 );
+
+/**
+ * Override the events-archive title in The SEO Framework, which generates its
+ * own <title> and og:title and bypasses document_title_parts. Returning the
+ * bare title lets TSF apply its own branding (" - Site Name"). A null $args
+ * means TSF is generating for the current query, where conditional tags work.
+ *
+ * @param string     $title  The generated title.
+ * @param array|null $args   TSF query args; null for the current query.
+ */
+function tclas_events_tsf_title( $title, $args ) {
+	if ( ! isset( $args ) && tclas_is_events_archive() ) {
+		return __( 'Events', 'tclas' );
+	}
+	return $title;
+}
+add_filter( 'the_seo_framework_title_from_generation', 'tclas_events_tsf_title', 10, 2 );
 
 /**
  * Render the events empty state.

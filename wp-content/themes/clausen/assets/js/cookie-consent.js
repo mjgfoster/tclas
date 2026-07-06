@@ -96,6 +96,10 @@
 		if ( banner ) banner.setAttribute( 'hidden', '' );
 	}
 
+	// Element focused before the preferences dialog opened, so focus can be
+	// restored to it when the dialog closes.
+	var lastFocusedBeforePrefs = null;
+
 	function showPrefs() {
 		var modal = document.getElementById( 'tclas-consent-prefs' );
 		if ( ! modal ) return;
@@ -105,13 +109,20 @@
 		var marketingToggle = modal.querySelector( '#tclas-pref-marketing' );
 		if ( analyticsToggle ) analyticsToggle.checked = data.analytics;
 		if ( marketingToggle ) marketingToggle.checked = data.marketing;
+		lastFocusedBeforePrefs = document.activeElement;
 		modal.removeAttribute( 'hidden' );
-		modal.querySelector( '.tclas-consent-prefs__panel' ).focus();
+		var panel = modal.querySelector( '.tclas-consent-prefs__panel' );
+		if ( panel ) panel.focus();
 	}
 
 	function hidePrefs() {
 		var modal = document.getElementById( 'tclas-consent-prefs' );
 		if ( modal ) modal.setAttribute( 'hidden', '' );
+		// Return focus to whatever opened the dialog (when still focusable).
+		if ( lastFocusedBeforePrefs && typeof lastFocusedBeforePrefs.focus === 'function' ) {
+			lastFocusedBeforePrefs.focus();
+		}
+		lastFocusedBeforePrefs = null;
 	}
 
 	// ── Event bindings ───────────────────────────────────────────────────
@@ -169,12 +180,30 @@
 			}
 		} );
 
-		// Close modal on Escape
+		// Keyboard handling while the modal is open: Escape closes it, Tab is
+		// trapped inside so focus can't wander behind the aria-modal dialog.
 		document.addEventListener( 'keydown', function ( e ) {
+			var modal = document.getElementById( 'tclas-consent-prefs' );
+			if ( ! modal || modal.hasAttribute( 'hidden' ) ) return;
+
 			if ( e.key === 'Escape' ) {
-				var modal = document.getElementById( 'tclas-consent-prefs' );
-				if ( modal && ! modal.hasAttribute( 'hidden' ) ) {
-					hidePrefs();
+				hidePrefs();
+				return;
+			}
+
+			if ( e.key === 'Tab' ) {
+				var focusables = modal.querySelectorAll(
+					'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+				);
+				if ( ! focusables.length ) return;
+				var first = focusables[0];
+				var last  = focusables[ focusables.length - 1 ];
+				if ( e.shiftKey && document.activeElement === first ) {
+					e.preventDefault();
+					last.focus();
+				} else if ( ! e.shiftKey && document.activeElement === last ) {
+					e.preventDefault();
+					first.focus();
 				}
 			}
 		} );

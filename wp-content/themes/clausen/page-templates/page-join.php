@@ -121,6 +121,7 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 <!-- ── Tier cards ────────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-tiers-section" id="tiers">
 	<div class="container-tclas">
+		<h2 class="sr-only"><?php esc_html_e( 'Choose your membership', 'tclas' ); ?></h2>
 		<div class="tclas-tiers">
 
 			<?php
@@ -134,8 +135,8 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 			<!-- Individual -->
 			<div class="tclas-tier">
 				<div class="tclas-tier__header">
+					<h3 class="tclas-tier__name"><?php esc_html_e( 'Individual', 'tclas' ); ?></h3>
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_0['tier_invite'] ) ? $tier_0['tier_invite'] : 'Just you — and everyone here.' ); ?></span>
-					<span class="tclas-tier__name"><?php esc_html_e( 'Individual', 'tclas' ); ?></span>
 					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_individual ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
@@ -158,8 +159,8 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 			<!-- Household -->
 			<div class="tclas-tier tclas-tier--featured">
 				<div class="tclas-tier__header">
+					<h3 class="tclas-tier__name"><?php esc_html_e( 'Household', 'tclas' ); ?></h3>
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_1['tier_invite'] ) ? $tier_1['tier_invite'] : 'Bring the people you love.' ); ?></span>
-					<span class="tclas-tier__name"><?php esc_html_e( 'Household', 'tclas' ); ?></span>
 					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_family ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
@@ -180,8 +181,8 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 			<!-- Student/Senior -->
 			<div class="tclas-tier">
 				<div class="tclas-tier__header">
+					<h3 class="tclas-tier__name"><?php esc_html_e( 'Student / Senior', 'tclas' ); ?></h3>
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_2['tier_invite'] ) ? $tier_2['tier_invite'] : 'Same community, adjusted rate.' ); ?></span>
-					<span class="tclas-tier__name"><?php esc_html_e( 'Student / Senior', 'tclas' ); ?></span>
 					<span class="tclas-tier__price"><strong>$<?php echo esc_html( $price_student ); ?></strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>
@@ -202,8 +203,8 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 			<!-- Benefactor -->
 			<div class="tclas-tier tclas-tier--benefactor">
 				<div class="tclas-tier__header">
+					<h3 class="tclas-tier__name"><?php esc_html_e( 'Benefactor', 'tclas' ); ?></h3>
 					<span class="tclas-tier__invite"><?php echo esc_html( ! empty( $tier_3['tier_invite'] ) ? $tier_3['tier_invite'] : 'Help carry the whole community forward.' ); ?></span>
-					<span class="tclas-tier__name"><?php esc_html_e( 'Benefactor', 'tclas' ); ?></span>
 					<span class="tclas-tier__price"><strong>$<?php echo esc_html( number_format( $price_benefactor ) ); ?>+</strong></span>
 					<span class="tclas-tier__period"><?php esc_html_e( 'per year', 'tclas' ); ?></span>
 				</div>

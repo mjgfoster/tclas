@@ -455,7 +455,7 @@
 
 .tclas-tier__header { padding: 1.5rem 1.5rem 1rem; text-align: center; }
 .tclas-tier__invite { font-size: .9rem; font-style: italic; color: rgba(235,245,252,.75); margin-bottom: .85rem; display: block; }
-.tclas-tier__name   { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-bottom: .4rem; }
+.tclas-tier__name   { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(235,245,252,.6); margin-top: 0; margin-bottom: .4rem; }
 .tclas-tier__price  { font-size: 2.5rem; font-weight: 700; color: var(--c-or-pale); line-height: 1; }
 .tclas-tier__period { font-size: .8rem; color: rgba(235,245,252,.45); }
 .tclas-tier__body   { padding: 0 1.5rem 1.5rem; flex: 1; }

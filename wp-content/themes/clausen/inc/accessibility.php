@@ -49,6 +49,35 @@ add_filter( 'language_attributes', function( string $output ): string {
 } );
 
 /**
+ * Resolve a short breadcrumb label for the current page.
+ *
+ * Prefers the page's label in the primary navigation menu (e.g. "Citizenship")
+ * over its full document title (e.g. "Do you qualify for Luxembourg
+ * citizenship?"), falling back to the title when the page isn't in the menu.
+ */
+function tclas_breadcrumb_short_title(): string {
+	$object_id = get_queried_object_id();
+	if ( $object_id ) {
+		$locations = get_nav_menu_locations();
+		if ( ! empty( $locations['primary'] ) ) {
+			$items = wp_get_nav_menu_items( $locations['primary'] );
+			if ( is_array( $items ) ) {
+				foreach ( $items as $item ) {
+					if (
+						'post_type' === $item->type
+						&& (int) $item->object_id === (int) $object_id
+						&& '' !== trim( (string) $item->title )
+					) {
+						return $item->title;
+					}
+				}
+			}
+		}
+	}
+	return get_the_title();
+}
+
+/**
  * Render a simple breadcrumb: Home › Page Title.
  *
  * @param string $title  Override for the current page title (optional).
@@ -56,7 +85,7 @@ add_filter( 'language_attributes', function( string $output ): string {
  */
 function tclas_breadcrumb( string $title = '', bool $light = false ): void {
 	if ( ! $title ) {
-		$title = get_the_title();
+		$title = tclas_breadcrumb_short_title();
 	}
 	$class = 'tclas-breadcrumb' . ( $light ? ' tclas-breadcrumb--light' : '' );
 	$is_member_page = tclas_is_member_page();

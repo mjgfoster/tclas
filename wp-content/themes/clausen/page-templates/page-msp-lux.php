@@ -64,7 +64,7 @@ get_header();
 					<?php while ( have_rows( 'msp_city_stats' ) ) : the_row(); ?>
 					<div class="tclas-msp-table__row" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
-							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"></span>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"><?php echo esc_html( tclas_msp_format_stat( get_sub_field( 'mn_value' ), get_sub_field( 'mn_format' ) ) ); ?></span>
 							<?php if ( $mn_suffix = get_sub_field( 'mn_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $mn_suffix ); ?></span><?php endif; ?>
 							<?php if ( $mn_note = get_sub_field( 'mn_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $mn_note ); ?></span><?php endif; ?>
 						</div>
@@ -73,7 +73,7 @@ get_header();
 							<?php if ( get_sub_field( 'lux_is_emoji' ) ) : ?>
 							<span class="tclas-msp-stat__value" aria-hidden="true"><?php echo esc_html( get_sub_field( 'lux_value' ) ); ?></span>
 							<?php else : ?>
-							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"></span>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"><?php echo esc_html( tclas_msp_format_stat( get_sub_field( 'lux_value' ), get_sub_field( 'lux_format' ) ) ); ?></span>
 							<?php endif; ?>
 							<?php if ( $lux_suffix = get_sub_field( 'lux_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $lux_suffix ); ?></span><?php endif; ?>
 							<?php if ( $lux_note = get_sub_field( 'lux_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $lux_note ); ?></span><?php endif; ?>
@@ -152,7 +152,7 @@ get_header();
 					<?php while ( have_rows( 'msp_metro_stats' ) ) : the_row(); ?>
 					<div class="tclas-msp-table__row" role="row">
 						<div class="tclas-msp-table__cell tclas-msp-table__stat tclas-msp-table__stat--mn" role="cell">
-							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"></span>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'mn_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'mn_format' ) ); ?>"><?php echo esc_html( tclas_msp_format_stat( get_sub_field( 'mn_value' ), get_sub_field( 'mn_format' ) ) ); ?></span>
 							<?php if ( $mn_suffix = get_sub_field( 'mn_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $mn_suffix ); ?></span><?php endif; ?>
 							<?php if ( $mn_note = get_sub_field( 'mn_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $mn_note ); ?></span><?php endif; ?>
 						</div>
@@ -161,7 +161,7 @@ get_header();
 							<?php if ( get_sub_field( 'lux_is_emoji' ) ) : ?>
 							<span class="tclas-msp-stat__value" aria-hidden="true"><?php echo esc_html( get_sub_field( 'lux_value' ) ); ?></span>
 							<?php else : ?>
-							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"></span>
+							<span class="tclas-msp-stat__value" data-count="<?php echo esc_attr( get_sub_field( 'lux_value' ) ); ?>" data-format="<?php echo esc_attr( get_sub_field( 'lux_format' ) ); ?>"><?php echo esc_html( tclas_msp_format_stat( get_sub_field( 'lux_value' ), get_sub_field( 'lux_format' ) ) ); ?></span>
 							<?php endif; ?>
 							<?php if ( $lux_suffix = get_sub_field( 'lux_suffix' ) ) : ?><span class="tclas-msp-stat__era"><?php echo esc_html( $lux_suffix ); ?></span><?php endif; ?>
 							<?php if ( $lux_note = get_sub_field( 'lux_note' ) ) : ?><span class="tclas-msp-stat__note"><?php echo esc_html( $lux_note ); ?></span><?php endif; ?>
@@ -332,7 +332,6 @@ get_header();
 	<div class="container-tclas">
 
 		<h2 id="msp-digdeeper-heading"><?php esc_html_e( 'Dig deeper into the connection', 'tclas' ); ?></h2>
-		<p class="tclas-story-hint"><?php esc_html_e( '(Content coming soon)', 'tclas' ); ?></p>
 
 		<div class="tclas-grid-3">
 			<!-- Our History -->
