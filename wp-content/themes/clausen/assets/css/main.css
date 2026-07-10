@@ -9918,3 +9918,37 @@ input:disabled + .tclas-toggle__slider::before {
   color: var(--c-text, inherit);
   margin: 0 0 0.75rem;
 }
+
+/* ═══ Homepage citizenship conversion band (front-page.php §1.5) ═══════════ */
+.tclas-citizen-band {
+  background: var(--c-ardoise-dk);
+  color: var(--c-white);
+  padding: 2.5rem 0;
+}
+.tclas-citizen-band__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.tclas-citizen-band__eyebrow {
+  color: var(--c-gold);
+}
+.tclas-citizen-band__title {
+  color: var(--c-white);
+  margin: 0.35rem 0 0.5rem;
+}
+.tclas-citizen-band__lede {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 46ch;
+}
+.tclas-citizen-band__cta {
+  flex: none;
+}
+@media (max-width: 800px) {
+  .tclas-citizen-band__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
