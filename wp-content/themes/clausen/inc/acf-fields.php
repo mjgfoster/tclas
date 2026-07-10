@@ -1462,5 +1462,96 @@ function tclas_register_acf_fields(): void {
 			],
 		],
 	] );
+
+	// ── Related places (links newsletter/blog stories to the places map) ──
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_post_place',
+		'title'    => 'Luxembourg in America',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'post' ] ] ],
+		'position' => 'side',
+		'fields'   => [
+			[
+				'key'           => 'field_post_related_places',
+				'label'         => 'Related places',
+				'name'          => 'related_places',
+				'type'          => 'relationship',
+				'post_type'     => [ 'tclas_place' ],
+				'return_format' => 'id',
+				'filters'       => [ 'search' ],
+				'instructions'  => 'Is this story about a place on the Luxembourg in America map? Link it and it will appear in that place\'s "Stories" section.',
+			],
+		],
+	] );
+
+	// ── Luxembourgish place details (Luxembourg in America map) ───────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_place',
+		'title'    => 'Place details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_place' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_place_lat',
+				'label'        => 'Latitude',
+				'name'         => 'place_lat',
+				'type'         => 'number',
+				'required'     => 1,
+				'step'         => 'any',
+				'instructions' => 'Decimal degrees, e.g. 43.4997. Right-click the spot in Google Maps to copy coordinates.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_lng',
+				'label'        => 'Longitude',
+				'name'         => 'place_lng',
+				'type'         => 'number',
+				'required'     => 1,
+				'step'         => 'any',
+				'instructions' => 'Decimal degrees, negative in the US — e.g. -87.8481.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_county',
+				'label'        => 'County',
+				'name'         => 'place_county',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Ozaukee County".',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_state',
+				'label'        => 'State',
+				'name'         => 'place_state',
+				'type'         => 'text',
+				'required'     => 1,
+				'instructions' => 'Full name, e.g. "Wisconsin".',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_links',
+				'label'        => 'Related links',
+				'name'         => 'place_links',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add link',
+				'instructions' => 'Local museum, heritage group, parish — shown in a "Learn more" box on the place page.',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_place_link_label',
+						'label'   => 'Label',
+						'name'    => 'link_label',
+						'type'    => 'text',
+						'wrapper' => [ 'width' => '40' ],
+					],
+					[
+						'key'     => 'field_place_link_url',
+						'label'   => 'URL',
+						'name'    => 'link_url',
+						'type'    => 'url',
+						'wrapper' => [ 'width' => '60' ],
+					],
+				],
+			],
+		],
+	] );
 }
 add_action( 'acf/init', 'tclas_register_acf_fields' );

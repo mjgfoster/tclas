@@ -41,6 +41,29 @@ function tclas_register_post_types(): void {
 		],
 	] );
 
+	// Luxembourgish place (Luxembourg in America map)
+	register_post_type( 'tclas_place', [
+		'labels' => [
+			'name'               => __( 'Luxembourgish places', 'tclas' ),
+			'singular_name'      => __( 'Luxembourgish place', 'tclas' ),
+			'add_new_item'       => __( 'Add place', 'tclas' ),
+			'edit_item'          => __( 'Edit place', 'tclas' ),
+			'new_item'           => __( 'New place', 'tclas' ),
+			'view_item'          => __( 'View place', 'tclas' ),
+			'search_items'       => __( 'Search places', 'tclas' ),
+			'not_found'          => __( 'No places found.', 'tclas' ),
+			'not_found_in_trash' => __( 'No places found in trash.', 'tclas' ),
+			'menu_name'          => __( 'Places', 'tclas' ),
+		],
+		'public'        => true,
+		'show_in_rest'  => true, // block editor for the history write-ups
+		'menu_icon'     => 'dashicons-location-alt',
+		'menu_position' => 7,
+		'supports'      => [ 'title', 'editor', 'excerpt', 'thumbnail' ],
+		'has_archive'   => false, // the map page at /msp-lux/places/ is the archive
+		'rewrite'       => [ 'slug' => 'msp-lux/places', 'with_front' => false ],
+	] );
+
 	// Board member
 	register_post_type( 'tclas_board', [
 		'labels' => [

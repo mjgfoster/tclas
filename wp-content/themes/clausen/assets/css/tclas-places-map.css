@@ -1,0 +1,140 @@
+/* TCLAS Luxembourg in America — places map
+ * Shares split-layout/list/popup chrome with tclas-ancestor-map.css (dependency);
+ * this sheet adds the map element itself, filter chips, and type badges. */
+
+.tclas-places-map {
+  width: 100%;
+  height: 600px;
+  background: var(--c-or-pale, #FAF9F6);
+  border: 1px solid var(--c-border, #ddd);
+  border-radius: var(--radius, 8px);
+}
+
+.tclas-places-map.leaflet-container {
+  font-family: inherit;
+  background: var(--c-or-pale, #FAF9F6);
+}
+
+@media (max-width: 640px) {
+  .tclas-places-map {
+    height: 340px;
+  }
+}
+
+/* ── Filter chips ─────────────────────────────────────────────────────── */
+
+.tclas-places-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tclas-places-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: none;
+  border: 1px solid var(--c-border, #ddd);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-family: inherit;
+  font-size: var(--text-md, 0.9375rem);
+  font-weight: 600;
+  color: var(--c-body-text, #454F55);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.tclas-places-chip__dot {
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  background: var(--chip-color, var(--c-crimson, #8B3A3A));
+  flex: none;
+}
+
+.tclas-places-chip:hover {
+  background: var(--c-or-pale, #FAF9F6);
+  border-color: var(--chip-color, var(--c-ardoise, #2B6282));
+}
+
+.tclas-places-chip[aria-pressed="false"] {
+  opacity: 0.5;
+}
+.tclas-places-chip[aria-pressed="false"] .tclas-places-chip__dot {
+  background: var(--c-muted, #626D78);
+}
+
+/* ── Type badges (list + popup + single template) ─────────────────────── */
+
+.tclas-places-badge {
+  display: inline-block;
+  background: var(--c-or-pale, #FAF9F6);
+  border: 1px solid var(--c-border, #ddd);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: var(--text-sm, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--c-muted, #626D78);
+  white-space: nowrap;
+}
+
+.tclas-places-list__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.tclas-places-popup-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.15rem 0;
+}
+
+/* Places list keeps the shared table styles but its last column is badges,
+ * not a count — align left like the rest. */
+.tclas-places-wrapper .tclas-map-list__table th:last-child,
+.tclas-places-wrapper .tclas-map-list__table td:last-child {
+  text-align: left;
+}
+
+/* ── Single place template ────────────────────────────────────────────── */
+
+.tclas-place-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--c-muted, #626D78);
+}
+
+.tclas-place-links {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--c-or-pale, #FAF9F6);
+  border: 1px solid var(--c-border, #ddd);
+  border-radius: var(--radius, 8px);
+}
+.tclas-place-links h2 {
+  margin-top: 0;
+}
+.tclas-place-links ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.tclas-place-links li {
+  margin: 0.35rem 0;
+}
+
+.tclas-place-stories__date {
+  color: var(--c-muted, #626D78);
+  margin-left: 0.5rem;
+}
+
+.tclas-place-back {
+  margin-top: 2rem;
+}
