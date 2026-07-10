@@ -41,6 +41,29 @@ function tclas_register_post_types(): void {
 		],
 	] );
 
+	// Luxembourgish surname (public surname explorer — one entry per variant cluster)
+	register_post_type( 'tclas_surname', [
+		'labels' => [
+			'name'               => __( 'Surnames', 'tclas' ),
+			'singular_name'      => __( 'Surname', 'tclas' ),
+			'add_new_item'       => __( 'Add surname', 'tclas' ),
+			'edit_item'          => __( 'Edit surname', 'tclas' ),
+			'new_item'           => __( 'New surname', 'tclas' ),
+			'view_item'          => __( 'View surname', 'tclas' ),
+			'search_items'       => __( 'Search surnames', 'tclas' ),
+			'not_found'          => __( 'No surnames found.', 'tclas' ),
+			'not_found_in_trash' => __( 'No surnames found in trash.', 'tclas' ),
+			'menu_name'          => __( 'Surnames', 'tclas' ),
+		],
+		'public'        => true,
+		'show_in_rest'  => true, // block editor for optional longer write-ups
+		'menu_icon'     => 'dashicons-id-alt',
+		'menu_position' => 7,
+		'supports'      => [ 'title', 'editor' ],
+		'has_archive'   => false, // the finder page at /ancestry/surnames/ is the archive
+		'rewrite'       => [ 'slug' => 'ancestry/surnames', 'with_front' => false ],
+	] );
+
 	// Board member
 	register_post_type( 'tclas_board', [
 		'labels' => [

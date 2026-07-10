@@ -1462,5 +1462,83 @@ function tclas_register_acf_fields(): void {
 			],
 		],
 	] );
+
+	// ── Luxembourgish surname details (public surname explorer) ────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_surname',
+		'title'    => 'Surname details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_surname' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_surname_variants',
+				'label'        => 'Variants',
+				'name'         => 'surname_variants',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add variant',
+				'instructions' => 'All known spellings: original LU form, German transcriptions, American anglicisations. The finder matches against every variant.',
+				'sub_fields'   => [
+					[
+						'key'   => 'field_surname_variant',
+						'label' => 'Variant',
+						'name'  => 'variant',
+						'type'  => 'text',
+					],
+				],
+			],
+			[
+				'key'          => 'field_surname_note',
+				'label'        => 'Note',
+				'name'         => 'surname_note',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'Short anglicisation/etymology note, e.g. "Bäcker → Baker, common trade-name anglicisation."',
+			],
+			[
+				'key'          => 'field_surname_shared',
+				'label'        => 'Also common in neighboring regions',
+				'name'         => 'surname_shared',
+				'type'         => 'true_false',
+				'ui'           => 1,
+				'instructions' => 'Shows the "also found in Germany, Belgium, and France" honesty note. When in doubt, leave ON.',
+				'default_value' => 1,
+			],
+			[
+				'key'           => 'field_surname_attested',
+				'label'         => 'Attested in (places)',
+				'name'          => 'surname_attested',
+				'type'          => 'relationship',
+				'post_type'     => [ 'tclas_place' ],
+				'return_format' => 'object',
+				'filters'       => [ 'search' ],
+				'instructions'  => 'Places on the Luxembourgers in North America map where this name is documented. (Empty until the places-map feature is deployed.)',
+			],
+			[
+				'key'          => 'field_surname_sources',
+				'label'        => 'Sources',
+				'name'         => 'surname_sources',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add source',
+				'instructions' => 'Where this name is attested — e.g. Gonner 1889, ANLux emigration inventory, MHS records. URL optional.',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_surname_source_label',
+						'label'   => 'Source',
+						'name'    => 'source_label',
+						'type'    => 'text',
+						'wrapper' => [ 'width' => '55' ],
+					],
+					[
+						'key'     => 'field_surname_source_url',
+						'label'   => 'URL',
+						'name'    => 'source_url',
+						'type'    => 'url',
+						'wrapper' => [ 'width' => '45' ],
+					],
+				],
+			],
+		],
+	] );
 }
 add_action( 'acf/init', 'tclas_register_acf_fields' );
