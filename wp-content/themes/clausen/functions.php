@@ -47,6 +47,9 @@ $tclas_modules = [
 	'inc/ltz-tagger.php',         // auto-wrap Luxembourgish terms in <span lang="lb">
 	// ── Commune profile API integrations ─────────────────────────────────
 	'inc/lod-audio.php',          // LOD.lu pronunciation audio + Forvo fallback
+	// ── Homepage culture corner ───────────────────────────────────────────
+	'inc/rotator-data.php',       // word-of-the-week + annual traditions datasets
+	'inc/homepage-rotators.php',  // Wuert vun der Woch + Elo zu Lëtzebuerg widgets
 	// ── Member profiles & directory ───────────────────────────────────────
 	'inc/member-profiles.php',    // profile helpers, rewrite, photo upload, founding badge
 	'inc/member-badges.php',      // member badge registry: founding, board, bierger/citizen

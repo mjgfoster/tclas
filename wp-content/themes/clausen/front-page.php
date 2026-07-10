@@ -128,6 +128,9 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 	</div>
 </section>
 
+<!-- ── 2.5 CULTURE CORNER (Wuert vun der Woch + Elo zu Lëtzebuerg) ───────── -->
+<?php tclas_render_culture_corner(); ?>
+
 <!-- ── 3. EMAIL SIGNUP (interim MailChimp until upgraded list is ready) ──── -->
 <section class="tclas-events" id="email-signup" aria-label="<?php esc_attr_e( 'Stay in touch', 'tclas' ); ?>">
 	<div class="container-tclas">
