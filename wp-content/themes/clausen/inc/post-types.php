@@ -41,7 +41,7 @@ function tclas_register_post_types(): void {
 		],
 	] );
 
-	// Luxembourgish place (Luxembourg in America map)
+	// Luxembourgish place (Luxembourgers in North America map)
 	register_post_type( 'tclas_place', [
 		'labels' => [
 			'name'               => __( 'Luxembourgish places', 'tclas' ),
@@ -62,6 +62,43 @@ function tclas_register_post_types(): void {
 		'supports'      => [ 'title', 'editor', 'excerpt', 'thumbnail' ],
 		'has_archive'   => false, // the map page at /msp-lux/places/ is the archive
 		'rewrite'       => [ 'slug' => 'msp-lux/places', 'with_front' => false ],
+	] );
+
+	// Luxembourg organization (Groups & Events page — external orgs, not TCLAS)
+	register_post_type( 'tclas_org', [
+		'labels' => [
+			'name'          => __( 'Lux organizations', 'tclas' ),
+			'singular_name' => __( 'Lux organization', 'tclas' ),
+			'add_new_item'  => __( 'Add organization', 'tclas' ),
+			'edit_item'     => __( 'Edit organization', 'tclas' ),
+			'menu_name'     => __( 'Lux Orgs', 'tclas' ),
+		],
+		'public'        => false, // rendered only on the Groups & Events page; entries link out
+		'show_ui'       => true,
+		'show_in_rest'  => true,
+		'menu_icon'     => 'dashicons-groups',
+		'menu_position' => 8,
+		'supports'      => [ 'title' ],
+		'rewrite'       => false,
+	] );
+
+	// External event (Groups & Events sidebar — non-TCLAS events; past events
+	// never render, so the sidebar can't go stale)
+	register_post_type( 'tclas_ext_event', [
+		'labels' => [
+			'name'          => __( 'External events', 'tclas' ),
+			'singular_name' => __( 'External event', 'tclas' ),
+			'add_new_item'  => __( 'Add external event', 'tclas' ),
+			'edit_item'     => __( 'Edit external event', 'tclas' ),
+			'menu_name'     => __( 'Lux Events (ext)', 'tclas' ),
+		],
+		'public'        => false,
+		'show_ui'       => true,
+		'show_in_rest'  => true,
+		'menu_icon'     => 'dashicons-calendar',
+		'menu_position' => 8,
+		'supports'      => [ 'title' ],
+		'rewrite'       => false,
 	] );
 
 	// Board member

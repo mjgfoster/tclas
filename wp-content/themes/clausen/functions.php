@@ -40,7 +40,8 @@ $tclas_modules = [
 	// ── Ancestral Commune Map ────────────────────────────────────────────
 	'inc/commune-data.php',       // 534 villages from official LU place-name index
 	'inc/ancestor-map.php',       // [tclas_ancestor_map] shortcode + Leaflet assets
-	'inc/places-map.php',         // [tclas_places_map] Luxembourg in America places map
+	'inc/places-map.php',         // [tclas_places_map] Luxembourgers in North America places map
+	'inc/orgs-events.php',        // [tclas_orgs_map] external Lux orgs + upcoming-events sidebar
 	// ── Content filters ──────────────────────────────────────────────────
 	'inc/ltz-tagger.php',         // auto-wrap Luxembourgish terms in <span lang="lb">
 	// ── Commune profile API integrations ─────────────────────────────────
