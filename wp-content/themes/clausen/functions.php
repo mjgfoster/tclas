@@ -40,6 +40,7 @@ $tclas_modules = [
 	// ── Ancestral Commune Map ────────────────────────────────────────────
 	'inc/commune-data.php',       // 534 villages from official LU place-name index
 	'inc/ancestor-map.php',       // [tclas_ancestor_map] shortcode + Leaflet assets
+	'inc/orgs-events.php',        // [tclas_orgs_map] external Lux orgs + upcoming-events sidebar
 	// ── Content filters ──────────────────────────────────────────────────
 	'inc/ltz-tagger.php',         // auto-wrap Luxembourgish terms in <span lang="lb">
 	// ── Commune profile API integrations ─────────────────────────────────

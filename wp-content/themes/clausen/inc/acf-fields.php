@@ -1462,5 +1462,95 @@ function tclas_register_acf_fields(): void {
 			],
 		],
 	] );
+
+	// ── Lux organization details (Groups & Events page) ───────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_org',
+		'title'    => 'Organization details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_org' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_org_lat',
+				'label'        => 'Latitude',
+				'name'         => 'org_lat',
+				'type'         => 'number',
+				'step'         => 'any',
+				'instructions' => 'Leave empty for online-only groups — they appear in the list but not on the map.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'     => 'field_org_lng',
+				'label'   => 'Longitude',
+				'name'    => 'org_lng',
+				'type'    => 'number',
+				'step'    => 'any',
+				'wrapper' => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_org_city',
+				'label'        => 'Location',
+				'name'         => 'org_city',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Belgium, Wisconsin" — or "Online".',
+				'wrapper'      => [ 'width' => '50' ],
+			],
+			[
+				'key'      => 'field_org_website',
+				'label'    => 'Website',
+				'name'     => 'org_website',
+				'type'     => 'url',
+				'required' => 1,
+			],
+			[
+				'key'          => 'field_org_blurb',
+				'label'        => 'Blurb',
+				'name'         => 'org_blurb',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'One or two sentences for the map popup.',
+			],
+		],
+	] );
+
+	// ── External event details (Groups & Events sidebar) ──────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_ext_event',
+		'title'    => 'Event details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_ext_event' ] ] ],
+		'fields'   => [
+			[
+				'key'            => 'field_ext_event_date',
+				'label'          => 'Event date',
+				'name'           => 'event_date',
+				'type'           => 'date_picker',
+				'required'       => 1,
+				'return_format'  => 'F j, Y',
+				'display_format' => 'F j, Y',
+				'instructions'   => 'The sidebar only shows upcoming events — past ones disappear automatically.',
+			],
+			[
+				'key'          => 'field_ext_event_host',
+				'label'        => 'Host',
+				'name'         => 'event_host',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Luxembourg American Cultural Society".',
+				'wrapper'      => [ 'width' => '50' ],
+			],
+			[
+				'key'     => 'field_ext_event_city',
+				'label'   => 'Location',
+				'name'    => 'event_city',
+				'type'    => 'text',
+				'wrapper' => [ 'width' => '50' ],
+			],
+			[
+				'key'      => 'field_ext_event_url',
+				'label'    => 'Event link',
+				'name'     => 'event_url',
+				'type'     => 'url',
+				'required' => 1,
+			],
+		],
+	] );
 }
 add_action( 'acf/init', 'tclas_register_acf_fields' );
