@@ -91,7 +91,9 @@ function tclas_build_places_data(): array {
 				$term_slugs[] = $term->slug;
 				if ( ! isset( $types[ $term->slug ] ) ) {
 					$types[ $term->slug ] = [
-						'label' => $term->name,
+						// Term names are stored entity-escaped ("&amp;"); decode for
+						// the JS payload — the JS escapes on output.
+						'label' => wp_specialchars_decode( $term->name, ENT_QUOTES ),
 						'color' => $colors[ $term->slug ] ?? '#8B3A3A',
 					];
 				}
@@ -99,7 +101,9 @@ function tclas_build_places_data(): array {
 		}
 
 		$places[] = [
-			'name'    => get_the_title( $post ),
+			// the_title filters texturize quotes/dashes into numeric entities;
+			// decode so the payload carries plain UTF-8 (JS escapes on output).
+			'name'    => html_entity_decode( get_the_title( $post ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ),
 			'state'   => (string) get_field( 'place_state', $post->ID ),
 			'county'  => (string) get_field( 'place_county', $post->ID ),
 			'lat'     => (float) $lat,

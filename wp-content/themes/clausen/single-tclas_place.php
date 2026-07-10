@@ -39,7 +39,8 @@ while ( have_posts() ) :
 				<?php endif; ?>
 				<?php if ( $types && ! is_wp_error( $types ) ) : ?>
 					<?php foreach ( $types as $type ) : ?>
-						<span class="tclas-places-badge"><?php echo esc_html( $type->name ); ?></span>
+						<?php // Term names come entity-escaped from the DB — decode before re-escaping. ?>
+						<span class="tclas-places-badge"><?php echo esc_html( wp_specialchars_decode( $type->name, ENT_QUOTES ) ); ?></span>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</div>
