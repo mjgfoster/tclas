@@ -37,6 +37,7 @@ $tclas_modules = [
 	// ── "How Are We Connected" feature ──────────────────────────────────
 	'inc/connection-data.php',    // canonical commune + surname data
 	'inc/connections.php',        // normalisation engine, matching, AJAX, cron
+	'inc/surname-explorer.php',   // [tclas_surname_finder] public "Is your name Luxembourgish?" explorer
 	// ── Ancestral Commune Map ────────────────────────────────────────────
 	'inc/commune-data.php',       // 534 villages from official LU place-name index
 	'inc/ancestor-map.php',       // [tclas_ancestor_map] shortcode + Leaflet assets
