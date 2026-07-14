@@ -263,6 +263,17 @@ if ( is_singular( 'tribe_events' ) ) :
 				<div class="tclas-event-description">
 					<?php echo $description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
+
+				<?php
+				// Event Tickets prints its RSVP/ticket form on this action; this
+				// custom template bypasses TEC's single-event view, so fire it
+				// here. Membership-gated so a restricted event never renders a
+				// submittable form to users without access.
+				if ( ! function_exists( 'pmpro_has_membership_access' ) || pmpro_has_membership_access( $eid ) ) : ?>
+					<div class="tclas-event-rsvp">
+						<?php do_action( 'tribe_events_single_event_after_the_meta' ); ?>
+					</div>
+				<?php endif; ?>
 			</div>
 
 		</div>
