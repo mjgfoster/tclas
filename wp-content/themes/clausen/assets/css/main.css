@@ -155,6 +155,41 @@ abbr.ltz {
   cursor: help;
   text-decoration: underline dotted var(--c-crimson);
   text-underline-offset: 3px;
+  background: rgba(139, 58, 58, 0.08);
+  border-radius: 3px;
+  padding: 0 0.15em;
+  transition: background-color 0.15s ease;
+}
+abbr.ltz:hover, abbr.ltz:focus {
+  background: rgba(139, 58, 58, 0.16);
+}
+/* Headings keep the dotted underline only — the chip wash at display sizes
+   reads as selected text. Must stay above .ltz-lit so the wave still wins. */
+.tclas-page-header__title abbr.ltz {
+  background: transparent;
+  padding: 0;
+}
+abbr.ltz.ltz-lit {
+  background: var(--c-gold);
+  color: var(--c-ardoise-dk);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.tclas-join-bar abbr.ltz.ltz-lit {
+  background: var(--c-or-pale);
+  color: var(--c-crimson-dk);
+}
+.tclas-ltz-showall {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--c-crimson);
+  text-decoration: underline dotted var(--c-crimson);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.tclas-ltz-showall:hover, .tclas-ltz-showall:focus {
+  color: var(--c-crimson-dk);
 }
 abbr.ltz::after {
   content: attr(title);

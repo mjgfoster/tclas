@@ -135,7 +135,7 @@ function tclas_render_culture_corner(): void {
 		wp_enqueue_script( 'tclas-rotators' );
 	}
 	?>
-	<section class="tclas-culture" aria-label="<?php esc_attr_e( 'Luxembourgish culture corner', 'tclas' ); ?>">
+	<section class="tclas-culture" id="culture-corner" aria-label="<?php esc_attr_e( 'Luxembourgish culture corner', 'tclas' ); ?>">
 		<div class="container-tclas">
 			<div class="tclas-culture__grid">
 

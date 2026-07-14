@@ -550,6 +550,18 @@ function tclas_ltz_shortcode( array $atts, ?string $content = null ): string {
 }
 add_shortcode( 'ltz', 'tclas_ltz_shortcode' );
 
+/**
+ * Render the one-shot "show all Lëtzebuergesch" trigger.
+ *
+ * Pairs with initLtzShowAll() in main.js: clicking lights every abbr.ltz
+ * on the page in reading order (gold), holds, then settles back. Drop it
+ * near the top of term-dense pages.
+ */
+function tclas_ltz_showall_button( string $label = '' ): void {
+	$label = $label ?: __( 'Show me all the Lëtzebuergesch on this page', 'tclas' );
+	echo '<button type="button" class="tclas-ltz-showall"><span aria-hidden="true">✨ </span>' . esc_html( $label ) . '</button>';
+}
+
 // ── Card helpers ──────────────────────────────────────────────────────────
 
 /**

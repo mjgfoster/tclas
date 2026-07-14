@@ -463,6 +463,33 @@
     });
   }
 
+  // ── Lëtzebuergesch "show all" wave ────────────────────────────────────────
+  function initLtzShowAll() {
+    // One-shot flourish: light every abbr.ltz in reading order, hold, settle.
+    const btns = qsa('.tclas-ltz-showall');
+    if (!btns.length) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.running) return;
+        const terms = qsa('abbr.ltz');
+        if (!terms.length) return;
+        btn.dataset.running = '1';
+
+        const stagger = reduced ? 0 : 100;
+        const hold    = reduced ? 2000 : 1400;
+
+        terms.forEach((el, i) => {
+          setTimeout(() => el.classList.add('ltz-lit'), i * stagger);
+          setTimeout(() => el.classList.remove('ltz-lit'), i * stagger + hold);
+        });
+
+        setTimeout(() => { delete btn.dataset.running; }, (terms.length - 1) * stagger + hold);
+      });
+    });
+  }
+
   // ── Connections panel ─────────────────────────────────────────────────────
   function initConnectionsPanel() {
     const panel = qs('#tclas-connections-panel');
@@ -847,6 +874,7 @@
     initDropdowns();
     initSmoothScroll();
     initLtzTooltips();
+    initLtzShowAll();
     initConnectionsPanel();
     initMyStoryForm();
     initTripRepeater();
