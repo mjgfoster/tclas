@@ -15,6 +15,8 @@ wp-content/sgs_encrypt_key.php
 
 # ── Local by Flywheel ────────────────────────────────────────────────────────
 local-xdebuginfo.php
+# Dev-only mail-redirect guard — lives only on the local copy, never deploy
+wp-content/mu-plugins/zzz-local-email-guard.php
 
 # ── Generated / runtime content ───────────────────────────────────────────────
 wp-content/uploads/
