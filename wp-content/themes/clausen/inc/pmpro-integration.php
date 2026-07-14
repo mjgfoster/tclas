@@ -268,9 +268,19 @@ function tclas_gate_rsvp_ajax(): void {
 	}
 
 	$event_id = (int) get_post_meta( $ticket_id, '_tribe_rsvp_for_event', true );
-	if ( $event_id && ! pmpro_has_membership_access( $event_id ) ) {
+	if ( ! $event_id ) {
+		return;
+	}
+
+	// Blocked if the event page itself is PMPro-restricted, or if it's a
+	// public page whose registration is members-only (_tclas_members_only).
+	$blocked = ! pmpro_has_membership_access( $event_id )
+		|| ( get_post_meta( $event_id, '_tclas_members_only', true )
+			&& ! ( function_exists( 'tclas_is_member' ) && tclas_is_member() ) );
+
+	if ( $blocked ) {
 		wp_send_json_error( [
-			'html' => esc_html__( 'This event is open to TCLAS members. Please log in or join to RSVP.', 'tclas' ),
+			'html' => esc_html__( 'Registration is for TCLAS members. Please log in or join to RSVP.', 'tclas' ),
 		] );
 	}
 }

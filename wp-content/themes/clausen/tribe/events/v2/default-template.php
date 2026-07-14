@@ -267,11 +267,27 @@ if ( is_singular( 'tribe_events' ) ) :
 				<?php
 				// Event Tickets prints its RSVP/ticket form on this action; this
 				// custom template bypasses TEC's single-event view, so fire it
-				// here. Membership-gated so a restricted event never renders a
-				// submittable form to users without access.
-				if ( ! function_exists( 'pmpro_has_membership_access' ) || pmpro_has_membership_access( $eid ) ) : ?>
+				// here. Gated two ways: PMPro page restriction (fully private
+				// events) and the _tclas_members_only teaser flag (public page,
+				// members-only registration).
+				$rsvp_allowed = ( ! function_exists( 'pmpro_has_membership_access' ) || pmpro_has_membership_access( $eid ) )
+					&& ( ! $members_only || ( function_exists( 'tclas_is_member' ) && tclas_is_member() ) );
+				?>
+				<?php if ( $rsvp_allowed ) : ?>
 					<div class="tclas-event-rsvp">
 						<?php do_action( 'tribe_events_single_event_after_the_meta' ); ?>
+					</div>
+				<?php elseif ( $members_only ) : ?>
+					<div class="tclas-event-members-gate tclas-event-rsvp-gate">
+						<p><?php esc_html_e( 'Registration is free — and just for TCLAS members. Join us to grab a spot.', 'tclas' ); ?></p>
+						<div class="tclas-event-members-gate__actions">
+							<a href="<?php echo esc_url( wp_login_url( get_permalink( $eid ) ) ); ?>" class="btn btn-outline-ardoise">
+								<?php esc_html_e( 'Member log in', 'tclas' ); ?>
+							</a>
+							<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary">
+								<?php esc_html_e( 'Become a member', 'tclas' ); ?>
+							</a>
+						</div>
 					</div>
 				<?php endif; ?>
 			</div>

@@ -89,16 +89,13 @@ HTML;
 	WP_CLI::success( "Created event (ID {$event_id})." );
 }
 
-// ── PMPro restriction: every membership level ────────────────────────────────
-$level_ids = $wpdb->get_col( "SELECT id FROM {$wpdb->pmpro_membership_levels}" );
-foreach ( $level_ids as $level_id ) {
-	$wpdb->replace(
-		$wpdb->pmpro_memberships_pages,
-		array( 'membership_id' => (int) $level_id, 'page_id' => $event_id ),
-		array( '%d', '%d' )
-	);
-}
-WP_CLI::success( 'Restricted event to levels: ' . implode( ', ', $level_ids ) . '.' );
+// ── Members-only teaser mode (public page, gated venue + registration) ──────
+// Deliberately NOT a PMPro page restriction: the description stays public as
+// a membership pitch; _tclas_members_only hides the venue from non-members
+// and gates the RSVP form + AJAX (see default-template.php and
+// tclas_gate_rsvp_ajax in pmpro-integration.php).
+update_post_meta( $event_id, '_tclas_members_only', 1 );
+WP_CLI::success( 'Set _tclas_members_only teaser flag (venue + registration gated).' );
 
 // ── RSVP ticket, capacity 10 ─────────────────────────────────────────────────
 $existing_ticket = get_posts( array(
