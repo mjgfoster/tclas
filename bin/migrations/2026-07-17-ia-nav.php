@@ -2,13 +2,16 @@
 /**
  * Migration: IA rethink nav changes (2026-07-17).
  *
- * Restructures the primary navigation per the 2026-07-10 IA:
- *   - "MSP + LUX"  → "Luxembourg & Us"   (present-day Luxembourg)
- *   - "Ancestry"   → "Your Roots"        (the past / heritage)
- *   - "Luxembourg-Minnesota history" moves under Your Roots
- *   - "Citizenship" folds from top level into Your Roots
- *   - Adds: Luxembourgers in North America (Your Roots),
- *           Groups & events (Luxembourg & Us)
+ * Restructures the primary navigation per the 2026-07-10 IA, with the
+ * 2026-07-20 label pass (Matthew): "LUX + MSP" / "Our roots" top levels,
+ * sentence case + no ampersands throughout:
+ *   - "MSP + LUX" / "Luxembourg & Us"  → "LUX + MSP"  (present-day Luxembourg)
+ *   - "Ancestry" / "Your Roots"        → "Our roots"  (the past / heritage)
+ *   - "Luxembourg-Minnesota history" moves under Our roots
+ *   - "Citizenship" folds from top level into Our roots
+ *   - Adds: Luxembourgers in North America (Our roots),
+ *           Groups and events (LUX + MSP)
+ *   - Retitles pre-existing items to sentence case / no ampersand
  *
  * Surname finder HELD BACK (2026-07-20): launches in the fall with the
  * expanded Gonner dataset — add its nav item in that release's migration.
@@ -58,8 +61,8 @@ if ( ! $lux_us || ! $roots ) {
 
 // ── Renames ──────────────────────────────────────────────────────────────────
 foreach ( [
-	[ $lux_us, 'Luxembourg & Us' ],
-	[ $roots, 'Your Roots' ],
+	[ $lux_us, 'LUX + MSP' ],
+	[ $roots, 'Our roots' ],
 ] as [ $item, $new_title ] ) {
 	if ( $item->title !== $new_title ) {
 		wp_update_nav_menu_item( $menu->term_id, $item->db_id, [
@@ -97,13 +100,34 @@ foreach ( [ 'msp-lux/history', 'citizenship' ] as $path ) {
 		'menu-item-parent-id' => (int) $roots->db_id,
 		'menu-item-position'  => $item->menu_order,
 	] );
-	WP_CLI::success( "Moved \"{$item->title}\" under Your Roots." );
+	WP_CLI::success( "Moved \"{$item->title}\" under Our roots." );
+}
+
+// ── Retitle: sentence case, no ampersands (2026-07-20) ──────────────────────
+$retitle = [
+	'Stats and Facts' => 'Stats and facts',
+	'Groups & events' => 'Groups and events',
+];
+foreach ( $items as $item ) {
+	if ( ! isset( $retitle[ $item->title ] ) ) {
+		continue;
+	}
+	wp_update_nav_menu_item( $menu->term_id, $item->db_id, [
+		'menu-item-title'     => $retitle[ $item->title ],
+		'menu-item-object'    => $item->object,
+		'menu-item-object-id' => $item->object_id,
+		'menu-item-type'      => $item->type,
+		'menu-item-status'    => 'publish',
+		'menu-item-parent-id' => (int) $item->menu_item_parent,
+		'menu-item-position'  => $item->menu_order,
+	] );
+	WP_CLI::success( "Retitled \"{$item->title}\" → \"{$retitle[ $item->title ]}\"." );
 }
 
 // ── New items ────────────────────────────────────────────────────────────────
 $new_items = [
 	[ 'msp-lux/places', 'Luxembourgers in North America', $roots->db_id ],
-	[ 'msp-lux/groups', 'Groups & events',                $lux_us->db_id ],
+	[ 'msp-lux/groups', 'Groups and events',              $lux_us->db_id ],
 ];
 foreach ( $new_items as [ $path, $title, $parent_db_id ] ) {
 	if ( tclas_nav_item_for_path( $items, $path ) ) {
