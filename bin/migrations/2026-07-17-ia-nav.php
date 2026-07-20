@@ -7,8 +7,11 @@
  *   - "Ancestry"   → "Your Roots"        (the past / heritage)
  *   - "Luxembourg-Minnesota history" moves under Your Roots
  *   - "Citizenship" folds from top level into Your Roots
- *   - Adds: Luxembourgers in North America + Surname finder (Your Roots),
+ *   - Adds: Luxembourgers in North America (Your Roots),
  *           Groups & events (Luxembourg & Us)
+ *
+ * Surname finder HELD BACK (2026-07-20): launches in the fall with the
+ * expanded Gonner dataset — add its nav item in that release's migration.
  *
  * Items are located by the page they link to (never by db_id), so this is
  * robust to prod-side menu edits. New items are only added if no item in
@@ -99,9 +102,8 @@ foreach ( [ 'msp-lux/history', 'citizenship' ] as $path ) {
 
 // ── New items ────────────────────────────────────────────────────────────────
 $new_items = [
-	[ 'msp-lux/places',    'Luxembourgers in North America', $roots->db_id ],
-	[ 'ancestry/surnames', 'Surname finder',                 $roots->db_id ],
-	[ 'msp-lux/groups',    'Groups & events',                $lux_us->db_id ],
+	[ 'msp-lux/places', 'Luxembourgers in North America', $roots->db_id ],
+	[ 'msp-lux/groups', 'Groups & events',                $lux_us->db_id ],
 ];
 foreach ( $new_items as [ $path, $title, $parent_db_id ] ) {
 	if ( tclas_nav_item_for_path( $items, $path ) ) {

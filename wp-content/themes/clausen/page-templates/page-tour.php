@@ -74,10 +74,10 @@ $tour_is_party_week = ( new DateTimeImmutable( 'now', wp_timezone() ) )->format(
 			<article class="tclas-card tclas-card--accented">
 				<div class="tclas-card__body">
 					<h3 class="tclas-card__title">
-						<a href="<?php echo esc_url( home_url( '/ancestry/surnames/' ) ); ?>"><?php esc_html_e( 'Ass Ären Numm lëtzebuergesch?', 'tclas' ); ?></a>
+						<a href="<?php echo esc_url( home_url( '/msp-lux/places/' ) ); ?>"><?php esc_html_e( 'Luxembourgers in North America', 'tclas' ); ?></a>
 					</h3>
 					<p class="tclas-card__excerpt">
-						<?php esc_html_e( 'Is your name Luxembourgish? Search the surnames emigrants carried from Luxembourg to America — where each name comes from and what it means. New names added all the time.', 'tclas' ); ?>
+						<?php esc_html_e( 'An interactive map of where emigrant families put down roots — the towns, churches, and monuments that carry Luxembourg\'s story, from Minnesota to both coasts.', 'tclas' ); ?>
 					</p>
 				</div>
 			</article>
@@ -162,7 +162,13 @@ $tour_is_party_week = ( new DateTimeImmutable( 'now', wp_timezone() ) )->format(
 
 		<div class="tclas-ancestry-intro">
 			<p>
-				<?php esc_html_e( 'This fall brings The Loon & the Lion, our email newsletter — and an interactive map of Luxembourgers in North America: the towns and townships where emigrant families put down roots, from Minnesota to both coasts. Members hear about every launch first.', 'tclas' ); ?>
+				<?php
+				printf(
+					/* translators: %s: "Ass Ären Numm lëtzebuergesch?" with tooltip */
+					esc_html__( 'This fall brings The Loon & the Lion, our email newsletter — and %s: look up your family name in a searchable index of the surnames Luxembourgers carried to America. Members hear about every launch first.', 'tclas' ),
+					tclas_ltz( 'Ass Ären Numm lëtzebuergesch?', __( 'Is your name Luxembourgish?', 'tclas' ), false )
+				);
+				?>
 			</p>
 			<a href="<?php echo esc_url( home_url( '/#email-signup' ) ); ?>" class="btn btn-outline-ardoise">
 				<?php esc_html_e( 'Get on the email list', 'tclas' ); ?>

@@ -5,10 +5,14 @@
  * Upserts everything the places-map / groups / surname-explorer features
  * need in the DB, from the JSON export alongside this script:
  *   - tclas_place_type + tclas_department terms
- *   - tclas_place (26 publish + 6 draft), tclas_surname (40),
- *     tclas_org (6), tclas_ext_event (1 draft) posts with ACF meta
- *     and term assignments
- *   - the /msp-lux/places/, /msp-lux/groups/, /ancestry/surnames/ pages
+ *   - tclas_place (26 publish + 6 draft), tclas_org (6),
+ *     tclas_ext_event (1 draft) posts with ACF meta and term assignments
+ *   - the /msp-lux/places/ and /msp-lux/groups/ pages
+ *
+ * Surname finder HELD BACK (2026-07-20): the 40 tclas_surname posts and the
+ * /ancestry/surnames/ page in the JSON are SKIPPED below. It launches in the
+ * fall with the expanded Gonner dataset — re-export and lift the holdback
+ * (or write that release's own migration) when it ships.
  *
  * ACF field groups are code-registered (inc/acf-fields.php), so meta rows
  * are all the fields need. No featured images exist on any of this content.
@@ -106,8 +110,16 @@ function tclas_mig_upsert_post( array $item, string $post_type, int $parent_id =
 }
 
 // ── CPT posts ────────────────────────────────────────────────────────────────
-$counts = [];
+$hold_back_types = [ 'tclas_surname' ];
+$hold_back_pages = [ 'surnames' ];
+
+$counts  = [];
+$skipped = 0;
 foreach ( $data['posts'] as $item ) {
+	if ( in_array( $item['post_type'], $hold_back_types, true ) ) {
+		$skipped++;
+		continue;
+	}
 	[ , $created ] = tclas_mig_upsert_post( $item, $item['post_type'] );
 	$key = $item['post_type'] . ( $created ? ':created' : ':updated' );
 	$counts[ $key ] = ( $counts[ $key ] ?? 0 ) + 1;
@@ -115,10 +127,17 @@ foreach ( $data['posts'] as $item ) {
 foreach ( $counts as $k => $n ) {
 	WP_CLI::log( "  {$k} = {$n}" );
 }
+if ( $skipped ) {
+	WP_CLI::log( "  HELD BACK (surname finder, fall launch): {$skipped} posts skipped" );
+}
 WP_CLI::success( 'CPT content done.' );
 
 // ── Pages ────────────────────────────────────────────────────────────────────
 foreach ( $data['pages'] as $item ) {
+	if ( in_array( $item['slug'], $hold_back_pages, true ) ) {
+		WP_CLI::log( "  page {$item['parent_path']}/{$item['slug']} HELD BACK (surname finder, fall launch)" );
+		continue;
+	}
 	$parent = get_page_by_path( $item['parent_path'] );
 	if ( ! $parent ) {
 		WP_CLI::error( "Parent page '{$item['parent_path']}' not found for page '{$item['slug']}'." );
@@ -129,4 +148,4 @@ foreach ( $data['pages'] as $item ) {
 WP_CLI::success( 'Pages done.' );
 
 flush_rewrite_rules();
-WP_CLI::success( 'Rewrite rules flushed. Verify: /msp-lux/places/, /msp-lux/groups/, /ancestry/surnames/.' );
+WP_CLI::success( 'Rewrite rules flushed. Verify: /msp-lux/places/, /msp-lux/groups/. (/ancestry/surnames/ held back — should 404.)' );
