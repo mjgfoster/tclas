@@ -28,6 +28,20 @@ function tclas_get_upcoming_events( int $limit = 3 ): array {
 }
 
 /**
+ * Should this event's venue/location be hidden from the current viewer?
+ *
+ * Members-only events share their location with members (and admins) only.
+ * Consulted by the event cards, the single-event template, calendar links,
+ * JSON-LD, the TEC REST API, and iCal exports.
+ */
+function tclas_event_location_hidden( int $event_id ): bool {
+	if ( ! get_post_meta( $event_id, '_tclas_members_only', true ) ) {
+		return false;
+	}
+	return ! ( function_exists( 'tclas_is_member' ) && tclas_is_member() );
+}
+
+/**
  * Render a single event card.
  *
  * @param WP_Post $event  TEC event post object.
@@ -36,7 +50,7 @@ function tclas_render_event_card( WP_Post $event ): void {
 	$start    = tribe_get_start_date( $event->ID, false, 'U' );
 	$date_str = date_i18n( 'l, F j', $start );
 	$time_str = tribe_get_start_time( $event->ID );
-	$venue    = tribe_get_venue( $event->ID );
+	$venue    = tclas_event_location_hidden( $event->ID ) ? '' : tribe_get_venue( $event->ID );
 	$permalink = get_permalink( $event->ID );
 	$title    = get_the_title( $event->ID );
 	$members  = get_post_meta( $event->ID, '_tclas_members_only', true );
@@ -372,6 +386,58 @@ function tclas_events_tsf_title( $title, $args ) {
 	return $title;
 }
 add_filter( 'the_seo_framework_title_from_generation', 'tclas_events_tsf_title', 10, 2 );
+
+// ── Members-only location gating (REST / iCal / TEC views) ──────────────────
+
+/**
+ * Strip venue details from the TEC REST API for hidden-location events.
+ * REST requests are effectively anonymous unless cookie+nonce authenticated,
+ * so members-only venues must not ride along.
+ */
+add_filter( 'tribe_rest_event_data', function ( $data, $event ) {
+	if ( isset( $data['venue'] ) && tclas_event_location_hidden( (int) $event->ID ) ) {
+		$data['venue'] = [];
+	}
+	return $data;
+}, 10, 2 );
+
+/**
+ * Strip LOCATION/GEO from iCal exports (?ical=1 and feed downloads).
+ */
+add_filter( 'tribe_ical_feed_item', function ( array $item, WP_Post $event_post ): array {
+	if ( tclas_event_location_hidden( $event_post->ID ) ) {
+		unset( $item['LOCATION'], $item['GEO'] );
+	}
+	return $item;
+}, 10, 2 );
+
+/**
+ * Strip the location from TEC's own JSON-LD output — it prints Event schema
+ * (with the full venue address) independently of the theme template, so a
+ * template-level fix alone would still hand the address to search engines.
+ */
+add_filter( 'tribe_json_ld_event_object', function ( $data, $args, $post ) {
+	if ( $post instanceof WP_Post && isset( $data->location ) && tclas_event_location_hidden( $post->ID ) ) {
+		unset( $data->location );
+	}
+	return $data;
+}, 10, 3 );
+
+/**
+ * Suppress the venue part in TEC's native v2 views (list/day/month tooltip).
+ * The theme's default-template override normally bypasses these views, but
+ * they remain reachable via shortcodes/widgets — belt and suspenders.
+ */
+function tclas_gate_tec_view_venue( $html, $file, $name, $template ) {
+	$event = $template->get( 'event' );
+	if ( $event instanceof WP_Post && tclas_event_location_hidden( $event->ID ) ) {
+		return '';
+	}
+	return $html;
+}
+add_filter( 'tribe_template_pre_html:events/v2/list/event/venue', 'tclas_gate_tec_view_venue', 10, 4 );
+add_filter( 'tribe_template_pre_html:events/v2/day/event/venue', 'tclas_gate_tec_view_venue', 10, 4 );
+add_filter( 'tribe_template_pre_html:events/v2/month/calendar-body/day/calendar-events/calendar-event/tooltip/venue', 'tclas_gate_tec_view_venue', 10, 4 );
 
 /**
  * Render the events empty state.

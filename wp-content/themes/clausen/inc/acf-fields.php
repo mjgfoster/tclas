@@ -1462,5 +1462,264 @@ function tclas_register_acf_fields(): void {
 			],
 		],
 	] );
+
+	// ── Related places (links newsletter/blog stories to the places map) ──
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_post_place',
+		'title'    => 'Luxembourg in America',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'post' ] ] ],
+		'position' => 'side',
+		'fields'   => [
+			[
+				'key'           => 'field_post_related_places',
+				'label'         => 'Related places',
+				'name'          => 'related_places',
+				'type'          => 'relationship',
+				'post_type'     => [ 'tclas_place' ],
+				'return_format' => 'id',
+				'filters'       => [ 'search' ],
+				'instructions'  => 'Is this story about a place on the Luxembourg in America map? Link it and it will appear in that place\'s "Stories" section.',
+			],
+		],
+	] );
+
+	// ── Luxembourgish place details (Luxembourg in America map) ───────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_place',
+		'title'    => 'Place details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_place' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_place_lat',
+				'label'        => 'Latitude',
+				'name'         => 'place_lat',
+				'type'         => 'number',
+				'required'     => 1,
+				'step'         => 'any',
+				'instructions' => 'Decimal degrees, e.g. 43.4997. Right-click the spot in Google Maps to copy coordinates.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_lng',
+				'label'        => 'Longitude',
+				'name'         => 'place_lng',
+				'type'         => 'number',
+				'required'     => 1,
+				'step'         => 'any',
+				'instructions' => 'Decimal degrees, negative in the US — e.g. -87.8481.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_county',
+				'label'        => 'County',
+				'name'         => 'place_county',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Ozaukee County".',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_state',
+				'label'        => 'State',
+				'name'         => 'place_state',
+				'type'         => 'text',
+				'required'     => 1,
+				'instructions' => 'Full name, e.g. "Wisconsin".',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_place_links',
+				'label'        => 'Related links',
+				'name'         => 'place_links',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add link',
+				'instructions' => 'Local museum, heritage group, parish — shown in a "Learn more" box on the place page.',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_place_link_label',
+						'label'   => 'Label',
+						'name'    => 'link_label',
+						'type'    => 'text',
+						'wrapper' => [ 'width' => '40' ],
+					],
+					[
+						'key'     => 'field_place_link_url',
+						'label'   => 'URL',
+						'name'    => 'link_url',
+						'type'    => 'url',
+						'wrapper' => [ 'width' => '60' ],
+					],
+				],
+			],
+		],
+	] );
+
+	// ── Lux organization details (Groups & Events page) ───────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_org',
+		'title'    => 'Organization details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_org' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_org_lat',
+				'label'        => 'Latitude',
+				'name'         => 'org_lat',
+				'type'         => 'number',
+				'step'         => 'any',
+				'instructions' => 'Leave empty for online-only groups — they appear in the list but not on the map.',
+				'wrapper'      => [ 'width' => '25' ],
+			],
+			[
+				'key'     => 'field_org_lng',
+				'label'   => 'Longitude',
+				'name'    => 'org_lng',
+				'type'    => 'number',
+				'step'    => 'any',
+				'wrapper' => [ 'width' => '25' ],
+			],
+			[
+				'key'          => 'field_org_city',
+				'label'        => 'Location',
+				'name'         => 'org_city',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Belgium, Wisconsin" — or "Online".',
+				'wrapper'      => [ 'width' => '50' ],
+			],
+			[
+				'key'      => 'field_org_website',
+				'label'    => 'Website',
+				'name'     => 'org_website',
+				'type'     => 'url',
+				'required' => 1,
+			],
+			[
+				'key'          => 'field_org_blurb',
+				'label'        => 'Blurb',
+				'name'         => 'org_blurb',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'One or two sentences for the map popup.',
+			],
+		],
+	] );
+
+	// ── External event details (Groups & Events sidebar) ──────────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_ext_event',
+		'title'    => 'Event details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_ext_event' ] ] ],
+		'fields'   => [
+			[
+				'key'            => 'field_ext_event_date',
+				'label'          => 'Event date',
+				'name'           => 'event_date',
+				'type'           => 'date_picker',
+				'required'       => 1,
+				'return_format'  => 'F j, Y',
+				'display_format' => 'F j, Y',
+				'instructions'   => 'The sidebar only shows upcoming events — past ones disappear automatically.',
+			],
+			[
+				'key'          => 'field_ext_event_host',
+				'label'        => 'Host',
+				'name'         => 'event_host',
+				'type'         => 'text',
+				'instructions' => 'E.g. "Luxembourg American Cultural Society".',
+				'wrapper'      => [ 'width' => '50' ],
+			],
+			[
+				'key'     => 'field_ext_event_city',
+				'label'   => 'Location',
+				'name'    => 'event_city',
+				'type'    => 'text',
+				'wrapper' => [ 'width' => '50' ],
+			],
+			[
+				'key'      => 'field_ext_event_url',
+				'label'    => 'Event link',
+				'name'     => 'event_url',
+				'type'     => 'url',
+				'required' => 1,
+			],
+		],
+	] );
+
+	// ── Luxembourgish surname details (public surname explorer) ────────────
+	acf_add_local_field_group( [
+		'key'      => 'group_tclas_surname',
+		'title'    => 'Surname details',
+		'location' => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'tclas_surname' ] ] ],
+		'fields'   => [
+			[
+				'key'          => 'field_surname_variants',
+				'label'        => 'Variants',
+				'name'         => 'surname_variants',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add variant',
+				'instructions' => 'All known spellings: original LU form, German transcriptions, American anglicisations. The finder matches against every variant.',
+				'sub_fields'   => [
+					[
+						'key'   => 'field_surname_variant',
+						'label' => 'Variant',
+						'name'  => 'variant',
+						'type'  => 'text',
+					],
+				],
+			],
+			[
+				'key'          => 'field_surname_note',
+				'label'        => 'Note',
+				'name'         => 'surname_note',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'Short anglicisation/etymology note, e.g. "Bäcker → Baker, common trade-name anglicisation."',
+			],
+			[
+				'key'          => 'field_surname_shared',
+				'label'        => 'Also common in neighboring regions',
+				'name'         => 'surname_shared',
+				'type'         => 'true_false',
+				'ui'           => 1,
+				'instructions' => 'Shows the "also found in Germany, Belgium, and France" honesty note. When in doubt, leave ON.',
+				'default_value' => 1,
+			],
+			[
+				'key'           => 'field_surname_attested',
+				'label'         => 'Attested in (places)',
+				'name'          => 'surname_attested',
+				'type'          => 'relationship',
+				'post_type'     => [ 'tclas_place' ],
+				'return_format' => 'object',
+				'filters'       => [ 'search' ],
+				'instructions'  => 'Places on the Luxembourgers in North America map where this name is documented. (Empty until the places-map feature is deployed.)',
+			],
+			[
+				'key'          => 'field_surname_sources',
+				'label'        => 'Sources',
+				'name'         => 'surname_sources',
+				'type'         => 'repeater',
+				'layout'       => 'table',
+				'button_label' => 'Add source',
+				'instructions' => 'Where this name is attested — e.g. Gonner 1889, ANLux emigration inventory, MHS records. URL optional.',
+				'sub_fields'   => [
+					[
+						'key'     => 'field_surname_source_label',
+						'label'   => 'Source',
+						'name'    => 'source_label',
+						'type'    => 'text',
+						'wrapper' => [ 'width' => '55' ],
+					],
+					[
+						'key'     => 'field_surname_source_url',
+						'label'   => 'URL',
+						'name'    => 'source_url',
+						'type'    => 'url',
+						'wrapper' => [ 'width' => '45' ],
+					],
+				],
+			],
+		],
+	] );
 }
 add_action( 'acf/init', 'tclas_register_acf_fields' );

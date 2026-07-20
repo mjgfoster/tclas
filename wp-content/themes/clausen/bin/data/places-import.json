@@ -1,0 +1,428 @@
+[
+  {
+    "slug": "luxemburg-wisconsin",
+    "title": "Luxemburg, Wisconsin",
+    "lat": 44.54, "lng": -87.7,
+    "county": "Kewaunee County", "state": "Wisconsin",
+    "types": ["namesake", "memorial"],
+    "excerpt": "A Luxembourg namesake village that received one of three replica Liberty Road markers gifted by the Grand Duchy in 1994.",
+    "body": [
+      "The village of Luxemburg in Kewaunee County carries its founders' homeland on the map. In 1994, for the 50th anniversary of Luxembourg's liberation in the Second World War, the Grand Duchy presented replica bornes de la Voie de la Liberté — Liberty Road markers — to the three American towns named Luxemburg: this one, and its namesakes in Minnesota and Iowa.",
+      "An interpretive marker erected by American Legion Post 262 in 2012 tells the story of the borne and the road it commemorates, the liberation route from Normandy to Bastogne."
+    ],
+    "links": [
+      { "link_label": "Liberty Road marker — Historical Marker Database", "link_url": "https://www.hmdb.org/m.asp?m=74286" }
+    ]
+  },
+  {
+    "slug": "luxemburg-minnesota",
+    "title": "Luxemburg, Minnesota",
+    "lat": 45.45, "lng": -94.2,
+    "county": "Stearns County", "state": "Minnesota",
+    "types": ["namesake", "memorial"],
+    "excerpt": "A Stearns County township named for the old country, with its own Liberty Road marker beside St. Wendelin Cemetery.",
+    "body": [
+      "Luxemburg Township in Stearns County sits in the heart of central Minnesota's Luxembourgish and German Catholic farm country. Its replica borne de la Voie de la Liberté — one of three gifted by the Grand Duchy in 1994 for the 50th anniversary of Luxembourg's liberation — stands along Highway 15 by St. Wendelin Cemetery.",
+      "Together with its namesake towns in Wisconsin and Iowa, it forms a small trans-Atlantic thread: three American Luxemburgs, each holding a marker from home."
+    ],
+    "links": [
+      { "link_label": "Liberty Road marker — Historical Marker Database", "link_url": "https://www.hmdb.org/m.asp?m=70310" }
+    ]
+  },
+  {
+    "slug": "luxemburg-iowa",
+    "title": "Luxemburg, Iowa",
+    "lat": 42.6, "lng": -91.07,
+    "county": "Dubuque County", "state": "Iowa",
+    "types": ["namesake", "memorial"],
+    "excerpt": "A Dubuque County namesake town in the heart of Iowa's Luxembourgish belt, home to the third of America's Liberty Road markers.",
+    "body": [
+      "Luxemburg, Iowa sits in Dubuque County's Luxembourgish belt, not far from St. Donatus and Holy Cross. Like its namesake towns in Wisconsin and Minnesota, it received a replica borne de la Voie de la Liberté from the Grand Duchy in 1994, marking the 50th anniversary of Luxembourg's liberation."
+    ],
+    "links": [
+      { "link_label": "Liberty Road in the US — Ardennes Breakthrough Association", "link_url": "https://ardennes-breakthrough-association.com/liberty-road-voie-de-la-liberte/" }
+    ]
+  },
+  {
+    "slug": "chicago-greenhouse-district",
+    "title": "Chicago's Greenhouse District (Edgewater & Rogers Park)",
+    "lat": 41.99, "lng": -87.66,
+    "county": "Cook County", "state": "Illinois",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "Home of the Luxembourgish 'glass house' truck farmers — by 1910, most of Chicago's hundred-odd greenhouses were Luxembourg-owned.",
+    "body": [
+      "Chicago's north-side neighborhoods of Edgewater and Rogers Park were the center of Luxembourgish truck farming in America. By 1906 some 1,200 Luxembourg-American greenhouse families worked the district, and by 1910 most of Chicago's roughly one hundred greenhouses were Luxembourg-owned — the famous 'glass houses' that supplied the city's vegetables and flowers.",
+      "The Luxembourg Brotherhood of America, founded on Chicago's south side in 1887, soon counted the greenhouse district among its strongholds, and its sections remain active in the region today."
+    ],
+    "links": [
+      { "link_label": "Luxembourg Brotherhood of America", "link_url": "https://www.luxbrotherhood.org/" },
+      { "link_label": "Luxembourgers in Chicago — Wikipedia", "link_url": "https://en.wikipedia.org/wiki/Luxembourgers_in_Chicago" }
+    ]
+  },
+  {
+    "slug": "aurora-illinois",
+    "title": "Aurora, Illinois — the Luxie Club",
+    "lat": 41.76, "lng": -88.32,
+    "county": "Kane County", "state": "Illinois",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "Home of the American Luxemburger Independent Club, whose 1917 Luxemburger Hall is the only functioning Luxembourg clubhouse in the United States.",
+    "body": [
+      "Luxembourgers began settling Aurora around 1850, many from the Canton of Echternach. In 1890, a hundred of them founded the Luxemburger Independent Club at Weiland Hall, and in 1917 the club built Luxemburger Hall on High Street — still operating today as the 'Luxie Club,' the only functioning Luxembourg clubhouse in the United States."
+    ],
+    "links": [
+      { "link_label": "Settlement spotlight: Aurora — Luxembourg Legacy", "link_url": "https://luxembourglegacy.com/settlement-spotlight-aurora-illinois/" }
+    ]
+  },
+  {
+    "slug": "remsen-iowa",
+    "title": "Remsen, Iowa",
+    "lat": 42.81, "lng": -95.97,
+    "county": "Plymouth County", "state": "Iowa",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "Northwest Iowa farm town once branded 'A Little Bit of Luxembourg in the U.S.' — home turf of the Luxembourg Heritage Society of Northwest Iowa.",
+    "body": [
+      "Remsen, in Plymouth County, was settled from the 1870s by Luxembourgish and German immigrants — many tracing back to villages of the Redingen commune. The town once styled itself 'A Little Bit of Luxembourg in the U.S.,' and it remains the home turf of the Luxembourg Heritage Society of Northwest Iowa."
+    ],
+    "links": [
+      { "link_label": "About Remsen — City of Remsen", "link_url": "https://www.remseniowa.org/about/" }
+    ]
+  },
+  {
+    "slug": "shakopee-minnesota",
+    "title": "Shakopee, Minnesota",
+    "lat": 44.79, "lng": -93.52,
+    "county": "Scott County", "state": "Minnesota",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "Anchor for Luxembourg immigrants in the Minnesota River valley, home of the Luxembourg Benefit Society of Shakopee.",
+    "body": [
+      "Luxembourgers settled Shakopee and surrounding Scott County from the late 1850s, making the Minnesota River valley one of the state's Luxembourgish anchors. The Luxembourg Benefit Society of Shakopee was active enough to send delegates to the great 1895 Luxembourger congress in Dubuque."
+    ],
+    "links": [
+      { "link_label": "Luxembourg Brotherhood of America — Grand Lodge history", "link_url": "https://www.luxbrotherhood.org/2445-2/" }
+    ]
+  },
+  {
+    "slug": "thomas-dale-st-paul",
+    "title": "Thomas-Dale (Frogtown), St. Paul",
+    "lat": 44.95, "lng": -93.12,
+    "county": "Ramsey County", "state": "Minnesota",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "St. Paul's wage-labor quarter for Luxembourg immigrants, home of the Luxembourg Independent Club of St. Paul.",
+    "body": [
+      "St. Paul drew Luxembourgers into urban wage work in the 1880s, and the city supported a lively cluster of societies — the Luxembourg Independent Club of St. Paul, a Luxembourg Brotherhood section, and the Luxembourg National Society of Minnesota all sent delegates to the 1895 Luxembourger congress in Dubuque. The Frogtown neighborhood, a landing place for Central European immigrants, was at the heart of that world."
+    ],
+    "links": [
+      { "link_label": "Luxembourg Brotherhood of America — Grand Lodge history", "link_url": "https://www.luxbrotherhood.org/2445-2/" }
+    ],
+    "vetting_note": "The St. Paul club itself is well documented; pinning it specifically to Thomas-Dale/Frogtown is an inference, not sourced. Adjust the framing if you have better local sources."
+  },
+  {
+    "slug": "bach-dunn-collection-st-thomas",
+    "title": "Bach-Dunn Luxembourgiana Collection (University of St. Thomas)",
+    "lat": 44.94, "lng": -93.19,
+    "county": "Ramsey County", "state": "Minnesota",
+    "types": ["museum-archive"],
+    "excerpt": "One of the largest US collections of Luxembourg books, maps, and periodicals — 2,000+ volumes in the O'Shaughnessy-Frey Library, right here in St. Paul.",
+    "body": [
+      "The Bach-Dunn Luxembourgiana Collection, held in Special Collections at the University of St. Thomas's O'Shaughnessy-Frey Library, is one of the largest collections of Luxembourg-related books, maps, and periodicals in the United States — more than 2,000 volumes. It was donated in 1993 through the Luxembourg Heritage Society with funding from Maria Bach Dunn.",
+      "For Twin Cities researchers of Luxembourgish family history, it is the closest major archive there is."
+    ],
+    "links": [
+      { "link_label": "Bach-Dunn Collection — University of St. Thomas", "link_url": "https://bach-dunn.special.libraries.stthomas.edu/" }
+    ]
+  },
+  {
+    "slug": "st-nicholas-dacada",
+    "title": "St. Nicholas Church, Dacada",
+    "lat": 43.55, "lng": -87.88,
+    "county": "Sheboygan County", "state": "Wisconsin",
+    "types": ["religious-site"],
+    "excerpt": "Houses what is considered the oldest statue of Our Lady of Luxembourg in the United States, carried from the old country in 1849.",
+    "body": [
+      "The parish of St. Nicholas in Dacada, founded in 1848 by Luxembourgish settlers, holds what is considered the oldest statue of Our Lady of Luxembourg in the United States — brought over in 1849 by immigrant Anna Margaret Deppiesse. Local legend embellishes the crossing: one telling has the statue sawed in half to hide it in transit.",
+      "The parish closed in 1998, but the 1911 brick church survives as a chapel and the statue remains."
+    ],
+    "links": [
+      { "link_label": "Dacada's St. Nicholas parish — Ozaukee Press archive", "link_url": "https://ozaukeepress.com/content/archive-175-dacada%E2%80%99s-st-nicholas-parish-founded-1848-and-closed-1998-draws-hundreds" }
+    ]
+  },
+  {
+    "slug": "holy-cross-wisconsin",
+    "title": "Holy Cross, Wisconsin",
+    "lat": 43.46, "lng": -87.88,
+    "county": "Ozaukee County", "state": "Wisconsin",
+    "types": ["luxembourgish-roots", "religious-site"],
+    "excerpt": "One of the earliest Luxembourgish communities in America, its 1840s parish church still serving as Holy Cross Chapel.",
+    "body": [
+      "Holy Cross is one of the earliest Luxembourgish communities in the United States — its parish was organized in 1845 and the settlement took root by 1849, part of the dense Luxembourgish corridor along the Lake Michigan shore. The church continues today as Holy Cross Chapel under the Divine Savior Congregation in Belgium, Wisconsin."
+    ],
+    "links": [
+      { "link_label": "Holy Cross, Wisconsin — Wikipedia", "link_url": "https://en.wikipedia.org/wiki/Holy_Cross,_Wisconsin" }
+    ],
+    "vetting_note": "Claims that this is 'the oldest Luxembourg parish in the US' circulate in heritage circles but lack an authoritative source, and the '1877 processional banner' could not be verified — both were left out. Restore them only with a solid citation."
+  },
+  {
+    "slug": "st-marys-port-washington",
+    "title": "St. Mary's Church, Port Washington",
+    "lat": 43.39, "lng": -87.88,
+    "county": "Ozaukee County", "state": "Wisconsin",
+    "types": ["religious-site"],
+    "excerpt": "Hilltop landmark built from 1882 by Luxembourg immigrants under a Luxembourg-born pastor; on the National Register since 1977.",
+    "body": [
+      "St. Mary's parish in Port Washington dates to Luxembourger families of 1847, and its landmark hilltop church was built starting in 1882 by Luxembourg immigrant parishioners under Fr. Henry Willmes — himself a Luxembourg immigrant. The church was listed on the National Register of Historic Places in 1977, and since 2003 has housed its own statue of Our Lady of Luxembourg, a gift from the Grand Duchy."
+    ],
+    "links": [
+      { "link_label": "St. Mary's Church — St. John XXIII Parish", "link_url": "https://stjohn23rd.org/st-marys-church/" }
+    ]
+  },
+  {
+    "slug": "stony-hill-flag-day-waubeka",
+    "title": "Stony Hill School & Flag Day Foundation, Waubeka",
+    "lat": 43.476, "lng": -87.986,
+    "county": "Ozaukee County", "state": "Wisconsin",
+    "types": ["memorial", "luxembourgish-roots"],
+    "excerpt": "Where Bernard Cigrand — son of Luxembourg immigrants and 'Father of Flag Day' — held the first Flag Day observance in 1885.",
+    "body": [
+      "Bernard J. Cigrand, the 'Father of Flag Day,' was born in Waubeka to immigrants from Bourglinster and Mensdorf, Luxembourg. As an 18-year-old teacher at the one-room Stony Hill School, he held the first Flag Day observance on June 14, 1885. The restored schoolhouse is preserved as an Ozaukee County park.",
+      "Nearby, the National Flag Day Foundation's Americanism Center displays a bronze bust of Cigrand — a gift from Luxembourg's Ministry of Culture in 2000."
+    ],
+    "links": [
+      { "link_label": "Stony Hill Schoolhouse — Ozaukee County", "link_url": "https://www.ozaukeecounty.gov/759/Stony-Hill-Schoolhouse" }
+    ]
+  },
+  {
+    "slug": "steichen-house-menomonee-falls",
+    "title": "Steichen Family Home (Old Falls Village), Menomonee Falls",
+    "lat": 43.19, "lng": -88.13,
+    "county": "Waukesha County", "state": "Wisconsin",
+    "types": ["museum-archive", "memorial"],
+    "excerpt": "The house Edward Steichen bought for his Luxembourg-immigrant parents in 1904 — and where Carl Sandburg married Lilian Steichen.",
+    "body": [
+      "Edward Steichen — born in Bivange, Luxembourg in 1879 and one of the most influential photographers of the twentieth century — bought this Menomonee Falls house in 1904 for his parents and his sister Lilian. The family owned it until 1915, and it was here in 1908 that the poet Carl Sandburg married Lilian after a courtship conducted largely by letter.",
+      "Saved from demolition, the house was moved to the Old Falls Village museum grounds in 2002, where it is preserved as an exhibit."
+    ],
+    "links": [
+      { "link_label": "Steichen House exhibit — Old Falls Village", "link_url": "https://www.oldfallsvillage.com/steichen-house-exhibit" }
+    ]
+  },
+  {
+    "slug": "topstone-park-redding",
+    "title": "Topstone Park (Steichen Estate), Redding",
+    "lat": 41.31, "lng": -73.41,
+    "county": "Fairfield County", "state": "Connecticut",
+    "types": ["memorial"],
+    "excerpt": "The former Umpawaug farm of Luxembourg-born photographer Edward Steichen, now a town park.",
+    "body": [
+      "Edward Steichen bought the roughly 400-acre Umpawaug farm in Redding in 1928 and lived there until his death in 1973, gardening, breeding delphiniums, and photographing the pond he dug. The Town of Redding purchased parkland from the estate in 1971, and Topstone Park preserves the landscape the Luxembourg-born photographer knew.",
+      "The farmhouse itself is private property; the park is the public face of the estate."
+    ],
+    "links": [
+      { "link_label": "Steichen Estate / Topstone Park — Connecticut Creative Places", "link_url": "https://connecticutcreativeplaces.org/places/steichen-estate-umpawaug-farm-topstone-park" }
+    ]
+  },
+  {
+    "slug": "ramath-orah-nyc",
+    "title": "Congregation Ramath Orah, New York City",
+    "lat": 40.802, "lng": -73.964,
+    "county": "Manhattan", "state": "New York",
+    "types": ["religious-site"],
+    "excerpt": "Founded in 1942 by Rabbi Serebrenik and Jewish refugees from Luxembourg — its Hebrew name renders 'Luxembourg' as 'mountain of light.'",
+    "body": [
+      "Congregation Ramath Orah on West 110th Street was founded in 1942 by Rabbi Robert Serebrenik, chief rabbi of Luxembourg, and 61 Jewish refugees who escaped the Nazi occupation of the Grand Duchy, arriving in New York in June 1941. The congregation's name is a Hebrew rendering of 'Luxembourg' — Ramath Orah, 'mountain of light.'"
+    ],
+    "links": [
+      { "link_label": "Our history — Congregation Ramath Orah", "link_url": "https://www.ramathorah.org/our-history" }
+    ]
+  },
+  {
+    "slug": "sheldon-new-york",
+    "title": "Sheldon, New York",
+    "lat": 42.74, "lng": -78.37,
+    "county": "Wyoming County", "state": "New York",
+    "types": ["founded-by-luxembourgers", "luxembourgish-roots"],
+    "excerpt": "The first Luxembourger colony in the United States (1830s) — the stepping-stone from which families pushed west.",
+    "body": [
+      "The Town of Sheldon in western New York holds a special place in Luxembourg-American history: the Library of Congress treats it as the first Luxembourger colony in the United States, with settlers arriving around 1833–1835. For many families it was a stepping stone — a generation later, Sheldon names reappear across the settlements of Wisconsin, Iowa, and Minnesota."
+    ],
+    "links": [
+      { "link_label": "Luxembourgers in America — Library of Congress research guide", "link_url": "https://guides.loc.gov/luxembourgers-in-america/chronology" }
+    ]
+  },
+  {
+    "slug": "basilica-carey-ohio",
+    "title": "Basilica of Our Lady of Consolation, Carey",
+    "lat": 40.952, "lng": -83.382,
+    "county": "Wyandot County", "state": "Ohio",
+    "types": ["religious-site"],
+    "excerpt": "National shrine whose devotion began in 1875, when a Luxembourg-born priest enshrined a replica of the statue venerated in Luxembourg Cathedral.",
+    "body": [
+      "The devotion at Carey began with Fr. Joseph Peter Gloden, a Luxembourg-born priest who arrived in 1873. On May 24, 1875, an oak replica of the statue of Our Lady of Consolation venerated in Luxembourg Cathedral was carried in procession to Carey and enshrined — the seed of what is now a national basilica and shrine drawing pilgrims from across the country.",
+      "The present basilica is a twentieth-century building; the 1875 statue and the Luxembourgish devotion it carried remain its heart."
+    ],
+    "links": [
+      { "link_label": "History — Basilica and National Shrine of Our Lady of Consolation", "link_url": "https://olcshrine.com/history/" }
+    ]
+  },
+  {
+    "slug": "cape-girardeau-gonner",
+    "title": "Cape Girardeau — Nicolas Gonner's First American Home",
+    "lat": 37.31, "lng": -89.52,
+    "county": "Cape Girardeau County", "state": "Missouri",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "First US home of Nicolas Gonner, who went on to edit the Luxemburger Gazette and chronicle Luxembourgers in America.",
+    "body": [
+      "Nicolas Gonner, born in Pfaffenthal in 1835, emigrated in 1866 and settled first in Cape Girardeau, Missouri. In 1872 he moved to Dubuque to edit the Luxemburger Gazette, the great German-language newspaper of Luxembourg America, and his book Die Luxemburger in der Neuen Welt remains a founding chronicle of the emigration."
+    ],
+    "links": [
+      { "link_label": "Nicolas Gonner — Embassy of Luxembourg in Washington", "link_url": "https://washington.mae.lu/en/actualites/2021/NicolasGonner.html" }
+    ]
+  },
+  {
+    "slug": "bonifas-arts-center-escanaba",
+    "title": "William Bonifas Fine Arts Center, Escanaba",
+    "lat": 45.74, "lng": -87.06,
+    "county": "Delta County", "state": "Michigan",
+    "types": ["museum-archive", "memorial"],
+    "excerpt": "Legacy of 'Big Bill' Bonifas, who left Luxembourg in 1886 and built a timber fortune in Michigan's Upper Peninsula.",
+    "body": [
+      "William 'Big Bill' Bonifas emigrated from Luxembourg in 1886 and built one of the Upper Peninsula's great timber fortunes — the William Bonifas Logging Company supplied Kimberly-Clark for decades. The arts center that bears his name occupies the 1938 St. Joseph auditorium his widow Catherine donated, and it has anchored Escanaba's cultural life since 1974."
+    ],
+    "links": [
+      { "link_label": "History — Bonifas Arts Center", "link_url": "https://bonifasarts.org/history/" }
+    ]
+  },
+  {
+    "slug": "skokie-heritage-museum",
+    "title": "Skokie Heritage Museum",
+    "lat": 42.03, "lng": -87.73,
+    "county": "Cook County", "state": "Illinois",
+    "types": ["museum-archive"],
+    "excerpt": "Skokie — old Niles Centre, a Luxembourgish truck-farming town — preserves digitized records of the Luxembourg Brotherhood of America.",
+    "body": [
+      "Skokie, the former Niles Centre, was one of the Luxembourgish truck-farming towns ringing Chicago. Its local collections preserve that legacy: digitized records and monographs of the Luxembourg Brotherhood of America are available through the Illinois Digital Archives' Skokie collections."
+    ],
+    "links": [
+      { "link_label": "Skokie Heritage Museum — Skokie Park District", "link_url": "https://www.skokieparks.org/skokie-heritage-museum/" }
+    ],
+    "vetting_note": "The LBA materials are confirmed in the Illinois Digital Archives' Skokie collections, but whether the Heritage Museum itself (vs. Skokie Public Library) is the physical holder could not be confirmed — check with the museum before publishing."
+  },
+  {
+    "slug": "pate-newcomer-collection-tcu",
+    "title": "Pate-Newcomer Luxembourg Collection (TCU), Fort Worth",
+    "lat": 32.71, "lng": -97.363,
+    "county": "Tarrant County", "state": "Texas",
+    "types": ["museum-archive"],
+    "excerpt": "1,500+ catalogued items on Luxembourg life, history, and culture — one of the largest such collections in the country, improbably in Texas.",
+    "body": [
+      "Deep in Texas, the Mary Couts Burnett Library at Texas Christian University holds the Pate-Newcomer Luxembourg Collection: more than 1,500 catalogued items on Luxembourg life, history, and culture, billed as one of the largest such collections in the United States. It is named for donors A.M. and Sebert Pate and Dr. James Newcomer, TCU's Vice-Chancellor Emeritus and a devoted scholar of the Grand Duchy."
+    ],
+    "links": [
+      { "link_label": "Pate-Newcomer Luxembourg Collection — TCU Library", "link_url": "https://library.tcu.edu/spcoll/pate-newcomer-luxembourg-collection.asp" }
+    ]
+  },
+  {
+    "slug": "kneip-statue-pierre",
+    "title": "Richard Kneip Statue (Trail of Governors), Pierre",
+    "lat": 44.367, "lng": -100.35,
+    "county": "Hughes County", "state": "South Dakota",
+    "types": ["memorial"],
+    "excerpt": "Bronze of Governor Richard Kneip, grandson of an emigrant from Munshausen, Luxembourg.",
+    "body": [
+      "On Pierre's Trail of Governors stands a 2015 bronze of Richard F. Kneip, South Dakota's governor from 1971 to 1978 and later US ambassador to Singapore. His grandfather Mathias Kneip emigrated from Munshausen, Luxembourg — a connection the Luxembourg Embassy has celebrated in its 'Luxembourgers in the United States' series."
+    ],
+    "links": [
+      { "link_label": "Governor Richard Francis Kneip — Trail of Governors", "link_url": "https://www.trailofgovernors.com/governor-richard-francis-kneip/" }
+    ]
+  },
+  {
+    "slug": "hesburgh-mlk-monument-south-bend",
+    "title": "Hesburgh–King Monument, South Bend",
+    "lat": 41.676, "lng": -86.251,
+    "county": "St. Joseph County", "state": "Indiana",
+    "types": ["memorial"],
+    "excerpt": "Bronze of Fr. Theodore Hesburgh — whose family left Luxembourg in 1848 — joining hands with Dr. King, from the famous 1964 photograph.",
+    "body": [
+      "In Leighton Plaza in downtown South Bend, a bronze by sculptor Tuck Langland, unveiled in 2017, recreates the famous 1964 Soldier Field photograph of Fr. Theodore Hesburgh and Dr. Martin Luther King Jr. joining hands in song at a civil-rights rally.",
+      "Hesburgh, Notre Dame's transformative president and a giant of American civic life, traced his paternal line to emigrants who left Luxembourg in 1848."
+    ],
+    "links": [
+      { "link_label": "Hesburgh–King statue unveiled — Notre Dame News", "link_url": "https://news.nd.edu/news/hesburgh-king-statue-unveiled-in-south-bend/" }
+    ]
+  },
+  {
+    "slug": "hesburgh-joyce-statue-notre-dame",
+    "title": "'Ted & Ned' Statue, University of Notre Dame",
+    "lat": 41.702, "lng": -86.234,
+    "county": "St. Joseph County", "state": "Indiana",
+    "types": ["memorial"],
+    "excerpt": "The 2018 bronze of Frs. Hesburgh and Joyce beside the Hesburgh Library reflecting pool.",
+    "body": [
+      "Beside the reflecting pool south of the library that bears his name stands 'Ted & Ned' — Lou Cella's 2018 bronze of Fr. Theodore Hesburgh and his longtime executive vice president Fr. Edmund Joyce, a gift of the Class of 1953. Hesburgh's Luxembourg roots (his paternal line emigrated in 1848) make the campus landmark a quiet stop on any Luxembourg-American pilgrimage."
+    ],
+    "links": [
+      { "link_label": "New statue honors Fathers Hesburgh and Joyce — Notre Dame News", "link_url": "https://news.nd.edu/news/new-statue-honors-fathers-hesburgh-and-joyce/" }
+    ]
+  },
+  {
+    "slug": "lauterbur-uiuc-urbana",
+    "title": "Paul C. Lauterbur (University of Illinois), Urbana",
+    "lat": 40.1, "lng": -88.22,
+    "county": "Champaign County", "state": "Illinois",
+    "types": ["memorial"],
+    "excerpt": "The Nobel laureate behind MRI — descendant of Luxembourg emigrants — spent his last two decades at Illinois' Beckman Institute.",
+    "body": [
+      "Paul C. Lauterbur, who shared the 2003 Nobel Prize in Physiology or Medicine for making magnetic resonance imaging possible, described his family in his own Nobel biography as emigrants from Luxembourg. A chemist by training, he spent his final two decades (1985–2007) at the University of Illinois' Beckman Institute in Urbana."
+    ],
+    "links": [
+      { "link_label": "Paul C. Lauterbur — Nobel Prize biographical", "link_url": "https://www.nobelprize.org/prizes/medicine/2003/lauterbur/biographical/" }
+    ],
+    "vetting_note": "The dataset claimed a commemorative plaque in Urbana; none exists (the ACS landmark plaque for MRI is at Stony Brook, NY). This entry is re-anchored to his UIUC/Beckman career — decide if a person-anchored pin fits the map's rules."
+  },
+  {
+    "slug": "cascade-iowa-red-faber",
+    "title": "Cascade, Iowa — Red Faber's Hometown",
+    "lat": 42.3, "lng": -91.01,
+    "county": "Dubuque County", "state": "Iowa",
+    "types": ["luxembourgish-roots", "memorial"],
+    "excerpt": "Hometown of Hall of Fame pitcher Urban 'Red' Faber, Luxembourg-American son of the Dubuque County settlement belt.",
+    "body": [
+      "Urban 'Red' Faber was born on a farm near Cascade, in Dubuque County's Luxembourgish belt, in 1888 — a son of the same settlement world as St. Donatus and Luxemburg, Iowa. He won 254 games for the Chicago White Sox, threw the American League's last legal spitball, and entered the Baseball Hall of Fame in 1964. Cascade still celebrates him as its Hall of Famer."
+    ],
+    "links": [
+      { "link_label": "Red Faber — Baseball Hall of Fame", "link_url": "https://baseballhall.org/hall-of-famers/faber-red" },
+      { "link_label": "Red Faber — SABR biography", "link_url": "https://sabr.org/bioproj/person/red-faber/" }
+    ]
+  },
+  {
+    "slug": "mckenzies-pastry-new-orleans",
+    "title": "McKenzie's Pastry Shoppes, New Orleans",
+    "lat": 29.923, "lng": -90.105,
+    "county": "Orleans Parish", "state": "Louisiana",
+    "types": ["luxembourgish-roots"],
+    "excerpt": "Where the Entringer family — a Luxembourgish name out of Wisconsin — put the first plastic baby in a Mardi Gras King Cake.",
+    "body": [
+      "In 1936, Daniel Entringer bought Henry McKenzie's Prytania Street bakery, and McKenzie's grew into New Orleans' dominant pastry chain. His son Donald Entringer Sr. is credited with introducing the plastic baby into Mardi Gras King Cakes — a tradition now inseparable from the holiday. Entringer is a documented Luxembourgish surname, and Daniel came south from Wisconsin's settlement country.",
+      "The original shop at 4926 Prytania Street is today the Creole Creamery."
+    ],
+    "links": [
+      { "link_label": "When McKenzie's put the first baby in a king cake — NOLA.com", "link_url": "https://www.nola.com/entertainment_life/when-mckenzies-put-the-first-baby-in-a-king-cake-bites-from-the-past/article_893baaca-01b5-53e8-97ba-06d60b8e3faf.html" }
+    ],
+    "vetting_note": "The Entringers' Luxembourg descent is inferred (documented Lux surname, Wisconsin origins) but not directly stated in any source found — worth confirming via LACS surname files before publishing."
+  },
+  {
+    "slug": "montreal-grand-ducal-refuge",
+    "title": "Montreal — Wartime Refuge of the Grand Ducal Family",
+    "lat": 45.5, "lng": -73.56,
+    "county": "", "state": "Québec, Canada",
+    "types": [],
+    "excerpt": "Where Prince Félix and the grand ducal children — including the future Grand Duke Jean — lived in exile, 1940–1944.",
+    "body": [
+      "After the German invasion of May 1940, Luxembourg's grand ducal family fled into exile. Prince Félix and the six children — among them the future Grand Duke Jean, who studied at Université Laval in Quebec City — made their home in Montreal from 1940 to 1944, while Grand Duchess Charlotte led the government-in-exile from London, her wartime radio broadcasts making her the voice of occupied Luxembourg.",
+      "The family's Montreal house survives, though no publicly pinnable address is documented — this marker stands for the city that sheltered them."
+    ],
+    "links": [
+      { "link_label": "Luxembourg royals' wartime Quebec refuge — Global News", "link_url": "https://globalnews.ca/news/8934864/luxembourg-royals-quebec-second-world-war/" }
+    ],
+    "vetting_note": "City-level pin only (no documented street address). Also: this entry has no place-type category yet — consider whether a 'Historic events' term is worth adding, or assign Memorials & markers."
+  }
+]

@@ -23,6 +23,7 @@ if ( is_singular( 'tribe_events' ) ) :
 	$eid          = get_queried_object_id();
 	$members_only = (bool) get_post_meta( $eid, '_tclas_members_only', true );
 	$reg_url      = get_post_meta( $eid, '_tclas_registration_url', true );
+	$loc_hidden   = function_exists( 'tclas_event_location_hidden' ) && tclas_event_location_hidden( $eid );
 	$events_url   = class_exists( 'Tribe__Events__Main' )
 		? get_post_type_archive_link( Tribe__Events__Main::POSTTYPE )
 		: home_url( '/events/' );
@@ -37,12 +38,16 @@ if ( is_singular( 'tribe_events' ) ) :
 	}
 	$time_str = $start_time . ( $end_time ? ' – ' . $end_time : '' );
 
-	// Venue info
+	// Venue info — blanked for non-members on members-only events, which also
+	// keeps it out of the calendar links and JSON-LD built from these values.
 	$venue_name    = tribe_get_venue( $eid );
 	$venue_addr    = tribe_get_address( $eid );
 	$venue_city    = tribe_get_city( $eid );
 	$venue_state   = tribe_get_stateprovince( $eid );
 	$venue_country = tribe_get_country( $eid );
+	if ( $loc_hidden ) {
+		$venue_name = $venue_addr = $venue_city = $venue_state = $venue_country = '';
+	}
 
 	// Omit state if Minnesota; omit country if USA
 	$show_state   = $venue_state
@@ -141,7 +146,7 @@ if ( is_singular( 'tribe_events' ) ) :
 		<div class="tclas-event-layout">
 
 			<aside class="tclas-event-sidebar" aria-label="<?php esc_attr_e( 'Event details', 'tclas' ); ?>">
-				<?php if ( $reg_url ) : ?>
+				<?php if ( $reg_url && ! $loc_hidden ) : ?>
 					<a
 						href="<?php echo esc_url( $reg_url ); ?>"
 						class="btn btn-primary tclas-event-register-link"
@@ -184,6 +189,14 @@ if ( is_singular( 'tribe_events' ) ) :
 							<?php endif; ?>
 						</address>
 					</li>
+					<?php elseif ( $loc_hidden ) : ?>
+					<li class="tclas-event-meta__venue">
+						<?php echo $icon_pin; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<address>
+							<strong><?php esc_html_e( 'Members-only location', 'tclas' ); ?></strong>
+							<span><?php esc_html_e( 'Shared with members after log in', 'tclas' ); ?></span>
+						</address>
+					</li>
 					<?php endif; ?>
 				</ul>
 
@@ -224,11 +237,59 @@ if ( is_singular( 'tribe_events' ) ) :
 						<?php echo $icon_lock; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<span><?php esc_html_e( 'Members only', 'tclas' ); ?></span>
 					</div>
+					<?php if ( $loc_hidden ) : ?>
+					<div class="tclas-event-members-gate">
+						<p>
+							<?php
+							if ( $reg_url ) {
+								esc_html_e( 'This event is for TCLAS members. Log in to see the location and register — or join us and come along.', 'tclas' );
+							} else {
+								esc_html_e( 'This event is for TCLAS members. Log in to see the location — or join us and come along.', 'tclas' );
+							}
+							?>
+						</p>
+						<div class="tclas-event-members-gate__actions">
+							<a href="<?php echo esc_url( wp_login_url( get_permalink( $eid ) ) ); ?>" class="btn btn-outline-ardoise">
+								<?php esc_html_e( 'Member log in', 'tclas' ); ?>
+							</a>
+							<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary">
+								<?php esc_html_e( 'Become a member', 'tclas' ); ?>
+							</a>
+						</div>
+					</div>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<div class="tclas-event-description">
 					<?php echo $description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
+
+				<?php
+				// Event Tickets prints its RSVP/ticket form on this action; this
+				// custom template bypasses TEC's single-event view, so fire it
+				// here. Gated two ways: PMPro page restriction (fully private
+				// events) and the _tclas_members_only teaser flag (public page,
+				// members-only registration).
+				$rsvp_allowed = ( ! function_exists( 'pmpro_has_membership_access' ) || pmpro_has_membership_access( $eid ) )
+					&& ( ! $members_only || ( function_exists( 'tclas_is_member' ) && tclas_is_member() ) );
+				?>
+				<?php if ( $rsvp_allowed ) : ?>
+					<div class="tclas-event-rsvp">
+						<?php do_action( 'tribe_events_single_event_after_the_meta' ); ?>
+					</div>
+				<?php elseif ( $members_only ) : ?>
+					<div class="tclas-event-members-gate tclas-event-rsvp-gate">
+						<p><?php esc_html_e( 'Registration is free — and just for TCLAS members. Join us to grab a spot.', 'tclas' ); ?></p>
+						<div class="tclas-event-members-gate__actions">
+							<a href="<?php echo esc_url( wp_login_url( get_permalink( $eid ) ) ); ?>" class="btn btn-outline-ardoise">
+								<?php esc_html_e( 'Member log in', 'tclas' ); ?>
+							</a>
+							<a href="<?php echo esc_url( home_url( '/join/' ) ); ?>" class="btn btn-primary">
+								<?php esc_html_e( 'Become a member', 'tclas' ); ?>
+							</a>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 
 		</div>
@@ -255,12 +316,13 @@ else :
 	$f_time     = tribe_get_start_time( $f_id );
 	$f_end_time = tribe_get_end_time( $f_id );
 	$f_time_str = $f_time . ( $f_end_time ? '–' . $f_end_time : '' );
-	$f_venue    = tribe_get_venue( $f_id );
+	$f_loc_hidden = function_exists( 'tclas_event_location_hidden' ) && tclas_event_location_hidden( $f_id );
+	$f_venue    = $f_loc_hidden ? '' : tribe_get_venue( $f_id );
 	$f_excerpt  = get_the_excerpt( $f_id );
 	$f_img      = get_the_post_thumbnail_url( $f_id, 'large' );
 	$f_reg_url  = get_post_meta( $f_id, '_tclas_registration_url', true );
-	$f_link     = $f_reg_url ?: get_permalink( $f_id );
-	$f_external = (bool) $f_reg_url;
+	$f_link     = ( $f_reg_url && ! $f_loc_hidden ) ? $f_reg_url : get_permalink( $f_id );
+	$f_external = (bool) $f_reg_url && ! $f_loc_hidden;
 
 	$icon_cal   = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 	$icon_clock = '<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';

@@ -37,13 +37,19 @@ $tclas_modules = [
 	// ── "How Are We Connected" feature ──────────────────────────────────
 	'inc/connection-data.php',    // canonical commune + surname data
 	'inc/connections.php',        // normalisation engine, matching, AJAX, cron
+	'inc/surname-explorer.php',   // [tclas_surname_finder] public "Is your name Luxembourgish?" explorer
 	// ── Ancestral Commune Map ────────────────────────────────────────────
 	'inc/commune-data.php',       // 534 villages from official LU place-name index
 	'inc/ancestor-map.php',       // [tclas_ancestor_map] shortcode + Leaflet assets
+	'inc/places-map.php',         // [tclas_places_map] Luxembourgers in North America places map
+	'inc/orgs-events.php',        // [tclas_orgs_map] external Lux orgs + upcoming-events sidebar
 	// ── Content filters ──────────────────────────────────────────────────
 	'inc/ltz-tagger.php',         // auto-wrap Luxembourgish terms in <span lang="lb">
 	// ── Commune profile API integrations ─────────────────────────────────
 	'inc/lod-audio.php',          // LOD.lu pronunciation audio + Forvo fallback
+	// ── Homepage culture corner ───────────────────────────────────────────
+	'inc/rotator-data.php',       // word-of-the-week + annual traditions datasets
+	'inc/homepage-rotators.php',  // Wuert vun der Woch + Elo zu Lëtzebuerg widgets
 	// ── Member profiles & directory ───────────────────────────────────────
 	'inc/member-profiles.php',    // profile helpers, rewrite, photo upload, founding badge
 	'inc/member-badges.php',      // member badge registry: founding, board, bierger/citizen

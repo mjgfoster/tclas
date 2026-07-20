@@ -28,6 +28,25 @@ function tclas_register_taxonomies(): void {
 	] );
 
 
+	// Place type (drives the category layers on the Luxembourg in America map)
+	register_taxonomy( 'tclas_place_type', [ 'tclas_place' ], [
+		'labels' => [
+			'name'          => __( 'Place types', 'tclas' ),
+			'singular_name' => __( 'Place type', 'tclas' ),
+			'search_items'  => __( 'Search place types', 'tclas' ),
+			'all_items'     => __( 'All place types', 'tclas' ),
+			'edit_item'     => __( 'Edit place type', 'tclas' ),
+			'add_new_item'  => __( 'Add place type', 'tclas' ),
+			'menu_name'     => __( 'Place types', 'tclas' ),
+		],
+		'hierarchical'      => true, // checkbox UI — places often carry more than one type
+		'public'            => false,
+		'show_ui'           => true,
+		'show_in_rest'      => true,
+		'show_admin_column' => true,
+		'rewrite'           => false,
+	] );
+
 	// Newsletter department + topic (unified: structural layout + public browsing)
 	// `main-story` slug is reserved — detected by templates to select the cover image.
 	// All other terms are bilingual (Luxembourgish name, English description) and
@@ -82,6 +101,50 @@ function tclas_seed_department_terms(): void {
 	}
 }
 add_action( 'init', 'tclas_seed_department_terms', 20 );
+
+/**
+ * Seed tclas_place_type terms for the Luxembourg in America map.
+ *
+ * Slugs are referenced by tclas_place_type_registry() in places-map.php for
+ * marker colors — keep them stable. Names/descriptions are editable in admin.
+ */
+function tclas_seed_place_type_terms(): void {
+	$terms = [
+		'founded-by-luxembourgers' => [
+			'name' => 'Founded by Luxembourgers',
+			'desc' => 'Places established by Luxembourgish settlers.',
+		],
+		'luxembourgish-roots'      => [
+			'name' => 'Luxembourgish roots',
+			'desc' => 'Places with deep Luxembourgish heritage or an active community today.',
+		],
+		'namesake'                 => [
+			'name' => 'Luxembourg namesake',
+			'desc' => 'Places named for Luxembourg or the Greater Region.',
+		],
+		'religious-site'           => [
+			'name' => 'Churches & religious sites',
+			'desc' => 'Parishes, chapels, and congregations with Luxembourgish origins.',
+		],
+		'memorial'                 => [
+			'name' => 'Memorials & markers',
+			'desc' => 'Statues, plaques, and monuments honoring Luxembourgers and their descendants.',
+		],
+		'museum-archive'           => [
+			'name' => 'Museums & archives',
+			'desc' => 'Museums, libraries, and collections preserving Luxembourgish heritage.',
+		],
+	];
+	foreach ( $terms as $slug => $data ) {
+		if ( ! term_exists( $slug, 'tclas_place_type' ) ) {
+			wp_insert_term( $data['name'], 'tclas_place_type', [
+				'slug'        => $slug,
+				'description' => $data['desc'],
+			] );
+		}
+	}
+}
+add_action( 'init', 'tclas_seed_place_type_terms', 20 );
 
 /**
  * Seed tclas_commune terms from the commune-data.php lookup table.

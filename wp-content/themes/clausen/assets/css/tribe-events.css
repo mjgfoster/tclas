@@ -606,6 +606,22 @@
   flex-shrink: 0;
 }
 
+.tclas-event-members-gate {
+  background: var(--c-or-pale);
+  border: 1px solid var(--c-or-pale-dk);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+.tclas-event-members-gate p {
+  margin: 0 0 1rem;
+}
+.tclas-event-members-gate__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .tclas-event-image {
   margin-bottom: 1.75rem;
 }

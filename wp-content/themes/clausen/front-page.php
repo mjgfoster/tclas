@@ -93,6 +93,22 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 	</div>
 </section>
 
+<!-- ── 1.5 CITIZENSHIP CONVERSION BAND ──────────────────────────────────── -->
+<section class="tclas-citizen-band" aria-label="<?php esc_attr_e( 'Luxembourg citizenship', 'tclas' ); ?>">
+	<div class="container-tclas tclas-citizen-band__inner">
+		<div class="tclas-citizen-band__copy">
+			<span class="tclas-eyebrow tclas-citizen-band__eyebrow"><?php esc_html_e( 'Bierger ginn · Become a citizen', 'tclas' ); ?></span>
+			<h2 class="tclas-citizen-band__title"><?php esc_html_e( 'Could you be a Luxembourger — officially?', 'tclas' ); ?></h2>
+			<p class="tclas-citizen-band__lede">
+				<?php esc_html_e( 'Luxembourg recognizes citizenship through ancestry. Our two-minute quiz tells you whether your family line may qualify.', 'tclas' ); ?>
+			</p>
+		</div>
+		<a href="<?php echo esc_url( home_url( '/citizenship/' ) ); ?>" class="btn btn-primary btn-lg tclas-citizen-band__cta">
+			<?php esc_html_e( 'Take the citizenship quiz', 'tclas' ); ?>
+		</a>
+	</div>
+</section>
+
 <!-- ── 2. EVENTS ────────────────────────────────────────────────────────── -->
 <section class="tclas-events" id="events">
 	<div class="container-tclas">
@@ -127,6 +143,9 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 		</div>
 	</div>
 </section>
+
+<!-- ── 2.5 CULTURE CORNER (Wuert vun der Woch + Elo zu Lëtzebuerg) ───────── -->
+<?php tclas_render_culture_corner(); ?>
 
 <!-- ── 3. EMAIL SIGNUP (interim MailChimp until upgraded list is ready) ──── -->
 <section class="tclas-events" id="email-signup" aria-label="<?php esc_attr_e( 'Stay in touch', 'tclas' ); ?>">

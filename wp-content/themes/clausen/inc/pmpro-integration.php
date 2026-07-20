@@ -231,3 +231,99 @@ add_filter( 'pmpro_has_membership_access_filter', function ( $hasaccess, $mypost
 	}
 	return $hasaccess;
 }, 10, 4 );
+
+/**
+ * Backstop: re-apply PMPro's members-only search/archive exclusions after
+ * every other pre_get_posts callback has run.
+ *
+ * PMPro adds its exclusion list at priority 10, but any plugin that set()s
+ * post__not_in outright afterwards (GiveWP's give_remove_pages_from_search
+ * did exactly this) silently wipes it, leaking restricted content into
+ * search results. pmpro_search_filter caches its hidden-post list in a
+ * static and merges with the query's current post__not_in, so re-running
+ * it last is cheap and idempotent.
+ */
+add_action( 'pre_get_posts', function ( $query ) {
+	if ( function_exists( 'pmpro_search_filter' ) && get_option( 'pmpro_filterqueries' ) ) {
+		pmpro_search_filter( $query );
+	}
+}, PHP_INT_MAX );
+
+/**
+ * Server-side membership gate for Event Tickets RSVP AJAX.
+ *
+ * The RSVP form is only rendered to users who can access the event, but the
+ * admin-ajax handler (tribe_tickets_rsvp_handle) only verifies a nonce — a
+ * visitor could still walk through the RSVP steps by POSTing directly. Deny
+ * every step when the ticket belongs to an event the current user can't see.
+ */
+function tclas_gate_rsvp_ajax(): void {
+	if ( ! function_exists( 'pmpro_has_membership_access' ) ) {
+		return;
+	}
+
+	$ticket_id = isset( $_POST['ticket_id'] ) ? absint( $_POST['ticket_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( ! $ticket_id ) {
+		return;
+	}
+
+	$event_id = (int) get_post_meta( $ticket_id, '_tribe_rsvp_for_event', true );
+	if ( ! $event_id ) {
+		return;
+	}
+
+	// Blocked if the event page itself is PMPro-restricted, or if it's a
+	// public page whose registration is members-only (_tclas_members_only).
+	$blocked = ! pmpro_has_membership_access( $event_id )
+		|| ( get_post_meta( $event_id, '_tclas_members_only', true )
+			&& ! ( function_exists( 'tclas_is_member' ) && tclas_is_member() ) );
+
+	if ( $blocked ) {
+		wp_send_json_error( [
+			'html' => esc_html__( 'Registration is for TCLAS members. Please log in or join to RSVP.', 'tclas' ),
+		] );
+	}
+}
+add_action( 'wp_ajax_tribe_tickets_rsvp_handle', 'tclas_gate_rsvp_ajax', 5 );
+add_action( 'wp_ajax_nopriv_tribe_tickets_rsvp_handle', 'tclas_gate_rsvp_ajax', 5 );
+
+/**
+ * Close the REST leak for members-only events.
+ *
+ * PMPro gates the_content (which covers core /wp/v2 responses), but The
+ * Events Calendar's and Event Tickets' own REST APIs build payloads from raw
+ * post data — anonymous requests to /tribe/events/v1 and /tribe/tickets/v1
+ * received the full description, venue, and ticket availability of
+ * restricted events. Returning WP_Error here drops the item from archive
+ * responses and turns single-item requests into an auth error.
+ */
+add_filter( 'tribe_rest_event_data', function ( $data, $event ) {
+	if (
+		function_exists( 'pmpro_has_membership_access' )
+		&& is_array( $data )
+		&& ! empty( $data['id'] )
+		&& ! pmpro_has_membership_access( (int) $data['id'] )
+	) {
+		return new WP_Error(
+			'rest_forbidden',
+			__( 'You are not authorized to see this event.', 'tclas' ),
+			[ 'status' => rest_authorization_required_code() ]
+		);
+	}
+	return $data;
+}, 9999, 2 );
+
+add_filter( 'tribe_tickets_rest_api_ticket_data', function ( $data, $ticket_id ) {
+	if ( ! function_exists( 'pmpro_has_membership_access' ) || ! is_array( $data ) ) {
+		return $data;
+	}
+	$event_id = ! empty( $data['post_id'] ) ? (int) $data['post_id'] : 0;
+	if ( $event_id && ! pmpro_has_membership_access( $event_id ) ) {
+		return new WP_Error(
+			'rest_forbidden',
+			__( 'You are not authorized to see this ticket.', 'tclas' ),
+			[ 'status' => rest_authorization_required_code() ]
+		);
+	}
+	return $data;
+}, 9999, 2 );

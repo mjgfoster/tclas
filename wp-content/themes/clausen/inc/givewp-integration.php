@@ -37,3 +37,17 @@ function tclas_donate_form(): void {
 	</div>
 	<?php
 }
+
+/**
+ * Merge — don't replace — GiveWP's search-page exclusions.
+ *
+ * give_remove_pages_from_search() calls $query->set( 'post__not_in', … ),
+ * clobbering exclusions added earlier on pre_get_posts. Notably that wiped
+ * PMPro's pmpro_search_filter list, leaking members-only titles/excerpts
+ * (e.g. restricted events) into logged-out search results. Give passes its
+ * list through this filter right before the set() call, so merging the
+ * query's existing exclusions back in here restores them.
+ */
+add_filter( 'give_remove_pages_from_search', function ( $args, $query ) {
+	return array_unique( array_merge( (array) $args, (array) $query->get( 'post__not_in' ) ) );
+}, 10, 2 );
