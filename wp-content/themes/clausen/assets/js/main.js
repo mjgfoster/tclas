@@ -231,6 +231,15 @@
     // mobile drawer uses them as inline accordions (both driven by aria-expanded).
     const parentItems = qsa('.tclas-nav__item.has-dropdown');
 
+    // Only one dropdown open at a time — opening one closes the rest.
+    function closeOtherDropdowns(current) {
+      parentItems.forEach(item => {
+        if (item === current) return;
+        const link = qs('.tclas-nav__link', item);
+        if (link) link.setAttribute('aria-expanded', 'false');
+      });
+    }
+
     parentItems.forEach(item => {
       // The toggle is a <button class="tclas-nav__link"> (see TCLAS_Nav_Walker).
       const link = qs('.tclas-nav__link', item);
@@ -244,6 +253,7 @@
       // Enter/Space, so no separate key handler is needed for activation.
       link.addEventListener('click', () => {
         const isExpanded = link.getAttribute('aria-expanded') === 'true';
+        if (!isExpanded) closeOtherDropdowns(item);
         link.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
       });
 
@@ -252,6 +262,7 @@
         // Arrow down to focus first dropdown item
         if (e.key === 'ArrowDown') {
           e.preventDefault();
+          closeOtherDropdowns(item);
           link.setAttribute('aria-expanded', 'true');
           const firstLink = qs('a', dropdown);
           if (firstLink) firstLink.focus();
