@@ -52,6 +52,19 @@ if ( tclas_is_member() && 'POST' === $_SERVER['REQUEST_METHOD'] ) {
 			update_user_meta( $uid, $meta_key, $raw_url );
 		}
 
+		// ── Mailing address (private — annual gift) ───────────────────────
+		if ( function_exists( 'tclas_gift_save_address' ) ) {
+			$mail_input = [];
+			foreach ( array_keys( tclas_gift_address_fields() ) as $mail_slug ) {
+				if ( isset( $_POST[ 'tclas_mail_' . $mail_slug ] ) ) {
+					$mail_input[ $mail_slug ] = $_POST[ 'tclas_mail_' . $mail_slug ]; // sanitised in tclas_gift_save_address()
+				}
+			}
+			if ( $mail_input ) {
+				tclas_gift_save_address( $uid, $mail_input );
+			}
+		}
+
 		// ── Bierger (self-reported Luxembourg citizenship) ────────────────
 		update_user_meta( $uid, '_tclas_badge_bierger', ! empty( $_POST['tclas_badge_bierger'] ) ? 1 : 0 );
 
@@ -79,6 +92,10 @@ $pinterest_url         = (string) ( get_user_meta( $user_id, '_tclas_pinterest_u
 $ancestry_url          = (string) ( get_user_meta( $user_id, '_tclas_ancestry_url',          true ) ?: '' );
 $familytree_url        = (string) ( get_user_meta( $user_id, '_tclas_familytree_url',        true ) ?: '' );
 $is_bierger            = (bool)     get_user_meta( $user_id, '_tclas_badge_bierger',         true );
+
+// Mailing address (private — used only for the annual member gift).
+$mail_address     = function_exists( 'tclas_gift_get_address' ) ? tclas_gift_get_address( $user_id ) : [];
+$mail_updated_at  = function_exists( 'tclas_gift_address_confirmed_at' ) ? tclas_gift_address_confirmed_at( $user_id ) : '';
 
 // Photo.
 $profile_photo_id  = (int) get_user_meta( $user_id, '_tclas_profile_photo', true );
@@ -314,6 +331,48 @@ $profile_photo_url = $profile_photo_id
 									<?php esc_html_e( 'I am a citizen of Luxembourg', 'tclas' ); ?>
 								</label>
 							</div>
+						</fieldset>
+
+						<!-- ── Mailing address (private) ─────────────────────── -->
+						<fieldset class="tclas-story-fieldset">
+							<legend class="tclas-story-legend"><?php esc_html_e( 'Mailing address', 'tclas' ); ?></legend>
+							<p class="tclas-story-hint">
+								<?php esc_html_e( 'Private — never shown on your profile or in the directory. We use it once a year to mail every member household a small gift, so keeping it current is the surest way to get yours.', 'tclas' ); ?>
+								<?php if ( $mail_updated_at ) : ?>
+									<?php
+									/* translators: %s: date the address was last saved */
+									printf( esc_html__( 'Last updated %s.', 'tclas' ), esc_html( mysql2date( get_option( 'date_format' ), $mail_updated_at ) ) );
+									?>
+								<?php endif; ?>
+							</p>
+
+							<?php
+							$mail_config = [
+								[ 'slug' => 'address1', 'label' => __( 'Street address', 'tclas' ),      'autocomplete' => 'address-line1',    'placeholder' => __( 'e.g. 1234 Grand Ave', 'tclas' ) ],
+								[ 'slug' => 'address2', 'label' => __( 'Apt, suite, etc. (optional)', 'tclas' ), 'autocomplete' => 'address-line2', 'placeholder' => '' ],
+								[ 'slug' => 'city',     'label' => __( 'City', 'tclas' ),                'autocomplete' => 'address-level2',   'placeholder' => __( 'e.g. Saint Paul', 'tclas' ) ],
+								[ 'slug' => 'state',    'label' => __( 'State or province', 'tclas' ),   'autocomplete' => 'address-level1',   'placeholder' => __( 'e.g. MN', 'tclas' ) ],
+								[ 'slug' => 'zip',      'label' => __( 'ZIP or postal code', 'tclas' ),  'autocomplete' => 'postal-code',      'placeholder' => __( 'e.g. 55105', 'tclas' ) ],
+								[ 'slug' => 'country',  'label' => __( 'Country', 'tclas' ),             'autocomplete' => 'country-name',     'placeholder' => __( 'Leave blank if United States', 'tclas' ) ],
+							];
+							foreach ( $mail_config as $m ) :
+								$m_id = 'tclas-mail-' . $m['slug'];
+								?>
+								<div class="tclas-story-social-group">
+									<label class="tclas-story-social-label" for="<?php echo esc_attr( $m_id ); ?>">
+										<?php echo esc_html( $m['label'] ); ?>
+									</label>
+									<input
+										type="text"
+										id="<?php echo esc_attr( $m_id ); ?>"
+										name="tclas_mail_<?php echo esc_attr( $m['slug'] ); ?>"
+										value="<?php echo esc_attr( $mail_address[ $m['slug'] ] ?? '' ); ?>"
+										class="tclas-story-input"
+										placeholder="<?php echo esc_attr( $m['placeholder'] ); ?>"
+										autocomplete="<?php echo esc_attr( $m['autocomplete'] ); ?>"
+									>
+								</div>
+							<?php endforeach; ?>
 						</fieldset>
 
 						<div class="tclas-story-actions">

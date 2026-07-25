@@ -210,18 +210,25 @@ function tclas_save_member_personal( int $user_id, $morder ): void {
 		wp_update_user( $userdata );
 	}
 
-	// Mailing address (for rough geography + the annual member gift).
+	// Mailing address (for rough geography + the annual member gift). Read back
+	// out by inc/member-gifts.php; members maintain it on Edit Profile.
 	$address_map = [
-		'baddress1' => '_tclas_mail_address1',
-		'baddress2' => '_tclas_mail_address2',
-		'bcity'     => '_tclas_mail_city',
-		'bstate'    => '_tclas_mail_state',
-		'bzipcode'  => '_tclas_mail_zip',
+		'baddress1' => 'address1',
+		'baddress2' => 'address2',
+		'bcity'     => 'city',
+		'bstate'    => 'state',
+		'bzipcode'  => 'zip',
+		'bcountry'  => 'country',
 	];
-	foreach ( $address_map as $req => $meta ) {
+	$address_input = [];
+	foreach ( $address_map as $req => $slug ) {
 		if ( isset( $_REQUEST[ $req ] ) ) {
-			update_user_meta( $user_id, $meta, sanitize_text_field( wp_unslash( $_REQUEST[ $req ] ) ) );
+			$address_input[ $slug ] = $_REQUEST[ $req ]; // sanitised in tclas_gift_save_address()
 		}
+	}
+	// Checkout counts as the member confirming the address, so stamp it.
+	if ( $address_input && function_exists( 'tclas_gift_save_address' ) ) {
+		tclas_gift_save_address( $user_id, $address_input );
 	}
 }
 add_action( 'pmpro_after_checkout', 'tclas_save_member_personal', 20, 2 );

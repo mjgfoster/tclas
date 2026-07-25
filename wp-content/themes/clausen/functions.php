@@ -27,6 +27,7 @@ $tclas_modules = [
 	'inc/pmpro-integration.php',
 	'inc/pmpro-checkout.php',
 	'inc/household-accounts.php', // Household sub-accounts: invites, cascade, "Manage Household" panel
+	'inc/member-gifts.php',       // Annual member gift: mailing list, per-year send log, labels
 
 	'inc/brevo-integration.php',
 	'inc/givewp-integration.php',
