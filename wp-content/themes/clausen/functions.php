@@ -31,6 +31,7 @@ $tclas_modules = [
 
 	'inc/brevo-integration.php',
 	'inc/brevo-health.php',       // Keepalive + health check: Brevo keys lapse after 90 days idle
+	'inc/email-signup.php',       // /email-list/ signup form + native double opt-in
 	'inc/givewp-integration.php',
 	'inc/events-integration.php',
 	'inc/member-hub.php',

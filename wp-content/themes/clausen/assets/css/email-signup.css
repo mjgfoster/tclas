@@ -1,0 +1,114 @@
+/**
+ * Email-list signup form (/email-list/)
+ *
+ * Standalone file on purpose: clausen's main.css contains hand-written rules that
+ * are not present in the SCSS source, so it must never be regenerated. Everything
+ * here leans on the theme's existing custom properties and .btn so the form
+ * inherits the design system rather than restating it.
+ */
+
+.tclas-signup {
+	max-width: 34rem;
+	margin: 0 0 2rem;
+}
+
+.tclas-signup__field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin: 0 0 1.1rem;
+}
+
+.tclas-signup__field label {
+	font-family: var(--font-sans);
+	font-weight: 700;
+	color: var(--c-body-text);
+}
+
+.tclas-signup__req {
+	color: var(--c-crimson);
+}
+
+.tclas-signup__field input {
+	font-family: var(--font-sans);
+	color: var(--c-body-text);
+	background: var(--c-white);
+	border: 1px solid var(--c-input-border, var(--c-border));
+	border-radius: 6px;
+	padding: 0.7em 0.85em;
+	width: 100%;
+}
+
+.tclas-signup__field input:focus-visible {
+	outline: 3px solid var(--c-gold-focus, var(--c-gold));
+	outline-offset: 2px;
+	border-color: var(--c-aigue);
+}
+
+/* Two-up on comfortable widths, stacked on phones. */
+.tclas-signup__row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0 1rem;
+}
+
+@media (min-width: 34em) {
+	.tclas-signup__row {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.tclas-signup__consent {
+	font-family: var(--font-sans);
+	color: var(--c-muted);
+	margin: 0 0 1.3rem;
+}
+
+.tclas-signup__submit {
+	margin: 0;
+}
+
+/* Honeypot: off-canvas rather than display:none, which some bots detect. */
+.tclas-signup__hp {
+	position: absolute !important;
+	left: -9999px !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+/* ── Outcome notices ─────────────────────────────────────────────────────── */
+
+.tclas-signup-notice {
+	border: 1px solid var(--c-border);
+	border-left-width: 4px;
+	background: var(--c-or-pale, #FAF9F6);
+	padding: 1.1rem 1.3rem;
+	margin: 0 0 1.8rem;
+	max-width: 34rem;
+}
+
+.tclas-signup-notice--ok {
+	border-left-color: var(--c-aigue);
+}
+
+.tclas-signup-notice--err {
+	border-left-color: var(--c-crimson);
+}
+
+.tclas-signup-notice__heading {
+	font-family: var(--font-serif);
+	font-weight: 700;
+	color: var(--c-aigue);
+	margin: 0 0 0.4rem;
+}
+
+.tclas-signup-notice--err .tclas-signup-notice__heading {
+	color: var(--c-crimson);
+}
+
+.tclas-signup-notice__body {
+	font-family: var(--font-sans);
+	color: var(--c-body-text);
+	margin: 0;
+}

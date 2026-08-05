@@ -147,7 +147,9 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 <!-- ── 2.5 CULTURE CORNER (Wuert vun der Woch + Elo zu Lëtzebuerg) ───────── -->
 <?php tclas_render_culture_corner(); ?>
 
-<!-- ── 3. EMAIL SIGNUP (sends to /newsletter/, which carries the signup form) ── -->
+<!-- ── 3. EMAIL SIGNUP (sends to /email-list/, which carries the signup form) ──
+     /newsletter/ is deliberately NOT the target: that is reserved for
+     The Loon & the Lion once it launches. -->
 <section class="tclas-events" id="email-signup" aria-label="<?php esc_attr_e( 'Stay in touch', 'tclas' ); ?>">
 	<div class="container-tclas">
 		<div class="tclas-events__header">
@@ -155,7 +157,7 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 				<span class="tclas-eyebrow"><?php esc_html_e( 'Stay in touch', 'tclas' ); ?></span>
 				<h2><?php esc_html_e( 'Join our email list', 'tclas' ); ?></h2>
 			</div>
-			<a href="<?php echo esc_url( home_url( '/newsletter/#tclas-nl-signup-heading' ) ); ?>" class="btn btn-primary btn-lg">
+			<a href="<?php echo esc_url( tclas_signup_page_url() ); ?>" class="btn btn-primary btn-lg">
 				<?php esc_html_e( 'Sign up', 'tclas' ); ?>
 			</a>
 		</div>
