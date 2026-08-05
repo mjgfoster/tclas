@@ -232,3 +232,46 @@ function tclas_save_member_personal( int $user_id, $morder ): void {
 	}
 }
 add_action( 'pmpro_after_checkout', 'tclas_save_member_personal', 20, 2 );
+
+/**
+ * Email-list opt-in.
+ *
+ * Deliberately UNCHECKED. A pre-ticked box is not valid consent under GDPR
+ * (Recital 32; CJEU, Planet49) and TCLAS plausibly has EU-resident members — so a
+ * pre-tick would be void for exactly the people most likely to care, while buying
+ * very little, since people actively joining a society opt in at high rates anyway.
+ *
+ * Membership itself is not consent to marketing email. inc/brevo-member-sync.php
+ * will not create a Brevo contact for anyone who leaves this unticked.
+ */
+function tclas_checkout_email_optin(): void {
+	?>
+	<div class="pmpro_checkout-field tclas-optin">
+		<label for="tclas_email_optin" class="tclas-optin__label">
+			<input type="checkbox" name="tclas_email_optin" id="tclas_email_optin" value="1" />
+			<span><?php esc_html_e( 'Email me about events, gatherings, traditions, and stories from the Twin Cities Luxembourg-American community.', 'tclas' ); ?></span>
+		</label>
+		<p class="tclas-optin__note"><?php esc_html_e( 'A few emails a year. You can unsubscribe from any of them. This is separate from the messages we send you about your membership.', 'tclas' ); ?></p>
+	</div>
+	<?php
+}
+add_action( 'pmpro_checkout_after_billing_fields', 'tclas_checkout_email_optin', 20 );
+
+/**
+ * Record the opt-in, then sync. The sync runs here rather than relying on the
+ * level-change hook alone because that hook fires BEFORE this meta is written —
+ * without this second pass a brand-new member would be judged to have no consent.
+ */
+function tclas_save_email_optin( int $user_id, $morder ): void {
+	$opted_in = ! empty( $_REQUEST['tclas_email_optin'] );
+	update_user_meta( $user_id, '_tclas_email_optin', $opted_in ? 1 : 0 );
+
+	if ( $opted_in ) {
+		update_user_meta( $user_id, '_tclas_email_optin_at', current_time( 'mysql', true ) );
+	}
+
+	if ( function_exists( 'tclas_brevo_sync_member' ) ) {
+		tclas_brevo_sync_member( $user_id, true );
+	}
+}
+add_action( 'pmpro_after_checkout', 'tclas_save_email_optin', 30, 2 );
