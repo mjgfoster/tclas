@@ -30,6 +30,7 @@ $tclas_modules = [
 	'inc/member-gifts.php',       // Annual member gift: mailing list, per-year send log, labels
 
 	'inc/brevo-integration.php',
+	'inc/brevo-health.php',       // Keepalive + health check: Brevo keys lapse after 90 days idle
 	'inc/givewp-integration.php',
 	'inc/events-integration.php',
 	'inc/member-hub.php',
