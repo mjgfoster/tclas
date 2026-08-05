@@ -70,6 +70,14 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Brevo form ID for the footer signup. Set after creating a form in the Brevo plugin.',
 			],
 			[
+				'key'   => 'field_signup_confirm_template_id',
+				'label' => 'Signup confirmation template ID',
+				'name'  => 'signup_confirm_template_id',
+				'type'  => 'number',
+				'default_value' => 0,
+				'instructions' => 'Brevo transactional template used for the /email-list/ double opt-in confirmation email. Must contain a link to {{ params.confirm_url }}. Leave 0 to use the built-in default.',
+			],
+			[
 				'key'   => 'field_newsletter_signup_fallback_url',
 				'label' => 'Newsletter signup fallback URL',
 				'name'  => 'newsletter_signup_fallback_url',

@@ -471,6 +471,14 @@ function tclas_household_link_member( int $owner_id, int $child_id ): void {
 	update_user_meta( $owner_id, '_tclas_household_revoked_members', $revoked );
 
 	update_user_meta( $child_id, '_tclas_household_parent', $owner_id );
+
+	/**
+	 * A sub-account has been attached to a household.
+	 *
+	 * @param int $owner_id Household owner (the paying member).
+	 * @param int $child_id The sub-account.
+	 */
+	do_action( 'tclas_household_member_linked', $owner_id, $child_id );
 }
 
 /**

@@ -31,6 +31,30 @@ const TCLAS_BREVO_HEALTH_MAIL_GAP  = DAY_IN_SECONDS; // Don't re-notify more tha
 const TCLAS_BREVO_HEALTH_HOOK      = 'tclas_brevo_health_check';
 
 /**
+ * Is this the production site?
+ *
+ * Deliberately NOT wp_get_environment_type(): that defaults to 'production' when
+ * WP_ENVIRONMENT_TYPE is undefined, which is exactly backwards for a Local site and
+ * would keep the false alarms coming. Host-sniffing is the reliable signal here.
+ *
+ * Only prod holds a Brevo key (see the local mailer guard), so anywhere else a
+ * "no API key" result is expected, not a fault worth emailing about.
+ */
+function tclas_brevo_is_production(): bool {
+	$host = wp_parse_url( home_url(), PHP_URL_HOST );
+	$host = is_string( $host ) ? strtolower( $host ) : '';
+
+	$is_local = ( '' === $host )
+		|| 'localhost' === $host
+		|| str_ends_with( $host, '.local' )
+		|| str_ends_with( $host, '.test' )
+		|| str_contains( $host, 'staging' )
+		|| str_contains( $host, 'stage.' );
+
+	return (bool) apply_filters( 'tclas_brevo_is_production', ! $is_local );
+}
+
+/**
  * Ping Brevo and record the result.
  *
  * @param bool $notify Send an email if the check fails. Cron passes true.
@@ -103,7 +127,9 @@ function tclas_brevo_health_record( array $result, bool $notify ): void {
 		'message' => $result['message'],
 	], false );
 
-	if ( $result['ok'] || ! $notify ) {
+	// Belt and braces: even if something invokes the check directly on a non-prod
+	// site, it must never raise an alarm about a key that was never meant to be there.
+	if ( $result['ok'] || ! $notify || ! tclas_brevo_is_production() ) {
 		return;
 	}
 
@@ -133,7 +159,19 @@ function tclas_brevo_health_record( array $result, bool $notify ): void {
  * land inside the 90-day window instead of 3.
  */
 add_action( 'after_setup_theme', function (): void {
-	if ( ! wp_next_scheduled( TCLAS_BREVO_HEALTH_HOOK ) ) {
+	$scheduled = wp_next_scheduled( TCLAS_BREVO_HEALTH_HOOK );
+
+	// Non-production sites have no key by design. Never schedule here, and clear any
+	// event a database pull dragged over from prod — otherwise local cheerfully
+	// emails "API key check FAILED" every week via the local mailer guard.
+	if ( ! tclas_brevo_is_production() ) {
+		if ( $scheduled ) {
+			wp_unschedule_event( $scheduled, TCLAS_BREVO_HEALTH_HOOK );
+		}
+		return;
+	}
+
+	if ( ! $scheduled ) {
 		wp_schedule_event( time() + HOUR_IN_SECONDS, 'weekly', TCLAS_BREVO_HEALTH_HOOK );
 	}
 } );
