@@ -16,9 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  * Uses ACF option field for form ID; falls back to guidance text.
  */
 function tclas_footer_newsletter_form(): void {
-	$form_id = 0;
+	$form_id      = 0;
+	$fallback_url = '';
 	if ( function_exists( 'get_field' ) ) {
-		$form_id = (int) get_field( 'footer_newsletter_form_id', 'option' );
+		$form_id      = (int) get_field( 'footer_newsletter_form_id', 'option' );
+		$fallback_url = (string) get_field( 'newsletter_signup_fallback_url', 'option' );
 	}
 
 	if ( $form_id > 0 && shortcode_exists( 'sibwp_form' ) ) {
@@ -26,10 +28,22 @@ function tclas_footer_newsletter_form(): void {
 		return;
 	}
 
-	// Fallback — admin reminder
-	?>
-	<p class="text-muted" style="font-size:0.75rem;"><?php esc_html_e( 'Configure a Brevo form in Theme Options to enable newsletter signup.', 'tclas' ); ?></p>
-	<?php
+	// No embedded form yet — link out to the hosted signup page if one is configured.
+	if ( $fallback_url ) {
+		?>
+		<a href="<?php echo esc_url( $fallback_url ); ?>" class="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+			<?php esc_html_e( 'Sign up', 'tclas' ); ?>
+		</a>
+		<?php
+		return;
+	}
+
+	// Nothing configured. Visitors see nothing; admins get told why.
+	if ( current_user_can( 'manage_options' ) ) {
+		?>
+		<p class="text-muted" style="font-size:0.75rem;"><?php esc_html_e( 'Configure a Brevo form in Theme Options to enable newsletter signup.', 'tclas' ); ?></p>
+		<?php
+	}
 }
 
 /**

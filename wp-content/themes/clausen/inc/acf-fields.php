@@ -70,6 +70,13 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Brevo form ID for the footer signup. Set after creating a form in the Brevo plugin.',
 			],
 			[
+				'key'   => 'field_newsletter_signup_fallback_url',
+				'label' => 'Newsletter signup fallback URL',
+				'name'  => 'newsletter_signup_fallback_url',
+				'type'  => 'url',
+				'instructions' => 'Hosted signup page to link to while no Brevo form ID is set above. Once the Brevo form is live, clear this field. If both are empty the signup button is hidden from visitors.',
+			],
+			[
 				'key'           => 'field_donate_form_id',
 				'label'         => 'GiveWP donation form ID',
 				'name'          => 'donate_form_id',
