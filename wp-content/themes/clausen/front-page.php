@@ -147,7 +147,7 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 <!-- ── 2.5 CULTURE CORNER (Wuert vun der Woch + Elo zu Lëtzebuerg) ───────── -->
 <?php tclas_render_culture_corner(); ?>
 
-<!-- ── 3. EMAIL SIGNUP (interim MailChimp until upgraded list is ready) ──── -->
+<!-- ── 3. EMAIL SIGNUP (sends to /newsletter/, which carries the signup form) ── -->
 <section class="tclas-events" id="email-signup" aria-label="<?php esc_attr_e( 'Stay in touch', 'tclas' ); ?>">
 	<div class="container-tclas">
 		<div class="tclas-events__header">
@@ -155,7 +155,7 @@ if ( ! $hero_cta2_url )   $hero_cta2_url   = '/about/';
 				<span class="tclas-eyebrow"><?php esc_html_e( 'Stay in touch', 'tclas' ); ?></span>
 				<h2><?php esc_html_e( 'Join our email list', 'tclas' ); ?></h2>
 			</div>
-			<a href="http://eepurl.com/iB7Skg" class="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
+			<a href="<?php echo esc_url( home_url( '/newsletter/#tclas-nl-signup-heading' ) ); ?>" class="btn btn-primary btn-lg">
 				<?php esc_html_e( 'Sign up', 'tclas' ); ?>
 			</a>
 		</div>
