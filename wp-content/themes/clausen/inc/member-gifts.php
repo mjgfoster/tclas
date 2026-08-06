@@ -756,6 +756,33 @@ function tclas_gift_export_guard( int &$year ): array {
 }
 
 /**
+ * Neutralise a value that a spreadsheet would otherwise read as a formula.
+ *
+ * Excel, Google Sheets and LibreOffice treat a cell beginning with =, +, -, @
+ * or a leading tab/carriage return as the start of an expression, and CSV
+ * quoting does nothing to stop it — the quoting is consumed by the parser
+ * before the formula engine ever sees the text. Since names, addresses and
+ * notes in this export are typed by members at checkout, a value like
+ * `=HYPERLINK(...)` would execute when the sheet is opened.
+ *
+ * Prefixing with an apostrophe is the standard mitigation: spreadsheets read it
+ * as "this cell is text" and don't display it.
+ */
+function tclas_csv_cell( $value ): string {
+	$value = (string) $value;
+
+	if ( '' === $value ) {
+		return '';
+	}
+
+	if ( preg_match( '/^[=+\-@\t\r]/', $value ) ) {
+		return "'" . $value;
+	}
+
+	return $value;
+}
+
+/**
  * CSV of the distribution list. Columns are mail-merge friendly — one column
  * per address part, so it drops straight into Word/Pages label merge as well.
  */
@@ -780,7 +807,9 @@ function tclas_gift_export_csv(): void {
 	foreach ( $list as $row ) {
 		$user = get_userdata( $row['user_id'] );
 		$log  = $row['log'];
-		fputcsv( $out, [
+		// Every cell goes through tclas_csv_cell() — not just the obviously
+		// member-typed ones — so adding a column later can't quietly reopen this.
+		fputcsv( $out, array_map( 'tclas_csv_cell', [
 			$row['name'],
 			$user ? $user->first_name : '',
 			$user ? $user->last_name : '',
@@ -798,7 +827,7 @@ function tclas_gift_export_csv(): void {
 			$log ? $log->status : '',
 			$log && $log->sent_at ? $log->sent_at : '',
 			$log ? (string) $log->notes : '',
-		] );
+		] ) );
 	}
 
 	fclose( $out );
