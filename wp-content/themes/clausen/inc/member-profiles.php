@@ -636,18 +636,27 @@ function tclas_ajax_upload_profile_photo(): void {
 	require_once ABSPATH . 'wp-admin/includes/file.php';
 	require_once ABSPATH . 'wp-admin/includes/media.php';
 
-	// Delete previous photo attachment to avoid orphaned media.
+	// Order matters: take the replacement all the way through WordPress's own
+	// validation and image processing BEFORE touching the existing photo. The
+	// extension check above is a courtesy — media_handle_upload() is what
+	// actually rejects a mislabelled file (a HEIC renamed .jpg, say), and it
+	// fails often enough in the real world that deleting first would lose a
+	// member's photo with nothing to put in its place.
 	$old_id = (int) get_user_meta( $user_id, '_tclas_profile_photo', true );
-	if ( $old_id ) {
-		wp_delete_attachment( $old_id, true );
-	}
 
 	$att_id = media_handle_upload( 'tclas_profile_photo', 0 );
 	if ( is_wp_error( $att_id ) ) {
+		// Nothing has changed — the member still has whatever they had before.
 		wp_send_json_error( [ 'message' => $att_id->get_error_message() ] );
 	}
 
 	update_user_meta( $user_id, '_tclas_profile_photo', $att_id );
+
+	// Only now is the old attachment safe to drop. Last, so a failure here
+	// leaves an orphaned file rather than a member without a photo.
+	if ( $old_id && $old_id !== (int) $att_id ) {
+		wp_delete_attachment( $old_id, true );
+	}
 
 	wp_send_json_success( [
 		'url' => tclas_get_profile_photo_url( $user_id, 'medium' ),
