@@ -208,16 +208,11 @@ function tclas_email_signup_submit(): void {
 		$back( 'already' );
 	}
 
-	$token = bin2hex( random_bytes( 16 ) );
-	set_transient( 'tclas_signup_' . $token, [
+	if ( ! tclas_signup_begin_double_optin( [
 		'email' => $email,
 		'first' => $first,
 		'last'  => $last,
-		'time'  => time(),
-	], TCLAS_SIGNUP_TTL );
-
-	if ( ! tclas_signup_send_confirmation( $email, $first, $token ) ) {
-		delete_transient( 'tclas_signup_' . $token );
+	] ) ) {
 		$back( 'error' );
 	}
 
@@ -225,14 +220,68 @@ function tclas_email_signup_submit(): void {
 }
 
 /**
+ * Start a double opt-in: stash the pending contact under a random token and
+ * email the confirmation link. Nothing reaches Brevo until the person clicks.
+ *
+ * Shared entry point so other features — the citizenship quiz, anything later —
+ * get confirmed consent without growing a second implementation of this. The
+ * caller chooses the list, tag, and where the confirmation click lands; the
+ * defaults reproduce the /email-list/ behaviour exactly.
+ *
+ * @param array $args {
+ *     @type string $email    Required.
+ *     @type string $first    Optional first name.
+ *     @type string $last     Optional last name.
+ *     @type int[]  $lists    Brevo list IDs. Default [ tclas_signup_list_id() ].
+ *     @type string $tag      Optional Brevo tag, e.g. 'quiz-completer'.
+ *     @type string $return   Base URL the confirmation click returns to.
+ *     @type int    $template Brevo transactional template ID.
+ * }
+ * @return bool True when the confirmation mail went out.
+ */
+function tclas_signup_begin_double_optin( array $args ): bool {
+	$email = isset( $args['email'] ) ? sanitize_email( $args['email'] ) : '';
+	if ( ! is_email( $email ) ) {
+		return false;
+	}
+
+	$lists = isset( $args['lists'] ) ? array_values( array_filter( array_map( 'intval', (array) $args['lists'] ) ) ) : [];
+	if ( ! $lists ) {
+		$lists = [ tclas_signup_list_id() ];
+	}
+
+	$first = isset( $args['first'] ) ? sanitize_text_field( $args['first'] ) : '';
+	$token = bin2hex( random_bytes( 16 ) );
+
+	set_transient( 'tclas_signup_' . $token, [
+		'email'  => $email,
+		'first'  => $first,
+		'last'   => isset( $args['last'] ) ? sanitize_text_field( $args['last'] ) : '',
+		'lists'  => $lists,
+		'tag'    => isset( $args['tag'] ) ? sanitize_text_field( $args['tag'] ) : '',
+		'return' => isset( $args['return'] ) ? esc_url_raw( $args['return'] ) : '',
+		'time'   => time(),
+	], TCLAS_SIGNUP_TTL );
+
+	$template = isset( $args['template'] ) ? (int) $args['template'] : 0;
+	if ( ! tclas_signup_send_confirmation( $email, $first, $token, $template ) ) {
+		delete_transient( 'tclas_signup_' . $token );
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Simple per-IP throttle. Not bulletproof, but it stops the lazy flooding that a
  * public form on a small site actually attracts.
  */
-function tclas_signup_rate_ok(): bool {
+function tclas_signup_rate_ok( string $bucket = 'signup', int $max = 0 ): bool {
 	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$key = 'tclas_signup_rate_' . md5( $ip . wp_salt() );
+	$key = 'tclas_rate_' . $bucket . '_' . md5( $ip . wp_salt() );
+	$max = $max > 0 ? $max : TCLAS_SIGNUP_RATE_MAX;
 	$n   = (int) get_transient( $key );
-	if ( $n >= TCLAS_SIGNUP_RATE_MAX ) {
+	if ( $n >= $max ) {
 		return false;
 	}
 	set_transient( $key, $n + 1, TCLAS_SIGNUP_RATE_WINDOW );
@@ -243,7 +292,7 @@ function tclas_signup_rate_ok(): bool {
  * Is this address already a (non-blocklisted) Brevo contact?
  * Fails open — a Brevo hiccup should not block a genuine signup.
  */
-function tclas_signup_already_subscribed( string $email ): bool {
+function tclas_signup_already_subscribed( string $email, int $list_id = 0 ): bool {
 	$api_key = get_option( 'sib_api_key', '' );
 	if ( ! $api_key ) {
 		return false;
@@ -265,13 +314,15 @@ function tclas_signup_already_subscribed( string $email ): bool {
 		return true;
 	}
 
-	return in_array( tclas_signup_list_id(), array_map( 'intval', $body['listIds'] ?? [] ), true );
+	$list_id = $list_id > 0 ? $list_id : tclas_signup_list_id();
+
+	return in_array( $list_id, array_map( 'intval', $body['listIds'] ?? [] ), true );
 }
 
 /**
  * Send the confirmation email through Brevo's transactional API.
  */
-function tclas_signup_send_confirmation( string $email, string $first, string $token ): bool {
+function tclas_signup_send_confirmation( string $email, string $first, string $token, int $template_id = 0 ): bool {
 	$api_key = get_option( 'sib_api_key', '' );
 	if ( ! $api_key ) {
 		error_log( 'TCLAS signup: no Brevo API key configured.' );
@@ -286,7 +337,7 @@ function tclas_signup_send_confirmation( string $email, string $first, string $t
 		],
 		'body'    => wp_json_encode( [
 			'to'         => [ [ 'email' => $email, 'name' => $first ?: $email ] ],
-			'templateId' => tclas_signup_template_id(),
+			'templateId' => $template_id > 0 ? $template_id : tclas_signup_template_id(),
 			'params'     => [
 				'confirm_url' => tclas_signup_page_url( [ 'tclas_confirm' => $token ] ),
 				'first_name'  => $first,
@@ -347,9 +398,16 @@ function tclas_email_signup_confirm(): void {
 	}
 	$attributes['OPTIN_DATE'] = gmdate( 'Y-m-d' );
 
-	$ok = function_exists( 'tclas_brevo_subscribe' )
-		&& tclas_brevo_subscribe( $pending['email'], $attributes, [ tclas_signup_list_id() ] );
+	// Older pending records (stored before these keys existed) fall back to the
+	// /email-list/ defaults, so links already in someone's inbox still work.
+	$lists = ! empty( $pending['lists'] ) ? array_map( 'intval', (array) $pending['lists'] ) : [ tclas_signup_list_id() ];
+	$tag   = ! empty( $pending['tag'] ) ? (string) $pending['tag'] : '';
 
-	wp_safe_redirect( tclas_signup_page_url( [ 'tclas' => $ok ? 'confirmed' : 'error' ] ) );
+	$ok = function_exists( 'tclas_brevo_subscribe' )
+		&& tclas_brevo_subscribe( $pending['email'], $attributes, $lists, $tag );
+
+	$return = ! empty( $pending['return'] ) ? $pending['return'] : tclas_signup_page_url();
+
+	wp_safe_redirect( add_query_arg( [ 'tclas' => $ok ? 'confirmed' : 'error' ], $return ) );
 	exit;
 }
