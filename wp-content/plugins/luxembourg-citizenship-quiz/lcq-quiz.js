@@ -256,20 +256,23 @@
 		buttonsEl.insertBefore(wrapper, buttonsEl.firstChild);
 	}
 
-	function buildLineageText() {
-		if (state.lineage.length === 0) return '';
-		var lines = ['Your lineage:'];
-		lines.push('- You' + (state.userBornBefore1969 ? ' (born before 1969)' : ' (born after 1969)'));
+	// Structured lineage for the results email. Deliberately carries no prose:
+	// the server derives every relationship label itself (see lcq_gen_label in
+	// the plugin PHP), so the email body is never assembled from what the
+	// browser says. Entries stay contiguous from index 0 because the server
+	// reads position as generation depth — a gap would mislabel everyone after it.
+	function buildLineagePayload() {
+		var payload = [];
 		for (var i = 0; i <= state.genIndex; i++) {
 			var p = state.lineage[i];
-			if (!p) continue;
-			var parts = [p.label];
-			if (p.bornBefore1969 === true)  parts.push('born before 1969');
-			if (p.bornBefore1969 === false) parts.push('born after 1969');
-			if (p.bornInLux === true)        parts.push('born in Luxembourg');
-			lines.push('- ' + parts.join(', '));
+			if (!p) break;
+			payload.push({
+				g:   p.gender === 'f' ? 'f' : 'm',
+				b69: p.bornBefore1969,
+				lux: p.bornInLux === true
+			});
 		}
-		return lines.join('\n');
+		return payload;
 	}
 
 	// ── 1969 skip helper ─────────────────────────────────────────────────
@@ -645,85 +648,49 @@
 
 		outcome_ineligible_no_ancestor: {
 			progress: 100,
-			render: () => renderOutcome(
-				'Luxembourg citizenship by descent requires a Luxembourgish ancestor.',
-				'This quiz helps determine eligibility for citizenship by descent \u2014 which requires having at least one ancestor who was a citizen of the Grand Duchy of Luxembourg. Without a known Luxembourgish ancestor, the Article 7 and Article 23 descent pathways are not available. If you believe you may have Luxembourgish roots but aren\u2019t certain, genealogical research or a consultation with the Luxembourg National Archives (ANLux) may be a good starting point.',
-				null
-			)
+			render: () => renderOutcome('outcome_ineligible_no_ancestor')
 		},
 
 		outcome_ineligible_territory: {
 			progress: 100,
-			render: () => renderOutcome(
-				'Your ancestor may have been born in Belgium, not Luxembourg.',
-				'The Province of Luxembourg \u2014 now part of southeastern Belgium \u2014 was historically part of the same region as the Grand Duchy until 1839, when the Treaty of London divided the territory. Modern Luxembourg citizenship law applies only to citizens of the Grand Duchy. If your ancestor was born in a town now in Belgium (such as Arlon, Bastogne, or Libramont), the Article 7 descent pathway does not apply to that line. We encourage you to double-check your ancestor\u2019s birthplace against a current map of the Grand Duchy of Luxembourg, then contact the Luxembourg Ministry of Justice if you have questions about your specific situation.',
-				null
-			)
+			render: () => renderOutcome('outcome_ineligible_territory')
 		},
 
 		outcome_unsure_ancestor: {
 			progress: 100,
-			render: () => renderOutcome(
-				'You\u2019ll want to confirm your Luxembourg connection first.',
-				'Before taking this quiz, it helps to know whether you have at least one ancestor who was a citizen of the Grand Duchy of Luxembourg. If you\u2019re not sure, genealogical research is a great starting point. The Luxembourg National Archives (ANLux), parish registers, and online databases can help you trace your family history. Once you\u2019ve confirmed a Luxembourgish ancestor, come back and retake this quiz.',
-				null
-			)
+			render: () => renderOutcome('outcome_unsure_ancestor')
 		},
 
 		outcome_unsure_territory: {
 			progress: 100,
-			render: () => renderOutcome(
-				'Worth confirming before you go further.',
-				'The historical Province of Luxembourg and the modern Grand Duchy share a name and much of their history \u2014 but they are different countries today. The 1839 Treaty of London split the original duchy: the western, French-speaking portion became a Belgian province, while the eastern portion remained the independent Grand Duchy. If your ancestor\u2019s records show \u201cLuxembourg\u201d as a birthplace, cross-reference the specific commune against a current map of the Grand Duchy. The Luxembourg National Archives (ANLux) and genealogical databases such as Portail G\u00e9n\u00e9alogique Grand-Ducal can help confirm whether a town is inside modern Luxembourg. Once verified, you can retake this quiz with that detail confirmed.',
-				null
-			)
+			render: () => renderOutcome('outcome_unsure_territory')
 		},
 
 		// ── Lineage outcomes ─────────────────────────────────────────────
 
 		outcome_adopted: {
 			progress: 100,
-			render: () => renderOutcome(
-				'Your situation has some unique nuances.',
-				'If you were adopted into a Luxembourgish family, you may qualify for citizenship\u2014but you\u2019ll have to contact someone to discuss your case.',
-				null
-			)
+			render: () => renderOutcome('outcome_adopted')
 		},
 
 		outcome_too_deep: {
 			progress: 100,
-			render: () => renderOutcome(
-				'Your Luxembourgish connection appears to go back many generations.',
-				'This quiz traces ancestry up to seven generations. Your Luxembourg connection appears to be beyond that range, which is outside the scope of the standard Article 7 pathway and beyond the reach of Article 23. While this makes qualifying by descent unlikely under current law, every family\u2019s records are different, and there may be details in your specific lineage that change the picture. We encourage you to consult directly with the Luxembourg Ministry of Justice or a citizenship specialist.',
-				null
-			)
+			render: () => renderOutcome('outcome_too_deep')
 		},
 
 		outcome_article7: {
 			progress: 100,
-			render: () => renderOutcome(
-				'It looks like you may qualify through Article 7 (Direct Descent).',
-				'Based on your answers, your Luxembourgish bloodline appears to have passed unbroken from generation to generation. Under Article 7 of the Luxembourg Nationality Act, you likely already hold citizenship by birthright\u2014you simply need to formally claim and register it. The process is handled entirely by mail; there is no language test, no travel to Luxembourg, and no residency requirement. Your qualifying ancestor must have been born between 1815 and 1946 within the borders of modern-day Luxembourg (not the former Belgian Luxembourg province).',
-				'article7'
-			)
+			render: () => renderOutcome('outcome_article7')
 		},
 
 		outcome_article23_living: {
 			progress: 100,
-			render: () => renderOutcome(
-				'It looks like you may qualify through Article 23.',
-				'Because a female ancestor in your line passed citizenship to a child born before 1969, the direct Article 7 line was technically broken under the law of that era. Article 23 exists specifically to address this situation. However, it\u2019s a two-step process: your living parent or grandparent must first be formally recognized as a Luxembourg citizen through their own Article 7 application. Once they receive recognition, you can then apply for nationality through Article 23. Note: Article 23 extends only one generation\u2014the connecting relative must be your parent or grandparent, not a great-grandparent. The Article 23 process requires an in-person appointment at the Luxembourg Ministry of Justice in Luxembourg City, with roughly a four-month waiting period.',
-				'article23'
-			)
+			render: () => renderOutcome('outcome_article23_living')
 		},
 
 		outcome_article23_deceased: {
 			progress: 100,
-			render: () => renderOutcome(
-				'It looks like you may qualify through the Article 7 + Article 23 (Posthumous) pathway.',
-				'Because a female ancestor in your line passed citizenship to a child born before 1969, the direct Article 7 line was technically broken. However, a two-phase process may still be available. In Phase 1, you petition for posthumous recognition of your late parent or grandparent as someone who would have qualified for Luxembourg nationality under Article 7. If granted, their citizenship is recognized retroactively. In Phase 2, you then apply for nationality yourself under Article 23. This pathway is more involved, but it has been successfully completed by other Americans navigating the same situation. An in-person appointment in Luxembourg City will be required.',
-				'article23'
-			)
+			render: () => renderOutcome('outcome_article23_deceased')
 		}
 	};
 
@@ -770,7 +737,25 @@
 	}
 
 	// ── Outcome Screen ───────────────────────────────────────────────────
-	function renderOutcome(headline, bodyText, outcomeType) {
+	// Takes an outcome KEY, not copy. The words come from lcqData.outcomes,
+	// which PHP localises from lcq_outcomes() — the same source the results
+	// email is built from, so the two can never disagree.
+	function renderOutcome(outcomeKey) {
+		var outcomes = (typeof lcqData !== 'undefined' && lcqData.outcomes) ? lcqData.outcomes : {};
+		var outcome  = outcomes[outcomeKey];
+
+		if (!outcome) {
+			// Localisation missing (script loaded out of context). Say so plainly
+			// rather than rendering an empty screen.
+			setProgress(100);
+			questionEl.textContent = 'Your results are ready.';
+			buttonsEl.innerHTML    = '<p class="cq_outcome_body">We could not load your results. Please reload the page and try again.</p>';
+			return;
+		}
+
+		var headline = outcome.headline;
+		var bodyText = outcome.body;
+
 		setProgress(100);
 		questionEl.textContent = headline;
 		buttonsEl.innerHTML    = '';
@@ -794,22 +779,39 @@
 			</div>\
 		');
 
-		// Email results
+		// Email results. The list opt-in is a separate, unchecked choice —
+		// asking for your results is not the same as asking for our newsletter.
+		var offerOptin = (typeof lcqData !== 'undefined') && lcqData.offer_optin;
+
+		var optinHtml = offerOptin ? '\
+			<div class="cq_optin">\
+				<label class="cq_optin__label" for="lcq-subscribe">\
+					<input type="checkbox" id="lcq-subscribe" class="cq_optin__checkbox">\
+					<span>Also send me occasional TCLAS news and event invitations.</span>\
+				</label>\
+				<p class="cq_optin__note">We’ll email you a confirmation link before adding you to anything.</p>\
+			</div>\
+		' : '';
+
 		buttonsEl.insertAdjacentHTML('beforeend', '\
 			<div class="cq_email_section">\
 				<p class="cq_email_label">Send yourself a copy of these results:</p>\
 				<div class="cq_form_group">\
+					<label class="cq_sr_only" for="lcq-email">Your email address</label>\
 					<input type="email" id="lcq-email" class="cq_input_field" placeholder="your@email.com" autocomplete="email">\
 				</div>\
+				' + optinHtml + '\
 				<button id="lcq-email-btn" class="cq_option_btn cq_submit_btn">Send Results</button>\
 				<p id="lcq-email-status" class="cq_email_status" aria-live="polite" role="status"></p>\
 			</div>\
 		');
 
 		document.getElementById('lcq-email-btn').addEventListener('click', function () {
-			var emailInput = document.getElementById('lcq-email');
-			var statusEl   = document.getElementById('lcq-email-status');
-			var email      = emailInput ? emailInput.value.trim() : '';
+			var emailInput  = document.getElementById('lcq-email');
+			var statusEl    = document.getElementById('lcq-email-status');
+			var subscribeEl = document.getElementById('lcq-subscribe');
+			var btn         = document.getElementById('lcq-email-btn');
+			var email       = emailInput ? emailInput.value.trim() : '';
 
 			if (!email) {
 				statusEl.textContent = 'Please enter your email address.';
@@ -817,13 +819,22 @@
 			}
 
 			statusEl.textContent = 'Sending\u2026';
+			btn.disabled = true;
 
 			var payload = new FormData();
-			payload.append('action',      'lcq_send_results');
-			payload.append('nonce',       (typeof lcqData !== 'undefined') ? lcqData.nonce : '');
-			payload.append('email',       email);
-			var lineageText = buildLineageText();
-			payload.append('result_text', headline + '\n\n' + (lineageText ? lineageText + '\n\n' : '') + bodyText);
+			payload.append('action',  'lcq_send_results');
+			payload.append('nonce',   (typeof lcqData !== 'undefined') ? lcqData.nonce : '');
+			payload.append('email',   email);
+			// Send the outcome KEY and a structured lineage \u2014 never prose. The
+			// server owns every word that ends up in the email.
+			payload.append('outcome', outcomeKey);
+			payload.append('lineage', JSON.stringify(buildLineagePayload()));
+			if (state.userBornBefore1969 !== null) {
+				payload.append('user_before_1969', state.userBornBefore1969 ? '1' : '0');
+			}
+			if (subscribeEl && subscribeEl.checked) {
+				payload.append('subscribe', '1');
+			}
 
 			var ajaxUrl = (typeof lcqData !== 'undefined')
 				? lcqData.ajax_url
@@ -832,11 +843,21 @@
 			fetch(ajaxUrl, { method: 'POST', body: payload })
 				.then(function (r)   { return r.json(); })
 				.then(function (res) {
-					statusEl.textContent = res.success
-						? 'Results sent! Check your inbox.'
-						: 'Something went wrong\u2014please try again.';
+					if (res.success) {
+						var msg = (res.data && res.data.message) || 'Results sent! Check your inbox.';
+						if (res.data && res.data.confirming) {
+							msg += ' We\u2019ve also sent a link to confirm your email list signup.';
+						}
+						statusEl.textContent = msg;
+					} else {
+						btn.disabled = false;
+						statusEl.textContent = (typeof res.data === 'string' && res.data)
+							? res.data
+							: 'Something went wrong\u2014please try again.';
+					}
 				})
 				.catch(function () {
+					btn.disabled = false;
 					statusEl.textContent = 'Something went wrong\u2014please try again.';
 				});
 		});
