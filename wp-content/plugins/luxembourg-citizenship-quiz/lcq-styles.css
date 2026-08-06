@@ -253,6 +253,17 @@
     color: #fff;
 }
 
+/* Disabled while a send is in flight, and left disabled after a successful
+   one — so it needs to look spent rather than merely unresponsive. */
+.cq_submit_btn:disabled,
+.cq_submit_btn:disabled:hover {
+    background: var(--c-ardoise, #0A2540);
+    border-color: var(--c-ardoise, #0A2540);
+    color: var(--c-or-pale, #EBF5FC);
+    opacity: 0.55;
+    cursor: default;
+}
+
 /* ── Restart + Back buttons ────────────────────────────────────────────── */
 
 .cq_restart_btn,
@@ -368,22 +379,30 @@
     margin: 0.875rem 0 1rem;
 }
 
+/* Two-column grid rather than a flex row with a guessed indent: the note
+   lines up with the label text whatever width the browser gives the box. */
 .cq_optin__label {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+    row-gap: 0.3rem;
+    align-items: start;
     cursor: pointer;
-    color: var(--c-ardoise, #0A2540);
 }
 
 .cq_optin__checkbox {
-    flex: 0 0 auto;
-    margin-top: 0.2em;
+    grid-column: 1;
+    margin: 0.25em 0 0;
+}
+
+.cq_optin__text {
+    grid-column: 2;
+    color: var(--c-ardoise, #0A2540);
 }
 
 .cq_optin__note {
-    margin: 0.35rem 0 0;
-    padding-left: 1.6rem;
+    grid-column: 2;
+    margin: 0;
     color: #555;
 }
 

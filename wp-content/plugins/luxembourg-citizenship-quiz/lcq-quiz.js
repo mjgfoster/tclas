@@ -787,9 +787,9 @@
 			<div class="cq_optin">\
 				<label class="cq_optin__label" for="lcq-subscribe">\
 					<input type="checkbox" id="lcq-subscribe" class="cq_optin__checkbox">\
-					<span>Also send me occasional TCLAS news and event invitations.</span>\
+					<span class="cq_optin__text">Also send me occasional TCLAS news and event invitations.</span>\
+					<span class="cq_optin__note">We’ll email you a confirmation link before adding you to anything.</span>\
 				</label>\
-				<p class="cq_optin__note">We’ll email you a confirmation link before adding you to anything.</p>\
 			</div>\
 		' : '';
 
