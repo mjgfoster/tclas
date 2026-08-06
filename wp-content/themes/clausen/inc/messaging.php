@@ -63,6 +63,35 @@ function tclas_messages_table(): string {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
+ * Has this member left themselves open to being contacted?
+ *
+ * Current key wins; the legacy key answers only when the current one has never
+ * been written; absent both, contact is allowed, matching the default-ON toggle
+ * on the privacy settings page.
+ *
+ * The previous inline version had the precedence wrong. When the current key
+ * said "no" it consulted the legacy key, and an UNSET legacy key failed the
+ * '' !== $allow test — so the guard fell through and the message sent. An
+ * explicit opt-out was honoured only if a legacy value happened to exist
+ * alongside it. In practice the privacy page mirrors one key onto the other on
+ * save, so anyone who used that page was safe; the hole opened for any account
+ * whose meta was set another way (migration, WP-CLI, direct admin edit).
+ */
+function tclas_member_allows_contact( int $user_id ): bool {
+	$current = get_user_meta( $user_id, '_tclas_privacy_allow_contact', true );
+	if ( '' !== $current ) {
+		return (bool) $current;
+	}
+
+	$legacy = get_user_meta( $user_id, '_tclas_open_to_contact', true );
+	if ( '' !== $legacy ) {
+		return (bool) $legacy;
+	}
+
+	return true;
+}
+
+/**
  * Send a message from one member to another.
  *
  * @return int|false  The message ID on success, false on failure.
@@ -72,19 +101,21 @@ function tclas_send_message( int $from, int $to, string $message ) {
 		return false;
 	}
 
+	// The recipient must be a real, current member. This only checked for a
+	// non-zero id before, so a member could post an arbitrary user ID and
+	// message an administrator, a lapsed member, or any other WordPress
+	// account that was never in the directory.
+	if ( ! tclas_is_visible_member( $to ) ) {
+		return false;
+	}
+
 	$message = sanitize_textarea_field( $message );
 	if ( '' === $message ) {
 		return false;
 	}
 
-	// Check recipient allows contact.
-	$allow = get_user_meta( $to, '_tclas_privacy_allow_contact', true );
-	if ( '' !== $allow && ! (bool) $allow ) {
-		// Fall back to legacy key.
-		$allow = get_user_meta( $to, '_tclas_open_to_contact', true );
-		if ( '' !== $allow && ! (bool) $allow ) {
-			return false;
-		}
+	if ( ! tclas_member_allows_contact( $to ) ) {
+		return false;
 	}
 
 	global $wpdb;

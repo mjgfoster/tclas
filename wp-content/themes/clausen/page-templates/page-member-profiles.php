@@ -83,6 +83,42 @@ if ( $profile_username ) :
 	endif;
 
 	// Check that the profile user is an active member and not hidden.
+	//
+	// The membership half of that sentence used to be missing: this route
+	// resolved ANY WordPress user by slug and checked only the visibility meta,
+	// so a member who knew a username could open the profile of a lapsed member
+	// or a non-member account. The directory never listed those people; the
+	// direct URL served them anyway.
+	//
+	// Own profile is always viewable. That is belt-and-braces today — the gate
+	// at the top of this template already proves the viewer is current, so a
+	// lapsed member never reaches here — but it keeps the rule correct if that
+	// gate is ever loosened.
+	$is_own_profile = ( get_current_user_id() === $profile_user->ID );
+
+	if ( ! $is_own_profile && ! tclas_is_visible_member( $profile_user->ID ) ) :
+?>
+<div class="tclas-page-header">
+	<div class="container-tclas">
+		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="tclas-back-link">
+			← <?php esc_html_e( 'Member Directory', 'tclas' ); ?>
+		</a>
+		<h1 class="tclas-page-header__title"><?php esc_html_e( 'Profile not available', 'tclas' ); ?></h1>
+	</div>
+</div>
+<section class="tclas-section">
+	<div class="container-tclas container--medium">
+		<p><?php esc_html_e( 'That profile is not part of the member directory.', 'tclas' ); ?></p>
+		<a href="<?php echo esc_url( home_url( '/member-hub/profiles/' ) ); ?>" class="btn btn-outline-ardoise">
+			← <?php esc_html_e( 'Back to directory', 'tclas' ); ?>
+		</a>
+	</div>
+</section>
+<?php
+		get_footer();
+		return;
+	endif;
+
 	$vis = get_user_meta( $profile_user->ID, '_tclas_visibility', true ) ?: 'members';
 	$is_board = function_exists( 'pmpro_getMembershipLevelForUser' )
 		&& ( pmpro_getMembershipLevelForUser( get_current_user_id() )->name ?? '' ) === 'Board';
@@ -110,8 +146,7 @@ if ( $profile_username ) :
 		return;
 	endif;
 
-	$p = tclas_get_profile_data( $profile_user->ID );
-	$is_own_profile = ( get_current_user_id() === $profile_user->ID );
+	$p = tclas_get_profile_data( $profile_user->ID ); // $is_own_profile set with the eligibility check above.
 
 	// Map data for profile mini-map (empty if no resolved communes or privacy-hidden).
 	$map_communes = tclas_get_profile_map_data( $profile_user->ID );
@@ -192,14 +227,9 @@ echo '</nav>';
 					<i class="bi bi-pencil-square" aria-hidden="true"></i> <?php esc_html_e( 'Edit my profile', 'tclas' ); ?>
 				</a>
 			<?php else :
-				// "Send Message" button — respects contact privacy.
-				$allow_contact = true;
-				$contact_val   = get_user_meta( $profile_user->ID, '_tclas_privacy_allow_contact', true );
-				if ( '' !== $contact_val && ! (bool) $contact_val ) {
-					$legacy = get_user_meta( $profile_user->ID, '_tclas_open_to_contact', true );
-					$allow_contact = ( '' === $legacy || (bool) $legacy );
-				}
-				if ( $allow_contact ) :
+				// "Send Message" button — respects contact privacy, using the
+				// same rule tclas_send_message() enforces.
+				if ( tclas_member_allows_contact( $profile_user->ID ) ) :
 					$msg_url = home_url( '/member-hub/messages/' . rawurlencode( $profile_user->user_nicename ) . '/' );
 				?>
 				<a href="<?php echo esc_url( $msg_url ); ?>" class="btn btn-outline-ardoise btn-sm" style="margin-top: 0.75rem;">

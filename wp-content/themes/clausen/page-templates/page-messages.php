@@ -77,13 +77,10 @@ if ( $is_conversation ) :
 	$other_photo      = tclas_get_profile_photo_url( $other_user->ID, 'thumbnail' );
 	$profile_url      = home_url( '/member-hub/profiles/' . rawurlencode( $other_user->user_nicename ) . '/' );
 
-	// Check if we can send to this user.
-	$can_contact = true;
-	$contact_val = get_user_meta( $other_user->ID, '_tclas_privacy_allow_contact', true );
-	if ( '' !== $contact_val && ! (bool) $contact_val ) {
-		$legacy = get_user_meta( $other_user->ID, '_tclas_open_to_contact', true );
-		$can_contact = ( '' === $legacy || (bool) $legacy );
-	}
+	// Check if we can send to this user. Same rule the send path enforces, so
+	// the form is never offered for a message that would be silently dropped.
+	$can_contact = tclas_is_visible_member( $other_user->ID )
+		&& tclas_member_allows_contact( $other_user->ID );
 ?>
 
 <div class="tclas-page-header">

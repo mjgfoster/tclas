@@ -88,21 +88,14 @@ add_action( 'tclas_weekly_digest_cron', 'tclas_run_weekly_digest' );
  * Process digest emails in batches of 50.
  */
 function tclas_run_weekly_digest(): void {
-	global $wpdb;
-
 	$batch_size = 50;
 	$offset     = (int) get_option( 'tclas_digest_batch_offset', 0 );
 
-	// Get active member IDs.
+	// Get active member IDs. Shares the site-wide definition of "current
+	// member", so a lapsed membership stops the digest at the same moment it
+	// stops directory visibility rather than a cron run later.
 	if ( function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		$ids = $wpdb->get_col( $wpdb->prepare(
-			"SELECT DISTINCT user_id
-			 FROM {$wpdb->prefix}pmpro_memberships_users
-			 WHERE status = 'active'
-			 LIMIT %d OFFSET %d",
-			$batch_size,
-			$offset
-		) );
+		$ids = tclas_get_active_member_ids( $batch_size, $offset );
 	} else {
 		$ids = get_users( [
 			'fields' => 'ID',

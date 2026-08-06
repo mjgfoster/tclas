@@ -394,11 +394,10 @@ function tclas_get_directory_members(): array {
 	}
 
 	global $wpdb;
-	$ids = $wpdb->get_col(
-		"SELECT DISTINCT user_id
-		 FROM {$wpdb->prefix}pmpro_memberships_users
-		 WHERE status = 'active'"
-	);
+	// Shared definition of "current member" — this used to check only
+	// status = 'active', which left lapsed members in the directory until
+	// PMPro's daily cron caught up.
+	$ids = tclas_get_active_member_ids();
 
 	if ( empty( $ids ) ) {
 		set_transient( 'tclas_directory_members', [], HOUR_IN_SECONDS );
@@ -435,9 +434,9 @@ function tclas_get_directory_members(): array {
 	$startdates = $wpdb->get_results( $wpdb->prepare(
 		"SELECT user_id, MIN(startdate) AS earliest
 		 FROM {$wpdb->prefix}pmpro_memberships_users
-		 WHERE user_id IN ({$id_placeholders}) AND status = 'active'
+		 WHERE user_id IN ({$id_placeholders}) AND " . tclas_active_membership_sql() . "
 		 GROUP BY user_id",
-		...array_map( 'intval', $ids )
+		...array_merge( array_map( 'intval', $ids ), [ current_time( 'mysql' ) ] )
 	), OBJECT_K );
 
 	$members = [];

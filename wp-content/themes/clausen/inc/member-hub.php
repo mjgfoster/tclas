@@ -203,7 +203,8 @@ function tclas_render_connections_panel(): void {
 							</div>
 						<?php endif; ?>
 
-						<?php if ( (bool) get_user_meta( (int) $other_id, '_tclas_open_to_contact', true ) ) : ?>
+						<?php // Read the legacy key alone before, which hid the button from anyone who had only ever set the current one. ?>
+						<?php if ( tclas_member_allows_contact( (int) $other_id ) ) : ?>
 							<div class="tclas-conn-card__actions">
 								<a
 									href="<?php

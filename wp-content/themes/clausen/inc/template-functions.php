@@ -235,13 +235,75 @@ function tclas_has_active_membership( int $user_id ): bool {
 	global $wpdb;
 	$count = (int) $wpdb->get_var( $wpdb->prepare(
 		"SELECT COUNT(*) FROM {$wpdb->prefix}pmpro_memberships_users
-		 WHERE user_id = %d AND status = 'active'
-		   AND ( enddate IS NULL OR enddate = '0000-00-00 00:00:00' OR enddate > %s )",
+		 WHERE user_id = %d AND " . tclas_active_membership_sql(),
 		$user_id,
 		current_time( 'mysql' )
 	) );
 	$cache[ $user_id ] = ( $count > 0 );
 	return $cache[ $user_id ];
+}
+
+/**
+ * The SQL condition for "membership is active AND has not passed its end date".
+ *
+ * Lives in one place so every surface that decides who counts as a current
+ * member — the directory, individual profile routes, messaging, the weekly
+ * digest — agrees on the answer. They used to disagree: most queried only
+ * `status = 'active'`, which keeps a lapsed member visible until PMPro's daily
+ * cron demotes them, or indefinitely if that cron isn't running.
+ *
+ * Contains one %s placeholder for the comparison time. ALWAYS run it through
+ * $wpdb->prepare() and pass current_time( 'mysql' ).
+ *
+ * @param string $alias Optional table alias to qualify the columns with.
+ */
+function tclas_active_membership_sql( string $alias = '' ): string {
+	$p = $alias ? $alias . '.' : '';
+	return "{$p}status = 'active'
+	        AND ( {$p}enddate IS NULL OR {$p}enddate = '0000-00-00 00:00:00' OR {$p}enddate > %s )";
+}
+
+/**
+ * IDs of every current member, for the bulk cases where asking per user would
+ * mean one query each. Same rule as tclas_has_active_membership().
+ *
+ * @param int $limit  0 for all.
+ * @param int $offset Ignored when $limit is 0.
+ */
+function tclas_get_active_member_ids( int $limit = 0, int $offset = 0 ): array {
+	global $wpdb;
+
+	$sql    = "SELECT DISTINCT user_id
+	           FROM {$wpdb->prefix}pmpro_memberships_users
+	           WHERE " . tclas_active_membership_sql();
+	$params = [ current_time( 'mysql' ) ];
+
+	if ( $limit > 0 ) {
+		$sql     .= ' LIMIT %d OFFSET %d';
+		$params[] = $limit;
+		$params[] = $offset;
+	}
+
+	return array_map( 'intval', (array) $wpdb->get_col( $wpdb->prepare( $sql, ...$params ) ) );
+}
+
+/**
+ * May this user be surfaced to other members — listed in the directory, opened
+ * by direct profile URL, chosen as a message recipient?
+ *
+ * Deliberately NOT satisfied by an administrator role. Being an admin grants
+ * the right to SEE member areas (see tclas_is_member()); it does not make
+ * someone a member to be seen. An admin who is also a member passes on the
+ * membership, which is the case for every admin on this site today.
+ */
+function tclas_is_visible_member( int $user_id ): bool {
+	if ( ! $user_id ) {
+		return false;
+	}
+	if ( ! get_userdata( $user_id ) ) {
+		return false;
+	}
+	return tclas_has_active_membership( $user_id );
 }
 
 /**
