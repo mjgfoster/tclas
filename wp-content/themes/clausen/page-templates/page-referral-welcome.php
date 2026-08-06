@@ -36,7 +36,7 @@ $price_student    = $price_student    ?: 15;
 					<?php
 					printf(
 						/* translators: %s: referrer first name */
-						esc_html__( '%s thought you'd like to meet us.', 'tclas' ),
+						esc_html__( "%s thought you'd like to meet us.", 'tclas' ),
 						esc_html( $referrer_name )
 					);
 					?>
