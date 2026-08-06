@@ -121,15 +121,21 @@ function tclas_brevo_apply_tag( string $email, string $tag, string $api_key = ''
 		return;
 	}
 
-	// Brevo uses "contacts/lists" or JSONATTR for tags depending on plan.
-	// The simplest portable approach: store the tag as a contact attribute.
-	// This requires a TEXT attribute named TAG_{normalized} to exist in Brevo,
-	// or we can append to a multi-value TEXT attribute named TAGS.
-	// For now, we set a boolean-style attribute: QUIZ_COMPLETER = true.
-	// Adjust attribute names in Brevo dashboard to match.
+	// Brevo has no first-class tag on this plan, so a tag is stored as a boolean
+	// contact attribute: 'quiz-completer' becomes QUIZ_COMPLETER = true.
+	//
+	// IMPORTANT: the attribute must already exist in the Brevo account. If it
+	// doesn't, Brevo answers 204 and silently discards the value — a success
+	// code for a write that didn't happen. That is exactly how QUIZ_COMPLETER
+	// went unset from the Brevo migration until 2026-08-06, when the attribute
+	// was finally created. So the error logging below cannot catch that case;
+	// when adding a NEW tag, create the attribute first:
+	//
+	//   POST https://api.brevo.com/v3/contacts/attributes/normal/<NAME>
+	//   { "type": "boolean" }
 	$attr_name = strtoupper( str_replace( '-', '_', $tag ) );
 
-	wp_remote_request( 'https://api.brevo.com/v3/contacts/' . rawurlencode( $email ), [
+	$response = wp_remote_request( 'https://api.brevo.com/v3/contacts/' . rawurlencode( $email ), [
 		'method'  => 'PUT',
 		'headers' => [
 			'accept'       => 'application/json',
@@ -141,4 +147,16 @@ function tclas_brevo_apply_tag( string $email, string $tag, string $api_key = ''
 		] ),
 		'timeout' => 10,
 	] );
+
+	// Tagging is best-effort — a failure must not cost someone their
+	// subscription — but it should never fail silently again.
+	if ( is_wp_error( $response ) ) {
+		error_log( 'TCLAS Brevo tag ' . $attr_name . ' failed for ' . $email . ': ' . $response->get_error_message() );
+		return;
+	}
+
+	$code = (int) wp_remote_retrieve_response_code( $response );
+	if ( $code >= 400 ) {
+		error_log( 'TCLAS Brevo tag ' . $attr_name . ' failed for ' . $email . ': HTTP ' . $code . ' — ' . wp_remote_retrieve_body( $response ) );
+	}
 }
