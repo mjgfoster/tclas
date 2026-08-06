@@ -408,7 +408,7 @@ blockquote {
 
 .tclas-bg-ardoise p, .tclas-bg-ardoise li,
 .bg-ardoise p, .bg-ardoise li {
-  color: rgba(235, 245, 252, 0.78);
+  color: rgba(235, 245, 252, 0.82);
 }
 
 .tclas-bg-crimson h1, .tclas-bg-crimson h2, .tclas-bg-crimson h3,
@@ -2173,7 +2173,7 @@ button.tclas-nav__link {
   z-index: 0;
 }
 .tclas-hero--page .tclas-hero__eyebrow {
-  color: rgba(235, 245, 252, 0.75);
+  color: rgba(235, 245, 252, 0.82);
   margin-bottom: 0.75rem;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
@@ -6230,7 +6230,7 @@ button.tclas-nav__link {
   padding-top: 0.5rem;
 }
 .bg-ardoise.tclas-join-perks-section .tclas-join-perks p {
-  color: rgba(235, 245, 252, 0.8);
+  color: rgba(235, 245, 252, 0.82);
 }
 
 .tclas-join-lede {
