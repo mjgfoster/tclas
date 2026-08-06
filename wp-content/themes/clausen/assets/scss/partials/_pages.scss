@@ -1034,11 +1034,69 @@
 
 // ── Referral landing page ─────────────────────────────────────────────────
 .tclas-referral-landing__intro .container-tclas { text-align: center; }
-.tclas-referral-landing__lede    { font-size: 1.15rem; max-width: 42ch; margin: 0 auto 2rem; }
+
+// The referral itself is the reason this page exists — it leads.
+.tclas-referral-landing__kicker   { display: block; color: var(--c-crimson); margin-bottom: .85rem; }
+.tclas-referral-landing__referred-by {
+	font-family: var(--font-serif);
+	font-size: 2rem;
+	line-height: 1.3;
+	color: var(--c-ardoise);
+	max-width: 22ch;
+	margin: 0 auto 1.75rem;
+	padding-bottom: 1.75rem;
+	position: relative;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		transform: translateX(-50%);
+		width: 52px;
+		height: 2px;
+		background: var(--c-crimson);
+		opacity: .5;
+	}
+}
+.tclas-referral-landing__referrer { color: var(--c-crimson); }
+
+.tclas-referral-landing__intro h1 { max-width: 18ch; margin: 0 auto .75rem; }
+.tclas-referral-landing__lede    { font-size: var(--text-lg); max-width: 46ch; margin: 0 auto 2.25rem; }
 .tclas-referral-landing__cta-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
 .tclas-referral-landing .bg-ardoise .container-tclas { text-align: center; }
-.tclas-referral-landing .tclas-tiers-mini { display: flex; flex-wrap: wrap; justify-content: center; max-width: 600px; margin: 2rem auto 0; }
-.tclas-referral-landing__tier-cta { margin-top: 2rem; }
+.tclas-referral-landing .bg-ardoise h2 { max-width: 24ch; margin-left: auto; margin-right: auto; }
+
+.tclas-referral-landing .tclas-tiers-mini { display: flex; flex-wrap: wrap; justify-content: center; max-width: 640px; margin: 2.5rem auto 0; }
+.tclas-referral-landing .tclas-tier-mini {
+	flex: 1 1 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: .25rem 1rem;
+	border-left: 1px solid rgba(235,245,252,.22);
+
+	&:first-child { border-left: 0; }
+}
+// .82 alpha on ardoise = 4.63:1 — the lowest step that clears WCAG AA.
+.tclas-tier-mini__name   { font-size: var(--text-md); font-weight: 700; text-transform: uppercase; letter-spacing: .15em; color: rgba(235,245,252,.82); margin-bottom: .35rem; }
+.tclas-tier-mini__price  { font-family: var(--font-serif); font-size: 2.5rem; line-height: 1.05; color: var(--c-or-pale); }
+.tclas-tier-mini__period { color: rgba(235,245,252,.82); }
+.tclas-referral-landing__tier-cta { margin-top: 2.25rem; }
+
+@media (max-width: 600px) {
+	.tclas-referral-landing__intro       { padding: 3rem 0 3.25rem; }
+	.tclas-referral-landing__referred-by { font-size: 1.6rem; }
+	.tclas-referral-landing .tclas-tier-mini {
+		flex: 0 0 100%;
+		border-left: 0;
+		border-top: 1px solid rgba(235,245,252,.22);
+		padding: 1rem;
+
+		&:first-child { border-top: 0; }
+	}
+}
 
 // ── Profile roots spacing ─────────────────────────────────────────────────
 .tclas-profile-roots + .tclas-profile-roots { margin-top: .75rem; }

@@ -50,6 +50,13 @@ blockquote {
 	&--gold  { color: var(--c-gold); }
 }
 
+// Bare eyebrows on an ardoise band would otherwise inherit the dark body
+// colour. Modifiers keep their own colour.
+.tclas-bg-ardoise .tclas-eyebrow:not(.tclas-eyebrow--light):not(.tclas-eyebrow--gold),
+.bg-ardoise .tclas-eyebrow:not(.tclas-eyebrow--light):not(.tclas-eyebrow--gold) {
+	color: rgba(235,245,252,.82); // 4.63:1 on ardoise — clears WCAG AA
+}
+
 // ── Ruled underline decorator ─────────────────────────────────────────────
 .tclas-ruled {
 	position: relative;
