@@ -395,9 +395,35 @@ add_filter( 'the_seo_framework_title_from_generation', 'tclas_events_tsf_title',
  * so members-only venues must not ride along.
  */
 add_filter( 'tribe_rest_event_data', function ( $data, $event ) {
-	if ( isset( $data['venue'] ) && tclas_event_location_hidden( (int) $event->ID ) ) {
+	// TEC passes whatever get_event_data() produced, and that is a WP_Error
+	// when it cannot build the event. Array syntax on an object is fatal on
+	// PHP 8 — even inside isset() — so the unguarded version turned one
+	// unbuildable event into a 500 for the entire
+	// /wp-json/tribe/events/v1/events response. This actually happened on
+	// 2026-07-13 while an event was being edited. Hand anything that isn't an
+	// array straight back and let TEC deal with its own error.
+	if ( ! is_array( $data ) ) {
+		return $data;
+	}
+
+	if ( ! isset( $data['venue'] ) ) {
+		return $data;
+	}
+
+	$event_id = 0;
+	if ( $event instanceof WP_Post ) {
+		$event_id = (int) $event->ID;
+	} elseif ( is_numeric( $event ) ) {
+		$event_id = (int) $event;
+	}
+
+	// Fail CLOSED: if the event can't be identified we cannot prove the venue
+	// is public, and this filter exists to stop members-only addresses reaching
+	// anonymous REST callers. Hiding a venue needlessly is the cheap mistake.
+	if ( ! $event_id || tclas_event_location_hidden( $event_id ) ) {
 		$data['venue'] = [];
 	}
+
 	return $data;
 }, 10, 2 );
 
