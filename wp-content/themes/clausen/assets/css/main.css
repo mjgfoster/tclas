@@ -301,6 +301,12 @@ blockquote {
 .tclas-eyebrow--light {
   color: var(--c-or-pale);
 }
+/* Bare eyebrows on an ardoise band would otherwise inherit the dark body
+   colour. Modifiers keep their own colour. */
+.tclas-bg-ardoise .tclas-eyebrow:not(.tclas-eyebrow--light):not(.tclas-eyebrow--gold),
+.bg-ardoise .tclas-eyebrow:not(.tclas-eyebrow--light):not(.tclas-eyebrow--gold) {
+  color: rgba(235, 245, 252, 0.82);
+}
 .tclas-eyebrow--gold {
   color: var(--c-gold);
 }
@@ -377,6 +383,7 @@ blockquote {
 
 .tclas-bg-ardoise, .bg-ardoise {
   background-color: var(--c-ardoise);
+  color: var(--c-or-pale);
 }
 
 .tclas-bg-crimson, .bg-crimson {
@@ -5990,20 +5997,21 @@ button.tclas-nav__link {
   min-height: 100vh;
 }
 
-.tclas-referral-landing__hero {
-  background: var(--c-ardoise);
-  padding: 4rem 0;
+.tclas-referral-landing__hug {
+  max-width: 340px;
+  margin: 0 auto 1.75rem;
 }
 
-.tclas-referral-landing__hug {
-  max-width: 360px;
-  margin: 0 auto 2rem;
+.tclas-referral-landing__hug img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .tclas-referral-landing__intro {
-  font-size: var(--text-lg);
-  color: rgba(235, 245, 252, 0.75);
-  margin: 1rem auto 0;
+  color: var(--c-body-text);
+  padding: 4.5rem 0 4.25rem;
+  margin: 0;
 }
 
 .tclas-page-header {
@@ -7528,11 +7536,51 @@ button.tclas-nav__link {
 }
 
 .tclas-referral-landing__intro .container-tclas {
+  text-align: center;
+}
+
+.tclas-referral-landing__kicker {
+  display: block;
+  color: var(--c-crimson);
+  margin-bottom: 0.85rem;
+}
+
+.tclas-referral-landing__referred-by {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  line-height: 1.3;
+  color: var(--c-ardoise);
+  max-width: 22ch;
+  margin: 0 auto 1.75rem;
+  padding-bottom: 1.75rem;
+  position: relative;
+}
+
+.tclas-referral-landing__referrer {
+  color: var(--c-crimson);
+}
+
+.tclas-referral-landing__referred-by::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 2px;
+  background: var(--c-crimson);
+  opacity: 0.5;
+}
+
+.tclas-referral-landing__intro h1 {
+  max-width: 18ch;
+  margin: 0 auto 0.75rem;
 }
 
 .tclas-referral-landing__lede {
   font-size: var(--text-lg);
-  margin: 0 auto 2rem;
+  max-width: 46ch;
+  margin: 0 auto 2.25rem;
 }
 
 .tclas-referral-landing__cta-row {
@@ -7543,18 +7591,76 @@ button.tclas-nav__link {
 }
 
 .tclas-referral-landing .bg-ardoise .container-tclas {
+  text-align: center;
+}
+
+.tclas-referral-landing .bg-ardoise h2 {
+  max-width: 24ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tclas-referral-landing .tclas-tiers-mini {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  max-width: 600px;
-  margin: 2rem auto 0;
+  max-width: 640px;
+  margin: 2.5rem auto 0;
+}
+
+.tclas-referral-landing .tclas-tier-mini {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-left: 1px solid rgba(235, 245, 252, 0.22);
+}
+
+.tclas-referral-landing .tclas-tier-mini:first-child {
+  border-left: 0;
+}
+
+.tclas-tier-mini__name {
+  font-size: var(--text-md);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(235, 245, 252, 0.82);
+  margin-bottom: 0.35rem;
+}
+
+.tclas-tier-mini__price {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  line-height: 1.05;
+  color: var(--c-or-pale);
+}
+
+.tclas-tier-mini__period {
+  color: rgba(235, 245, 252, 0.82);
 }
 
 .tclas-referral-landing__tier-cta {
-  margin-top: 2rem;
+  margin-top: 2.25rem;
+}
+
+@media (max-width: 600px) {
+  .tclas-referral-landing__intro {
+    padding: 3rem 0 3.25rem;
+  }
+  .tclas-referral-landing__referred-by {
+    font-size: 1.6rem;
+  }
+  .tclas-referral-landing .tclas-tier-mini {
+    flex: 0 0 100%;
+    border-left: 0;
+    border-top: 1px solid rgba(235, 245, 252, 0.22);
+    padding: 1rem;
+  }
+  .tclas-referral-landing .tclas-tier-mini:first-child {
+    border-top: 0;
+  }
 }
 
 .tclas-profile-roots + .tclas-profile-roots {

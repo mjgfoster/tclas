@@ -65,11 +65,9 @@
 // ── Referral landing page ─────────────────────────────────────────────────
 .tclas-referral-landing { background: var(--c-or-pale); min-height: 100vh; }
 
-.tclas-referral-landing__hero {
-	background: var(--c-ardoise);
-	padding: 4rem 0;
-	text-align: center;
-}
+// NOTE: __hero was never emitted by page-referral-welcome.php — the template
+// only renders __intro. The rule is gone; the hero is a light band now.
 
-.tclas-referral-landing__hug  { max-width: 360px; margin: 0 auto 2rem; }
-.tclas-referral-landing__intro{ font-size: 1rem; color: rgba(235,245,252,.75); max-width: 50ch; margin: 1rem auto 0; }
+.tclas-referral-landing__hug     { max-width: 340px; margin: 0 auto 1.75rem; }
+.tclas-referral-landing__hug img { display: block; width: 100%; height: auto; }
+.tclas-referral-landing__intro   { color: var(--c-body-text); padding: 4.5rem 0 4.25rem; margin: 0; }

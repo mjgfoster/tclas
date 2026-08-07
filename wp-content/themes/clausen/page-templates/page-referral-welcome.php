@@ -32,12 +32,15 @@ $price_student    = $price_student    ?: 15;
 		<div class="container-tclas container--medium">
 
 			<?php if ( $referrer_name ) : ?>
+				<span class="tclas-eyebrow tclas-referral-landing__kicker">
+					<?php esc_html_e( 'An invitation', 'tclas' ); ?>
+				</span>
 				<div class="tclas-referral-landing__referred-by">
 					<?php
 					printf(
-						/* translators: %s: referrer first name */
+						/* translators: %s: referrer first name, wrapped for emphasis */
 						esc_html__( "%s thought you'd like to meet us.", 'tclas' ),
-						esc_html( $referrer_name )
+						'<span class="tclas-referral-landing__referrer">' . esc_html( $referrer_name ) . '</span>'
 					);
 					?>
 				</div>
@@ -45,9 +48,12 @@ $price_student    = $price_student    ?: 15;
 
 			<div class="tclas-referral-landing__hug">
 				<img
-					src="<?php echo esc_url( TCLAS_ASSETS . '/images/hug-cover.png' ); ?>"
+					src="<?php echo esc_url( TCLAS_ASSETS . '/images/hug-welcome.png' ); ?>"
 					alt="<?php esc_attr_e( 'Minnesota and Luxembourg — a warm welcome', 'tclas' ); ?>"
-					loading="lazy"
+					width="800"
+					height="800"
+					decoding="async"
+					fetchpriority="high"
 				>
 			</div>
 
@@ -84,7 +90,7 @@ $price_student    = $price_student    ?: 15;
 	<!-- Mini membership tiers -->
 	<div class="tclas-section bg-ardoise">
 		<div class="container-tclas container--medium">
-			<span class="tclas-eyebrow"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
+			<span class="tclas-eyebrow tclas-eyebrow--light"><?php esc_html_e( 'Membership', 'tclas' ); ?></span>
 			<h2><?php esc_html_e( 'Simple, affordable, and worth every penny.', 'tclas' ); ?></h2>
 			<div class="tclas-tiers-mini">
 				<div class="tclas-tier-mini tclas-tier-mini--individual">

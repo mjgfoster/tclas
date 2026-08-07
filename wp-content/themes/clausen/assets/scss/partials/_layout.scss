@@ -24,7 +24,7 @@
 .tclas-bg-white,   .bg-white   { background-color: var(--c-white); }
 .tclas-bg-warm,    .bg-warm    { background-color: var(--c-body-bg); }
 .tclas-bg-or-pale, .bg-or-pale { background-color: var(--c-or-pale); }
-.tclas-bg-ardoise, .bg-ardoise { background-color: var(--c-ardoise); }
+.tclas-bg-ardoise, .bg-ardoise { background-color: var(--c-ardoise); color: var(--c-or-pale); }
 .tclas-bg-crimson, .bg-crimson { background-color: var(--c-crimson); }
 
 .tclas-text-white   { color: #fff !important; }
