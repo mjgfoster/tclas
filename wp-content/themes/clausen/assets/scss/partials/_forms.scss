@@ -36,10 +36,20 @@ input[type="number"],input[type="date"],select,textarea,.form-control {
 	appearance: none;
 }
 
+// A placeholder is often a field's only visible label, so it has to clear AA.
+// The former #b0a89e was 2.35:1 on white; --c-muted is 5.28:1.
 input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="search"]::placeholder,
-textarea::placeholder { color: #b0a89e; }
+textarea::placeholder { color: var(--c-muted); opacity: 1; }
+
+// Fluent Forms ships .fluentform .ff-el-form-control::placeholder at #868e96
+// (3.32:1 on white). Specificity 0,2,0 beats the rule above, so it has to be
+// matched here — in the theme, not by editing plugin CSS an update would undo.
+// Two separate rules on purpose: an unknown pseudo-element invalidates the
+// whole selector list, so grouping these makes Chrome discard both.
+.fluentform .ff-el-form-control::placeholder      { color: var(--c-muted); opacity: 1; }
+.fluentform .ff-el-form-control::-moz-placeholder { color: var(--c-muted); opacity: 1; }
 
 input:focus-visible,select:focus-visible,textarea:focus-visible,.form-control:focus-visible {
 	border-color: var(--c-crimson);
