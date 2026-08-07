@@ -1596,64 +1596,19 @@ button.tclas-nav__link {
   text-decoration: underline;
 }
 
-.tclas-footer__newsletter > p {
-  font-size: var(--text-sm);
-  color: rgba(235, 245, 252, 0.78);
-  margin-bottom: 0.75rem;
-  max-width: none;
-  line-height: 1.5;
-}
-.tclas-footer__newsletter .form-row,
-.tclas-footer__newsletter .sib-form-block {
-  display: flex;
-  gap: 0;
-  align-items: stretch;
-}
-.tclas-footer__newsletter .form-row > div,
-.tclas-footer__newsletter .form-row > p,
-.tclas-footer__newsletter .sib-form-block > div,
-.tclas-footer__newsletter .sib-form-block > p {
-  margin: 0;
-  display: contents;
-}
-.tclas-footer__newsletter input[type=email] {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(235, 245, 252, 0.2);
-  border-right: none;
-  color: var(--c-or-pale);
-  font-size: var(--text-sm);
-  padding: 0.5rem 0.75rem;
-  font-family: var(--font-sans);
-  min-width: 0;
-}
-.tclas-footer__newsletter input[type=email]::placeholder {
-  color: rgba(235, 245, 252, 0.35);
-}
-.tclas-footer__newsletter input[type=email]:focus-visible {
-  border-color: var(--c-gold-focus);
-  background: rgba(255, 255, 255, 0.12);
-}
-.tclas-footer__newsletter .btn,
-.tclas-footer__newsletter input[type=submit] {
-  flex-shrink: 0;
-  border-radius: 0;
-  font-size: var(--text-sm);
-  font-weight: 700;
-  font-family: var(--font-sans);
-  padding: 0.5rem 1rem;
-  background: var(--c-crimson);
-  border: 1px solid var(--c-crimson);
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  white-space: nowrap;
-}
-.tclas-footer__newsletter .btn:hover,
-.tclas-footer__newsletter input[type=submit]:hover {
-  background: var(--c-crimson-dk);
-  border-color: var(--c-crimson-dk);
-}
+/* Removed: the footer signup-form styling — > p, .form-row / .sib-form-block
+   and their children, input[type=email] with its placeholder and focus state,
+   and the .btn / input[type=submit] pair.
+
+   .tclas-footer__newsletter kept its name but now contains only a heading and
+   the social icon nav. footer.php has no do_shortcode or dynamic_sidebar call,
+   so nothing can inject a form into it, and its history never held an email
+   input or any sib-form markup — so these rules could never match. Signup
+   moved to /email-list/ in the Brevo migration; Brevo's own .sib-form-block
+   styling is unaffected, since every rule here was scoped to the footer.
+
+   Still in use and deliberately kept: .tclas-footer__col-title (the heading)
+   and .tclas-footer__social--newsletter (the nav). */
 
 .tclas-footer__bottom {
   border-top: 1px solid rgba(235, 245, 252, 0.08);

@@ -57,59 +57,12 @@
 	}
 }
 
-.tclas-footer__newsletter {
-	// Description paragraphs (outside the form itself)
-	> p { font-size: .82rem; color: rgba(235,245,252,.78); margin-bottom: .75rem; max-width: none; line-height: 1.5; }
-
-	// ── Inline layout: works for both .form-row and Brevo's .sib-form-block ──
-	.form-row,
-	.sib-form-block {
-		display: flex;
-		gap: 0;
-		align-items: stretch;
-
-		// Brevo wraps each field in a div — flatten those into flex items
-		> div,
-		> p {
-			margin: 0;
-			display: contents; // lets children participate directly in the flex row
-		}
-	}
-
-	input[type="email"] {
-		flex: 1;
-		background: rgba(255,255,255,.08);
-		border: 1px solid rgba(235,245,252,.2);
-		border-right: none;
-		color: var(--c-or-pale);
-		font-size: .82rem;
-		padding: .5rem .75rem;
-		font-family: var(--font-sans);
-		min-width: 0; // prevents flex overflow
-
-		&::placeholder { color: rgba(235,245,252,.35); }
-		&:focus-visible { border-color: var(--c-gold); background: rgba(255,255,255,.12); }
-	}
-
-	// Target both .btn class and Brevo's native submit input/button
-	.btn,
-	input[type="submit"] {
-		flex-shrink: 0;
-		border-radius: 0;
-		font-size: .78rem;
-		font-weight: 700;
-		font-family: var(--font-sans);
-		padding: .5rem 1rem;
-		background: var(--c-crimson);
-		border: 1px solid var(--c-crimson);
-		color: #fff;
-		cursor: pointer;
-		transition: background .15s, border-color .15s;
-		white-space: nowrap;
-
-		&:hover { background: var(--c-crimson-dk); border-color: var(--c-crimson-dk); }
-	}
-}
+// Removed: the footer signup-form styling (> p, .form-row / .sib-form-block,
+// input[type="email"], .btn / input[type="submit"]). .tclas-footer__newsletter
+// kept its name but now holds only a heading and the social nav; footer.php has
+// no do_shortcode or dynamic_sidebar, so no form can be injected into it.
+// Signup moved to /email-list/ in the Brevo migration. Brevo's own
+// .sib-form-block styling is unaffected — every rule here was footer-scoped.
 
 .tclas-footer__bottom {
 	border-top: 1px solid rgba(235,245,252,.08);
