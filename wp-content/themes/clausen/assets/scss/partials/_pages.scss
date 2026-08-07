@@ -1098,6 +1098,88 @@
 	}
 }
 
+// ── 404 ───────────────────────────────────────────────────────────────────
+// Standalone component — shares the referral landing page's light-ground,
+// centred, serif-led language rather than the old dark page-hero banner.
+.tclas-404 {
+	background: var(--c-or-pale);
+	padding: 5rem 0 5.5rem;
+
+	.container-tclas { text-align: center; }
+}
+.tclas-404__code  { display: block; color: var(--c-crimson); margin-bottom: 1rem; }
+.tclas-404__title {
+	font-family: var(--font-serif);
+	font-size: clamp(2.75rem, 7vw, 4.5rem);
+	line-height: 1;
+	color: var(--c-ardoise);
+	margin: 0 auto .5rem;
+	padding-bottom: 1.5rem;
+	position: relative;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		transform: translateX(-50%);
+		width: 52px;
+		height: 2px;
+		background: var(--c-crimson);
+		opacity: .5;
+	}
+}
+.tclas-404__gloss { font-family: var(--font-serif); font-style: italic; color: var(--c-muted); margin: .6rem auto 0; }
+.tclas-404__lede  { color: var(--c-body-text); font-size: var(--text-lg); max-width: 46ch; margin: 1.25rem auto 2.25rem; }
+
+.tclas-404__search {
+	max-width: 420px;
+	margin: 0 auto 3rem;
+
+	input[type="search"] {
+		width: 100%;
+		padding: .85rem 3.25rem .85rem 1rem;
+		border: 1px solid var(--c-or-pale-dk);
+		border-radius: 8px;
+		background: #fff;
+		font-family: var(--font-sans);
+		font-size: var(--text-lg);
+		color: var(--c-body-text);
+	}
+	.tclas-search__btn { border-radius: 0 8px 8px 0; }
+
+	// The placeholder is this field's only visible label, so it cannot inherit
+	// the theme's #b0a89e (2.35:1 on white). --c-muted gives 5.24:1.
+	input[type="search"]::placeholder { color: var(--c-muted); opacity: 1; }
+}
+
+.tclas-404__or    { display: block; color: var(--c-muted); margin-bottom: 1rem; }
+.tclas-404__links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: .6rem 0;
+
+	li { display: flex; align-items: center; }
+	li + li::before { content: "·"; color: var(--c-or-pale-dk); margin: 0 .9rem; font-weight: 700; }
+
+	a {
+		color: var(--c-ardoise);
+		text-decoration: none;
+		border-bottom: 1px solid transparent;
+
+		&:hover, &:focus-visible { border-bottom-color: var(--c-crimson); }
+	}
+}
+
+@media (max-width: 600px) {
+	.tclas-404 { padding: 3.25rem 0 3.75rem; }
+	.tclas-404__links li + li::before { margin: 0 .6rem; }
+}
+
 // ── Profile roots spacing ─────────────────────────────────────────────────
 .tclas-profile-roots + .tclas-profile-roots { margin-top: .75rem; }
 

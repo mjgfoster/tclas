@@ -415,7 +415,7 @@ blockquote {
 
 .tclas-bg-ardoise p, .tclas-bg-ardoise li,
 .bg-ardoise p, .bg-ardoise li {
-  color: rgba(235, 245, 252, 0.78);
+  color: rgba(235, 245, 252, 0.82);
 }
 
 .tclas-bg-crimson h1, .tclas-bg-crimson h2, .tclas-bg-crimson h3,
@@ -1893,8 +1893,10 @@ button.tclas-nav__link {
   margin-left: auto;
   margin-right: auto;
 }
-/* Top half: ardoise (matches copy block 1 + MN photo) — full viewport width */
-.tclas-hero::before {
+/* Top half: ardoise (matches copy block 1 + MN photo) — full viewport width.
+   Front-page four-quadrant hero ONLY — :not(--page) keeps these off 404.php
+   and single.php, which share the base class but not the quadrant layout. */
+.tclas-hero:not(.tclas-hero--page)::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1905,7 +1907,7 @@ button.tclas-nav__link {
   z-index: 0;
 }
 /* Bottom half: or-pale (matches copy block 2 + LUX photo) — full viewport width */
-.tclas-hero::after {
+.tclas-hero:not(.tclas-hero--page)::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -2180,7 +2182,7 @@ button.tclas-nav__link {
   z-index: 0;
 }
 .tclas-hero--page .tclas-hero__eyebrow {
-  color: rgba(235, 245, 252, 0.75);
+  color: rgba(235, 245, 252, 0.82);
   margin-bottom: 0.75rem;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
@@ -6238,7 +6240,7 @@ button.tclas-nav__link {
   padding-top: 0.5rem;
 }
 .bg-ardoise.tclas-join-perks-section .tclas-join-perks p {
-  color: rgba(235, 245, 252, 0.8);
+  color: rgba(235, 245, 252, 0.82);
 }
 
 .tclas-join-lede {
@@ -7660,6 +7662,135 @@ button.tclas-nav__link {
   }
   .tclas-referral-landing .tclas-tier-mini:first-child {
     border-top: 0;
+  }
+}
+
+/* ── 404 ──────────────────────────────────────────────────────────────────
+   Standalone component. Shares the light-ground, centred, serif-led language
+   of the referral landing page rather than the old dark page-hero banner. */
+.tclas-404 {
+  background: var(--c-or-pale);
+  padding: 5rem 0 5.5rem;
+}
+
+.tclas-404 .container-tclas {
+  text-align: center;
+}
+
+.tclas-404__code {
+  display: block;
+  color: var(--c-crimson);
+  margin-bottom: 1rem;
+}
+
+.tclas-404__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  line-height: 1;
+  color: var(--c-ardoise);
+  margin: 0 auto 0.5rem;
+  padding-bottom: 1.5rem;
+  position: relative;
+}
+
+.tclas-404__title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 2px;
+  background: var(--c-crimson);
+  opacity: 0.5;
+}
+
+.tclas-404__gloss {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--c-muted);
+  margin: 0.6rem auto 0;
+}
+
+.tclas-404__lede {
+  color: var(--c-body-text);
+  font-size: var(--text-lg);
+  max-width: 46ch;
+  margin: 1.25rem auto 2.25rem;
+}
+
+.tclas-404__search {
+  max-width: 420px;
+  margin: 0 auto 3rem;
+}
+
+.tclas-404__search input[type=search] {
+  width: 100%;
+  padding: 0.85rem 3.25rem 0.85rem 1rem;
+  border: 1px solid var(--c-or-pale-dk);
+  border-radius: 8px;
+  background: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  color: var(--c-body-text);
+}
+
+.tclas-404__search .tclas-search__btn {
+  border-radius: 0 8px 8px 0;
+}
+
+/* The placeholder is this field's only visible label, so it cannot inherit the
+   theme's #b0a89e (2.35:1 on white). --c-muted gives 5.24:1. */
+.tclas-404__search input[type=search]::placeholder {
+  color: var(--c-muted);
+  opacity: 1;
+}
+
+.tclas-404__or {
+  display: block;
+  color: var(--c-muted);
+  margin-bottom: 1rem;
+}
+
+.tclas-404__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 0;
+}
+
+.tclas-404__links li {
+  display: flex;
+  align-items: center;
+}
+
+.tclas-404__links li + li::before {
+  content: "·";
+  color: var(--c-or-pale-dk);
+  margin: 0 0.9rem;
+  font-weight: 700;
+}
+
+.tclas-404__links a {
+  color: var(--c-ardoise);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.tclas-404__links a:hover,
+.tclas-404__links a:focus-visible {
+  border-bottom-color: var(--c-crimson);
+}
+
+@media (max-width: 600px) {
+  .tclas-404 {
+    padding: 3.25rem 0 3.75rem;
+  }
+  .tclas-404__links li + li::before {
+    margin: 0 0.6rem;
   }
 }
 
