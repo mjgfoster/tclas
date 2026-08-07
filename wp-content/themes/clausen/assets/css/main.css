@@ -1886,8 +1886,10 @@ button.tclas-nav__link {
   margin-left: auto;
   margin-right: auto;
 }
-/* Top half: ardoise (matches copy block 1 + MN photo) — full viewport width */
-.tclas-hero::before {
+/* Top half: ardoise (matches copy block 1 + MN photo) — full viewport width.
+   Front-page four-quadrant hero ONLY — :not(--page) keeps these off 404.php
+   and single.php, which share the base class but not the quadrant layout. */
+.tclas-hero:not(.tclas-hero--page)::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1898,7 +1900,7 @@ button.tclas-nav__link {
   z-index: 0;
 }
 /* Bottom half: or-pale (matches copy block 2 + LUX photo) — full viewport width */
-.tclas-hero::after {
+.tclas-hero:not(.tclas-hero--page)::after {
   content: "";
   position: absolute;
   bottom: 0;
