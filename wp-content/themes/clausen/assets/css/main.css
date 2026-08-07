@@ -2179,47 +2179,12 @@ button.tclas-nav__link {
     padding: 6rem 0;
   }
 }
-.tclas-hero--page .tclas-hero__bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.tclas-hero--page .tclas-hero__bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center right;
-}
-.tclas-hero--page .tclas-hero__bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(10, 37, 64, 0.82) 0%, rgba(10, 37, 64, 0.55) 45%, rgba(10, 37, 64, 0.1) 100%);
-}
-.tclas-hero--page .tclas-hero__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.tclas-hero--page .tclas-hero__eyebrow {
-  color: rgba(235, 245, 252, 0.82);
-  margin-bottom: 0.75rem;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
-}
-.tclas-hero--page .tclas-hero__actions {
-  display: flex;
-  gap: 0.85rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-@media (max-width: 767px) {
-  .tclas-hero--page .tclas-hero__bg img {
-    object-position: 70% center;
-  }
-  .tclas-hero--page .tclas-hero__bg::after {
-    background: linear-gradient(to bottom, rgba(10, 37, 64, 0.55) 0%, rgba(10, 37, 64, 0.82) 60%);
-  }
-}
+/* Removed: __bg, __bg img, __bg::after, __overlay, __eyebrow, __actions and
+   the max-767 __bg media block. All six styled a photographic hero backdrop
+   that no template renders. 404.php stopped using --page entirely in the
+   redesign, and single.php — now the only --page consumer — emits just
+   __content, __title and __subtitle. Confirmed absent from every PHP/JS file
+   and from posts, postmeta and options. */
 .tclas-mission {
   background: var(--c-or-pale);
   padding: var(--pad-y) 0;
@@ -2809,37 +2774,13 @@ button.tclas-nav__link {
   flex: 1;
 }
 
-.tclas-tier__features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-}
-.tclas-tier__features li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.35rem 0;
-  font-size: var(--text-sm);
-  color: rgba(235, 245, 252, 0.78);
-  border-bottom: 1px solid rgba(235, 245, 252, 0.07);
-}
-.tclas-tier__features li:last-child {
-  border-bottom: none;
-}
-.tclas-tier__features li::before {
-  content: "✓";
-  color: var(--c-vert);
-  font-weight: 700;
-  flex-shrink: 0;
-  margin-top: 0.05em;
-}
-.tclas-tier__features li.unavailable {
-  color: rgba(235, 245, 252, 0.3);
-}
-.tclas-tier__features li.unavailable::before {
-  content: "–";
-  color: rgba(235, 245, 252, 0.25);
-}
+/* Removed: the whole .tclas-tier__features block. It set light-on-dark text
+   (rgba(235,245,252,.78)) over .tclas-tier's #fff card — 1.08:1 — a leftover
+   from a dark tier design that no longer exists. The class appears in no
+   PHP/JS file and in no posts, postmeta or options row. Deleted rather than
+   recoloured: the rule should not exist, and repainting it would have hidden
+   that. The tier styles still in use are __name, __price, __period, __note,
+   __member-note and __cta. */
 
 .tclas-tier__cta {
   padding: 0 1.5rem 1.5rem;

@@ -460,29 +460,9 @@
 .tclas-tier__period { font-size: .8rem; color: rgba(235,245,252,.45); }
 .tclas-tier__body   { padding: 0 1.5rem 1.5rem; flex: 1; }
 
-.tclas-tier__features {
-	list-style: none;
-	padding: 0;
-	margin: 0 0 1.5rem;
-
-	li {
-		display: flex;
-		align-items: flex-start;
-		gap: .5rem;
-		padding: .35rem 0;
-		font-size: .82rem;
-		color: rgba(235,245,252,.78);
-		border-bottom: 1px solid rgba(235,245,252,.07);
-
-		&:last-child  { border-bottom: none; }
-		&::before     { content: '✓'; color: var(--c-vert); font-weight: 700; flex-shrink: 0; margin-top: .05em; }
-
-		&.unavailable {
-			color: rgba(235,245,252,.3);
-			&::before { content: '–'; color: rgba(235,245,252,.25); }
-		}
-	}
-}
+// Removed: .tclas-tier__features. Light-on-dark text over .tclas-tier's #fff
+// card (1.08:1) — a leftover from a dark tier design that no longer exists.
+// Absent from every PHP/JS file and from posts, postmeta and options.
 
 .tclas-tier__cta { padding: 0 1.5rem 1.5rem; .btn { width: 100%; } }
 
