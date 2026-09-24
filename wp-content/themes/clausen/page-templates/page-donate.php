@@ -36,46 +36,6 @@ $is_member = tclas_is_member();
 	</div>
 </section>
 
-<!-- ── Where your gift goes ─────────────────────────────────────────────── -->
-<section class="tclas-section tclas-bg-warm">
-	<div class="container-tclas">
-		<span class="tclas-eyebrow"><?php esc_html_e( 'Where your gift goes', 'tclas' ); ?></span>
-		<h2><?php esc_html_e( 'Every dollar stays close to home.', 'tclas' ); ?></h2>
-		<div class="tclas-donate-impact">
-		<?php if ( function_exists( 'have_rows' ) && have_rows( 'donate_impact_items' ) ) : ?>
-			<?php while ( have_rows( 'donate_impact_items' ) ) : the_row(); ?>
-			<div class="tclas-donate-impact__item">
-				<h3><?php echo esc_html( get_sub_field( 'impact_title' ) ); ?></h3>
-				<p><?php echo esc_html( get_sub_field( 'impact_desc' ) ); ?></p>
-			</div>
-			<?php endwhile; ?>
-		<?php else : ?>
-
-			<div class="tclas-donate-impact__item">
-				<h3><?php esc_html_e( 'Events and gatherings', 'tclas' ); ?></h3>
-				<p><?php esc_html_e( 'Receptions, celebrations, and informal meetups that bring the community together throughout the year.', 'tclas' ); ?></p>
-			</div>
-
-			<div class="tclas-donate-impact__item">
-				<h3><?php esc_html_e( 'Citizenship resources', 'tclas' ); ?></h3>
-				<p><?php esc_html_e( 'Research tools, guides, and the eligibility quiz that help members navigate the Luxembourg citizenship process.', 'tclas' ); ?></p>
-			</div>
-
-			<div class="tclas-donate-impact__item">
-				<h3><?php esc_html_e( 'Cultural preservation', 'tclas' ); ?></h3>
-				<p><?php esc_html_e( 'The ancestral commune map, member stories, and educational content that keep our shared heritage alive.', 'tclas' ); ?></p>
-			</div>
-
-			<div class="tclas-donate-impact__item">
-				<h3><?php esc_html_e( 'Community growth', 'tclas' ); ?></h3>
-				<p><?php esc_html_e( 'Outreach, the newsletter, and partnerships that help more Luxembourgers in the Twin Cities find their people.', 'tclas' ); ?></p>
-			</div>
-
-		<?php endif; ?>
-		</div>
-	</div>
-</section>
-
 <!-- ── Donation form ────────────────────────────────────────────────────── -->
 <section class="tclas-section" id="donate-form">
 	<div class="container-tclas container--medium">

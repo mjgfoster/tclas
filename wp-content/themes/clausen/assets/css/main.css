@@ -7984,29 +7984,6 @@ button.tclas-nav__link {
   margin: 0 auto;
 }
 
-.tclas-donate-impact {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem 3rem;
-  margin-top: 2rem;
-}
-@media (max-width: 600px) {
-  .tclas-donate-impact {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tclas-donate-impact__item h3 {
-  font-size: var(--text-md);
-  margin-bottom: 0.4rem;
-}
-.tclas-donate-impact__item p {
-  font-size: var(--text-md);
-  color: var(--c-muted);
-  margin: 0;
-  line-height: 1.6;
-}
-
 .tclas-donate-form-heading {
   text-align: center;
   margin-bottom: 2rem;
