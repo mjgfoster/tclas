@@ -10,18 +10,12 @@
 
 // ── Donate page layout ──────────────────────────────────────────────────
 
-.tclas-donate-intro .container-tclas { text-align: center; }
+// Mirrors the Join page: lede sits right under the title, full width,
+// with the form pulled up close beneath it.
+.tclas-donate-intro        { padding-top: 0; padding-bottom: 1.5rem; }
+.tclas-donate-form-section { padding-top: .5rem; }
 
-.tclas-donate-lede {
-	font-size: 1.15rem;
-	max-width: 52ch;
-	margin: 0 auto;
-}
-
-.tclas-donate-form-heading {
-	text-align: center;
-	margin-bottom: 2rem;
-}
+.tclas-donate-lede { font-size: 1.15rem; }
 
 .tclas-donate-tax-note {
 	font-size: .82rem;

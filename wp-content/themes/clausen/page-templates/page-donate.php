@@ -22,7 +22,7 @@ $is_member = tclas_is_member();
 
 <!-- ── Introduction ─────────────────────────────────────────────────────── -->
 <section class="tclas-section tclas-donate-intro">
-	<div class="container-tclas container--medium">
+	<div class="container-tclas">
 		<?php
 		$donate_lede = function_exists( 'get_field' ) ? get_field( 'donate_lede' ) : '';
 		if ( $donate_lede ) {
@@ -37,9 +37,8 @@ $is_member = tclas_is_member();
 </section>
 
 <!-- ── Donation form ────────────────────────────────────────────────────── -->
-<section class="tclas-section" id="donate-form">
+<section class="tclas-section tclas-donate-form-section" id="donate-form">
 	<div class="container-tclas container--medium">
-		<h2 class="tclas-donate-form-heading"><?php esc_html_e( 'Make a gift', 'tclas' ); ?></h2>
 		<?php tclas_donate_form(); ?>
 		<?php
 		$tax_note = function_exists( 'get_field' ) ? get_field( 'donate_tax_note' ) : '';

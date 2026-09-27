@@ -7976,17 +7976,17 @@ button.tclas-nav__link {
     padding-right: 1.25rem;
   }
 }
-.tclas-donate-intro .container-tclas {
+.tclas-donate-intro {
+  padding-top: 0;
+  padding-bottom: 1.5rem;
+}
+
+.tclas-donate-form-section {
+  padding-top: 0.5rem;
 }
 
 .tclas-donate-lede {
   font-size: var(--text-lg);
-  margin: 0 auto;
-}
-
-.tclas-donate-form-heading {
-  text-align: center;
-  margin-bottom: 2rem;
 }
 
 .tclas-donate-tax-note {
