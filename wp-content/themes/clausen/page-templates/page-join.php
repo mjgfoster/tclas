@@ -227,6 +227,15 @@ if ( isset( $_GET['tclas_gate'] ) ) :
 		<p class="tclas-tiers__note">
 			<?php esc_html_e( 'Membership renews on an annual basis from your date of enrollment. If there are financial barriers to joining, please reach out — we&rsquo;ll help.', 'tclas' ); ?>
 		</p>
+		<p class="tclas-tiers__note">
+			<?php
+			printf(
+				/* translators: %s: link to the donate page */
+				esc_html__( 'Not ready to join? %s', 'tclas' ),
+				'<a href="' . esc_url( home_url( '/donate/' ) ) . '">' . esc_html__( 'Make a one-time donation', 'tclas' ) . '</a>'
+			);
+			?>
+		</p>
 	</div>
 </section>
 
