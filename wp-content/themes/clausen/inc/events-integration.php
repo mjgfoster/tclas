@@ -128,6 +128,25 @@ function tclas_render_event_card( WP_Post $event ): void {
 // ── Event settings meta box ────────────────────────────────────────────────
 
 /**
+ * Button text choices for an event's external registration link.
+ */
+function tclas_registration_labels(): array {
+	return [
+		'register' => __( 'Register now', 'tclas' ),
+		'tickets'  => __( 'Get tickets', 'tclas' ),
+	];
+}
+
+/**
+ * The button text an event's external registration link should use.
+ */
+function tclas_registration_label( int $event_id ): string {
+	$labels = tclas_registration_labels();
+	$key    = get_post_meta( $event_id, '_tclas_registration_label', true );
+	return $labels[ $key ] ?? $labels['register'];
+}
+
+/**
  * Register the "TCLAS Event Settings" meta box on TEC event edit screens.
  * Covers: featured event flag, members-only flag, external registration URL.
  */
@@ -156,6 +175,7 @@ function tclas_events_meta_box_render( WP_Post $post ): void {
 	$featured     = (bool) get_post_meta( $post->ID, '_tclas_featured_event', true );
 	$members_only = (bool) get_post_meta( $post->ID, '_tclas_members_only', true );
 	$reg_url      = esc_url( get_post_meta( $post->ID, '_tclas_registration_url', true ) );
+	$reg_label    = get_post_meta( $post->ID, '_tclas_registration_label', true ) ?: 'register';
 	?>
 	<p style="margin:0 0 10px;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#50575e;">
 		<?php esc_html_e( 'Display', 'tclas' ); ?>
@@ -190,6 +210,15 @@ function tclas_events_meta_box_render( WP_Post $post ): void {
 	<p class="description" style="margin-top:5px;">
 		<?php esc_html_e( 'External registration link (Eventbrite, Google Forms, etc.). Leave blank to link to this event page.', 'tclas' ); ?>
 	</p>
+
+	<label for="tclas_registration_label" style="display:block;margin:10px 0 4px;">
+		<?php esc_html_e( 'Button text', 'tclas' ); ?>
+	</label>
+	<select name="tclas_registration_label" id="tclas_registration_label">
+		<?php foreach ( tclas_registration_labels() as $key => $text ) : ?>
+			<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $reg_label, $key ); ?>><?php echo esc_html( $text ); ?></option>
+		<?php endforeach; ?>
+	</select>
 	<?php
 }
 
@@ -236,6 +265,16 @@ function tclas_events_meta_box_save( int $post_id ): void {
 		update_post_meta( $post_id, '_tclas_registration_url', $reg_url );
 	} else {
 		delete_post_meta( $post_id, '_tclas_registration_url' );
+	}
+
+	// Button text — "register" is the default, so it isn't stored.
+	$reg_label = isset( $_POST['tclas_registration_label'] )
+		? sanitize_key( wp_unslash( $_POST['tclas_registration_label'] ) )
+		: '';
+	if ( $reg_label && 'register' !== $reg_label && isset( tclas_registration_labels()[ $reg_label ] ) ) {
+		update_post_meta( $post_id, '_tclas_registration_label', $reg_label );
+	} else {
+		delete_post_meta( $post_id, '_tclas_registration_label' );
 	}
 }
 add_action( 'save_post', 'tclas_events_meta_box_save' );
@@ -425,6 +464,66 @@ add_filter( 'tribe_rest_event_data', function ( $data, $event ) {
 	}
 
 	return $data;
+}, 10, 2 );
+
+/**
+ * Private venues — a member's home, say — flagged with _tclas_private_venue.
+ *
+ * The event-level gating above hides a venue *on its event*, but venues are
+ * posts in their own right: /tribe/events/v1/venues and /wp/v2/tribe_venue
+ * list every venue's name and street address to anonymous callers. (Venues
+ * have no front-end pages here — tribe_venue isn't publicly queryable without
+ * Events Calendar Pro.) Public places (Wilder Center) don't need this; a
+ * private address does. Members and editors still see everything.
+ */
+function tclas_private_venue_ids(): array {
+	// Editors too, so the event editor's venue picker still finds it.
+	if ( current_user_can( 'edit_posts' ) || ( function_exists( 'tclas_is_member' ) && tclas_is_member() ) ) {
+		return [];
+	}
+	static $ids = null;
+	if ( null === $ids ) {
+		// Raw SQL, not get_posts(): this runs inside pre_get_posts, and a
+		// WP_Query here would re-enter that hook (suppress_filters doesn't
+		// stop it) and recurse until PHP runs out of memory.
+		global $wpdb;
+		$ids = array_map( 'intval', $wpdb->get_col(
+			"SELECT pm.post_id FROM {$wpdb->postmeta} pm
+			 JOIN {$wpdb->posts} p ON p.ID = pm.post_id AND p.post_type = 'tribe_venue'
+			 WHERE pm.meta_key = '_tclas_private_venue' AND pm.meta_value = '1'"
+		) );
+	}
+	return $ids;
+}
+
+// Drop private venues from venue listings built by REST requests (TEC's venue
+// archive and core /wp/v2/tribe_venue both run through WP_Query).
+add_action( 'pre_get_posts', function ( WP_Query $query ): void {
+	if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
+		return;
+	}
+	if ( ! in_array( 'tribe_venue', (array) $query->get( 'post_type' ), true ) ) {
+		return;
+	}
+	$private = tclas_private_venue_ids();
+	if ( $private ) {
+		$query->set( 'post__not_in', array_merge( (array) $query->get( 'post__not_in' ), $private ) );
+	}
+} );
+
+// Single-venue REST requests don't query, so empty the payload instead.
+add_filter( 'tribe_rest_venue_data', function ( $data, $venue ) {
+	if ( is_array( $data ) && $venue instanceof WP_Post && in_array( $venue->ID, tclas_private_venue_ids(), true ) ) {
+		return [ 'id' => $venue->ID ];
+	}
+	return $data;
+}, 9999, 2 );
+
+add_filter( 'rest_prepare_tribe_venue', function ( $response, $post ) {
+	if ( in_array( $post->ID, tclas_private_venue_ids(), true ) ) {
+		return new WP_REST_Response( [ 'id' => $post->ID ] );
+	}
+	return $response;
 }, 10, 2 );
 
 /**

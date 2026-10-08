@@ -153,7 +153,7 @@ if ( is_singular( 'tribe_events' ) ) :
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						<?php esc_html_e( 'Register now', 'tclas' ); ?> &#8594;
+						<?php echo esc_html( tclas_registration_label( $eid ) ); ?> &#8594;
 					</a>
 				<?php endif; ?>
 
@@ -374,7 +374,7 @@ else :
 					class="btn btn-primary"
 					<?php if ( $f_external ) : ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>
 				>
-					<?php echo $f_external ? esc_html__( 'Register now', 'tclas' ) : esc_html__( 'View event details', 'tclas' ); ?>
+					<?php echo $f_external ? esc_html( tclas_registration_label( $f_id ) ) : esc_html__( 'View event details', 'tclas' ); ?>
 				</a>
 			</div>
 
