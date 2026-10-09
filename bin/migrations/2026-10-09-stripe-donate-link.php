@@ -18,7 +18,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	exit( 1 );
 }
 
-const TCLAS_DONATE_LINK = ''; // https://donate.stripe.com/… — fill in once the link exists.
+const TCLAS_DONATE_LINK = 'https://donate.stripe.com/00w6oH2fB9TP1NqgSOeIw00'; // plink_1UOhdLDJNhrm1srHNg9t9JJh
 
 if ( ! TCLAS_DONATE_LINK || ! str_starts_with( TCLAS_DONATE_LINK, 'https://donate.stripe.com/' ) ) {
 	WP_CLI::error( 'TCLAS_DONATE_LINK is not set to a donate.stripe.com URL.' );
