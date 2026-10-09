@@ -85,12 +85,19 @@ function tclas_register_acf_fields(): void {
 				'instructions' => 'Hosted signup page to link to while no Brevo form ID is set above. Once the Brevo form is live, clear this field. If both are empty the signup button is hidden from visitors.',
 			],
 			[
+				'key'          => 'field_donate_payment_link',
+				'label'        => 'Donate: Stripe Payment Link',
+				'name'         => 'donate_payment_link',
+				'type'         => 'url',
+				'instructions' => 'Stripe Payment Link for one-time donations (https://donate.stripe.com/…). When set, the donate page shows a button to it instead of the GiveWP form.',
+			],
+			[
 				'key'           => 'field_donate_form_id',
-				'label'         => 'GiveWP donation form ID',
+				'label'         => 'GiveWP donation form ID (legacy)',
 				'name'          => 'donate_form_id',
 				'type'          => 'number',
 				'default_value' => 0,
-				'instructions'  => 'GiveWP form ID for the donate page. Create a form in Donations > Add Form, then enter its ID here.',
+				'instructions'  => 'Only used while the Stripe Payment Link above is empty and GiveWP is active.',
 			],
 			[
 				'key'          => 'field_mapbox_access_token',

@@ -2,8 +2,8 @@
 /**
  * Template Name: Donate
  *
- * Donation page with GiveWP form embedded via shortcode.
- * Form ID stored in ACF Theme Options (donate_form_id).
+ * Donation page. Button to a Stripe Payment Link (ACF Theme Options
+ * donate_payment_link); see inc/givewp-integration.php.
  *
  * @package TCLAS
  */

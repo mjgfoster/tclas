@@ -40,6 +40,27 @@
 	}
 }
 
+// Stripe Payment Link donate button (replaces the GiveWP form)
+.tclas-donate-form--stripe .tclas-donate-button {
+  margin: 0;
+}
+.tclas-donate-form--stripe .tclas-donate-secure {
+  color: var(--c-muted);
+  margin: .75rem 0 0;
+}
+.tclas-donate-thanks {
+  border-left: 4px solid var(--c-crimson);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  background: var(--c-or-pale);
+}
+.tclas-donate-thanks h2 {
+  margin: 0 0 .5rem;
+}
+.tclas-donate-thanks p {
+  margin: 0;
+}
+
 // ── GiveWP form overrides ───────────────────────────────────────────────
 // Scope all overrides to .tclas-donate-form to avoid bleeding into admin.
 

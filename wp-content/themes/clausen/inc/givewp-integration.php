@@ -1,9 +1,11 @@
 <?php
 /**
- * GiveWP (donation platform) integration
+ * Donate page integration
  *
- * Renders the donation form using a shortcode ID stored in ACF Theme Options.
- * Falls back gracefully when GiveWP is not active or unconfigured.
+ * Donations go through a Stripe Payment Link (ACF option `donate_payment_link`)
+ * hosted on Stripe's checkout. GiveWP's bundled stripe-php shadowed PMPro's and
+ * crashed the membership webhook (Oct 2026), so GiveWP is being retired; while
+ * the link is unset the page still falls back to the GiveWP form.
  *
  * @package TCLAS
  */
@@ -11,16 +13,47 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 /**
- * Render the GiveWP donation form.
+ * Render the donation call to action.
  *
- * Uses ACF option field `donate_form_id` for the GiveWP form ID.
- * Checks shortcode_exists() before rendering so the page degrades
- * gracefully when GiveWP is deactivated.
+ * Prefers the Stripe Payment Link; falls back to the GiveWP shortcode
+ * (`donate_form_id`) when no link is set and GiveWP is active.
  */
 function tclas_donate_form(): void {
+	$link    = '';
 	$form_id = 0;
 	if ( function_exists( 'get_field' ) ) {
+		$link    = (string) get_field( 'donate_payment_link', 'option' );
 		$form_id = (int) get_field( 'donate_form_id', 'option' );
+	}
+
+	if ( $link ) {
+		// Prefill the logged-in member's email on Stripe's checkout.
+		$user = wp_get_current_user();
+		if ( $user->exists() && $user->user_email ) {
+			$link = add_query_arg( 'prefilled_email', rawurlencode( $user->user_email ), $link );
+		}
+		?>
+		<div class="tclas-donate-form tclas-donate-form--stripe">
+			<div class="tclas-donate-thanks" id="donate-thanks" role="status" hidden>
+				<h2><?php echo tclas_ltz( 'Villmools merci!', 'Thank you so much!', false ); ?></h2>
+				<p><?php esc_html_e( 'Your gift has gone through. A receipt for your tax records is on its way to your inbox.', 'tclas' ); ?></p>
+			</div>
+			<p class="tclas-donate-button">
+				<a href="<?php echo esc_url( $link ); ?>" class="btn btn-primary btn-lg">
+					<?php esc_html_e( 'Donate', 'tclas' ); ?>
+				</a>
+			</p>
+			<p class="tclas-donate-secure"><?php esc_html_e( 'You’ll choose your amount on Stripe’s secure checkout page.', 'tclas' ); ?></p>
+		</div>
+		<script>
+		// Stripe sends donors back to /donate/?thanks=1. Revealed client-side so a
+		// cached copy of the page can't show (or hide) the message wrongly.
+		if ( /[?&]thanks=1\b/.test( location.search ) ) {
+			document.getElementById( 'donate-thanks' ).hidden = false;
+		}
+		</script>
+		<?php
+		return;
 	}
 
 	if ( $form_id > 0 && shortcode_exists( 'give_form' ) ) {
@@ -33,7 +66,7 @@ function tclas_donate_form(): void {
 	// Fallback — admin reminder
 	?>
 	<div class="tclas-donate-form tclas-donate-form--fallback">
-		<p class="text-muted"><?php esc_html_e( 'The donation form will appear here once GiveWP is installed and a form ID is set in Theme Options.', 'tclas' ); ?></p>
+		<p class="text-muted"><?php esc_html_e( 'The donate button will appear here once a Stripe Payment Link is set in Theme Options.', 'tclas' ); ?></p>
 	</div>
 	<?php
 }
