@@ -74,3 +74,16 @@ add_action( 'after_setup_theme', 'tclas_content_width', 0 );
 add_filter( 'show_admin_bar', function (): bool {
 	return current_user_can( 'publish_posts' );
 } );
+
+/**
+ * Serve YouTube embeds from youtube-nocookie.com (privacy-enhanced mode),
+ * so no YouTube cookies are set until a visitor presses play. Rewrites the
+ * oEmbed HTML, which covers pasted URLs and Embed blocks alike.
+ */
+add_filter( 'embed_oembed_html', function ( string $html ): string {
+	return str_replace(
+		[ 'https://www.youtube.com/embed/', 'https://youtube.com/embed/' ],
+		'https://www.youtube-nocookie.com/embed/',
+		$html
+	);
+} );
