@@ -91,6 +91,18 @@ img, video, svg {
   display: block;
 }
 
+/* Video embeds pasted outside an Embed block arrive as bare iframes sized to
+   content_width (1200px); make them fill their column at 16:9 instead. Block
+   embeds keep core's aspect-ratio wrapper, whose more specific rule wins. */
+iframe[src*="youtube.com/embed"],
+iframe[src*="youtube-nocookie.com/embed"],
+iframe[src*="player.vimeo.com"] {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
 figure {
   margin: 0;
 }
